@@ -1,0 +1,25 @@
+plugins {
+    id "com.ewerk.gradle.plugins.jaxb2" version "1.0.5"
+}
+
+sourceSets {
+    // configuration after the jaxb classes have been generated
+    main.java.srcDirs += ['src/main/jaxb2']
+}
+
+jar {
+    baseName 'jonglisto-common'
+}
+
+/*
+jaxb2 {
+  xjc {
+    'configuration-classes' {
+      generatedSourcesDir = 'src/main/jaxb2/'
+      basePackage = 'vdr.jonglisto.configuration.jaxb'
+      schema = 'src/main/resources/xsd/jonglisto-ng.xsd'
+      encoding = 'UTF-8'
+    }
+  }
+}
+*/

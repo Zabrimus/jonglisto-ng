@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- configuration of jonglisto-ng -->
+<configuration>
+    <!-- configuration directory in which jonglisto-ng can store some configuration files -->
+    <directory dir="/var/jonglisto-ng" />
+
+    <!-- all available configured VDR instances -->
+    <configuredVdr>
+
+        <!-- name:        internal name, used to identify the VDR instance  -->
+        <!-- displayName: name, which will be shown in the GUI as selection -->
+        <!-- host:        hostname or IP address of the VDR instance        -->
+        <!-- port:        SVDRP port of the VDR instance                    -->
+        <instance name="vdr1"       displayName="VDR 1"      host="vdr1"       port="6419" />
+        <instance name="vdr2"       displayName="VDR 2"      host="vdr2"       port="6419" />
+        <instance name="vdr3"       displayName="VDR 3"      host="vdr3"       port="6419" />
+        <instance name="epgcollect" displayName="epgcollect" host="epgcollect" port="6419" />
+
+    </configuredVdr>
+
+    <!-- configuration of the VDR instance which are responsible for EPG and channel data -->
+    <!-- ref:  reference to a configured VDR instance, see configuredVdr.instance.name    -->
+    <!-- updateInterval: jonglisto-ng uses an internal cache for EPG and channel data.    -->
+    <!--                 the data will be updated after xxx minutes at the latest         -->
+    <epg     ref="epgcollect" updateInterval="720" />
+    <channel ref="epgcollect" updateInterval="720" />
+
+    <!-- optional configuration of the epg2vdr database, used for e.g. search timers -->
+    <epg2vdr host="epgd" port="3306" username="epg2vdr" password="epg" />
+
+    <!-- preconfigured time list used in EPG view to fastly select a time value -->
+    <epgTimeList>
+        <value>10:00</value>
+        <value>12:00</value>
+        <value>18:00</value>
+        <value>20:15</value>
+        <value>23:00</value>
+    </epgTimeList>
+
+    <!-- preconfigured common SVDRP commands -->
+    <svdrpCommandList>
+        <command>HELP</command>
+        <command>PLUG</command>
+    </svdrpCommandList>
+
+    <!-- configuration of epg columns -->
+    <!-- Tested with http://www.regexplanet.com/advanced/java/index.html -->
+    <epg-columns>
+        <series>
+            <season>
+                <pattern>(^|\|)Staffel:(.*?)\|</pattern>
+                <group>2</group>
+            </season>
+
+            <part>
+                <pattern>(^|\|)Staffelfolge:(.*?)\|</pattern>
+                <group>2</group>
+            </part>
+
+            <parts>
+                <pattern>(^|\|)Staffelfolgen:(.*?)\|</pattern>
+                <group>2</group>
+            </parts>
+        </series>
+
+        <!-- can be disabled, if wished
+        <genre>
+            <pattern>(^|\|)Genre:(.*?)\|</pattern>
+            <group>2</group>
+        </genre>
+
+        <category>
+            <pattern>(^|\|)Kategorie:(.*?)\|</pattern>
+            <group>2</group>
+        </category>
+        -->
+
+        <!-- Custom patterns and columns -->
+        <custom-pattern>
+            <custom>
+                <header>Rating</header>
+                <pattern>(^|\|)(Empfehlenswert|Eher durchschnittlich|Eher uninteressant|Einer der besten Filme aller Zeiten|Sehr empfehlenswert)\|</pattern>
+                <output><![CDATA[<span style="color:red">${2}</span>]]></output>
+            </custom>
+
+            <custom>
+                <header>Tipp</header>
+                <pattern>(^|\|)(TopTipp|GoldTipp|TagesTipp|Tipp)\|</pattern>
+                <output><![CDATA[<span style="color:red">${2}</span>]]></output>
+            </custom>
+
+            <custom>
+                <header>-</header>
+                <pattern>(^|\|) (/.*?)\|</pattern>
+                <output><![CDATA[<span style="color:red">${2}</span>]]></output>
+            </custom>
+
+            <!--
+            <custom>
+                <header>Quelle</header>
+                <pattern>(^|\|)Quelle:(.*?)(\||$)</pattern>
+                <output><![CDATA[<span style="color:red;text-decoration: underline;">${2}</span>]]></output>
+            </custom>
+            -->
+        </custom-pattern>
+    </epg-columns>
+
+</configuration>

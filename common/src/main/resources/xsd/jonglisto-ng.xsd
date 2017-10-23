@@ -1,0 +1,183 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="jonglisto">
+    <xs:annotation>
+      <xs:documentation>configuration of jonglisto-ng</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="directory">
+          <xs:annotation>
+            <xs:documentation>configuration directory in which jonglisto-ng can store some configuration files</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="dir"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="configuredVdr">
+          <xs:annotation>
+            <xs:documentation>all available configured VDR instances</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="instance" maxOccurs="unbounded" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>name:        internal name, used to identify the VDR instance   displayName: name, which will be shown in the GUI as selection  host:        hostname or IP address of the VDR instance         port:        SVDRP port of the VDR instance</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:string" name="name" use="optional"/>
+                      <xs:attribute type="xs:string" name="displayName" use="optional"/>
+                      <xs:attribute type="xs:string" name="host" use="optional"/>
+                      <xs:attribute type="xs:short" name="port" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="epg">
+          <xs:annotation>
+            <xs:documentation>configuration of the VDR instance which are responsible for EPG and channel data  ref:  reference to a configured VDR instance, see configuredVdr.instance.name     updateInterval: jonglisto-ng uses an internal cache for EPG and channel data.                     the data will be updated after xxx minutes at the latest</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="ref"/>
+                <xs:attribute type="xs:short" name="updateInterval"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="channel">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="ref"/>
+                <xs:attribute type="xs:short" name="updateInterval"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="epg2vdr">
+          <xs:annotation>
+            <xs:documentation>optional configuration of the epg2vdr database, used for e.g. search timers</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="host"/>
+                <xs:attribute type="xs:short" name="port"/>
+                <xs:attribute type="xs:string" name="username"/>
+                <xs:attribute type="xs:string" name="password"/>
+                <xs:attribute type="xs:string" name="database"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="epgTimeList">
+          <xs:annotation>
+            <xs:documentation>preconfigured time list used in EPG view to fastly select a time value</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="value" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="svdrpCommandList">
+          <xs:annotation>
+            <xs:documentation>preconfigured common SVDRP commands</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="command" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="epg-columns">
+          <xs:annotation>
+            <xs:documentation>configuration of epg columns  Tested with http://www.regexplanet.com/advanced/java/index.html</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="series">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="season">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="pattern"/>
+                          <xs:element type="xs:byte" name="group"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="part">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="pattern"/>
+                          <xs:element type="xs:byte" name="group"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="parts">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="pattern"/>
+                          <xs:element type="xs:byte" name="group"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="genre">
+                <xs:annotation>
+                  <xs:documentation></xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="pattern"/>
+                    <xs:element type="xs:byte" name="group"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="category">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="pattern"/>
+                    <xs:element type="xs:byte" name="group"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="custom-pattern">
+                <xs:annotation>
+                  <xs:documentation>Custom patterns and columns</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="custom" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="header"/>
+                          <xs:element type="xs:string" name="pattern"/>
+                          <xs:element type="xs:string" name="output"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+

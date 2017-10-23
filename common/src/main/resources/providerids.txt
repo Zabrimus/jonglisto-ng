@@ -1,0 +1,427 @@
+TVM|1|ARD|ard
+TVM|2|ZDF|zdf
+TVM|3|RTL|rtl
+TVM|4|SAT1|sat1
+TVM|11|PRO7|prosieben
+TVM|43|RTL II|rtl2
+TVM|13|S RTL|srtl
+TVM|39|Kabel|kabel
+TVM|12|3SAT|3sat
+TVM|46|VOX|vox
+TVM|9|WDR|wdr
+TVM|6|NDR|ndr
+TVM|57|RBB|rbb
+TVM|41|MDR|mdr
+TVM|7|H3|h3
+TVM|8|SWR|swr
+TVM|5|B3|b3
+TVM|76|Ki.Ka|kika
+TVM|38|Arte|arte
+TVM|45|DSF|dsf
+TVM|48|EURONEWS|euronews
+TVM|30|EUROSPORT|eurosport
+TVM|47|NTV|ntv
+TVM|31|N24|n24
+TVM|60|Phoenix|phoenix
+TVM|42|CNN|cnn
+TVM|73|VIVA|viva
+TVM|32|MTV|mtv
+TVM|55|Tele5|tele5
+TVM|52|XXP|xxp
+TVM|53|Home Shopping Europe|homeshoppingeurope
+TVM|54|QVC|qvc
+TVM|16|ORF 1|orf1
+TVM|17|ORF 2|orf2
+TVM|24|SF 1|sf1
+TVM|35|SF 2|sf2
+TVM|18|DK1|dk1
+TVM|19|DK2|dk2
+TVM|21|NL1|nl1
+TVM|22|NL2|nl2
+TVM|23|NL3|nl3
+TVM|33|TV5|tv5
+TVM|56|BR Alpha|bralpha
+TVM|122|EinsFestival|einsfestival
+TVM|123|EinsMuXx|einsmuxx
+TVM|128|EinsExtra|einsextra
+TVM|467|Discovery Channel|discoverychannel
+TVM|111|Disney Channel|disneychannel
+TVM|96|Junior|junior
+TVM|98|Planet|planet
+TVM|154|SCI FI|scifi
+TVM|151|MGM|mgm
+TVM|88|13th Street|13thstreet
+TVM|95|Classica|classica
+TVM|113|Goldstar TV|goldstartv
+TVM|89|Heimatkanal|heimatkanal
+TVM|127|Beate-Uhse-TV|beateuhsetv
+TVM|158|Animal Planet|animalplanet
+TVM|129|ATV+|atvplus
+TVM|137|ZDFInfo|zdfinfo
+TVM|69|Nick|nick
+TVM|177|AXN|axn
+TVM|182|Kinowelt TV|kinowelttv
+TVM|185|Silverline|silverline
+TVM|156|Bibel-TV|bibeltv
+TVM|125|BloombergTV|bloombergtv
+TVM|61|BBC|bbc
+TVM|171|Playhouse Disney|playhousedisney
+TVM|174|MTV Hits|mtvhits
+TVM|181|History Channel|historychannel
+TVM|183|K-TV|ktv
+TVM|187|VH1 Classic|vh1classic
+TVM|189|MTV Dance|mtvdance
+TVM|190|National Geographic|nationalgeographic
+TVM|153|Extreme Sports Channel|extremesportschannel
+TVM|188|Wetter Fernsehen|wetterfernsehen
+TVM|186|tv.gusto premium|tvgustopremium
+TVM|184|Motors TV|motorstv
+TVM|205|Gute Laune TV|gutelaunetv
+TVM|206|Trace.TV|tracetv
+TVM|201|E! Entertainment Television|eentertainmenttelevision
+TVM|209|kabel eins classics|kabeleinsclassics
+TVM|211|Boomerang|boomerang
+TVM|467hd|Discovery HD|discovery
+TVM|214|RTL Crime|rtlcrime
+TVM|215|RTL Living|rtlliving
+TVM|216|RTL Passion|rtlpassion
+TVM|14|Comedy Central|comedycentral
+TVM|219|Cartoon Network|cartoonnetwork
+TVM|218|The Biography Channel|thebiographychannel
+TVM|220|Turner Classic Movies|turnerclassicmovies
+TVM|221|MEZZO|mezzo
+TVM|222|Animax|animax
+TVM|239|Eurosport 2|eurosport2
+TVM|240|MTV Base|mtvbase
+TVM|225|MTV Music|mtvmusic
+TVM|232|MCM Top|mcmtop
+TVM|235|Baby TV|babytv
+TVM|234|The Karaoke Channel|thekaraokechannel
+TVM|229|Tier TV|tiertv
+TVM|241|ATV Avrupa|atvavrupa
+TVM|242|Detski Mir / Teleclub|detskimirteleclub
+TVM|243|Euro D|eurod
+TVM|244|Euro Star|eurostar
+TVM|246|iTVN|itvn
+TVM|250|RTR-Planeta|rtrplaneta
+TVM|254|TV Polonia|tvpolonia
+TVM|255|TVP Info|tvpinfo
+TVM|256|TVP Kultura|tvpkultura
+TVM|249|Nashe Kino|nashekino
+TVM|252|Show Turk|showturk
+TVM|251|RTVi|rtvi
+TVM|253|Türkmax|turkmax
+TVM|238|DELUXE MUSIC TV|deluxemusictv
+TVM|247|Kanal 7 Int|kanalsiebenint
+TVM|264|FOX Channel|foxchannel
+TVM|265|Romance TV|romancetv
+TVM|268|TIMM|timm
+TVM|269|Anixe HD|anixe
+TVM|270|SKY Cinema|skycinema
+TVM|272|SKY Cinema +24|skycinemaplus24
+TVM|273|SKY Cinema Hits|skycinemahits
+TVM|274|SKY Action|skyaction
+TVM|275|SKY Emotion|skyemotion
+TVM|276|SKY Comedy|skycomedy
+TVM|278|SKY Krimi|skykrimi
+TVM|271|SKY Cinema +1|skycinemaplus1
+TVM|277|SKY Nostalgie|skynostalgie
+TVM|286|SKY Sport Austria|skysportaustria
+TVM|288|SKY Fußball Bundesliga|skyfuballbundesliga
+TVM|289|SKY Sport 1|skysport1
+TVM|290|SKY Sport 2|skysport2
+TVM|270hd|SKY Cinema HD|skycinema
+TVM|289hd|SKY Sport HD|skysport
+TVM|284|National Geographic Wild|nationalgeographicwild
+TVM|279|Disney Cinemagic|disneycinemagic
+TVM|285|Spiegel Geschichte|spiegelgeschichte
+TVM|267|TNT Serie|tntserie
+TVM|291|TGRT EU|tgrteu
+TVM|190hd|National Geographic HD|nationalgeographic
+TVM|292|Disney XD|disneyxd
+TVM|296|fashiontv HD|fashiontv
+TVM|263|sportdigital.tv|sportdigitaltv
+TVM|294|ZDFneo|zdfneo
+TVM|279hd|Disney Cinemagic HD|disneycinemagic
+TVM|30hd|Eurosport HD|eurosport
+TVM|318|Sixx|sixx
+TVM|259|Sonnenklar.TV|sonnenklartv
+TVM|181hd|HISTORY HD|history
+TVM|287|MOTORVISION TV|motorvisiontv
+TVM|297|LUST PUR|lustpur
+TVM|299|BBC Entertainment|bbcentertainment
+TVM|300|OKTO TV|oktotv
+TVM|301|gotv|gotv
+TVM|305|AutoMotorSportChannel|automotorsportchannel
+TVM|311|yourfamilyentertainment|yourfamilyentertainment
+TVM|314|PULS 4|puls4
+TVM|290hd|SKY Sport HD 2|skysport2
+TVM|273hd|SKY Cinema Hits HD|skycinemahits
+TVM|274hd|SKY Action HD|skyaction
+TVM|310|Nick jr.|nickjr
+TVM|257|iMusic1|imusic1
+TVM|298|Astro TV|astrotv
+TVM|236|LUXE.TV|luxetv
+TVM|316|ServusTV|servustv
+TVM|381|MezzoLive HD|mezzolive
+TVM|378|ZDF Kultur|zdfkultur
+TVM|382|KidsCo|kidsco
+TVM|383|Hustler TV|hustlertv
+TVM|428|Sat.1 Emotions|sat1emotions
+TVM|427|RTL Nitro|rtlnitro
+TVM|429|Sky Atlantic HD|skyatlantic
+TVM|430|Sat.1 Gold|sat1gold
+TVM|406|Spiegel TV Wissen|spiegeltvwissen
+TVM|421|Glitz*|glitzstar
+TVM|411|Sky Sport News HD|skysportnews
+TVM|436|ProSieben Maxx|prosiebenmaxx
+TVM|441|Universal Channel|universalchannel
+TVM|420|Sport1+|sport1plus
+TVM|307|DAF|daf
+TVM|319|Fine Living Network|finelivingnetwork
+TVM|435|Fuel TV|fueltv
+TVM|309|JimJam|jimjam
+TVM|224|Jukebox|jukebox
+TVM|380|MTV Live|mtvlive
+TVM|227|nicktoons|nicktoons
+TVM|379|Powertürk|powerturk
+TVM|431|ProSieben Fun|prosiebenfun
+TVM|437|RIC|ric
+TVM|223|Rock TV|rocktv
+TVM|439|Sony Entertainment|sonyentertainment
+TVM|440|Sport1 US|sport1us
+TVM|20|TV Een|tveen
+TVM|445|TLC|tlc
+TVM|432|SKY 3D|sky3d
+TVM|447|ORF 3|orf3
+TVM|451|ORF Sport+|orfsportplus
+TVM|459|ATV II|atv2
+TVM|102|RTL Plus|rtlplus
+TVM|175|Sky 1|sky1
+TVM|176|ZeeOne|zeeone
+TVM|168|N24 Doku|n24doku
+TVM|167|Kabel eins Doku|kabeleinsdoku
+TVM|169|Sky Cinema Family|skycinemafamily
+TVSP|ARD|Das Erste|daserste
+TVSP|ZDF|ZDF|zdf
+TVSP|RTL|RTL|rtl
+TVSP|SAT1|SAT.1|sat1
+TVSP|PRO7|ProSieben|prosieben
+TVSP|K1|kabel eins|kabeleins
+TVSP|RTL2|RTL II|rtl2
+TVSP|VOX|VOX|vox
+TVSP|3SAT|3sat|3sat
+TVSP|ARTE|ARTE|arte
+TVSP|SERVU|ServusTV|servustv
+TVSP|TELE5|Tele 5|tele5
+TVSP|DMAX|DMAX|dmax
+TVSP|SIXX|sixx|sixx
+TVSP|RTL-N|NITRO|nitro
+TVSP|RTLPL|RTLplus|rtlplus
+TVSP|SAT1G|SAT.1 Gold|sat1gold
+TVSP|PRO7M|ProSieben MAXX|prosiebenmaxx
+TVSP|CC|Comedy Central|comedycentral
+TVSP|WDR-K|WDR Köln|wdrkoln
+TVSP|NDR-NI|NDR NI|ndrni
+TVSP|RB-TV|Radio Bremen TV|radiobrementv
+TVSP|BR-S|BR Süd|brsud
+TVSP|SWRBW|SWR BW|swrbw
+TVSP|SR|SR|sr
+TVSP|HR|HR|hr
+TVSP|MDR-SN|MDR Sachsen|mdrsachsen
+TVSP|RBB-B|RBB Berlin|rbbberlin
+TVSP|SPORT|SPORT1|sport1
+TVSP|S1PLU|SPORT1+|sport1plus
+TVSP|SP1US|SPORT1 US|sport1us
+TVSP|EURO|Eurosport 1|eurosport1
+TVSP|EURO2|Eurosport 2|eurosport2
+TVSP|EX-SP|EXTREME SPORTS|extremesports
+TVSP|SPO-D|sportdigital|sportdigital
+TVSP|SNHD|Sky Sport News HD|skysportnews
+TVSP|AMS|Auto Motor Sport|automotorsport
+TVSP|KIKA|KiKA|kika
+TVSP|SUPER|SUPER RTL|superrtl
+TVSP|TOGGO|TOGGO plus|toggoplus
+TVSP|RIC|RiC|ric
+TVSP|NICK|nick|nick
+TVSP|FFTV|Fix & Foxi|fixandfoxi
+TVSP|NICKJ|Nick Jr.|nickjr
+TVSP|NICKT|Nicktoons|nicktoons
+TVSP|DISNE|Disney Channel|disneychannel
+TVSP|PHOEN|PHOENIX|phoenix
+TVSP|ALPHA|ARD alpha|ardalpha
+TVSP|FES|ONE|one
+TVSP|2NEO|ZDFneo|zdfneo
+TVSP|ZINFO|ZDFinfo|zdfinfo
+TVSP|DWTV|DW (Europe)|dweurope
+TVSP|ANIXE|ANIXE|anixe
+TVSP|ZEE-1|Zee.One|zeeone
+TVSP|H2D|Handshake 2 Deutschland|handshake2deutschland
+TVSP|BIBEL|Bibel TV|bibeltv
+TVSP|BLIZZ|blizz|blizz
+TVSP|FAMTV|Family TV|familytv
+TVSP|KTV|K-TV|ktv
+TVSP|TLC|TLC|tlc
+TVSP|WDWTV|Welt der Wunder TV|weltderwundertv
+TVSP|PLANE|Planet|planet
+TVSP|EOTV|eoTV|eotv
+TVSP|FUNDO|FunDorado TV|fundoradotv
+TVSP|FLN|Fine Living Network|finelivingnetwork
+TVSP|FOOD|Food Network|foodnetwork
+TVSP|MAPO|Marco Polo TV|marcopolotv
+TVSP|TRCH|Travel Channel|travelchannel
+TVSP|HEALTH|Health TV|healthtv
+TVSP|TAG24|tagesschau24|tagesschau24
+TVSP|NTV|n-tv|ntv
+TVSP|N24|N24|n24
+TVSP|N24DOKU|N24 Doku|n24doku
+TVSP|K1DOKU|kabel eins Doku|kabeleinsdoku
+TVSP|BBC|BBC World News|bbcworldnews
+TVSP|BLM|Bloomberg Europe TV|bloombergeuropetv
+TVSP|CNBC|CNBC|cnbc
+TVSP|CNN|CNN International|cnninternational
+TVSP|EURON|euronews|euronews
+TVSP|ALJAZ|Al Jazeera|aljazeera
+TVSP|FR24E|France 24 (engl.)|france24engl
+TVSP|FR24F|France 24 (franz.)|france24franz
+TVSP|DATV|Der Aktionär TV|deraktionartv
+TVSP|DMC|DELUXE MUSIC|deluxemusic
+TVSP|DMF|Deutsches Musik Fernsehen|deutschesmusikfernsehen
+TVSP|MTV|MTV|mtv
+TVSP|MTV-L|MTV Live HD|mtvlive
+TVSP|VIVA|VIVA|viva
+TVSP|VH1|VH1 Classic|vh1classic
+TVSP|QVC|QVC|qvc
+TVSP|QVCP|QVC Plus|qvcplus
+TVSP|QVCBS|QVC Beauty & Style |qvcbeautyandstyle
+TVSP|HSE|HSE24|hse24
+TVSP|CH21|Channel21|channel21
+TVSP|SKLAR|Sonnenklar.TV|sonnenklartv
+TVSP|WDR-AC|WDR Aachen|wdraachen
+TVSP|WDR-BI|WDR Bielefeld|wdrbielefeld
+TVSP|WDR-BN|WDR Bonn|wdrbonn
+TVSP|WDR-DO|WDR Dortmund|wdrdortmund
+TVSP|WDR-DU|WDR Duisburg|wdrduisburg
+TVSP|WDR-D|WDR Düsseldorf|wdrdusseldorf
+TVSP|WDR-E|WDR Essen|wdressen
+TVSP|WDR-MS|WDR Münster|wdrmunster
+TVSP|WDR-SI|WDR Siegen|wdrsiegen
+TVSP|WDR-W|WDR Wuppertal|wdrwuppertal
+TVSP|NDR-MV|NDR MV|ndrmv
+TVSP|NDR-HH|NDR HH|ndrhh
+TVSP|NDR-SH|NDR SH|ndrsh
+TVSP|BR-N|BR Nord|brnord
+TVSP|SWRRP|SWR RP|swrrp
+TVSP|MDR-ST|MDR Sachsen-Anhalt|mdrsachsenanhalt
+TVSP|MDR-TH|MDR Thüringen|mdrthuringen
+TVSP|RBB-BB|RBB Brandenburg|rbbbrandenburg
+TVSP|HH1|Hamburg 1|hamburg1
+TVSP|MUE2|münchen2|munchen2
+TVSP|TVM|münchen.tv|munchentv
+TVSP|TVB|tv.berlin|tvberlin
+TVSP|CENTE|Köln.tv|kolntv
+TVSP|LEITV|Leipzig Fernsehen|leipzigfernsehen
+TVSP|REGIO|Regio TV|regiotv
+TVSP|REGBS|Regio TV Bodensee|regiotvbodensee
+TVSP|REGHD|regio TV HD|regiotv
+TVSP|RMTV|rheinmaintv|rheinmaintv
+TVSP|RNF|Rhein-Neckar Fernsehen|rheinneckarfernsehen
+TVSP|SACH|Sachsen Fernsehen|sachsenfernsehen
+TVSP|ATV|ATV|atv
+TVSP|ATV2|ATV II|atv2
+TVSP|ORF1|ORF eins|orfeins
+TVSP|ORF2|ORF 2|orf2
+TVSP|ORF3|ORF III|orf2i
+TVSP|ORFSP|ORF SPORT +|orfsportplus
+TVSP|OE24TV|oe24.TV|oe24tv
+TVSP|PULS4|PULS 4|puls4
+TVSP|SF1|SRF 1|srf1
+TVSP|STTV|STAR TV|startv
+TVSP|SF2|SRF zwei|srfzwei
+TVSP|3PLUS|3+|3plus
+TVSP|PULS8|PULS acht|pulsacht
+TVSP|NL1|NPO 1|npo1
+TVSP|NL2|NPO 2|npo2
+TVSP|NL3|NPO 3|npo3
+TVSP|DR1|DR1|dr1
+TVSP|BE1|Belgien 1|belgien1
+TVSP|TV2|TV2|tv2
+TVSP|TV5|TV5 Monde|tv5monde
+TVSP|CIN|Sky Cinema|skycinema
+TVSP|CIN1|Sky Cinema+1|skycinemaplus1
+TVSP|CIN24|Sky Cinema+24|skycinemaplus24
+TVSP|SKY-F|Sky Family|skyfamily
+TVSP|SKY-A|Sky Action|skyaction
+TVSP|SKY-C|Sky Comedy|skycomedy
+TVSP|SKY-E|Sky Emotion|skyemotion
+TVSP|SKY-N|Sky Nostalgie|skynostalgie
+TVSP|SKY-H|Sky Hits HD|skyhits
+TVSP|TNT-F|TNT Film|tntfilm
+TVSP|DCM|Disney Cinemagic (HD)|disneycinemagic
+TVSP|KINOW|KinoweltTV|kinowelttv
+TVSP|SKY-S|Sky select|skyselect
+TVSP|BLUM|Blue Movie|bluemovie
+TVSP|BLUM2|Blue Movie 2|bluemovie2
+TVSP|BLUM3|Blue Movie 3|bluemovie3
+TVSP|BULI|Sky Sport Bundesliga|skysportbundesliga
+TVSP|HDSPO|Sky Sport HD 1|skysport1
+TVSP|SHD2|Sky Sport HD 2|skysport2
+TVSP|SPO-A|Sky Sport Austria|skysportaustria
+TVSP|SKY1|Sky 1|sky1
+TVSP|SKYAT|Sky Atlantic HD|skyatlantic
+TVSP|SKY-K|Sky Krimi|skykrimi
+TVSP|ARTS|Sky Arts HD|skyarts
+TVSP|AXN|AXN|axn
+TVSP|UNIVE|Universal Channel HD|universalchannel
+TVSP|HISHD|History HD|history
+TVSP|SP-GE|Spiegel Geschichte|spiegelgeschichte
+TVSP|MOVTV|Motorvision TV|motorvisiontv
+TVSP|HDDIS|Discovery HD|discovery
+TVSP|N-GHD|Nat Geo HD|natgeo
+TVSP|N-GW|NAT GEO WILD|natgeowild
+TVSP|RTL-C|RTL Crime|rtlcrime
+TVSP|13TH|13th Street Universal|13thstreetuniversal
+TVSP|SCIFI|Syfy|syfy
+TVSP|FOX|FOX|fox
+TVSP|TNT-S|TNT Serie|tntserie
+TVSP|TNT-C|TNT Comedy|tntcomedy
+TVSP|AETV|A&E|aande
+TVSP|RTL-L|RTL Living|rtlliving
+TVSP|PASS|RTL Passion|rtlpassion
+TVSP|ROM|Romance TV|romancetv
+TVSP|HEIMA|Heimatkanal|heimatkanal
+TVSP|BOOM|Boomerang|boomerang
+TVSP|C-NET|Cartoon Network|cartoonnetwork
+TVSP|DXD|Disney XD|disneyxd
+TVSP|DJUN|Disney Junior|disneyjunior
+TVSP|JUNIO|Junior|junior
+TVSP|E!|E! Entertainment|eentertainment
+TVSP|GOLD|Goldstar TV|goldstartv
+TVSP|CLASS|Classica|classica
+TVSP|BUTV|Beate-Uhse.TV|beateuhsetv
+TVSP|ADULT|Adult Channel|adultchannel
+TVSP|APLAN|Animal Planet|animalplanet
+TVSP|BBC-E|BBC Entertainment|bbcentertainment
+TVSP|GUSTO|Bon Gusto|bongusto
+TVSP|DWF|Wetter.com TV|wettercomtv
+TVSP|FATV|Fashion TV|fashiontv
+TVSP|GEO|GEO Television|geotelevision
+TVSP|LAUNE|Gute Laune TV|gutelaunetv
+TVSP|JUKE|Jukebox|jukebox
+TVSP|LUSTP|LUST PUR|lustpur
+TVSP|MEZZO|Mezzo|mezzo
+TVSP|MOTOR|Motors TV|motorstv
+TVSP|MTV-B|MTV Base|mtvbase
+TVSP|MTV-D|MTV Dance|mtvdance
+TVSP|MTV-H|MTV Hits|mtvhits
+TVSP|N-GP|Nat Geo People HD|natgeopeople
+TVSP|NAUCH|Nautical Channel|nauticalchannel
+TVSP|PBOY|Playboy TV|playboytv
+TVSP|K1CLA|kabel eins classics|kabeleinsclassics
+TVSP|SAT1E|SAT.1 emotions|sat1emotions
+TVSP|PRO7F|ProSieben Fun|prosiebenfun
+TVSP|RCK|RCK TV|rcktv
+TVSP|SILVE|Silverline|silverline
+TVSP|SONY|Sony Entertainment Television|sonyentertainmenttelevision
+TVSP|SPTVW|Spiegel TV Wissen|spiegeltvwissen
+TVSP|TRACE|Trace TV|tracetv

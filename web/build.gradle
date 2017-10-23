@@ -1,0 +1,23 @@
+plugins {
+    id 'com.devsoap.plugin.vaadin' version '1.2.4'
+}
+
+jar {
+    baseName 'jonglisto-web'
+
+    from('src/main/java') {
+        include '**/*.properties'
+    }
+}
+
+vaadin {
+    version '8.1.5'
+    manageDependencies true
+    manageRepositories true
+    push true
+    logToConsole true
+}
+
+vaadinCompile {
+    manageWidgetset false
+}

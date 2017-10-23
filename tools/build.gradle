@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id "org.xtext.xtend" version '1.0.18'
+}
+
+repositories {
+    jcenter()
+}
+
+sourceSets {
+    main.xtendOutputDir = 'src/main/xtend-gen'
+    main.java.srcDirs += ['src/main/xtend-gen']
+}
+
+dependencies {
+    compile "com.google.code.gson:gson:2.8.1"
+    compile "org.eclipse.xtend:org.eclipse.xtend.lib:2.12.0"
+    compile "com.google.guava:guava:23.0"
+    compile "commons-cli:commons-cli:1.4"
+    compile "org.apache.commons:commons-lang3:3.6"
+    compile "org.eclipse.xtend:org.eclipse.xtend.lib:2.12.0"
+}
+

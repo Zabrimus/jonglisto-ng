@@ -1,0 +1,210 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'eclipse-wtp'
+    id "org.xtext.xtend" version '1.0.18'
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+apply from: "gradle/dependencies.gradle"
+
+configurations.all {
+   exclude group:"com.vaadin", module: "vaadin-client"
+   exclude group:"com.vaadin", module: "vaadin-client-compiler"
+}
+
+configurations {
+    embeddedJetty {
+        transitive = false
+    }
+}
+
+dependencies {
+    runtime libs.jcl_over_slf4j
+
+    compileOnly "javax.servlet:javax.servlet-api:3.1.0"
+
+    compile libs.guava
+    compile libs.slf4j
+    compile libs.xtend
+
+    compile project(':widgets')
+    compile project(':annotation')
+    compile project(':common')
+    compile project(':web')
+    compile project(':svdrp')
+    compile project(':database')
+
+    runtime 'com.vaadin.external.atmosphere:atmosphere-runtime:2.4.11.vaadin2'
+
+    compileOnly('org.eclipse.jetty:jetty-runner:9.4.7.v20170914') {
+        transitive = false
+    }
+
+    embeddedJetty('org.eclipse.jetty:jetty-runner:9.4.7.v20170914') {
+        transitive = false
+    }
+
+    embeddedJetty('org.eclipse.jetty.websocket:websocket-server:9.4.7.v20170914') {
+        transitive = false
+    }
+}
+
+// precompile addon widgets
+task prepareWidgets(dependsOn: ':widgets:build') {
+}
+
+eclipse {
+    classpath {
+        plusConfigurations += [ configurations.embeddedJetty ]
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'war'
+    apply plugin: 'org.xtext.xtend'
+    apply plugin: 'eclipse-wtp'
+
+    repositories {
+        jcenter()
+        mavenCentral()
+
+        maven {
+            url "http://maven.vaadin.com/vaadin-addons"
+        }
+    }
+
+    sourceSets {
+        main.xtendOutputDir = 'src/main/xtend-gen'
+        main.java.srcDirs += ['src/main/xtend-gen', 'src/main/resources', 'src/main/java']
+    }
+}
+
+project(':widgets') {
+    apply plugin: 'war'
+
+    dependencies {
+        compile libs.vaadinServer
+        compile libs.xtend
+        compile libs.slf4j
+
+        compile addons.scaleimage
+        compile addons.messagebox
+
+        providedCompile "com.vaadin:vaadin-client:8.1.5"
+        providedCompile "com.vaadin:vaadin-client-compiler:8.1.5"
+    }
+}
+
+project(':annotation') {
+    dependencies {
+        compile libs.xtend
+        compile libs.slf4j
+        compile libs.guava
+    }
+}
+
+project(':common') {
+    dependencies {
+        compile libs.xtend
+        compile libs.gson
+        compile libs.guava
+        compile libs.commons
+        compile libs.slf4j
+
+        compile project(':annotation')
+    }
+}
+
+project(':svdrp') {
+    dependencies {
+        compile libs.xtend
+        compile libs.guava
+        compile libs.commons
+        compile libs.slf4j
+
+        compile project(':annotation')
+        compile project(':common')
+    }
+}
+
+project(':database') {
+    dependencies {
+        compile libs.xtend
+        compile libs.guava
+        compile libs.commons
+        compile libs.slf4j
+        compile libs.juli
+        compile libs.tomjdbc
+        compile libs.sql2o
+        compile libs.mysqljdbc
+
+        compile(libs.tomjdbc) {
+           transitive = false
+        }
+
+        compile project(':annotation')
+        compile project(':common')
+    }
+}
+
+project(':web') {
+    dependencies {
+        compile project(':annotation')
+        compile project(':common')
+        compile project(':svdrp')
+        compile project(':widgets')
+        compile project(':database')
+
+        compile libs.vaadinServer
+        compile libs.vaadinThemes
+        compile libs.vaadinClient
+        compile libs.shirocore
+        compile libs.shiroweb
+        compile libs.logback
+        compile libs.sanitizer
+        compile libs.guava
+        compile libs.slf4j
+        compile libs.xtend
+
+        compile addons.vicons
+
+        compile(addons.scaleimage) {
+            transitive = false
+        }
+
+        compile(addons.messagebox) {
+            transitive = false
+        }
+
+        compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
+    }
+}
+
+task standaloneWar(type: War) {
+    from "build/classes/java/main"
+    include "starter/"
+    exclude "vdr"
+
+    delete 'build/extracted-jetty'
+
+    copy {
+        from configurations.embeddedJetty.collect {
+            project.zipTree(it)
+        }
+        into 'build/extracted-jetty'
+    }
+
+    from 'build/extracted-jetty'
+    include '**'
+
+    manifest { attributes 'Main-Class': 'starter.JettyStarter' }
+}
+
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '4.1'
+}

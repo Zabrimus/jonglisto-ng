@@ -1,0 +1,90 @@
+13th Street (S)|13th Street Universal
+13th Street HD|13th Street Universal
+13th Street|13th Street Universal
+ARD-alpha|BR Alpha
+AXN Action|AXN
+Auto Motor und Sport TV HD|AutoMotorSportChannel|Auto Motor Sport
+BBC HD|BBC Entertainment
+BLUE MOVIE 1|Blue Movie
+BR Fernsehen Nord|B3|BR Nord
+BR Fernsehen Süd HD|B3|BR Süd
+BR Fernsehen Süd|B3|BR Süd
+Bloomberg|BloombergTV|Bloomberg Europe TV
+CNN International HD|CNN
+CNN|CNN International
+DELUXE MUSIC HD|DELUXE MUSIC TV
+DELUXE MUSIC|DELUXE MUSIC TV
+Das Erste HD|ARD
+Das Erste|ARD
+Deutsches Wetter Fernsehen|Wetter Fernsehen|DW (Europe)
+Discovery Channel (S)|Disney Channel
+Discovery Channel|Discovery HD
+Discovery HD (S)|Discovery Channel
+Discovery HD|Discovery Channel
+Disney HD|Disney Channel
+Disney SD|Disney Channel
+E! Entertainment|E! Entertainment Television
+EUROSPORT 1|EUROSPORT
+Eurosport1 HD|EUROSPORT
+Extreme Sports|Extreme Sports Channel
+Fox HD (S)|FOX Channel
+Fox HD|FOX Channel
+Fox Serie (S)|FOX Channel|FOX
+Fox Serie|FOX Channel|FOX
+H2D Handshake 2 Deutschland|Handshake 2 Deutschland
+HISTORY|History Channel
+HSE24 HD|Home Shopping Europe
+HSE24|Home Shopping Europe
+History HD|History Channel
+MDR S-ANHALT|MDR Sachsen-Anhalt|MDR
+MDR S-Anhalt|MDR Sachsen-Anhalt|MDR
+MDR Sachsen|MDR
+MDR Thüringen|MDR
+Motorvision|Motorvision TV|MOTORVISION TV
+NDR FS HH|NDR HH|NDR
+NDR FS MV|NDR MV|NDR
+NDR FS NDS|NDR NI|NDR
+NDR FS SH|NDR SH|NDR
+NDR Niedersachsen HD|NDR NI|NDR
+Nat Geo Wild HD|National Geographic Wild
+NatGeo HD (S)|National Geographic
+NatGeo HD|National Geographic
+NatGeo Wild|National Geographic Wild
+National Geographic (S)|Nat Geo HD
+National Geographic|Nat Geo HD
+Nickelodeon HD|Nick
+Nitro HD|RTL Nitro
+Nitro|RTL Nitro
+QVC Beauty|QVC Beauty & Style
+RTL Television|RTL
+SONY CHANNEL|Sony Entertainment|Sony Entertainment Television
+SWR BW HD|SWR
+SWR Fernsehen BW|SWR BW|SWR
+SWR Fernsehen RP|SWR RP|SWR
+Silverline Movie Channel|Silverline
+Sky Cinema Action HD|Sky Action|SKY Action
+Sky Cinema Action|Sky Action|SKY Action
+Sky Cinema Comedy|SKY Comedy|Sky Comedy
+Sky Cinema Emotion|SKY Emotion|Sky Emotion
+Sky Cinema Nostalgie|Sky Nostalgie|SKY Nostalgie
+Super RTL HD|S RTL
+Super RTL|S RTL
+SyFy HD|SCI FI
+Syfy (S)|SCI FI
+Syfy|SCI FI
+VIVA/COMEDY CENTRAL HD|VIVA|Comedy Central
+VIVA/COMEDY CENTRAL|VIVA|Comedy Central
+WDR Düsseldorf|WDR
+WDR Essen|WDR
+WDR Köln HD|WDR
+WDR Köln|WDR
+Welt der Wunder|Welt der Wunder TV
+auto motor und sport channel|AutoMotorSportChannel|Auto Motor Sport
+euronews (D)|euronews|EURONEWS
+hr-fernsehen HD|HR|H3
+hr-fernsehen|HR|H3
+kabel eins HD|Kabel
+kabel eins|Kabel
+rbb Berlin|RBB
+rbb Brandenburg|RBB
+sportdigital|sportdigital.tv

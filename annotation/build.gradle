@@ -1,0 +1,4 @@
+jar {
+    baseName 'jonglisto-annotation'
+}
+

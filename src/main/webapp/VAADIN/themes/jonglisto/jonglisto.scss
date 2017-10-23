@@ -1,0 +1,41 @@
+$v-focus-style: none;
+
+@import "../valo/valo.scss";
+
+@mixin jonglisto {
+    @include valo;
+
+    /* Menubar styles */
+    .v-menubar {
+    }
+  
+    .v-menubar-menuitem {
+    }
+
+    .v-menubar-menuitem:hover {
+    }
+
+    .v-menubar-menuitem-selected {
+    }
+                        
+    .v-menubar-menuitem-highlight {
+        background-color: #6475ca !important; 
+        color: white !important;
+    }
+
+    .v-button-epg-now, 
+    .v-button-epg-time, 
+    .v-button-epg-channel {
+        margin-right: 20px;
+    }
+
+    .v-csslayout-epg-now, 
+    .v-csslayout-epg-time, 
+    .v-csslayout-epg-channel {
+        margin-right: 20px;
+    }   
+
+    .v-select-epg-type {
+        margin-right: 20px;
+    }
+}

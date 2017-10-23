@@ -1,0 +1,85 @@
+package vdr.jonglisto.model
+
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.List
+import java.util.Map
+import java.util.regex.Pattern
+import org.eclipse.xtend.lib.annotations.Accessors
+import org.eclipse.xtend.lib.annotations.EqualsHashCode
+import org.eclipse.xtend.lib.annotations.ToString
+import org.apache.commons.lang3.StringUtils
+
+@Accessors
+@EqualsHashCode
+@ToString
+class Epg extends BaseData {
+    private String channelId
+    private String eventId
+    private long startTime
+    private long duration
+    private String title
+    private String shortText
+    private String description
+    private String parentalRating
+    private Long vps
+    private int priority
+    private int lifetime
+    private String aux
+
+    private String genre
+    private String category
+    private Map<String, String> custom = new HashMap<String, String>
+
+    private String season
+    private String part
+    private String parts
+
+    // saves the raw data without the description, if someone wants to edit the epg data
+    private List<String> rawData = new ArrayList<String>
+
+    def void addData(String d) {
+        rawData.add(d)
+    }
+
+    def getCustom(String header) {
+        return custom.get(header)
+    }
+
+    def findPattern(Pair<Pattern, Integer> pattern) {
+        var result = ""
+
+        if (pattern !== null && pattern.key !== null && description !== null) {
+            val m = pattern.key.matcher(description)
+            if (m.find) {
+                result = m.group(pattern.value) ?: ""
+            }
+        }
+
+        return result.trim
+    }
+
+    def findPattern(EpgCustomColumn column) {
+        if (StringUtils.isEmpty(column.output)) {
+            custom.put(column.header, "")
+            return
+        }
+
+        var result = column.output
+
+        if (column.pattern !== null && description !== null) {
+            val m = column.pattern.matcher(description)
+            if (m.find) {
+                for (var i = 0; i <= m.groupCount; i++) {
+                    result = result.replace("${" + i + "}", m.group(i))
+                }
+
+                custom.put(column.header, result)
+            } else {
+                custom.put(column.header, "")
+            }
+        } else {
+            custom.put(column.header, "")
+        }
+    }
+}

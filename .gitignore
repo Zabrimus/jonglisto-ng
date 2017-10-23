@@ -1,0 +1,10 @@
+bin
+.gradle
+*.class
+.classpath
+.project
+*._trace
+*.xtendbin
+xtend-gen
+.settings
+
