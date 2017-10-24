@@ -52,6 +52,10 @@ dependencies {
     }
 }
 
+xtext {
+    version = '$versions.xtend'
+}
+
 // precompile addon widgets
 task prepareWidgets(dependsOn: ':widgets:build') {
 }
