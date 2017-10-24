@@ -1,3 +1,13 @@
+pluginManagement {
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.namespace == 'com.google.guava') {
+                useModule('com.google.guava:guava:$versions.guava')
+            }
+        }
+    }
+}
+
 include 'annotation'
 include 'common'
 include 'svdrp'
@@ -6,4 +16,3 @@ include 'web'
 include 'widgets'
 
 rootProject.name = 'jonglisto-ng'
-
