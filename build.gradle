@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'war'
     id 'eclipse-wtp'
-    id "org.xtext.xtend" version '1.0.18'
+    id "org.xtext.xtend" version '1.0.19'
 }
 
 sourceCompatibility = "1.8"
