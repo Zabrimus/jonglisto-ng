@@ -2,6 +2,7 @@ package vdr.jonglisto.web.ui
 
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Layout
+import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.db.Database
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.ui.component.SearchTimerEpgdGrid
@@ -19,6 +20,11 @@ class SearchTimerEpgdView extends BaseView {
     }
 
     protected override createMainComponents() {
+        // sanity check
+        if (!Configuration.get.isDatabaseConfigured) {
+            return
+        }
+
         horizontalLayout[
             button(messages.searchtimerRefresh) [
                 icon = VaadinIcons.REFRESH

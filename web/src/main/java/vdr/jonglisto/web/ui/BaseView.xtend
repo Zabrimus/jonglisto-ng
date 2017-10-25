@@ -5,13 +5,14 @@ import com.vaadin.icons.VaadinIcons
 import com.vaadin.navigator.View
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
 import com.vaadin.server.VaadinSession
-import com.vaadin.ui.Alignment
+import com.vaadin.ui.Button
 import com.vaadin.ui.ComboBox
 import com.vaadin.ui.VerticalLayout
 import com.vaadin.ui.themes.ValoTheme
 import java.util.Locale
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.VDR
+import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
@@ -30,6 +31,9 @@ abstract class BaseView extends VerticalLayout implements View {
     protected var Messages messages
 
     var ComboBox<String> selectVdr
+    private Button epgsearchButton
+
+    private BUTTON currentView
 
     new(BUTTON selectedButton) {
         locale = VaadinSession.current.locale
@@ -40,6 +44,8 @@ abstract class BaseView extends VerticalLayout implements View {
         createMainComponents()
 
         setSizeFull
+
+        currentView = selectedButton
     }
 
     abstract protected def void createMainComponents()
@@ -86,14 +92,18 @@ abstract class BaseView extends VerticalLayout implements View {
                 addClickListener(s | { navigator.navigateTo(MainUI.TIMER_VIEW) })
             ]
 
-            button(messages.menuSearchTimerEpgd) [
-                icon = VaadinIcons.CLOCK
-                styleName = (if (selectedButton == BUTTON.EPGD) ValoTheme.BUTTON_PRIMARY else "")
-                addClickListener(s | { navigator.navigateTo(MainUI.SEARCHTIMER_EPGD_VIEW) })
-            ]
+            // Show the button only, if database is configured
+            if (Configuration.get.isDatabaseConfigured) {
+                button(messages.menuSearchTimerEpgd) [
+                    icon = VaadinIcons.CLOCK
+                    styleName = (if (selectedButton == BUTTON.EPGD) ValoTheme.BUTTON_PRIMARY else "")
+                    addClickListener(s | { navigator.navigateTo(MainUI.SEARCHTIMER_EPGD_VIEW) })
+                ]
+            }
 
-            button(messages.menuSearchTimerEpgsearch) [
+            epgsearchButton = button(messages.menuSearchTimerEpgsearch) [
                 icon = VaadinIcons.CLOCK
+                enabled = false // disabled per default
                 styleName = (if (selectedButton == BUTTON.EPGSEARCH) ValoTheme.BUTTON_PRIMARY else "")
                 addClickListener(s | { navigator.navigateTo(MainUI.SEARCHTIMER_EPGSEARCH_VIEW) })
             ]
@@ -121,26 +131,6 @@ abstract class BaseView extends VerticalLayout implements View {
                 styleName = (if (selectedButton == BUTTON.LOGOUT) ValoTheme.BUTTON_PRIMARY else "")
                 addClickListener(s | { (UI as MainUI).doLogout })
             ]
-
-            /*
-            val lmenu = menuBar [
-                menuItem(messages.menuEpg, VaadinIcons.NEWSPAPER, [navigator.navigateTo(MainUI.EPG_VIEW)])
-                menuItem(messages.menuTimer, VaadinIcons.CLOCK, [navigator.navigateTo(MainUI.TIMER_VIEW)])
-                menuItem(messages.menuSearchTimerEpgd, VaadinIcons.CLOCK, [navigator.navigateTo(MainUI.SEARCHTIMER_EPGD_VIEW)])
-                menuItem(messages.menuSearchTimerEpgsearch, VaadinIcons.CLOCK, [navigator.navigateTo(MainUI.SEARCHTIMER_EPGSEARCH_VIEW)])
-                menuItem(messages.menuRecordings, VaadinIcons.FILM, [navigator.navigateTo(MainUI.RECORDING_VIEW)])
-                menuItem(messages.menuOsd, VaadinIcons.LAPTOP, [navigator.navigateTo(MainUI.OSD_VIEW)])
-                menuItem(messages.channelConfig, VaadinIcons.COG, [navigator.navigateTo(MainUI.CHANNEL_CONFIG_VIEW)])
-            ]
-
-            val rmenu = menuBar [
-                menuItem(messages.menuLogout, VaadinIcons.EXIT, [(UI as MainUI).doLogout])
-            ]
-
-            it.setComponentAlignment(selectVdr, Alignment.MIDDLE_LEFT)
-            it.setComponentAlignment(lmenu, Alignment.MIDDLE_LEFT)
-            it.setComponentAlignment(rmenu, Alignment.MIDDLE_RIGHT)
-            */
         ]
 
         val sessionVdr = VaadinSession.current.getAttribute("SELECTED_VDR") as String
@@ -152,25 +142,22 @@ abstract class BaseView extends VerticalLayout implements View {
     def selectVdr(SingleSelectionEvent<String> event) {
         log.debug("Got Event: " + event +  " --> " + event.selectedItem.get)
 
-
         VaadinSession.current.setAttribute("SELECTED_VDR", event.selectedItem.get)
         changeVdr(Configuration.get.getVdr(event.selectedItem.get))
+
+        // check if epgsearch plugin is available in selectedVdr
+        if (SvdrpClient.get.isEpgsearchAvailable(event.selectedItem.get)) {
+            epgsearchButton.enabled = true
+        } else {
+            epgsearchButton.enabled = false
+            if (currentView == BUTTON.EPGSEARCH) {
+                // this view do not exists for this VDR -> change to home
+                UI.navigator.navigateTo(MainUI.MAIN_VIEW)
+            }
+        }
     }
 
     def getSelectedVdr() {
         Configuration.get.getVdr(selectVdr.selectedItem.get)
     }
-
-    /*
-    private def highlight(Object ev) {
-        val MenuItem bev = ev as MenuItem
-
-        if(previous !== null) {
-            previous.setStyleName(null);
-        }
-
-        bev.styleName = "highlight"
-        previous = bev
-    }
-    */
 }

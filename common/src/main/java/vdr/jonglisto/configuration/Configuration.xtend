@@ -76,6 +76,14 @@ class Configuration {
         loadEpgProvider
     }
 
+    public def isDatabaseConfigured() {
+        return StringUtils.isNotEmpty(dbUsername) &&
+                StringUtils.isNotEmpty(dbPassword) &&
+                StringUtils.isNotEmpty(dbDatabase) &&
+                StringUtils.isNotEmpty(dbHost) &&
+                dbPort > 0
+    }
+
     public def getEpgSeriesSeason() {
         return epgSeriesSeason -> epgSeriesSeasonGroup
     }
@@ -137,8 +145,6 @@ class Configuration {
     }
 
     public def getDbInformation() {
-        println("DB: " + #{'username' -> dbUsername ,'password' -> dbPassword, 'host' -> dbHost, 'port' -> dbPort, 'database' -> dbDatabase})
-
         return #{'username' -> dbUsername ,'password' -> dbPassword, 'host' -> dbHost, 'port' -> dbPort, 'database' -> dbDatabase}
     }
 

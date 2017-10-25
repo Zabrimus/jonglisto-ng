@@ -206,6 +206,25 @@ class SvdrpClient {
         }
     }
 
+    def isEpgsearchAvailable(String vdrName) {
+        val vdr = Configuration.get.getVdr(vdrName)
+
+        if (vdr === null) {
+            return false
+        }
+
+        if (!pingHost(vdr) || !Configuration.get.pingHost(vdr)) {
+            return false
+        }
+
+        val p = getPlugins(vdr).stream.filter(s | s.plugin == "epgsearch").findFirst
+        if (p.isPresent) {
+            return true
+        }
+
+        return false
+    }
+
     private def List<Channel> readChannels(VDR vdr) {
         return Parser.parseChannel(vdr.command("LSTC :ids :groups", 250).lines)
     }
