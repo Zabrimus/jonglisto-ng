@@ -17,13 +17,13 @@ import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.db.SearchTimerService
 import vdr.jonglisto.db.VdrService
 import vdr.jonglisto.model.Channel
-import vdr.jonglisto.model.SearchTimer
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
+import vdr.jonglisto.model.EpgdSearchTimer
 
 @Log
 class SearchTimerEditWindow extends Window {
@@ -76,7 +76,7 @@ class SearchTimerEditWindow extends Window {
     private CheckBox searchShortText
     private CheckBox searchDescription
 
-    new(Messages messages, SearchTimer timer) {
+    new(Messages messages, EpgdSearchTimer timer) {
         super()
         this.messages = messages
         closable = true
@@ -87,7 +87,7 @@ class SearchTimerEditWindow extends Window {
         createLayout(timer)
     }
 
-    def createLayout(SearchTimer timer) {
+    def createLayout(EpgdSearchTimer timer) {
         caption = createCaption(timer)
 
         val tab1 = verticalLayout [
@@ -378,11 +378,11 @@ class SearchTimerEditWindow extends Window {
         fillTimerValues(timer)
     }
 
-    private def createCaption(SearchTimer timer) {
+    private def createCaption(EpgdSearchTimer timer) {
         return  messages.searchtimerEdit
     }
 
-    private def fillTimerValues(SearchTimer timer) {
+    private def fillTimerValues(EpgdSearchTimer timer) {
         name.value = timer.name ?: ""
         active.value = timer.active ?: 0 == 1
         vps.value = timer.vps ?: 0 == 1
@@ -548,7 +548,7 @@ class SearchTimerEditWindow extends Window {
         }
     }
 
-    private def saveTimer(SearchTimer timer) {
+    private def saveTimer(EpgdSearchTimer timer) {
         var checkResult = true
 
         // check some values

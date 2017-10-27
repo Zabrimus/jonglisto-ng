@@ -14,12 +14,12 @@ import java.util.List
 import org.apache.commons.lang3.StringUtils
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.db.SearchTimerService
-import vdr.jonglisto.model.SearchTimer
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import vdr.jonglisto.model.EpgdSearchTimer
 
 @Log
 class SearchTimerEpgdGrid {
@@ -34,9 +34,9 @@ class SearchTimerEpgdGrid {
     val COL_DIRECTORY = "directory"
     val COL_ACTION = "action"
 
-    var Grid<SearchTimer> grid
+    var Grid<EpgdSearchTimer> grid
 
-    var List<SearchTimer> searchTimer
+    var List<EpgdSearchTimer> searchTimer
     val Messages messages
 
     val service = new SearchTimerService
@@ -118,7 +118,7 @@ class SearchTimerEpgdGrid {
     }
 
     def newTimer() {
-        openEditWindow(new SearchTimer)
+        openEditWindow(new EpgdSearchTimer)
     }
 
     private def createType(String type) {
@@ -183,7 +183,7 @@ class SearchTimerEpgdGrid {
         return ""
     }
 
-    private def createVdrName(SearchTimer timer) {
+    private def createVdrName(EpgdSearchTimer timer) {
         if (timer.ip !== null) {
             val vdr = Configuration.get.findVdr(timer.ip, timer.svdrp)
 
@@ -197,7 +197,7 @@ class SearchTimerEpgdGrid {
         }
     }
 
-    private def createActions(SearchTimer timer) {
+    private def createActions(EpgdSearchTimer timer) {
        val layout = cssLayout[
             button("") [
                 icon = VaadinIcons.TRASH
@@ -221,7 +221,7 @@ class SearchTimerEpgdGrid {
         return layout
     }
 
-    private def openEditWindow(SearchTimer timer) {
+    private def openEditWindow(EpgdSearchTimer timer) {
         val w = new SearchTimerEditWindow(messages, timer)
         w.addCloseListener(new CloseListener() {
             override windowClose(CloseEvent e) {

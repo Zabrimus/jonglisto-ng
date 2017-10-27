@@ -1,8 +1,8 @@
 package vdr.jonglisto.db
 
-import vdr.jonglisto.model.SearchTimer
 
 import static vdr.jonglisto.util.Utils.*
+import vdr.jonglisto.model.EpgdSearchTimer
 
 class SearchTimerService {
 
@@ -13,7 +13,7 @@ class SearchTimerService {
         using(Database.get.open) [
             return createQuery("select st.*, v.name as vdrname, v.ip as ip, v.svdrp as svdrp from searchtimers st left join vdrs v on v.uuid = st.vdruuid where st.state <> 'D'") //
                 .throwOnMappingFailure(false) //
-                .executeAndFetch(SearchTimer)
+                .executeAndFetch(EpgdSearchTimer)
         ]
     }
 
@@ -33,7 +33,7 @@ class SearchTimerService {
         ]
     }
 
-    public def save(SearchTimer timer) {
+    public def save(EpgdSearchTimer timer) {
         using(Database.get.beginTransaction) [
             if (timer.id > 0) {
                 val sql = "update searchtimers " + //

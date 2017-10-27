@@ -103,7 +103,7 @@ abstract class BaseView extends VerticalLayout implements View {
 
             epgsearchButton = button(messages.menuSearchTimerEpgsearch) [
                 icon = VaadinIcons.CLOCK
-                enabled = false // disabled per default
+                visible = false // disabled per default
                 styleName = (if (selectedButton == BUTTON.EPGSEARCH) ValoTheme.BUTTON_PRIMARY else "")
                 addClickListener(s | { navigator.navigateTo(MainUI.SEARCHTIMER_EPGSEARCH_VIEW) })
             ]
@@ -147,9 +147,9 @@ abstract class BaseView extends VerticalLayout implements View {
 
         // check if epgsearch plugin is available in selectedVdr
         if (SvdrpClient.get.isEpgsearchAvailable(event.selectedItem.get)) {
-            epgsearchButton.enabled = true
+            epgsearchButton.visible = true
         } else {
-            epgsearchButton.enabled = false
+            epgsearchButton.visible = false
             if (currentView == BUTTON.EPGSEARCH) {
                 // this view do not exists for this VDR -> change to home
                 UI.navigator.navigateTo(MainUI.MAIN_VIEW)

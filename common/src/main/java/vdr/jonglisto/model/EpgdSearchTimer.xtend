@@ -7,7 +7,7 @@ import org.eclipse.xtend.lib.annotations.ToString
 @Accessors
 @EqualsHashCode
 @ToString
-class SearchTimer {
+class EpgdSearchTimer {
     private long id
     private String channelIds
     private String chexclude
