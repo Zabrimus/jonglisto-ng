@@ -17,7 +17,6 @@ import com.vaadin.ui.themes.ValoTheme
 import java.util.Collections
 import java.util.HashSet
 import java.util.List
-import org.apache.commons.lang3.StringUtils
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.EpgCustomColumn
@@ -30,6 +29,7 @@ import vdr.jonglisto.web.ui.EpgView.EPGTYPE
 import vdr.jonglisto.web.util.HtmlSanitizer
 import vdr.jonglisto.xtend.annotation.Log
 
+import static extension org.apache.commons.lang3.StringUtils.*
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
@@ -260,13 +260,13 @@ class EventGrid {
 
         builder.append("<div class='component-wrap'>")
 
-        if (StringUtils.isNotEmpty(ev.season)) {
+        if (ev.season.isNotEmpty) {
             builder.append("<div>").append(messages.epgSeason).append(": ").append(HtmlSanitizer.clean(ev.season)).append("</div>")
         }
 
-        if (StringUtils.isNotEmpty(ev.part)) {
+        if (ev.part.isNotEmpty) {
             builder.append("<div>").append(messages.epgPart).append(": ").append(HtmlSanitizer.clean(ev.part))
-            if (StringUtils.isNotEmpty(ev.parts)) {
+            if (ev.parts.isNotEmpty) {
                 builder.append(" &#47; ").append(HtmlSanitizer.clean(ev.parts))
             }
             builder.append("</div>")
@@ -434,7 +434,7 @@ class EventGrid {
         val genre = new HashSet<String>
         val dataProvider = grid.dataProvider as ListDataProvider<Epg>
 
-        dataProvider.items.stream.filter(s | StringUtils.isNotEmpty(s.genre)).map(s | s.genre).forEach(s | genre.add(s))
+        dataProvider.items.stream.filter(s | s.genre.isNotEmpty).map(s | s.genre).forEach(s | genre.add(s))
         genreFilter.items = genre.sort
     }
 
@@ -464,7 +464,7 @@ class EventGrid {
         val categories = new HashSet<String>
         val dataProvider = grid.dataProvider as ListDataProvider<Epg>
 
-        dataProvider.items.stream.filter(s | StringUtils.isNotEmpty(s.category)).map(s | s.category).forEach(s | categories.add(s))
+        dataProvider.items.stream.filter(s | s.category.isNotEmpty).map(s | s.category).forEach(s | categories.add(s))
         categoryFilter.items = categories.sort
     }
 

@@ -10,7 +10,6 @@ import java.util.Map
 import java.util.Optional
 import java.util.regex.Pattern
 import javax.xml.bind.JAXBContext
-import org.apache.commons.lang3.StringUtils
 import vdr.jonglisto.configuration.jaxb.Jonglisto
 import vdr.jonglisto.configuration.jaxb.ObjectFactory
 import vdr.jonglisto.model.EpgCustomColumn
@@ -20,6 +19,8 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.util.ClasspathFileReader
 import vdr.jonglisto.util.Utils
 import vdr.jonglisto.xtend.annotation.Log
+
+import static extension org.apache.commons.lang3.StringUtils.*
 
 @Log
 class Configuration {
@@ -77,10 +78,10 @@ class Configuration {
     }
 
     public def isDatabaseConfigured() {
-        return StringUtils.isNotEmpty(dbUsername) &&
-                StringUtils.isNotEmpty(dbPassword) &&
-                StringUtils.isNotEmpty(dbDatabase) &&
-                StringUtils.isNotEmpty(dbHost) &&
+        return dbUsername.isNotEmpty && //
+                dbPassword.isNotEmpty && //
+                dbDatabase.isNotEmpty && //
+                dbHost.isNotEmpty && //
                 dbPort > 0
     }
 
@@ -129,7 +130,7 @@ class Configuration {
     }
 
     public def findVdr(String ip, int port) {
-        if (StringUtils.isNotEmpty(ip)) {
+        if (ip.isNotEmpty) {
             return vdrs.values.stream.filter(v | v.ip == ip && v.port == port).findFirst
         } else {
             return Optional.empty

@@ -8,7 +8,8 @@ import java.util.regex.Pattern
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.EqualsHashCode
 import org.eclipse.xtend.lib.annotations.ToString
-import org.apache.commons.lang3.StringUtils
+
+import static extension org.apache.commons.lang3.StringUtils.*
 
 @Accessors
 @EqualsHashCode
@@ -60,7 +61,7 @@ class Epg extends BaseData {
     }
 
     def findPattern(EpgCustomColumn column) {
-        if (StringUtils.isEmpty(column.output)) {
+        if (!column.output.isNotEmpty) {
             custom.put(column.header, "")
             return
         }

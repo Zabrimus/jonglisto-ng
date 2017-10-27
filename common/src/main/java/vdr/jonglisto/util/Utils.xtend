@@ -1,13 +1,14 @@
 package vdr.jonglisto.util
 
 import java.io.Closeable
-import org.apache.commons.lang3.StringUtils
 import vdr.jonglisto.configuration.Configuration
+
+import static extension org.apache.commons.lang3.StringUtils.*
 
 class Utils {
 
     static def normalizeChannelName(String name) {
-        return StringUtils.stripAccents(name) //
+        return name.stripAccents //
         .replaceAll("\\&", "and") //
         .replaceAll("\\+", "plus") //
         .replaceAll("\\*", "star") //
