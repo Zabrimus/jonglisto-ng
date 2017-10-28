@@ -21,6 +21,7 @@ import vdr.jonglisto.model.Timer
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.model.VdrPlugin
 import vdr.jonglisto.xtend.annotation.Log
+import vdr.jonglisto.model.EpgsearchSearchTimer
 
 @Log
 class SvdrpClient {
@@ -196,6 +197,23 @@ class SvdrpClient {
 
     def void updateTimer(VDR vdr, Timer timer) {
         vdr.command("UPDT " + timer.toVdrString, 250)
+    }
+
+    def getEpgsearchSearchTimerList(VDR vdr) {
+        println("Get Epgsearch from " + vdr)
+
+        try {
+            val timer = new ArrayList<EpgsearchSearchTimer>
+            val response = vdr.command("PLUG epgsearch LSTS", 900)
+            response.lines.stream.forEach(s | timer.add(Parser.parseEpgsearchList(s)))
+
+            return timer
+        } catch (Exception e) {
+            log.debug("Exception: " + e, e)
+
+            // no search timers defined or host down
+            return Collections.emptyList
+        }
     }
 
     def processCommand(VDR vdr, String command) {
