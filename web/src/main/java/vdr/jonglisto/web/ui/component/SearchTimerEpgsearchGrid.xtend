@@ -5,11 +5,13 @@ import com.vaadin.ui.Button
 import com.vaadin.ui.Grid
 import com.vaadin.ui.Grid.SelectionMode
 import com.vaadin.ui.Notification
+import com.vaadin.ui.UI
+import com.vaadin.ui.Window.CloseEvent
+import com.vaadin.ui.Window.CloseListener
 import com.vaadin.ui.renderers.ComponentRenderer
 import com.vaadin.ui.themes.ValoTheme
 import java.util.List
 import org.apache.commons.lang3.StringUtils
-import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 import vdr.jonglisto.model.VDR
@@ -210,8 +212,7 @@ class SearchTimerEpgsearchGrid {
     }
 
     private def openEditWindow(EpgsearchSearchTimer timer) {
-        /*
-        val w = new SearchTimerEditWindow(messages, timer)
+        val w = new SearchTimerEpgsearchEditWindow(vdr, messages, timer)
         w.addCloseListener(new CloseListener() {
             override windowClose(CloseEvent e) {
                 refreshSearchTimer
@@ -219,6 +220,5 @@ class SearchTimerEpgsearchGrid {
         })
 
         UI.current.addWindow(w)
-        */
     }
 }
