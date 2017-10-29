@@ -222,7 +222,7 @@ class SearchTimerEpgdGrid {
     }
 
     private def openEditWindow(EpgdSearchTimer timer) {
-        val w = new SearchTimerEditWindow(messages, timer)
+        val w = new SearchTimerEpgdEditWindow(messages, timer)
         w.addCloseListener(new CloseListener() {
             override windowClose(CloseEvent e) {
                 refreshSearchTimer

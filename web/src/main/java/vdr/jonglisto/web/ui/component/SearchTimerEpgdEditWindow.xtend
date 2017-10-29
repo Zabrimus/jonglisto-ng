@@ -26,7 +26,7 @@ import static vdr.jonglisto.web.xtend.UIBuilder.*
 import vdr.jonglisto.model.EpgdSearchTimer
 
 @Log
-class SearchTimerEditWindow extends Window {
+class SearchTimerEpgdEditWindow extends Window {
 
     val Messages messages
     val service = new SearchTimerService
