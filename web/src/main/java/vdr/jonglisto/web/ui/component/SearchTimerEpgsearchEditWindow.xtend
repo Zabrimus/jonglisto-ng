@@ -1,18 +1,27 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.ui.Alignment
 import com.vaadin.ui.Window
+import com.vaadin.ui.themes.ValoTheme
 import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import com.vaadin.ui.CheckBox
 
 @Log
 class SearchTimerEpgsearchEditWindow extends Window {
 
     val Messages messages
     var VDR vdr
+
+    CheckBox searchCase
+
+    CheckBox useTime
+
+    CheckBox useDuration
 
     new(VDR vdr, Messages messages, EpgsearchSearchTimer timer) {
         super()
@@ -29,197 +38,262 @@ class SearchTimerEpgsearchEditWindow extends Window {
     def createLayout(EpgsearchSearchTimer timer) {
         caption = createCaption(timer)
 
-        val layout = verticalLayout[
-            textField("Suche") [
+        val tab1 = verticalLayout[
+            horizontalLayout(it) [
+                textField(messages.searchtimerSearch) [
+                ]
+
+                comboBox(#[messages.searchtimerPattern, messages.searchtimerAllWords, messages.searchtimerOneWord, messages.searchtimerExact, messages.searchtimerRegex, messages.searchtimerFuzzy]) [
+                    caption = messages.searchtimerSearch
+                ]
+
+                textField(messages.searchtimerTolerance) [
+                ]
+
+                searchCase = checkbox(messages.searchtimerCasesensitiv) [
+                ]
+
+                setComponentAlignment(searchCase, Alignment.MIDDLE_CENTER);
             ]
 
-            comboBox(#["Ausdruck", "Alle Worte", "Ein Wort", "exakt", "regulärer Ausdruck", "unscharf"]) [
-                caption = "Suchmodus"
+            horizontalLayout(it) [
+                label(messages.searchtimerContains) [
+                ]
+
+                checkbox(messages.searchtimerTitle) [
+                ]
+
+                checkbox(messages.searchtimerShorttext) [
+                ]
+
+                checkbox(messages.searchtimerDescription) [
+                ]
             ]
 
-            textField("Toleranz für unscharf") [
+            horizontalLayout(it) [
+                // TODO: Auswahllisten: plug epgsearch LSTB
+                comboBox(#[messages.searchtimerNo, messages.searchtimerSelection, messages.searchtimerAll]) [
+                    caption = messages.searchtimerUseBlacklist
+                ]
+
+                nativeSelect [
+                    caption = ""
+                    items = #["Keine Ahnung", "Was steht hier"]
+                ]
             ]
 
-            checkbox("Groß/Klein") [
+            horizontalLayout(it) [
+                comboBox(#[messages.searchtimerNo, messages.searchtimerYes, messages.searchtimerUserdefined]) [
+                    caption = messages.searchtimerUseastimer
+                ]
+
+                comboBox(#[messages.searchtimerRecord, messages.searchtimerAnnounceOsd, messages.searchtimerChangeChannel, messages.searchtimerAskchannelswitch, messages.searchtimerAnnounceEmail]) [
+                    caption = ""
+                ]
             ]
 
-            label("Zu suchen in") [
+            horizontalLayout(it) [
+                textField(messages.searchtimerFirstDay) [
+                ]
+
+                textField(messages.searchtimerLastDay) [
+                ]
             ]
 
-            checkbox("Titel") [
+            horizontalLayout(it) [
+                comboBox(#[messages.searchtimerNo, messages.searchtimerCountRecords, messages.searchtimerCountDays]) [
+                    caption = messages.searchtimerAutoDelete
+                ]
+
+                textField(messages.searchtimerAfterXRecord) [
+                ]
+
+                textField(messages.searchtimerAfterXDays) [
+                ]
+            ]
+        ]
+
+        val tab2 = verticalLayout[
+            checkbox(messages.searchtimerExtendedEpg) [
             ]
 
-            checkbox("Untertitel") [
-            ]
-
-            checkbox("Beschreibung") [
-            ]
-
-            checkbox("Verwende erweiterte EPG Infos") [
-            ]
-
-            checkbox("Ignoriere fehlende Kategorien") [
+            checkbox(messages.searchtimerIgnoreMissingCategories) [
             ]
 
             // TODO: Liste der Kategorien: PLUG epgsearch LSTE
+        ]
 
-            comboBox(#["nein", "Bereich", "Kanalgruppe", "ohne PayTV"]) [
-                caption = "Verwende Kanal"
+        val tab3 = verticalLayout[
+            comboBox(#[messages.searchtimerNo, messages.searchtimerInterval, messages.searchtimerChannelGroup, messages.searchtimerFta]) [
+                caption = messages.searchtimerUseChannel
             ]
 
             // TODO: Kanalgruppen: PLUG epgsearch LSTC
             comboBox(#["Kanalgruppe 1 ", "Kanalgruppe 2"]) [
-                caption = "Kanalgruppe"
+                caption = messages.searchtimerChannelGroup
+            ]
+        ]
+
+        val tab4 = verticalLayout [
+            horizontalLayout(it) [
+                useTime = checkbox(messages.searchtimerUseTime) [
+                ]
+
+                textField(messages.searchtimerStartAfter) [
+                ]
+
+                textField(messages.searchtimerStartBefore) [
+                ]
+
+                setComponentAlignment(useTime, Alignment.MIDDLE_CENTER);
             ]
 
-            checkbox("Verwende Uhrzeit") [
+            horizontalLayout(it) [
+                useDuration = checkbox(messages.searchtimerUseDuration) [
+                ]
+
+                textField(messages.searchtimerMinDuration) [
+                ]
+
+                textField(messages.searchtimerMaxDuration) [
+                ]
+
+                setComponentAlignment(useDuration, Alignment.MIDDLE_CENTER);
             ]
 
-            textField("Start nach") [
-            ]
+            horizontalLayout(it) [
+                checkbox(messages.searchtimerWeekdays) [
+                ]
 
-            textField("Start vor") [
-            ]
+                checkbox(messages.searchtimerStartMonday) [
+                ]
 
-            checkbox("Verwende Dauer") [
-            ]
+                checkbox(messages.searchtimerStartTuesday) [
+                ]
 
-            textField("Minimale Dauer") [
-            ]
+                checkbox(messages.searchtimerStartWednesday) [
+                ]
 
-            textField("Maximale Dauer") [
-            ]
+                checkbox(messages.searchtimerStartThursday) [
+                ]
 
-            checkbox("Verwende Wochentag") [
-            ]
+                checkbox(messages.searchtimerStartFriday) [
+                ]
 
-            checkbox("Montag") [
-            ]
+                checkbox(messages.searchtimerStartSaturday) [
+                ]
 
-            checkbox("Dienstag") [
+                checkbox(messages.searchtimerStartSunday) [
+                ]
             ]
+        ]
 
-            checkbox("Mittwoch") [
-            ]
-
-            checkbox("Donnerstag") [
-            ]
-
-            checkbox("Freitag") [
-            ]
-
-            checkbox("Samstag") [
-            ]
-
-            checkbox("Sonntag") [
-            ]
-
-            // TODO: Auswahllisten: plug epgsearch LSTB
-            comboBox(#["Nein", "Auswahl", "Alle"]) [
-                caption = "Verwende Ausschlusslisten"
-            ]
-
-            nativeSelect [
-                items = #["Keine Ahnung", "Was steht hier"]
-            ]
-
-            comboBox(#["nein", "ja", "benutzerdefiniert"]) [
-                caption = "Als Suchtimerverwenden"
-            ]
-
-            comboBox(#["Aufnehmen", "per OSD ankündigen", "nur umschalten", "ankündigen und umschalten", "per EMail ankündigen"]) [
-            ]
-
-            textField("erster Tag") [
-            ]
-
-            textField("letzter Tag") [
-            ]
-
-            comboBox(#["nein", "Anzahl Aufnahmen", "Anzahl Tage"]) [
-                caption = "Automatisch löschen"
-            ]
-
-            textField("Nach ... Aufnahmen") [
-            ]
-
-            textField("Nach ... Tagen nach erster Aufnahme:") [
-            ]
-
+        val tab5 = verticalLayout [
             // ----- Einstellungen für "nur umschalten"
-            textField("Umschalten ... Minuten vor Start") [
+            textField(messages.searchtimerSwitchMinutes) [
             ]
 
-            checkbox("Ton anschalten") [
+            checkbox(messages.searchtimerUnmute) [
             ]
+        ]
 
+        val tab6 = verticalLayout [
             // ----- Einstellungen für "umschalten und ankündigen"
-            textField("Nachfrage ... Minuten vor Start:") [
+            textField(messages.searchtimerAskSwitchMinutes) [
             ]
 
-            checkbox("Ton anschalten") [
+            checkbox(messages.searchtimerUnmute) [
             ]
+        ]
 
+        val tab7 = verticalLayout [
             // ----- Einstellungen für Aufnehmen
-            checkbox("Serienaufnahme") [
+            checkbox(messages.searchtimerRecordSeries) [
             ]
 
-            textField("Ordner") [
+            textField(messages.searchtimerDirectory) [
             ]
 
-            textField("Aufnahme nach ... Tagen löschen") [
+            horizontalLayout(it) [
+                textField(messages.searchtimerDeleteRecordDays) [
+                ]
+
+                textField(messages.searchtimerKeepRecord) [
+                ]
+
+                textField(messages.searchtimerPause) [
+                ]
             ]
 
-            textField("Behalte ... Aufnahmen: ") [
+            checkbox(messages.searchtimerAvoidRepeating) [
             ]
 
-            textField("Pause, wenn ... Aufnahmen existieren:") [
+            horizontalLayout(it) [
+                textField(messages.searchtimerAllowRepeating) [
+                ]
+
+                textField(messages.searchtimerAllowRepeatingDays) [
+                ]
             ]
 
-            checkbox("Vermeide Wiederholungen") [
-            ]
+            horizontalLayout(it) [
+                label(messages.searchtimerCompare) [
+                ]
 
-            textField("Erlaubte Wiederholungen:") [
-            ]
+                checkbox(messages.searchtimerTitle) [
+                ]
 
-            textField("Nur Wiederholungen innerhalb ... Tagen:") [
-            ]
+                checkbox(messages.searchtimerShorttext) [
+                ]
 
-            label("Vergleiche") [
-            ]
+                checkbox(messages.searchtimerDescription) [
+                ]
 
-            checkbox("Titel") [
-            ]
+                label(messages.searchtimerFuzzyDescription) [
+                ]
 
-            checkbox("Untertitel") [
-            ]
-
-            checkbox("Beschreibung") [
-            ]
-
-            textField("Minimale Übereinstimmung der Beschreibung in %:") [
+                textField("") [
+                    caption = null
+                ]
             ]
 
             // TODO: Liste der Kategorien: PLUG epgsearch LSTE
 
-            textField("Priorität:") [
+            horizontalLayout(it) [
+                textField(messages.searchtimerPriority) [
+                ]
+
+                textField(messages.searchtimerLifetime) [
+                ]
             ]
 
-            textField("Lebenszeit") [
-            ]
+            horizontalLayout(it) [
+                textField(messages.searchtimerMarginStart) [
+                ]
 
-            textField("Zeitpuffer Anfang in Minuten :") [
-            ]
-
-            textField("Zeitpuffer Ende in Minuten :") [
+                textField(messages.searchtimerMarginEnd) [
+                ]
             ]
 
             checkbox("VPS") [
             ]
         ]
 
+        val tabsheet = tabsheet[
+            addTab(tab1, messages.searchtimerConfiguration)
+            addTab(tab2, messages.searchtimerExtended)
+            addTab(tab3, messages.searchtimerChannels)
+            addTab(tab4, messages.searchtimerStartdate)
+            addTab(tab5, messages.searchtimerChannelswitch)
+            addTab(tab6, messages.searchtimerAskchannelswitch)
+            addTab(tab7, messages.searchtimerRecording)
+
+            addStyleName(ValoTheme.TABSHEET_FRAMED);
+            addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
+        ]
+
         val mainLayout = verticalLayout[
-            addComponent(layout)
+            addComponent(tabsheet)
 
             cssLayout(it) [
                 width = "100%"
