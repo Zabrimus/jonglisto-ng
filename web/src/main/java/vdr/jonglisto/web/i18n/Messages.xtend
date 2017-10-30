@@ -4,5 +4,6 @@ import vdr.jonglisto.xtend.annotation.ExtractMessages
 
 @ExtractMessages
 class Messages {
+
 }
 

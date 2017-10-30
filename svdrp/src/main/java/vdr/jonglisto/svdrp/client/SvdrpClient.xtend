@@ -246,13 +246,14 @@ class SvdrpClient {
         try {
             val result = new ArrayList<EpgsearchChannelGroup>
             val response = vdr.command("PLUG epgsearch LSTC", 900)
+
             response.lines.stream.forEach(s | result.add(Parser.parseEpgsearchChannelGroup(s)))
 
             return result
         } catch (Exception e) {
             log.debug("Exception: " + e, e)
 
-            // no categories defined or host down
+            // no channel groups defined or host down
             return Collections.emptyList
         }
     }

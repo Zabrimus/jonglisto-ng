@@ -245,7 +245,9 @@ class UIBuilder {
     static def comboBox(ComponentContainer it, List<String> items, (ComboBox<String>)=>void initializer) {
         val that = new ComboBox
         that.items = items;
-        that.selectedItem = items.get(0)
+        if (items.size > 0) {
+            that.selectedItem = items.get(0)
+        }
         it.addComponent(that)
         that.init(initializer)
         return that
@@ -254,7 +256,9 @@ class UIBuilder {
     static def comboBoxVdr(ComponentContainer it, List<VDR> items, (ComboBox<VDR>)=>void initializer) {
         val that = new ComboBox
         that.items = items;
-        that.selectedItem = items.get(0)
+        if (items.size > 0) {
+            that.selectedItem = items.get(0)
+        }
         it.addComponent(that)
         that.init(initializer)
         return that
@@ -269,7 +273,6 @@ class UIBuilder {
         return that
     }
 
-
     static def dateField(ComponentContainer it, (DateField)=>void initializer) {
         val that = new DateField
         it.addComponent(that)
@@ -278,6 +281,13 @@ class UIBuilder {
     }
 
     static def nativeSelect(ComponentContainer it, (NativeSelect<String>)=>void initializer) {
+        val that = new NativeSelect
+        it.addComponent(that)
+        that.init(initializer)
+        return that
+    }
+
+    static def nativeChannelSelect(ComponentContainer it, (NativeSelect<Channel>)=>void initializer) {
         val that = new NativeSelect
         it.addComponent(that)
         that.init(initializer)

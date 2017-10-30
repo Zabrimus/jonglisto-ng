@@ -4,6 +4,8 @@ import com.vaadin.ui.Alignment
 import com.vaadin.ui.CheckBox
 import com.vaadin.ui.Window
 import com.vaadin.ui.themes.ValoTheme
+import java.util.Collections
+import java.util.List
 import java.util.stream.Collectors
 import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.EpgsearchSearchTimer.Field
@@ -48,6 +50,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
 
                 comboBox(#[messages.searchtimerPattern, messages.searchtimerAllWords, messages.searchtimerOneWord, messages.searchtimerExact, messages.searchtimerRegex, messages.searchtimerFuzzy]) [
                     caption = messages.searchtimerSearch
+                    selectedItem = null
                 ]
 
                 textField(messages.searchtimerTolerance) [
@@ -81,6 +84,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
 
                     comboBox(#[messages.searchtimerNo, messages.searchtimerSelection, messages.searchtimerAll]) [
                         caption = messages.searchtimerUseBlacklist
+                        selectedItem = null
                     ]
 
                     listSelect [
@@ -92,10 +96,12 @@ class SearchTimerEpgsearchEditWindow extends Window {
             horizontalLayout(it) [
                 comboBox(#[messages.searchtimerNo, messages.searchtimerYes, messages.searchtimerUserdefined]) [
                     caption = messages.searchtimerUseastimer
+                    selectedItem = null
                 ]
 
                 comboBox(#[messages.searchtimerRecord, messages.searchtimerAnnounceOsd, messages.searchtimerChangeChannel, messages.searchtimerAskchannelswitch, messages.searchtimerAnnounceEmail]) [
                     caption = ""
+                    selectedItem = null
                 ]
             ]
 
@@ -110,6 +116,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
             horizontalLayout(it) [
                 comboBox(#[messages.searchtimerNo, messages.searchtimerCountRecords, messages.searchtimerCountDays]) [
                     caption = messages.searchtimerAutoDelete
+                    selectedItem = null
                 ]
 
                 textField(messages.searchtimerAfterXRecord) [
@@ -151,17 +158,39 @@ class SearchTimerEpgsearchEditWindow extends Window {
         val tab3 = verticalLayout[
             val channelGroups = SvdrpClient.get.getEpgsearchChannelGroups(vdr)
 
+            comboBox(#[messages.searchtimerNo, messages.searchtimerInterval, messages.searchtimerChannelGroup, messages.searchtimerFta]) [
+                caption = messages.searchtimerUseChannel
+                selectedItem = null
+            ]
+
+            var List<String> list
+
             if (channelGroups !== null && channelGroups.size > 0) {
-                comboBox(#[messages.searchtimerNo, messages.searchtimerInterval, messages.searchtimerChannelGroup, messages.searchtimerFta]) [
-                    caption = messages.searchtimerUseChannel
-                ]
-
-                val list = channelGroups.stream.map(s | s.name).collect(Collectors.toList)
-
-                comboBox(list) [
-                    caption = messages.searchtimerChannelGroup
-                ]
+                list = channelGroups.stream.map(s | s.name).collect(Collectors.toList)
+            } else {
+                list = Collections.emptyList
             }
+
+            comboBox(list) [
+                caption = messages.searchtimerChannelGroup
+                selectedItem = null
+            ]
+
+            horizontalLayout(it) [
+                val channelList = SvdrpClient.get.channels
+
+                nativeChannelSelect [
+                    items = channelList
+                    itemCaptionGenerator = [s | s.name]
+                    caption = messages.searchtimerFrom
+                ]
+
+                nativeChannelSelect [
+                    items = channelList
+                    itemCaptionGenerator = [s | s.name]
+                    caption = messages.searchtimerTo
+                ]
+            ]
         ]
 
         val tab4 = verticalLayout [
