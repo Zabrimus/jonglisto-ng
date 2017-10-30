@@ -1,15 +1,18 @@
 package vdr.jonglisto.web.ui.component
 
 import com.vaadin.ui.Alignment
+import com.vaadin.ui.CheckBox
 import com.vaadin.ui.Window
 import com.vaadin.ui.themes.ValoTheme
+import java.util.stream.Collectors
 import vdr.jonglisto.model.EpgsearchSearchTimer
+import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 import vdr.jonglisto.model.VDR
+import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.ui.CheckBox
 
 @Log
 class SearchTimerEpgsearchEditWindow extends Window {
@@ -71,15 +74,19 @@ class SearchTimerEpgsearchEditWindow extends Window {
             ]
 
             horizontalLayout(it) [
-                // TODO: Auswahllisten: plug epgsearch LSTB
-                comboBox(#[messages.searchtimerNo, messages.searchtimerSelection, messages.searchtimerAll]) [
-                    caption = messages.searchtimerUseBlacklist
-                ]
+                val blacklist = SvdrpClient.get.getEpgsearchSearchBlacklist(vdr)
 
-                nativeSelect [
-                    caption = ""
-                    items = #["Keine Ahnung", "Was steht hier"]
-                ]
+                if (blacklist.size > 0) {
+                    val names = blacklist.stream().map[s | s.getField(Field.pattern)].collect(Collectors.toList)
+
+                    comboBox(#[messages.searchtimerNo, messages.searchtimerSelection, messages.searchtimerAll]) [
+                        caption = messages.searchtimerUseBlacklist
+                    ]
+
+                    listSelect [
+                        items = names
+                    ]
+                }
             ]
 
             horizontalLayout(it) [
@@ -120,18 +127,41 @@ class SearchTimerEpgsearchEditWindow extends Window {
             checkbox(messages.searchtimerIgnoreMissingCategories) [
             ]
 
-            // TODO: Liste der Kategorien: PLUG epgsearch LSTE
+            val categories = SvdrpClient.get.getEpgsearchCategories(vdr)
+            if (categories !== null && categories.size > 0) {
+                horizontalLayout(it) [
+                    for (s : categories) {
+                        if (s.values !== null && s.values.size > 0) {
+                            comboBox(s.values) [
+                                caption = s.publicName
+                                emptySelectionAllowed = true
+                                selectedItem = null
+                            ]
+                        } else {
+                            textField(s.publicName) [
+                            ]
+                        }
+                    }
+
+                    addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
+                ]
+            }
         ]
 
         val tab3 = verticalLayout[
-            comboBox(#[messages.searchtimerNo, messages.searchtimerInterval, messages.searchtimerChannelGroup, messages.searchtimerFta]) [
-                caption = messages.searchtimerUseChannel
-            ]
+            val channelGroups = SvdrpClient.get.getEpgsearchChannelGroups(vdr)
 
-            // TODO: Kanalgruppen: PLUG epgsearch LSTC
-            comboBox(#["Kanalgruppe 1 ", "Kanalgruppe 2"]) [
-                caption = messages.searchtimerChannelGroup
-            ]
+            if (channelGroups !== null && channelGroups.size > 0) {
+                comboBox(#[messages.searchtimerNo, messages.searchtimerInterval, messages.searchtimerChannelGroup, messages.searchtimerFta]) [
+                    caption = messages.searchtimerUseChannel
+                ]
+
+                val list = channelGroups.stream.map(s | s.name).collect(Collectors.toList)
+
+                comboBox(list) [
+                    caption = messages.searchtimerChannelGroup
+                ]
+            }
         ]
 
         val tab4 = verticalLayout [
@@ -225,6 +255,27 @@ class SearchTimerEpgsearchEditWindow extends Window {
                 ]
             ]
 
+            horizontalLayout(it) [
+                textField(messages.searchtimerPriority) [
+                ]
+
+                textField(messages.searchtimerLifetime) [
+                ]
+            ]
+
+            horizontalLayout(it) [
+                textField(messages.searchtimerMarginStart) [
+                ]
+
+                textField(messages.searchtimerMarginEnd) [
+                ]
+            ]
+
+            checkbox("VPS") [
+            ]
+        ]
+
+        val tab8 = verticalLayout [
             checkbox(messages.searchtimerAvoidRepeating) [
             ]
 
@@ -248,7 +299,9 @@ class SearchTimerEpgsearchEditWindow extends Window {
 
                 checkbox(messages.searchtimerDescription) [
                 ]
+            ]
 
+            horizontalLayout(it) [
                 label(messages.searchtimerFuzzyDescription) [
                 ]
 
@@ -257,25 +310,16 @@ class SearchTimerEpgsearchEditWindow extends Window {
                 ]
             ]
 
-            // TODO: Liste der Kategorien: PLUG epgsearch LSTE
-
             horizontalLayout(it) [
-                textField(messages.searchtimerPriority) [
-                ]
+                val categories = SvdrpClient.get.getEpgsearchCategories(vdr)
+                if (categories !== null && categories.size > 0) {
+                    for (s : categories) {
+                        checkbox(s.publicName) [
+                        ]
+                    }
+                }
 
-                textField(messages.searchtimerLifetime) [
-                ]
-            ]
-
-            horizontalLayout(it) [
-                textField(messages.searchtimerMarginStart) [
-                ]
-
-                textField(messages.searchtimerMarginEnd) [
-                ]
-            ]
-
-            checkbox("VPS") [
+                addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
             ]
         ]
 
@@ -287,6 +331,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
             addTab(tab5, messages.searchtimerChannelswitch)
             addTab(tab6, messages.searchtimerAskchannelswitch)
             addTab(tab7, messages.searchtimerRecording)
+            addTab(tab8, messages.searchtimerRepeat)
 
             addStyleName(ValoTheme.TABSHEET_FRAMED);
             addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);

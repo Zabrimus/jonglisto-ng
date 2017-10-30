@@ -16,12 +16,14 @@ import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.BaseData
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.Epg
+import vdr.jonglisto.model.EpgsearchCategory
+import vdr.jonglisto.model.EpgsearchChannelGroup
+import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.Recording
 import vdr.jonglisto.model.Timer
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.model.VdrPlugin
 import vdr.jonglisto.xtend.annotation.Log
-import vdr.jonglisto.model.EpgsearchSearchTimer
 
 @Log
 class SvdrpClient {
@@ -200,8 +202,6 @@ class SvdrpClient {
     }
 
     def getEpgsearchSearchTimerList(VDR vdr) {
-        println("Get Epgsearch from " + vdr)
-
         try {
             val timer = new ArrayList<EpgsearchSearchTimer>
             val response = vdr.command("PLUG epgsearch LSTS", 900)
@@ -209,9 +209,50 @@ class SvdrpClient {
 
             return timer
         } catch (Exception e) {
+            // no search timers defined or host down
+            return Collections.emptyList
+        }
+    }
+
+    def getEpgsearchSearchBlacklist(VDR vdr) {
+        try {
+            val timer = new ArrayList<EpgsearchSearchTimer>
+            val response = vdr.command("PLUG epgsearch LSTB", 900)
+            response.lines.stream.forEach(s | timer.add(Parser.parseEpgsearchList(s)))
+
+            return timer
+        } catch (Exception e) {
+            // no search timers defined or host down
+            return Collections.emptyList
+        }
+    }
+
+    def getEpgsearchCategories(VDR vdr) {
+        try {
+            val result = new ArrayList<EpgsearchCategory>
+            val response = vdr.command("PLUG epgsearch LSTE", 900)
+            response.lines.stream.forEach(s | result.add(Parser.parseEpgsearchCategory(s)))
+
+            return result
+        } catch (Exception e) {
             log.debug("Exception: " + e, e)
 
-            // no search timers defined or host down
+            // no categories defined or host down
+            return Collections.emptyList
+        }
+    }
+
+    def getEpgsearchChannelGroups(VDR vdr) {
+        try {
+            val result = new ArrayList<EpgsearchChannelGroup>
+            val response = vdr.command("PLUG epgsearch LSTC", 900)
+            response.lines.stream.forEach(s | result.add(Parser.parseEpgsearchChannelGroup(s)))
+
+            return result
+        } catch (Exception e) {
+            log.debug("Exception: " + e, e)
+
+            // no categories defined or host down
             return Collections.emptyList
         }
     }

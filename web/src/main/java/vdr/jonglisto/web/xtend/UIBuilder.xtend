@@ -11,6 +11,7 @@ import com.vaadin.ui.FormLayout
 import com.vaadin.ui.HorizontalLayout
 import com.vaadin.ui.Label
 import com.vaadin.ui.Layout
+import com.vaadin.ui.ListSelect
 import com.vaadin.ui.MenuBar
 import com.vaadin.ui.MenuBar.Command
 import com.vaadin.ui.MenuBar.MenuItem
@@ -278,6 +279,13 @@ class UIBuilder {
 
     static def nativeSelect(ComponentContainer it, (NativeSelect<String>)=>void initializer) {
         val that = new NativeSelect
+        it.addComponent(that)
+        that.init(initializer)
+        return that
+    }
+
+    static def listSelect(ComponentContainer it, (ListSelect<String>)=>void initializer) {
+        val that = new ListSelect
         it.addComponent(that)
         that.init(initializer)
         return that
