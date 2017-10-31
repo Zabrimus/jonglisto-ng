@@ -1,7 +1,17 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.data.Binder
+import com.vaadin.data.validator.IntegerRangeValidator
+import com.vaadin.data.validator.StringLengthValidator
 import com.vaadin.ui.Alignment
 import com.vaadin.ui.CheckBox
+import com.vaadin.ui.ComboBox
+import com.vaadin.ui.HorizontalLayout
+import com.vaadin.ui.ListSelect
+import com.vaadin.ui.Notification
+import com.vaadin.ui.TabSheet.Tab
+import com.vaadin.ui.TextField
+import com.vaadin.ui.VerticalLayout
 import com.vaadin.ui.Window
 import com.vaadin.ui.themes.ValoTheme
 import java.util.Collections
@@ -14,13 +24,10 @@ import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
+import static extension org.apache.commons.lang3.StringUtils.*
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.ui.TextField
-import com.vaadin.ui.VerticalLayout
-import com.vaadin.ui.ComboBox
-import com.vaadin.ui.HorizontalLayout
-import com.vaadin.ui.ListSelect
-import com.vaadin.ui.TabSheet.Tab
+import com.vaadin.ui.NativeSelect
+import vdr.jonglisto.model.Channel
 
 @Log
 class SearchTimerEpgsearchEditWindow extends Window {
@@ -28,13 +35,16 @@ class SearchTimerEpgsearchEditWindow extends Window {
     val Messages messages
     var VDR vdr
 
-    CheckBox searchCase
+    val binder = new Binder<EpgsearchSearchTimer>
+    val EpgsearchSearchTimer currentTimer
+
+    CheckBox matchCase
 
     CheckBox useTime
 
     CheckBox useDuration
 
-    TextField searchTimerTolerance
+    TextField fuzzyTolerance
 
     VerticalLayout extendedEpgInfos
 
@@ -67,8 +77,112 @@ class SearchTimerEpgsearchEditWindow extends Window {
     Tab tabObject8
 
     ComboBox<String> actionCombo
+    var List<String> actionComboItems
 
     HorizontalLayout firstLastDay
+
+    ComboBox<String> typeCombo
+    var List<String> typeComboItems
+
+    VerticalLayout repeatConfiguration
+
+    TextField deleteAfterRecordings
+
+    TextField deleteAfterDays
+
+    TextField pattern
+
+    ComboBox<String> searchMode
+    var List<String> searchModeItems
+
+    CheckBox searchInTitle
+
+    CheckBox searchInShortText
+
+    CheckBox searchInDescription
+
+    ComboBox<String> blacklistMode
+    var List<String> blacklistItems
+
+    TextField firstDay
+
+    TextField lastDay
+
+    ComboBox<String> deleteSearchTimer
+    var List<String> deleteSearchTimerItems
+
+    CheckBox useExtendedEpg
+
+    ComboBox<String> channelGroupSelect
+    var List<String> channelGroupSelectItems
+
+    NativeSelect<Channel> channelFrom
+
+    NativeSelect<Channel> channelTo
+
+    TextField startAfter
+
+    TextField startBefore
+
+    TextField durationMin
+
+    TextField durationMax
+
+    CheckBox useWeekdays
+
+    CheckBox monday
+
+    CheckBox tuesday
+
+    CheckBox wednesday
+
+    CheckBox thursday
+
+    CheckBox friday
+
+    CheckBox saturday
+
+    CheckBox sunday
+
+    TextField switchMinutes
+
+    CheckBox unmute
+
+    TextField askSwitchMinutes
+
+    CheckBox recordSeries
+
+    TextField recordDirectory
+
+    TextField recordDeleteDays
+
+    TextField recordKeepCount
+
+    TextField recordPauseCount
+
+    TextField recordPriority
+
+    TextField recordLifetime
+
+    TextField marginStart
+
+    TextField marginEnd
+
+    CheckBox vps
+
+    CheckBox avoidRepeating
+
+    TextField allowRepeatingCount
+
+    TextField allowRepeatingDays
+
+    CheckBox repeatingTitle
+
+    CheckBox repeatingShortText
+
+    CheckBox repeatingDescription
+
+    TextField repeatingFuzzyDescription
 
     new(VDR vdr, Messages messages, EpgsearchSearchTimer timer) {
         super()
@@ -79,7 +193,12 @@ class SearchTimerEpgsearchEditWindow extends Window {
         width = "60%"
         center();
 
+        currentTimer = timer
+        fillDefaultLists
+
         createLayout(timer)
+        createBinder()
+        fillTimerValues()
     }
 
     def createLayout(EpgsearchSearchTimer timer) {
@@ -87,44 +206,44 @@ class SearchTimerEpgsearchEditWindow extends Window {
 
         val tab1 = verticalLayout[
             horizontalLayout(it) [
-                textField(messages.searchtimerSearch) [
+                pattern = textField(messages.searchtimerSearch) [
                 ]
 
-                comboBox(#[messages.searchtimerPattern, messages.searchtimerAllWords, messages.searchtimerOneWord, messages.searchtimerExact, messages.searchtimerRegex, messages.searchtimerFuzzy]) [
+                searchMode = comboBox(searchModeItems) [
                     caption = messages.searchtimerSearch
                     emptySelectionAllowed = false
                     selectedItem = messages.searchtimerPattern
 
                     addSelectionListener(s | {
                         if (s.selectedItem.isPresent && s.selectedItem.get == messages.searchtimerFuzzy) {
-                            searchTimerTolerance.visible = true
+                            fuzzyTolerance.visible = true
                         } else {
-                            searchTimerTolerance.visible = false
+                            fuzzyTolerance.visible = false
                         }
                     })
                 ]
 
-                searchTimerTolerance = textField(messages.searchtimerTolerance) [
+                fuzzyTolerance = textField(messages.searchtimerTolerance) [
                     visible = false
                 ]
 
-                searchCase = checkbox(messages.searchtimerCasesensitiv) [
+                matchCase = checkbox(messages.searchtimerCasesensitiv) [
                 ]
 
-                setComponentAlignment(searchCase, Alignment.MIDDLE_CENTER);
+                setComponentAlignment(matchCase, Alignment.MIDDLE_CENTER);
             ]
 
             horizontalLayout(it) [
                 label(messages.searchtimerContains) [
                 ]
 
-                checkbox(messages.searchtimerTitle) [
+                searchInTitle = checkbox(messages.searchtimerTitle) [
                 ]
 
-                checkbox(messages.searchtimerShorttext) [
+                searchInShortText = checkbox(messages.searchtimerShorttext) [
                 ]
 
-                checkbox(messages.searchtimerDescription) [
+                searchInDescription = checkbox(messages.searchtimerDescription) [
                 ]
             ]
 
@@ -134,7 +253,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
                 if (blacklist.size > 0) {
                     val names = blacklist.stream().map[s | s.getField(Field.pattern)].collect(Collectors.toList)
 
-                    comboBox(#[messages.searchtimerNo, messages.searchtimerSelection, messages.searchtimerAll]) [
+                    blacklistMode = comboBox(blacklistItems) [
                         caption = messages.searchtimerUseBlacklist
                         emptySelectionAllowed = false
                         selectedItem = messages.searchtimerNo
@@ -154,7 +273,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
             ]
 
             horizontalLayout(it) [
-                typeCombo = comboBox(#[messages.searchtimerNo, messages.searchtimerYes, messages.searchtimerUserdefined]) [
+                typeCombo = comboBox(typeComboItems) [
                     caption = messages.searchtimerUseastimer
                     selectedItem = messages.searchtimerNo
                     emptySelectionAllowed = false
@@ -162,7 +281,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
                     addSelectionListener(s | setTabsVisible(s.selectedItem.get, actionCombo.selectedItem.get))
                 ]
 
-                actionCombo = comboBox(#[messages.searchtimerRecord, messages.searchtimerAnnounceOsd, messages.searchtimerChangeChannel, messages.searchtimerAskchannelswitch, messages.searchtimerAnnounceEmail]) [
+                actionCombo = comboBox(actionComboItems) [
                     caption = ""
                     emptySelectionAllowed = false
                     selectedItem = messages.searchtimerRecord
@@ -172,15 +291,15 @@ class SearchTimerEpgsearchEditWindow extends Window {
             ]
 
             firstLastDay = horizontalLayout(it) [
-                textField(messages.searchtimerFirstDay) [
+                firstDay = textField(messages.searchtimerFirstDay) [
                 ]
 
-                textField(messages.searchtimerLastDay) [
+                lastDay = textField(messages.searchtimerLastDay) [
                 ]
             ]
 
             horizontalLayout(it) [
-                comboBox(#[messages.searchtimerNo, messages.searchtimerCountRecords, messages.searchtimerCountDays]) [
+                deleteSearchTimer = comboBox(deleteSearchTimerItems) [
                     caption = messages.searchtimerAutoDelete
                     emptySelectionAllowed = false
                     selectedItem = messages.searchtimerNo
@@ -206,7 +325,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
         ]
 
         val tab2 = verticalLayout[
-            checkbox(messages.searchtimerExtendedEpg) [
+            useExtendedEpg = checkbox(messages.searchtimerExtendedEpg) [
                 addValueChangeListener(s | extendedEpgInfos.visible = s.value)
             ]
 
@@ -241,7 +360,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
         val tab3 = verticalLayout[
             val channelGroups = SvdrpClient.get.getEpgsearchChannelGroups(vdr)
 
-            comboBox(#[messages.searchtimerNo, messages.searchtimerInterval, messages.searchtimerChannelGroup, messages.searchtimerFta]) [
+            channelGroupSelect = comboBox(channelGroupSelectItems) [
                 caption = messages.searchtimerUseChannel
                 emptySelectionAllowed = false
                 selectedItem = messages.searchtimerNo
@@ -285,13 +404,13 @@ class SearchTimerEpgsearchEditWindow extends Window {
             channelIntervalSelect = horizontalLayout(it) [
                 val channelList = SvdrpClient.get.channels
 
-                nativeChannelSelect [
+                channelFrom = nativeChannelSelect [
                     items = channelList
                     itemCaptionGenerator = [s | s.name]
                     caption = messages.searchtimerFrom
                 ]
 
-                nativeChannelSelect [
+                channelTo = nativeChannelSelect [
                     items = channelList
                     itemCaptionGenerator = [s | s.name]
                     caption = messages.searchtimerTo
@@ -308,10 +427,10 @@ class SearchTimerEpgsearchEditWindow extends Window {
                 ]
 
                 timeFields = horizontalLayout(it) [
-                    textField(messages.searchtimerStartAfter) [
+                    startAfter = textField(messages.searchtimerStartAfter) [
                     ]
 
-                    textField(messages.searchtimerStartBefore) [
+                    startBefore = textField(messages.searchtimerStartBefore) [
                     ]
 
                     visible = false
@@ -326,10 +445,10 @@ class SearchTimerEpgsearchEditWindow extends Window {
                 ]
 
                 durationFields = horizontalLayout(it) [
-                    textField(messages.searchtimerMinDuration) [
+                    durationMin = textField(messages.searchtimerMinDuration) [
                     ]
 
-                    textField(messages.searchtimerMaxDuration) [
+                    durationMax = textField(messages.searchtimerMaxDuration) [
                     ]
 
                     visible = false
@@ -339,30 +458,30 @@ class SearchTimerEpgsearchEditWindow extends Window {
             ]
 
             horizontalLayout(it) [
-                checkbox(messages.searchtimerWeekdays) [
+                useWeekdays = checkbox(messages.searchtimerWeekdays) [
                     addValueChangeListener(s | daysCheckboxes.visible = s.value)
                 ]
 
                 daysCheckboxes = horizontalLayout(it) [
-                    checkbox(messages.searchtimerStartMonday) [
+                    monday = checkbox(messages.searchtimerStartMonday) [
                     ]
 
-                    checkbox(messages.searchtimerStartTuesday) [
+                    tuesday = checkbox(messages.searchtimerStartTuesday) [
                     ]
 
-                    checkbox(messages.searchtimerStartWednesday) [
+                    wednesday = checkbox(messages.searchtimerStartWednesday) [
                     ]
 
-                    checkbox(messages.searchtimerStartThursday) [
+                    thursday = checkbox(messages.searchtimerStartThursday) [
                     ]
 
-                    checkbox(messages.searchtimerStartFriday) [
+                    friday = checkbox(messages.searchtimerStartFriday) [
                     ]
 
-                    checkbox(messages.searchtimerStartSaturday) [
+                    saturday = checkbox(messages.searchtimerStartSaturday) [
                     ]
 
-                    checkbox(messages.searchtimerStartSunday) [
+                    sunday = checkbox(messages.searchtimerStartSunday) [
                     ]
 
                     visible = false
@@ -372,72 +491,72 @@ class SearchTimerEpgsearchEditWindow extends Window {
 
         val tab5 = verticalLayout [
             // ----- Einstellungen für "nur umschalten"
-            textField(messages.searchtimerSwitchMinutes) [
+            switchMinutes = textField(messages.searchtimerSwitchMinutes) [
             ]
 
-            checkbox(messages.searchtimerUnmute) [
+            unmute = checkbox(messages.searchtimerUnmute) [
             ]
         ]
 
         val tab6 = verticalLayout [
             // ----- Einstellungen für "umschalten und ankündigen"
-            textField(messages.searchtimerAskSwitchMinutes) [
+            askSwitchMinutes = textField(messages.searchtimerAskSwitchMinutes) [
             ]
 
-            checkbox(messages.searchtimerUnmute) [
+            unmute = checkbox(messages.searchtimerUnmute) [
             ]
         ]
 
         val tab7 = verticalLayout [
             // ----- Einstellungen für Aufnehmen
-            checkbox(messages.searchtimerRecordSeries) [
+            recordSeries = checkbox(messages.searchtimerRecordSeries) [
             ]
 
-            textField(messages.searchtimerDirectory) [
-            ]
-
-            horizontalLayout(it) [
-                textField(messages.searchtimerDeleteRecordDays) [
-                ]
-
-                textField(messages.searchtimerKeepRecord) [
-                ]
-
-                textField(messages.searchtimerPause) [
-                ]
+            recordDirectory = textField(messages.searchtimerDirectory) [
             ]
 
             horizontalLayout(it) [
-                textField(messages.searchtimerPriority) [
+                recordDeleteDays = textField(messages.searchtimerDeleteRecordDays) [
                 ]
 
-                textField(messages.searchtimerLifetime) [
+                recordKeepCount = textField(messages.searchtimerKeepRecord) [
+                ]
+
+                recordPauseCount = textField(messages.searchtimerPause) [
                 ]
             ]
 
             horizontalLayout(it) [
-                textField(messages.searchtimerMarginStart) [
+                recordPriority = textField(messages.searchtimerPriority) [
                 ]
 
-                textField(messages.searchtimerMarginEnd) [
+                recordLifetime = textField(messages.searchtimerLifetime) [
                 ]
             ]
 
-            checkbox("VPS") [
+            horizontalLayout(it) [
+                marginStart = textField(messages.searchtimerMarginStart) [
+                ]
+
+                marginEnd = textField(messages.searchtimerMarginEnd) [
+                ]
+            ]
+
+            vps = checkbox("VPS") [
             ]
         ]
 
         val tab8 = verticalLayout [
-            checkbox(messages.searchtimerAvoidRepeating) [
+            avoidRepeating = checkbox(messages.searchtimerAvoidRepeating) [
                 addValueChangeListener(s | repeatConfiguration.visible = s.value)
             ]
 
             repeatConfiguration = verticalLayout(it) [
                 horizontalLayout(it) [
-                    textField(messages.searchtimerAllowRepeating) [
+                    allowRepeatingCount = textField(messages.searchtimerAllowRepeating) [
                     ]
 
-                    textField(messages.searchtimerAllowRepeatingDays) [
+                    allowRepeatingDays = textField(messages.searchtimerAllowRepeatingDays) [
                     ]
                 ]
 
@@ -445,13 +564,13 @@ class SearchTimerEpgsearchEditWindow extends Window {
                     label(messages.searchtimerCompare) [
                     ]
 
-                    checkbox(messages.searchtimerTitle) [
+                    repeatingTitle = checkbox(messages.searchtimerTitle) [
                     ]
 
-                    checkbox(messages.searchtimerShorttext) [
+                    repeatingShortText = checkbox(messages.searchtimerShorttext) [
                     ]
 
-                    checkbox(messages.searchtimerDescription) [
+                    repeatingDescription = checkbox(messages.searchtimerDescription) [
                     ]
                 ]
 
@@ -459,7 +578,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
                     label(messages.searchtimerFuzzyDescription) [
                     ]
 
-                    textField("") [
+                    repeatingFuzzyDescription = textField("") [
                         caption = null
                     ]
                 ]
@@ -506,7 +625,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
                 width = "100%"
                 button(it, messages.searchtimerSave) [
                     it.addClickListener(s | {
-                        if (saveTimer(timer)) {
+                        if (saveTimer()) {
                             close
                         }
                     })
@@ -521,23 +640,223 @@ class SearchTimerEpgsearchEditWindow extends Window {
         ]
 
         setContent(mainLayout)
-
-        fillTimerValues(timer)
     }
 
-    ComboBox<String> typeCombo
+    private def createBinder() {
+        pattern.bindMandTextField(Field.pattern)
+        searchMode.bindListBox(searchModeItems, Field.mode)
+        fuzzyTolerance.bindIntTextField(null, 100, Field.fuzzy_tolerance, "Value must be between 1 and 100")
+        matchCase.bindCheckBox(Field.matchcase)
+        searchInTitle.bindCheckBox(Field.use_title)
+        searchInShortText.bindCheckBox(Field.use_subtitle)
+        searchInDescription.bindCheckBox(Field.use_descr)
+        blacklistMode.bindListBox(blacklistItems, Field.use_blacklists)
+        // TODO: binder for blacklistSelect
+        typeCombo.bindListBox(typeComboItems, Field.has_action)
+        actionCombo.bindListBox(actionComboItems, Field.action)
+        firstDay.bindIntTextField(null, 31, Field.searchtimer_from, "Value must be between 1 and 31")
+        lastDay.bindIntTextField(null, 31, Field.searchtimer_until, "Value must be between 1 and 31")
+        deleteSearchTimer.bindListBox(deleteSearchTimerItems, Field.autodelete)
+        deleteAfterRecordings.bindIntTextField(null, null, Field.del_after_recs, "Must be an positive Integer")
+        deleteAfterDays.bindIntTextField(null, null, Field.del_after_days, "Must be an positive Integer")
+        useExtendedEpg.bindCheckBox(Field.use_extepg)
+        // TODO: binder for extendedEpgInfos
+        channelGroupSelect.bindListBox(channelGroupSelectItems, Field.use_channel)
+        useTime.bindCheckBox(Field.use_time)
+        startAfter.bindTextField(Field.time_start)
+        startBefore.bindTextField(Field.time_stop)
+        useDuration.bindCheckBox(Field.use_duration)
+        durationMin.bindTextField(Field.min_duration)
+        durationMax.bindTextField(Field.max_duration)
+        useWeekdays.bindCheckBox(Field.use_days)
+        sunday.bindWeekdayCheckBox(Field.which_days, 0, 1)
+        monday.bindWeekdayCheckBox(Field.which_days, 1, 2)
+        tuesday.bindWeekdayCheckBox(Field.which_days, 2, 4)
+        wednesday.bindWeekdayCheckBox(Field.which_days, 3, 8)
+        thursday.bindWeekdayCheckBox(Field.which_days, 4, 16)
+        friday.bindWeekdayCheckBox(Field.which_days, 5, 32)
+        saturday.bindWeekdayCheckBox(Field.which_days, 6, 64)
+        switchMinutes.bindTextField(Field.switch_before)
+        askSwitchMinutes.bindTextField(Field.switch_before)
+        unmute.bindCheckBox(Field.unmute)
+        recordSeries.bindCheckBox(Field.is_series)
+        recordDirectory.bindTextField(Field.directory)
+        recordDeleteDays.bindIntTextField(null, null, Field.del_after_recs, "Must be a numeric value")
+        recordKeepCount.bindIntTextField(null, null, Field.keep_recordings, "Must be a numeric value")
+        recordPauseCount.bindIntTextField(null, null, Field.pause, "Must be a numeric value")
+        recordPriority.bindIntTextField(0, 99, Field.prio, "Value must be between 0 and 99")
+        recordLifetime.bindIntTextField(0, 99, Field.lft, "Value must be between 0 and 99")
+        marginStart.bindIntTextField(null, null, Field.bstart, "Must be a numeric value")
+        marginEnd.bindIntTextField(null, null, Field.bstop, "Must be a numeric value")
+        vps.bindCheckBox(Field.use_vps)
+        avoidRepeating.bindCheckBox(Field.avoid_repeats)
+        allowRepeatingCount.bindIntTextField(null, null, Field.allowed_repeats, "Must be a numeric value")
+        allowRepeatingDays.bindIntTextField(null, null, Field.repeats_in_days, "Must be a numeric value")
+        repeatingTitle.bindCheckBox(Field.comp_title)
+        repeatingShortText.bindCheckBox(Field.comp_subtitle)
+        repeatingDescription.bindCheckBox(Field.comp_descr)
+        repeatingFuzzyDescription.bindIntTextField(null, 100, Field.min_match, "Must be a numeric value")
 
-    VerticalLayout repeatConfiguration
+        // TODO: bind für repeating categories
+    }
 
-    TextField deleteAfterRecordings
+    private def bindMandTextField(TextField text, Field field) {
+        if (text === null) {
+            // do nothing
+            return
+        }
 
-    TextField deleteAfterDays
+        binder.forField(text)
+                .withConverter( [s|s.trim], [s | s.trim] )
+                .withValidator( new StringLengthValidator("Pattern length must be greater than 0", 1, null) )
+                .bind([s | s.getField(field)], [ s1, s2 | s1.setField(field, s2)] )
+    }
+
+    private def bindTextField(TextField text, Field field) {
+        if (text === null) {
+            // do nothing
+            return
+        }
+
+        binder.forField(text)
+                .withConverter( [s|s.trim], [s | s.trim] )
+                .bind([s | s.getField(field)], [ s1, s2 | s1.setField(field, s2)] )
+    }
+
+    private def void bindIntTextField(TextField textField, Integer from, Integer to, Field field, String errorMessage) {
+        if (textField === null) {
+            // do nothing
+            return
+        }
+
+        var b = binder.forField(textField)
+               .withConverter( [s | Integer.parseInt(s)], [s | String.valueOf(s)])
+
+        if (from !== null || to !== null) {
+            b = b.withValidator( new IntegerRangeValidator(errorMessage, from, to))
+        }
+
+        b.bind( [s | s.getIntField(field)], [s1,s2 | s1.setIntField(field, s2)] )
+    }
+
+    private def void bindCheckBox(CheckBox box, Field field) {
+        if (box === null) {
+            // do nothing
+            return
+        }
+
+        binder.forField(box)
+               .bind( [s | s.getBooleanField(field)], [s1,s2 | s1.setBooleanField(field, s2)] )
+    }
+
+    private def void bindWeekdayCheckBox(CheckBox box, Field field, int posNr, int negNr) {
+        if (box === null) {
+            // do nothing
+            return
+        }
+
+        binder.forField(box)
+               .bind([s | val w = s.getIntField(Field.which_days)
+                          if (w >= 0) {
+                            w == posNr
+                          } else {
+                            getBitFlag(negNr, -w)
+                          }],
+                    [s1,s2 | var w = s1.getIntField(Field.which_days)
+                        var int wneu
+                        if (w >= 0) {
+                            switch (w) {
+                                case 0: wneu = setBitFlag(true, 1, 0)
+                                case 1: wneu = setBitFlag(true, 2, 0)
+                                case 2: wneu = setBitFlag(true, 4, 0)
+                                case 3: wneu = setBitFlag(true, 8, 0)
+                                case 4: wneu = setBitFlag(true, 16, 0)
+                                case 5: wneu = setBitFlag(true, 32, 0)
+                                case 6: wneu = setBitFlag(true, 64, 0)
+                            }
+                        } else {
+                            wneu = -w
+                        }
+
+                        wneu = setBitFlag(box.value, negNr, wneu)
+                        s1.setField(Field.which_days, String.valueOf(-wneu))
+                    ]
+               )
+    }
+
+    private def void bindListBox(ComboBox<String> box, List<String> items, Field field) {
+        if (box === null) {
+            // do nothing
+            return
+        }
+
+        binder.forField(box)
+               .withConverter( [s | items.indexOf(s)], [s | items.get(s)])
+               .bind( [s | s.getIntField(field)], [s1,s2 | s1.setIntField(field, s2)])
+    }
+
+    private def doManualBindingRead() {
+        //  6 - use channel? 0 = no,  1 = Interval, 2 = Channel group, 3 = FTA only
+        //  7 - if 'use channel' = 1 then channel id[|channel id] in vdr format,
+        //      one entry or min/max entry separated with |, if 'use channel' = 2
+        //      then the channel group name
+        // --> channelGroupCombo, channelFrom, channelTo
+        val channels = currentTimer.getField(Field.channels)
+        val idx = channelGroupSelectItems.indexOf(channelGroupSelect.selectedItem.get)
+
+        if (idx == 1) {
+            val splitted = channels.split("\\|")
+            if (splitted.length == 1) {
+                channelFrom.selectedItem = SvdrpClient.get.getChannel(splitted.get(0))
+                channelTo.selectedItem = SvdrpClient.get.getChannel(splitted.get(0))
+            } else if (splitted.length == 2 && splitted.get(0).isNotEmpty) {
+                channelFrom.selectedItem = SvdrpClient.get.getChannel(splitted.get(0))
+                channelTo.selectedItem = SvdrpClient.get.getChannel(splitted.get(1))
+            } else if (splitted.length == 2 && !splitted.get(0).isNotEmpty) {
+                channelTo.selectedItem = SvdrpClient.get.getChannel(splitted.get(1))
+            }
+        } else if (idx == 2) {
+            channelGroupCombo.selectedItem = channels
+        }
+    }
+
+    private def doManualBindingWrite() {
+        //  6 - use channel? 0 = no,  1 = Interval, 2 = Channel group, 3 = FTA only
+        //  7 - if 'use channel' = 1 then channel id[|channel id] in vdr format,
+        //      one entry or min/max entry separated with |, if 'use channel' = 2
+        //      then the channel group name
+        // --> channelGroupCombo, channelFrom, channelTo
+        val idx = channelGroupSelectItems.indexOf(channelGroupSelect.selectedItem.get)
+
+        var result = ""
+
+        if (idx == 1) {
+            if (channelFrom.selectedItem.isPresent) {
+                result = channelFrom.selectedItem.get.id
+            }
+
+            if (channelTo.selectedItem.isPresent && result != channelTo.selectedItem.get.id) {
+                result = "|" + channelTo.selectedItem.get.id
+            }
+        } else if (idx == 2) {
+            if (channelGroupCombo.selectedItem.isPresent) {
+                result = channelGroupCombo.selectedItem.get
+            }
+        }
+
+        currentTimer.setField(Field.channels, result)
+
+        return true
+    }
 
     private def createCaption(EpgsearchSearchTimer timer) {
         return  messages.searchtimerEdit
     }
 
-    private def fillTimerValues(EpgsearchSearchTimer timer) {
+    private def fillTimerValues() {
+        println("Timer: " + currentTimer)
+        binder.readBean(currentTimer)
+        doManualBindingRead
     }
 
     private def getBitFlag(int idx, Integer field) {
@@ -562,8 +881,20 @@ class SearchTimerEpgsearchEditWindow extends Window {
         }
     }
 
-    private def saveTimer(EpgsearchSearchTimer timer) {
-        return true
+    private def saveTimer() {
+        var isValid = binder.writeBeanIfValid(currentTimer);
+        isValid = isValid && doManualBindingWrite
+
+        if (isValid) {
+            println("Yaa.. Valid")
+            return true
+        } else {
+            val  status = binder.validate();
+            Notification.show(status.getValidationErrors().stream()
+                    .map(s | s.errorMessage)
+                    .collect(Collectors.joining("; ")))
+            return false
+        }
     }
 
     private def setTabsVisible(String searchTimerType, String searchTimerMode) {
@@ -589,5 +920,14 @@ class SearchTimerEpgsearchEditWindow extends Window {
             }
         }
 
+    }
+
+    private def fillDefaultLists() {
+        searchModeItems = #[messages.searchtimerPattern, messages.searchtimerAllWords, messages.searchtimerOneWord, messages.searchtimerExact, messages.searchtimerRegex, messages.searchtimerFuzzy]
+        blacklistItems = #[messages.searchtimerNo, messages.searchtimerSelection, messages.searchtimerAll]
+        typeComboItems = #[messages.searchtimerNo, messages.searchtimerYes, messages.searchtimerUserdefined]
+        actionComboItems = #[messages.searchtimerRecord, messages.searchtimerAnnounceOsd, messages.searchtimerChangeChannel, messages.searchtimerAskchannelswitch, messages.searchtimerAnnounceEmail]
+        deleteSearchTimerItems = #[messages.searchtimerNo, messages.searchtimerCountRecords, messages.searchtimerCountDays]
+        channelGroupSelectItems = #[messages.searchtimerNo, messages.searchtimerInterval, messages.searchtimerChannelGroup, messages.searchtimerFta]
     }
 }
