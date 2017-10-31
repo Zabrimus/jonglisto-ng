@@ -38,151 +38,82 @@ class SearchTimerEpgsearchEditWindow extends Window {
     val binder = new Binder<EpgsearchSearchTimer>
     val EpgsearchSearchTimer currentTimer
 
-    CheckBox matchCase
-
-    CheckBox useTime
-
-    CheckBox useDuration
-
-    TextField fuzzyTolerance
-
-    VerticalLayout extendedEpgInfos
-
-    ComboBox<String> channelGroupCombo
-
-    HorizontalLayout channelIntervalSelect
-
-    HorizontalLayout timeFields
-
-    HorizontalLayout durationFields
-
-    HorizontalLayout daysCheckboxes
-
-    ListSelect<String> blacklistSelect
-
-    Tab tabObject1
-
-    Tab tabObject2
-
-    Tab tabObject3
-
-    Tab tabObject4
-
-    Tab tabObject5
-
-    Tab tabObject6
-
-    Tab tabObject7
-
-    Tab tabObject8
-
-    ComboBox<String> actionCombo
+    var CheckBox matchCase
+    var CheckBox useTime
+    var CheckBox useDuration
+    var TextField fuzzyTolerance
+    var VerticalLayout extendedEpgInfos
+    var ComboBox<String> channelGroupCombo
+    var HorizontalLayout channelIntervalSelect
+    var HorizontalLayout timeFields
+    var HorizontalLayout durationFields
+    var HorizontalLayout daysCheckboxes
+    var ListSelect<String> blacklistSelect
+    var Tab tabObject1
+    var Tab tabObject2
+    var Tab tabObject3
+    var Tab tabObject4
+    var Tab tabObject5
+    var Tab tabObject6
+    var Tab tabObject7
+    var Tab tabObject8
+    var ComboBox<String> actionCombo
     var List<String> actionComboItems
-
-    HorizontalLayout firstLastDay
-
-    ComboBox<String> typeCombo
+    var HorizontalLayout firstLastDay
+    var ComboBox<String> typeCombo
     var List<String> typeComboItems
-
-    VerticalLayout repeatConfiguration
-
-    TextField deleteAfterRecordings
-
-    TextField deleteAfterDays
-
-    TextField pattern
-
-    ComboBox<String> searchMode
+    var VerticalLayout repeatConfiguration
+    var TextField deleteAfterRecordings
+    var TextField deleteAfterDays
+    var TextField pattern
+    var ComboBox<String> searchMode
     var List<String> searchModeItems
-
-    CheckBox searchInTitle
-
-    CheckBox searchInShortText
-
-    CheckBox searchInDescription
-
-    ComboBox<String> blacklistMode
+    var CheckBox searchInTitle
+    var CheckBox searchInShortText
+    var CheckBox searchInDescription
+    var ComboBox<String> blacklistMode
     var List<String> blacklistItems
-
-    TextField firstDay
-
-    TextField lastDay
-
-    ComboBox<String> deleteSearchTimer
+    var TextField firstDay
+    var TextField lastDay
+    var ComboBox<String> deleteSearchTimer
     var List<String> deleteSearchTimerItems
-
-    CheckBox useExtendedEpg
-
-    ComboBox<String> channelGroupSelect
+    var CheckBox useExtendedEpg
+    var ComboBox<String> channelGroupSelect
     var List<String> channelGroupSelectItems
-
-    NativeSelect<Channel> channelFrom
-
-    NativeSelect<Channel> channelTo
-
-    TextField startAfter
-
-    TextField startBefore
-
-    TextField durationMin
-
-    TextField durationMax
-
-    CheckBox useWeekdays
-
-    CheckBox monday
-
-    CheckBox tuesday
-
-    CheckBox wednesday
-
-    CheckBox thursday
-
-    CheckBox friday
-
-    CheckBox saturday
-
-    CheckBox sunday
-
-    TextField switchMinutes
-
-    CheckBox unmute
-
-    TextField askSwitchMinutes
-
-    CheckBox recordSeries
-
-    TextField recordDirectory
-
-    TextField recordDeleteDays
-
-    TextField recordKeepCount
-
-    TextField recordPauseCount
-
-    TextField recordPriority
-
-    TextField recordLifetime
-
-    TextField marginStart
-
-    TextField marginEnd
-
-    CheckBox vps
-
-    CheckBox avoidRepeating
-
-    TextField allowRepeatingCount
-
-    TextField allowRepeatingDays
-
-    CheckBox repeatingTitle
-
-    CheckBox repeatingShortText
-
-    CheckBox repeatingDescription
-
-    TextField repeatingFuzzyDescription
+    var NativeSelect<Channel> channelFrom
+    var NativeSelect<Channel> channelTo
+    var TextField startAfter
+    var TextField startBefore
+    var TextField durationMin
+    var TextField durationMax
+    var CheckBox useWeekdays
+    var CheckBox monday
+    var CheckBox tuesday
+    var CheckBox wednesday
+    var CheckBox thursday
+    var CheckBox friday
+    var CheckBox saturday
+    var CheckBox sunday
+    var TextField switchMinutes
+    var CheckBox unmute
+    var TextField askSwitchMinutes
+    var CheckBox recordSeries
+    var TextField recordDirectory
+    var TextField recordDeleteDays
+    var TextField recordKeepCount
+    var TextField recordPauseCount
+    var TextField recordPriority
+    var TextField recordLifetime
+    var TextField marginStart
+    var TextField marginEnd
+    var CheckBox vps
+    var CheckBox avoidRepeating
+    var TextField allowRepeatingCount
+    var TextField allowRepeatingDays
+    var CheckBox repeatingTitle
+    var CheckBox repeatingShortText
+    var CheckBox repeatingDescription
+    var TextField repeatingFuzzyDescription
 
     new(VDR vdr, Messages messages, EpgsearchSearchTimer timer) {
         super()
