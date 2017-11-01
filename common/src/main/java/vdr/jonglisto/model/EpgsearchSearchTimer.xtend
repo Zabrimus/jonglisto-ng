@@ -1,10 +1,20 @@
 package vdr.jonglisto.model
 
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.Arrays
 import java.util.HashMap
+import java.util.HashSet
 import java.util.Map
+import java.util.Set
+import java.util.stream.Collectors
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.EqualsHashCode
 import org.eclipse.xtend.lib.annotations.ToString
+
+import static extension org.apache.commons.lang3.StringUtils.*
 
 @Accessors
 @EqualsHashCode
@@ -69,6 +79,8 @@ class EpgsearchSearchTimer {
     // epgsearch contains too much different information, therefore a non-optimal datatype is selected
     private Map<Field, String> cfg = new HashMap<Field, String>
 
+    private val searchCategories = new HashMap<String, Set<String>>
+
     def getField(Field field) {
         return cfg.get(field)
     }
@@ -91,5 +103,53 @@ class EpgsearchSearchTimer {
 
     def setIntField(Field field, Integer value) {
         setField(field, String.valueOf(value))
+    }
+
+    def getDateField(Field field) {
+        val v = getField(field)
+
+        if (v !== null && v.isNotEmpty) {
+            return LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(v)), ZoneId.systemDefault()).toLocalDate()
+        }
+
+        return null
+    }
+
+    def setDateField(Field field, LocalDate value) {
+        setField(field, String.valueOf(value.atStartOfDay(ZoneId.systemDefault()).toEpochSecond()))
+    }
+
+    def splitCategories() {
+        val cats = getField(Field.extepg_infos)
+
+        if (cats.isNotEmpty) {
+            val splitted = cats.split("\\|")
+            for (x : splitted) {
+                val ca = x.split("#");
+                if (ca.length == 2) {
+                    var entries = searchCategories.get(ca.get(0));
+                    if (entries === null) {
+                        entries = new HashSet<String>
+                    }
+
+                    entries.addAll(Arrays.stream(ca.get(1).replace("!^colon^!", ":").split(",")).collect(Collectors.toList()));
+
+                    searchCategories.put(ca.get(0), entries);
+                }
+            }
+        }
+    }
+
+    def getSearchCategories(String key) {
+        return searchCategories.get(key)
+    }
+
+    def setSearchCategories(String key, String value) {
+        println("SetSearchCategories:" + key + " -> " + value)
+    }
+
+    // def setSearchCategories(String key, List<String> values) {
+    def setSearchCategories(String key, Object values) {
+        println("SetSearchCategories:" + key + " -> " + values)
     }
 }

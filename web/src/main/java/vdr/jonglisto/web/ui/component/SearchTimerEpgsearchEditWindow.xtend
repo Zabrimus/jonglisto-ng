@@ -3,20 +3,26 @@ package vdr.jonglisto.web.ui.component
 import com.vaadin.data.Binder
 import com.vaadin.data.validator.IntegerRangeValidator
 import com.vaadin.data.validator.StringLengthValidator
+import com.vaadin.ui.AbstractComponent
 import com.vaadin.ui.Alignment
 import com.vaadin.ui.CheckBox
 import com.vaadin.ui.ComboBox
+import com.vaadin.ui.DateField
 import com.vaadin.ui.HorizontalLayout
 import com.vaadin.ui.ListSelect
+import com.vaadin.ui.NativeSelect
 import com.vaadin.ui.Notification
 import com.vaadin.ui.TabSheet.Tab
 import com.vaadin.ui.TextField
 import com.vaadin.ui.VerticalLayout
 import com.vaadin.ui.Window
 import com.vaadin.ui.themes.ValoTheme
+import java.util.ArrayList
 import java.util.Collections
 import java.util.List
+import java.util.Set
 import java.util.stream.Collectors
+import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 import vdr.jonglisto.model.VDR
@@ -26,12 +32,11 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.ui.NativeSelect
-import vdr.jonglisto.model.Channel
+import com.vaadin.data.ValueProvider
+import com.vaadin.server.Setter
 
 @Log
 class SearchTimerEpgsearchEditWindow extends Window {
-
     val Messages messages
     var VDR vdr
 
@@ -73,8 +78,8 @@ class SearchTimerEpgsearchEditWindow extends Window {
     var CheckBox searchInDescription
     var ComboBox<String> blacklistMode
     var List<String> blacklistItems
-    var TextField firstDay
-    var TextField lastDay
+    var DateField firstDay
+    var DateField lastDay
     var ComboBox<String> deleteSearchTimer
     var List<String> deleteSearchTimerItems
     var CheckBox useExtendedEpg
@@ -114,6 +119,9 @@ class SearchTimerEpgsearchEditWindow extends Window {
     var CheckBox repeatingShortText
     var CheckBox repeatingDescription
     var TextField repeatingFuzzyDescription
+    var CheckBox ignoreMissingEpg
+
+    var extendedEpg = new ArrayList<AbstractComponent>
 
     new(VDR vdr, Messages messages, EpgsearchSearchTimer timer) {
         super()
@@ -222,10 +230,10 @@ class SearchTimerEpgsearchEditWindow extends Window {
             ]
 
             firstLastDay = horizontalLayout(it) [
-                firstDay = textField(messages.searchtimerFirstDay) [
+                firstDay = dateField(messages.searchtimerFirstDay) [
                 ]
 
-                lastDay = textField(messages.searchtimerLastDay) [
+                lastDay = dateField(messages.searchtimerLastDay) [
                 ]
             ]
 
@@ -261,23 +269,28 @@ class SearchTimerEpgsearchEditWindow extends Window {
             ]
 
             extendedEpgInfos = verticalLayout(it) [
-                checkbox(messages.searchtimerIgnoreMissingCategories) [
+                ignoreMissingEpg = checkbox(messages.searchtimerIgnoreMissingCategories) [
                 ]
 
                 val categories = SvdrpClient.get.getEpgsearchCategories(vdr)
                 if (categories !== null && categories.size > 0) {
                     horizontalLayout(it) [
                         for (s : categories) {
+                            var AbstractComponent c
                             if (s.values !== null && s.values.size > 0) {
-                                comboBox(s.values) [
+                                c = listSelect [
+                                    items = s.values
                                     caption = s.publicName
-                                    emptySelectionAllowed = true
-                                    selectedItem = null
+                                    data = s.publicName
+                                    rows = 4
                                 ]
                             } else {
-                                textField(s.publicName) [
+                                c = textField(s.publicName) [
+                                    data = s.publicName
                                 ]
                             }
+
+                            extendedEpg.add(c)
                         }
 
                         addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
@@ -585,13 +598,18 @@ class SearchTimerEpgsearchEditWindow extends Window {
         // TODO: binder for blacklistSelect
         typeCombo.bindListBox(typeComboItems, Field.has_action)
         actionCombo.bindListBox(actionComboItems, Field.action)
-        firstDay.bindIntTextField(null, 31, Field.searchtimer_from, "Value must be between 1 and 31")
-        lastDay.bindIntTextField(null, 31, Field.searchtimer_until, "Value must be between 1 and 31")
+        firstDay.bindDateField(Field.searchtimer_from)
+        lastDay.bindDateField(Field.searchtimer_until)
         deleteSearchTimer.bindListBox(deleteSearchTimerItems, Field.autodelete)
         deleteAfterRecordings.bindIntTextField(null, null, Field.del_after_recs, "Must be an positive Integer")
         deleteAfterDays.bindIntTextField(null, null, Field.del_after_days, "Must be an positive Integer")
         useExtendedEpg.bindCheckBox(Field.use_extepg)
-        // TODO: binder for extendedEpgInfos
+        ignoreMissingEpg.bindCheckBox(Field.ignore_missing_epgcats)
+
+        for (var i = 0; i < extendedEpg.size(); i++) {
+            extendedEpg.get(i).bindExtendedEpg(String.valueOf(i+1))
+        }
+
         channelGroupSelect.bindListBox(channelGroupSelectItems, Field.use_channel)
         useTime.bindCheckBox(Field.use_time)
         startAfter.bindTextField(Field.time_start)
@@ -670,6 +688,16 @@ class SearchTimerEpgsearchEditWindow extends Window {
         b.bind( [s | s.getIntField(field)], [s1,s2 | s1.setIntField(field, s2)] )
     }
 
+    private def bindDateField(DateField dateField, Field field) {
+        if (dateField === null) {
+            // do nothing
+            return
+        }
+
+        binder.forField(dateField)
+            .bind([s | s.getDateField(field)], [ s1, s2 | s1.setDateField(field, s2)] )
+    }
+
     private def void bindCheckBox(CheckBox box, Field field) {
         if (box === null) {
             // do nothing
@@ -678,6 +706,31 @@ class SearchTimerEpgsearchEditWindow extends Window {
 
         binder.forField(box)
                .bind( [s | s.getBooleanField(field)], [s1,s2 | s1.setBooleanField(field, s2)] )
+    }
+
+    private def void bindExtendedEpg(AbstractComponent component, String idx) {
+        if (component instanceof TextField) {
+            binder.forField(component)
+                .bind( [s | if (s.getSearchCategories(idx) !== null && s.searchCategories.size > 0) {
+                                s.getSearchCategories(idx).stream.collect(Collectors.joining(","))
+                            } else {
+                                ""
+                            }
+                        ],
+                        [s1,s2 | s1.setSearchCategories(idx, s2)])
+        } else if (component instanceof ListSelect<?>) {
+            binder.forField(component)
+                .bind(new ValueProvider<EpgsearchSearchTimer, Set<?>>() {
+                        override def Set<String> apply(EpgsearchSearchTimer t) {
+                            return t.getSearchCategories(idx)
+                        }
+                      },
+                      new Setter<EpgsearchSearchTimer, Set<?>>() {
+                        override def void accept(EpgsearchSearchTimer t, Set<?> values) {
+                          t.setSearchCategories(idx, values)
+                        }
+                      })
+        }
     }
 
     private def void bindWeekdayCheckBox(CheckBox box, Field field, int posNr, int negNr) {

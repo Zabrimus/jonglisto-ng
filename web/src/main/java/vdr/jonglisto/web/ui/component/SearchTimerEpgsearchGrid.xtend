@@ -133,6 +133,11 @@ class SearchTimerEpgsearchGrid {
         var Button button
 
         switch(active) {
+            case "2": {
+                button = new Button("", VaadinIcons.CHECK)
+                button.description = messages.searchtimerActive
+            }
+
             case "1": {
                 button = new Button("", VaadinIcons.CHECK)
                 button.description = messages.searchtimerActive

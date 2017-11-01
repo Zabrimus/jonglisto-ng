@@ -154,6 +154,13 @@ class UIBuilder {
         return that
     }
 
+    static def dateField(ComponentContainer it, String str, (DateField)=>void initializer) {
+        val that = new DateField(str)
+        it.addComponent(that)
+        that.init(initializer)
+        return that
+    }
+
     static def passwordField(ComponentContainer it, String str) {
         val that = new PasswordField(str)
         it.addComponent(that)
