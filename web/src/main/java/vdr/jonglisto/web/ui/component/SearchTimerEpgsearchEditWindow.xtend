@@ -1,8 +1,10 @@
 package vdr.jonglisto.web.ui.component
 
 import com.vaadin.data.Binder
-import com.vaadin.data.validator.IntegerRangeValidator
+import com.vaadin.data.ValueProvider
+import com.vaadin.data.validator.LongRangeValidator
 import com.vaadin.data.validator.StringLengthValidator
+import com.vaadin.server.Setter
 import com.vaadin.ui.AbstractComponent
 import com.vaadin.ui.Alignment
 import com.vaadin.ui.CheckBox
@@ -32,8 +34,6 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.data.ValueProvider
-import com.vaadin.server.Setter
 
 @Log
 class SearchTimerEpgsearchEditWindow extends Window {
@@ -589,7 +589,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
     private def createBinder() {
         pattern.bindMandTextField(Field.pattern)
         searchMode.bindListBox(searchModeItems, Field.mode)
-        fuzzyTolerance.bindIntTextField(null, 100, Field.fuzzy_tolerance, "Value must be between 1 and 100")
+        fuzzyTolerance.bindIntTextField(null, 100L, Field.fuzzy_tolerance, "Value must be between 1 and 100")
         matchCase.bindCheckBox(Field.matchcase)
         searchInTitle.bindCheckBox(Field.use_title)
         searchInShortText.bindCheckBox(Field.use_subtitle)
@@ -633,8 +633,8 @@ class SearchTimerEpgsearchEditWindow extends Window {
         recordDeleteDays.bindIntTextField(null, null, Field.del_after_recs, "Must be a numeric value")
         recordKeepCount.bindIntTextField(null, null, Field.keep_recordings, "Must be a numeric value")
         recordPauseCount.bindIntTextField(null, null, Field.pause, "Must be a numeric value")
-        recordPriority.bindIntTextField(0, 99, Field.prio, "Value must be between 0 and 99")
-        recordLifetime.bindIntTextField(0, 99, Field.lft, "Value must be between 0 and 99")
+        recordPriority.bindIntTextField(0L, 99L, Field.prio, "Value must be between 0 and 99")
+        recordLifetime.bindIntTextField(0L, 99L, Field.lft, "Value must be between 0 and 99")
         marginStart.bindIntTextField(null, null, Field.bstart, "Must be a numeric value")
         marginEnd.bindIntTextField(null, null, Field.bstop, "Must be a numeric value")
         vps.bindCheckBox(Field.use_vps)
@@ -644,7 +644,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
         repeatingTitle.bindCheckBox(Field.comp_title)
         repeatingShortText.bindCheckBox(Field.comp_subtitle)
         repeatingDescription.bindCheckBox(Field.comp_descr)
-        repeatingFuzzyDescription.bindIntTextField(null, 100, Field.min_match, "Must be a numeric value")
+        repeatingFuzzyDescription.bindIntTextField(null, 100L, Field.min_match, "Must be a numeric value")
 
         // TODO: bind für repeating categories
     }
@@ -672,20 +672,20 @@ class SearchTimerEpgsearchEditWindow extends Window {
                 .bind([s | s.getField(field)], [ s1, s2 | s1.setField(field, s2)] )
     }
 
-    private def void bindIntTextField(TextField textField, Integer from, Integer to, Field field, String errorMessage) {
+    private def void bindIntTextField(TextField textField, Long from, Long to, Field field, String errorMessage) {
         if (textField === null) {
             // do nothing
             return
         }
 
         var b = binder.forField(textField)
-               .withConverter( [s | Integer.parseInt(s)], [s | String.valueOf(s)])
+               .withConverter( [s | Long.parseLong(s)], [s | String.valueOf(s)])
 
         if (from !== null || to !== null) {
-            b = b.withValidator( new IntegerRangeValidator(errorMessage, from, to))
+            b = b.withValidator( new LongRangeValidator(errorMessage, from, to))
         }
 
-        b.bind( [s | s.getIntField(field)], [s1,s2 | s1.setIntField(field, s2)] )
+        b.bind( [s | s.getLongField(field)], [s1,s2 | s1.setLongField(field, s2)] )
     }
 
     private def bindDateField(DateField dateField, Field field) {
@@ -740,23 +740,23 @@ class SearchTimerEpgsearchEditWindow extends Window {
         }
 
         binder.forField(box)
-               .bind([s | val w = s.getIntField(Field.which_days)
+               .bind([s | val w = s.getLongField(Field.which_days)
                           if (w >= 0) {
                             w == posNr
                           } else {
                             getBitFlag(negNr, -w)
                           }],
-                    [s1,s2 | var w = s1.getIntField(Field.which_days)
-                        var int wneu
+                    [s1,s2 | var w = s1.getLongField(Field.which_days)
+                        var long wneu
                         if (w >= 0) {
                             switch (w) {
-                                case 0: wneu = setBitFlag(true, 1, 0)
-                                case 1: wneu = setBitFlag(true, 2, 0)
-                                case 2: wneu = setBitFlag(true, 4, 0)
-                                case 3: wneu = setBitFlag(true, 8, 0)
-                                case 4: wneu = setBitFlag(true, 16, 0)
-                                case 5: wneu = setBitFlag(true, 32, 0)
-                                case 6: wneu = setBitFlag(true, 64, 0)
+                                case 0: wneu = setBitFlag(true, 1L, 0L)
+                                case 1: wneu = setBitFlag(true, 2L, 0L)
+                                case 2: wneu = setBitFlag(true, 4L, 0L)
+                                case 3: wneu = setBitFlag(true, 8L, 0L)
+                                case 4: wneu = setBitFlag(true, 16L, 0L)
+                                case 5: wneu = setBitFlag(true, 32L, 0L)
+                                case 6: wneu = setBitFlag(true, 64L, 0L)
                             }
                         } else {
                             wneu = -w
@@ -775,8 +775,8 @@ class SearchTimerEpgsearchEditWindow extends Window {
         }
 
         binder.forField(box)
-               .withConverter( [s | items.indexOf(s)], [s | items.get(s)])
-               .bind( [s | s.getIntField(field)], [s1,s2 | s1.setIntField(field, s2)])
+               .withConverter( [s | Long.valueOf(items.indexOf(s))], [s | items.get(s.intValue)])
+               .bind( [s | s.getLongField(field)], [s1,s2 | s1.setLongField(field, s2)])
     }
 
     private def doManualBindingRead() {
@@ -843,7 +843,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
         doManualBindingRead
     }
 
-    private def getBitFlag(int idx, Integer field) {
+    private def getBitFlag(long idx, Long field) {
         if (field === null) {
             return false
         }
@@ -851,11 +851,11 @@ class SearchTimerEpgsearchEditWindow extends Window {
         return field.bitwiseAnd(idx) > 0
     }
 
-    private def setBitFlag(boolean value, int idx, Integer field) {
+    private def setBitFlag(boolean value, long idx, Long field) {
         var f = field
 
         if (f === null) {
-            f = 0
+            f = 0L
         }
 
         if (value) {

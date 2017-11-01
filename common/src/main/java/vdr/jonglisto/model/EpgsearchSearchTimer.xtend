@@ -97,11 +97,11 @@ class EpgsearchSearchTimer {
         setField(field, if (value) "1" else "0")
     }
 
-    def getIntField(Field field) {
-        return Integer.parseInt(getField(field))
+    def getLongField(Field field) {
+        return Long.parseLong(getField(field))
     }
 
-    def setIntField(Field field, Integer value) {
+    def setLongField(Field field, Long value) {
         setField(field, String.valueOf(value))
     }
 
