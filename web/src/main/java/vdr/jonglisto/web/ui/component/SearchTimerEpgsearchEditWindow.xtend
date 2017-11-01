@@ -122,6 +122,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
     var CheckBox ignoreMissingEpg
 
     var extendedEpg = new ArrayList<AbstractComponent>
+    var compExtendedEpg = new ArrayList<CheckBox>
 
     new(VDR vdr, Messages messages, EpgsearchSearchTimer timer) {
         super()
@@ -531,8 +532,10 @@ class SearchTimerEpgsearchEditWindow extends Window {
                     val categories = SvdrpClient.get.getEpgsearchCategories(vdr)
                     if (categories !== null && categories.size > 0) {
                         for (s : categories) {
-                            checkbox(s.publicName) [
+                            val c = checkbox(s.publicName) [
                             ]
+
+                            compExtendedEpg.add(c)
                         }
                     }
 
@@ -646,7 +649,9 @@ class SearchTimerEpgsearchEditWindow extends Window {
         repeatingDescription.bindCheckBox(Field.comp_descr)
         repeatingFuzzyDescription.bindIntTextField(null, 100L, Field.min_match, "Must be a numeric value")
 
-        // TODO: bind für repeating categories
+        for (var i = 0; i < compExtendedEpg.size(); i++) {
+            compExtendedEpg.get(i).bindCompExtendedEpg(i)
+        }
     }
 
     private def bindMandTextField(TextField text, Field field) {
@@ -727,10 +732,23 @@ class SearchTimerEpgsearchEditWindow extends Window {
                       },
                       new Setter<EpgsearchSearchTimer, Set<?>>() {
                         override def void accept(EpgsearchSearchTimer t, Set<?> values) {
-                          t.setSearchCategories(idx, values)
+                          t.setSearchCategoriesSet(idx, values)
                         }
                       })
         }
+    }
+
+    private def void bindCompExtendedEpg(CheckBox box, int i) {
+        if (box === null) {
+            // do nothing
+            return
+        }
+
+        binder.forField(box)
+               .bind(
+                   [s | getBitFlag(1 << i, s.getLongField(Field.comp_extepg_info))],
+                   [s1,s2 | s1.setLongField(Field.comp_extepg_info, setBitFlag(s2, 1 << i, s1.getLongField(Field.comp_extepg_info)))]
+               )
     }
 
     private def void bindWeekdayCheckBox(CheckBox box, Field field, int posNr, int negNr) {
@@ -750,13 +768,13 @@ class SearchTimerEpgsearchEditWindow extends Window {
                         var long wneu
                         if (w >= 0) {
                             switch (w) {
-                                case 0: wneu = setBitFlag(true, 1L, 0L)
-                                case 1: wneu = setBitFlag(true, 2L, 0L)
-                                case 2: wneu = setBitFlag(true, 4L, 0L)
-                                case 3: wneu = setBitFlag(true, 8L, 0L)
-                                case 4: wneu = setBitFlag(true, 16L, 0L)
-                                case 5: wneu = setBitFlag(true, 32L, 0L)
-                                case 6: wneu = setBitFlag(true, 64L, 0L)
+                                case 0: wneu = setBitFlag(true, 1, 0L)
+                                case 1: wneu = setBitFlag(true, 2, 0L)
+                                case 2: wneu = setBitFlag(true, 4, 0L)
+                                case 3: wneu = setBitFlag(true, 8, 0L)
+                                case 4: wneu = setBitFlag(true, 16, 0L)
+                                case 5: wneu = setBitFlag(true, 32, 0L)
+                                case 6: wneu = setBitFlag(true, 64, 0L)
                             }
                         } else {
                             wneu = -w
@@ -870,7 +888,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
         isValid = isValid && doManualBindingWrite
 
         if (isValid) {
-            println("Yaa.. Valid")
+            println("Yaa.. Valid: " + currentTimer)
             return true
         } else {
             val  status = binder.validate();

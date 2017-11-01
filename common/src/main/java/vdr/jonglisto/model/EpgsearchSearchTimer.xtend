@@ -145,11 +145,18 @@ class EpgsearchSearchTimer {
     }
 
     def setSearchCategories(String key, String value) {
-        println("SetSearchCategories:" + key + " -> " + value)
+        val ca = new HashSet<String>
+        ca.add(value)
+        searchCategories.put(key, ca)
     }
 
-    // def setSearchCategories(String key, List<String> values) {
-    def setSearchCategories(String key, Object values) {
-        println("SetSearchCategories:" + key + " -> " + values)
+    def setSearchCategoriesSet(String key, Set<?> values) {
+        val ca = new HashSet<String>
+
+        for (a : values) {
+            ca.add(a as String)
+        }
+
+        searchCategories.put(key, ca)
     }
 }
