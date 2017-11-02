@@ -301,6 +301,14 @@ class Parser {
             i = i + 1
         }
 
+        result.splitCategories
+
+        if (line != result.createSvdrpLine()) {
+            log.error("Mismatch found in epgsearch timer parsing/creating!")
+            log.error("Original:  " + line)
+            log.error("Generated: " + result.createSvdrpLine())
+        }
+
         return result
     }
 

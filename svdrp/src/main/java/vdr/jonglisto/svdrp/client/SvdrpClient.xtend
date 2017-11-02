@@ -207,11 +207,6 @@ class SvdrpClient {
             val response = vdr.command("PLUG epgsearch LSTS", 900)
             response.lines.stream.forEach(s | timer.add(Parser.parseEpgsearchList(s)))
 
-            // fine tune search timers
-            for (t : timer) {
-                t.splitCategories
-            }
-
             return timer
         } catch (Exception e) {
             // no search timers defined or host down

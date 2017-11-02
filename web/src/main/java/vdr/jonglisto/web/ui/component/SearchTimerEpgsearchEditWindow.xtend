@@ -35,6 +35,14 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension org.apache.commons.lang3.StringUtils.*
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
+// TODO:
+// 38 - minutes before switch (if action = 2)
+// 54 - compare date when testing for a repeat? (0=no, 1=same day, 2=same week, 3=same month)
+//
+// 53 - HEX representation of the content descriptors, each descriptor ID is represented with 2 chars
+// Is this the content descriptor inside the DVB stream?
+// See 6.2.9 Content descriptor in http://www.etsi.org/deliver/etsi_en/300400_300499/300468/01.15.01_60/en_300468v011501p.pdf
+
 @Log
 class SearchTimerEpgsearchEditWindow extends Window {
     val Messages messages
@@ -889,6 +897,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
 
         if (isValid) {
             println("Yaa.. Valid: " + currentTimer)
+            println("SVDRP: " + currentTimer.createSvdrpLine)
             return true
         } else {
             val  status = binder.validate();
