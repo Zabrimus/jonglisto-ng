@@ -19,11 +19,14 @@ import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.EpgsearchCategory
 import vdr.jonglisto.model.EpgsearchChannelGroup
 import vdr.jonglisto.model.EpgsearchSearchTimer
+import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 import vdr.jonglisto.model.Recording
 import vdr.jonglisto.model.Timer
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.model.VdrPlugin
 import vdr.jonglisto.xtend.annotation.Log
+
+import static extension org.apache.commons.lang3.StringUtils.*
 
 @Log
 class SvdrpClient {
@@ -255,6 +258,15 @@ class SvdrpClient {
 
             // no channel groups defined or host down
             return Collections.emptyList
+        }
+    }
+
+    def saveEpgsearchTimer(VDR vdr, EpgsearchSearchTimer timer) {
+        // insert or update
+        if (timer.getField(Field.id).isNotEmpty) {
+            vdr.command("PLUG epgsearch EDIS " + timer.createSvdrpLine, 900)
+        } else {
+            vdr.command("PLUG epgsearch NEWS " + timer.createSvdrpLine, 900)
         }
     }
 

@@ -669,7 +669,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
         }
 
         binder.forField(text)
-                .withConverter( [s|s.trim], [s | s.trim] )
+                .withConverter( [s| if (s !== null) s.trim else ""], [s| if (s !== null) s.trim else ""] )
                 .withValidator( new StringLengthValidator("Pattern length must be greater than 0", 1, null) )
                 .bind([s | s.getField(field)], [ s1, s2 | s1.setField(field, s2)] )
     }
@@ -681,7 +681,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
         }
 
         binder.forField(text)
-                .withConverter( [s|s.trim], [s | s.trim] )
+                .withConverter( [s|if (s !== null) s.trim else ""], [s | if (s !== null) s.trim else ""] )
                 .bind([s | s.getField(field)], [ s1, s2 | s1.setField(field, s2)] )
     }
 
@@ -766,31 +766,38 @@ class SearchTimerEpgsearchEditWindow extends Window {
         }
 
         binder.forField(box)
-               .bind([s | val w = s.getLongField(Field.which_days)
-                          if (w >= 0) {
-                            w == posNr
+               .bind([s | val w = s.getNullableLongField(Field.which_days)
+                          if (w !== null) {
+                              if (w >= 0) {
+                                w == posNr
+                              } else {
+                                getBitFlag(negNr, -w)
+                              }
                           } else {
-                            getBitFlag(negNr, -w)
-                          }],
-                    [s1,s2 | var w = s1.getLongField(Field.which_days)
-                        var long wneu
-                        if (w >= 0) {
-                            switch (w) {
-                                case 0: wneu = setBitFlag(true, 1, 0L)
-                                case 1: wneu = setBitFlag(true, 2, 0L)
-                                case 2: wneu = setBitFlag(true, 4, 0L)
-                                case 3: wneu = setBitFlag(true, 8, 0L)
-                                case 4: wneu = setBitFlag(true, 16, 0L)
-                                case 5: wneu = setBitFlag(true, 32, 0L)
-                                case 6: wneu = setBitFlag(true, 64, 0L)
+                              return false
+                          }
+                     ],
+                     [s1,s2 | var w = s1.getNullableLongField(Field.which_days)
+                        if (w !== null) {
+                            var long wneu
+                            if (w >= 0) {
+                                switch (w) {
+                                    case 0: wneu = setBitFlag(true, 1, 0L)
+                                    case 1: wneu = setBitFlag(true, 2, 0L)
+                                    case 2: wneu = setBitFlag(true, 4, 0L)
+                                    case 3: wneu = setBitFlag(true, 8, 0L)
+                                    case 4: wneu = setBitFlag(true, 16, 0L)
+                                    case 5: wneu = setBitFlag(true, 32, 0L)
+                                    case 6: wneu = setBitFlag(true, 64, 0L)
+                                }
+                            } else {
+                                wneu = -w
                             }
-                        } else {
-                            wneu = -w
-                        }
 
-                        wneu = setBitFlag(box.value, negNr, wneu)
-                        s1.setField(Field.which_days, String.valueOf(-wneu))
-                    ]
+                            wneu = setBitFlag(box.value, negNr, wneu)
+                            s1.setField(Field.which_days, String.valueOf(-wneu))
+                        }
+                     ]
                )
     }
 
@@ -841,12 +848,17 @@ class SearchTimerEpgsearchEditWindow extends Window {
         var result = ""
 
         if (idx == 1) {
+            println("channelFrom: " + channelFrom.selectedItem)
+            println("channelTo: " + channelTo.selectedItem)
+
             if (channelFrom.selectedItem.isPresent) {
                 result = channelFrom.selectedItem.get.id
+            } else {
+                result = SvdrpClient.get.channels.get(0).id
             }
 
             if (channelTo.selectedItem.isPresent && result != channelTo.selectedItem.get.id) {
-                result = "|" + channelTo.selectedItem.get.id
+                result = result + "|" + channelTo.selectedItem.get.id
             }
         } else if (idx == 2) {
             if (channelGroupCombo.selectedItem.isPresent) {
@@ -864,7 +876,6 @@ class SearchTimerEpgsearchEditWindow extends Window {
     }
 
     private def fillTimerValues() {
-        println("Timer: " + currentTimer)
         binder.readBean(currentTimer)
         doManualBindingRead
     }
@@ -896,8 +907,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
         isValid = isValid && doManualBindingWrite
 
         if (isValid) {
-            println("Yaa.. Valid: " + currentTimer)
-            println("SVDRP: " + currentTimer.createSvdrpLine)
+            SvdrpClient.get.saveEpgsearchTimer(vdr, currentTimer)
             return true
         } else {
             val  status = binder.validate();
@@ -930,7 +940,6 @@ class SearchTimerEpgsearchEditWindow extends Window {
                 firstLastDay.visible = false
             }
         }
-
     }
 
     private def fillDefaultLists() {

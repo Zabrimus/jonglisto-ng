@@ -123,6 +123,22 @@ class EpgsearchSearchTimer {
     }
 
     def getLongField(Field field) {
+        val r = getField(field)
+
+        if (r === null) {
+            return 0
+        }
+
+        return Long.parseLong(getField(field))
+    }
+
+    def getNullableLongField(Field field) {
+        val r = getField(field)
+
+        if (r === null) {
+            return null
+        }
+
         return Long.parseLong(getField(field))
     }
 
@@ -141,7 +157,9 @@ class EpgsearchSearchTimer {
     }
 
     def setDateField(Field field, LocalDate value) {
-        setField(field, String.valueOf(value.atStartOfDay(ZoneId.systemDefault()).toEpochSecond()))
+        if (value !== null) {
+            setField(field, String.valueOf(value.atStartOfDay(ZoneId.systemDefault()).toEpochSecond()))
+        }
     }
 
     def splitCategories() {
@@ -189,6 +207,10 @@ class EpgsearchSearchTimer {
 
     private def getTransformedField(Field field) {
         var value = cfg.get(field)
+
+        if (value === null) {
+            return ""
+        }
 
         if (field == Field.extepg_infos) {
             value = searchCategories.keySet //
