@@ -1,0 +1,32 @@
+TODOs in no specific order:
+
+- channel logos
+- main page: ping and svdrp only after requested, not automatically
+- timer page: show timer conflicts and timeline
+- epg overview: implement alarm
+- recording view: show free/used harddisk size
+- OSD view is not implemented
+- channel configuration view: hide all epgd information, if epgd is not configured
+- channel configuration view: is it possible to update the channel list in live/running vdr?
+- automatically change epg-data (that search timers are able to filter) -> But how to prevent epgd to change the epg entry?
+- epgsearch view: save and use templates
+- epg details view: record, switch channel, find reruns, create searchtimer
+- more rights / better password configuration (use e.g. a hashed value)
+- monitor open VDR connections (i'm not sure if everything is working as desired)
+- wake on lan
+- epg view: favourite channel list
+- channel config view: save and load configuration
+
+
+TODOs which are not yet reasoned:
+
+- implement SVDRP-only VDR plugin to get more information / do something useful
+    e.g. - get list of deleted recordings / undelete recordings
+- implement svdrp server to show jonglisto OSD entries:
+    e.g. - favourite channel list
+         - epg suggestions (together with an epg search mechanism)
+
+finished TODOs:
+
+-
+
