@@ -238,8 +238,8 @@ class TimerGrid {
                 width = "22px"
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                 addClickListener(s | {
-                    Notification.show("Not yet implemented: Timer delete")
-                    grid.dataProvider.refreshAll
+                    SvdrpClient.get.deleteTimer(currentVdr, timer)
+                    refreshTimer
                 })
             ]
 
