@@ -2,6 +2,7 @@ package vdr.jonglisto.web.ui.component
 
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.shared.ui.ContentMode
+import com.vaadin.ui.Button
 import com.vaadin.ui.GridLayout
 import com.vaadin.ui.HorizontalLayout
 import com.vaadin.ui.Label
@@ -10,6 +11,7 @@ import com.vaadin.ui.TextArea
 import com.vaadin.ui.UI
 import com.vaadin.ui.VerticalLayout
 import com.vaadin.ui.Window
+import com.vaadin.ui.themes.ValoTheme
 import de.steinwedel.messagebox.MessageBox
 import java.util.List
 import java.util.stream.Collectors
@@ -22,7 +24,7 @@ import static vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
 class VdrStatus {
-    val Panel panel
+    val CPanel panel
     val GridLayout grid
     val VDR vdr
 
@@ -35,14 +37,12 @@ class VdrStatus {
             // row 1
             addComponent(new Label("IP:"))
             addComponent(new Label(vdr.ip))
-
-            addComponent(new Label(getPingStatus(false), ContentMode.HTML))
+            addComponent(new Label(VaadinIcons.QUESTION_CIRCLE.html, ContentMode.HTML))
 
             // row 2
             addComponent(new Label("SVDRP port:"))
             addComponent(new Label(String.valueOf(vdr.port)))
-
-            addComponent(new Label(getSvdrpStatus(false), ContentMode.HTML))
+            addComponent(new Label(VaadinIcons.QUESTION_CIRCLE.html, ContentMode.HTML))
         ]
 
         val layout = new VerticalLayout => [
@@ -52,19 +52,24 @@ class VdrStatus {
                     addClickListener(s | showPlugins)
                 ]
 
-                button(it, "Refresh") [
-                    addClickListener(s | refreshStatus)
-                ]
-
                 button(it, "SVDRP") [
                     addClickListener(s | svdrpCommand)
                 ]
             ])
         ]
 
-        panel = new Panel(vdr.name) => [
-            width = "350px"
-            content = layout
+        val refreshButton = new Button() => [
+            icon = VaadinIcons.REFRESH
+            description = "Refresh"
+            width = "22px"
+            styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+            addClickListener(s | refreshStatus)
+        ]
+
+        panel = new CPanel(vdr.name) => [
+            width = "320px"
+            addComponent(layout)
+            addHeaderComponent(refreshButton)
         ]
     }
 
@@ -153,7 +158,7 @@ class VdrStatus {
         val result = getStatusHtml(SvdrpClient.get.pingHost(vdr))
 
         if (updateGrid) {
-            grid.replaceComponent(grid.getComponent(2, 0), new Label(result, ContentMode.HTML))
+            grid.replaceComponent(grid.getComponent(2, 1), new Label(result, ContentMode.HTML))
         }
 
         return result
