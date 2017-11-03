@@ -267,11 +267,15 @@ class Configuration {
     }
 
     private def registerDbInformation(Jonglisto cfg) {
-        dbUsername = cfg.epg2Vdr?.username
-        dbPassword = cfg.epg2Vdr?.password
-        dbDatabase = cfg.epg2Vdr?.database
-        dbHost = cfg.epg2Vdr?.host
-        dbPort = cfg.epg2Vdr?.port
+        val mc = cfg.epg2Vdr
+
+        if (mc !== null) {
+            dbUsername = mc.username
+            dbPassword = mc.password
+            dbDatabase = mc.database
+            dbHost = mc.host
+            dbPort = mc.port
+        }
     }
 
     private def compilePattern(String str) {

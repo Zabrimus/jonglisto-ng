@@ -89,11 +89,17 @@ class ChannelConfigView extends BaseView {
                 addClickListener[
                     epgProviderAutoMapping()
                 ]
+
+                visible = Configuration.get.isDatabaseConfigured
             ]
 
-            addComponent(getChannelMapDownloadButton(messages.createChannelMap, "channelmap.conf"))
+            val download1 = getChannelMapDownloadButton(messages.createChannelMap, "channelmap.conf")
+            download1.visible = Configuration.get.isDatabaseConfigured
+            addComponent(download1)
 
-            addComponent(getMappingDownloadButton(messages.createExtMapping, "mapping.jonglisto"))
+            val download2 = getMappingDownloadButton(messages.createExtMapping, "mapping.jonglisto")
+            download2.visible = Configuration.get.isDatabaseConfigured
+            addComponent(download2)
         ]
 
         addComponentsAndExpand(createMainLayout)
@@ -236,6 +242,8 @@ class ChannelConfigView extends BaseView {
             ]
 
             addPanelDropTarget(it)
+
+            visible = Configuration.get.isDatabaseConfigured
         ]
 
         /*****************************
@@ -253,6 +261,8 @@ class ChannelConfigView extends BaseView {
             ]
 
             addPanelDropTarget(it)
+
+            visible = Configuration.get.isDatabaseConfigured
         ]
 
         return h

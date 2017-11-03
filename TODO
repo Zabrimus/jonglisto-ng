@@ -6,7 +6,6 @@ TODOs in no specific order:
 - epg overview: implement alarm
 - recording view: show free/used harddisk size
 - OSD view is not implemented
-- channel configuration view: hide all epgd information, if epgd is not configured
 - channel configuration view: is it possible to update the channel list in live/running vdr?
 - automatically change epg-data (that search timers are able to filter) -> But how to prevent epgd to change the epg entry?
 - epgsearch view: save and use templates
@@ -28,5 +27,5 @@ TODOs which are not yet reasoned:
 
 finished TODOs:
 
--
+- channel configuration view: hide all epgd information, if epgd is not configured
 
