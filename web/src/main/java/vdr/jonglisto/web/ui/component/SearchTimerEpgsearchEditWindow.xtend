@@ -848,9 +848,6 @@ class SearchTimerEpgsearchEditWindow extends Window {
         var result = ""
 
         if (idx == 1) {
-            println("channelFrom: " + channelFrom.selectedItem)
-            println("channelTo: " + channelTo.selectedItem)
-
             if (channelFrom.selectedItem.isPresent) {
                 result = channelFrom.selectedItem.get.id
             } else {
