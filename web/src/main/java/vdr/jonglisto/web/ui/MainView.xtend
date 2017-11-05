@@ -4,6 +4,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
 import com.vaadin.ui.CssLayout
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.VDR
+import vdr.jonglisto.web.ui.component.TimeLine
 import vdr.jonglisto.web.ui.component.VdrStatus
 import vdr.jonglisto.xtend.annotation.Log
 

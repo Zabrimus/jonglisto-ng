@@ -1,8 +1,14 @@
 package vdr.jonglisto.web.ui
 
 import com.vaadin.icons.VaadinIcons
+import com.vaadin.ui.Alignment
+import com.vaadin.ui.DateField
+import com.vaadin.ui.HorizontalLayout
+import com.vaadin.ui.Label
+import java.time.LocalDate
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
+import vdr.jonglisto.web.ui.component.TimeLine
 import vdr.jonglisto.web.ui.component.TimerGrid
 import vdr.jonglisto.xtend.annotation.Log
 
@@ -12,6 +18,9 @@ import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 class TimerView extends BaseView {
 
     var TimerGrid timerGrid
+    var TimeLine timeLine
+    var DateField  timeLineDateField
+    var HorizontalLayout timeLineLayout
 
     new() {
         super(BUTTON.TIMER)
@@ -41,6 +50,21 @@ class TimerView extends BaseView {
             ]
         ]
 
+        timeLineLayout = horizontalLayout[
+            width = "100%"
+            timeLine = new TimeLine(800, LocalDate.now, SvdrpClient.get.getTimer(selectedVdr))
+            addComponent(timeLine)
+            setComponentAlignment(timeLine, Alignment.MIDDLE_CENTER);
+
+            timeLineDateField = new DateField(messages.timerDate, LocalDate.now) => [
+                addValueChangeListener(it | refreshTimeLine)
+            ]
+
+            addComponent(timeLineDateField)
+        ]
+
+        timeLineLayout.setExpandRatio(timeLine, 2.0f)
+
         prepareGrid
     }
 
@@ -51,6 +75,23 @@ class TimerView extends BaseView {
             timerGrid.grid.getDataProvider().refreshAll();
             timerGrid.grid.recalculateColumnWidths
             timerGrid.currentVdr = vdr
+        }
+
+        refreshTimeLine()
+    }
+
+    private def refreshTimeLine() {
+        if (timeLineLayout !== null) {
+            var selDate = timeLineDateField.value
+            if (selDate === null) {
+                selDate = LocalDate.now
+            }
+
+            val oldTimeLine = timeLine
+            timeLine = new TimeLine(800, selDate, SvdrpClient.get.getTimer(selectedVdr))
+
+            timeLineLayout.replaceComponent(oldTimeLine, timeLine)
+            timeLineLayout.setComponentAlignment(timeLine, Alignment.MIDDLE_CENTER);
         }
     }
 
