@@ -226,8 +226,16 @@ class Timer extends BaseData implements Serializable {
         LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime), ZoneId.systemDefault()).toLocalDate()
     }
 
+    def getEndDate() {
+        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime + getDuration), ZoneId.systemDefault()).toLocalDate()
+    }
+
     def getStartDateTime() {
         LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime), ZoneId.systemDefault())
+    }
+
+    def getEndDateTime() {
+        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime + getDuration), ZoneId.systemDefault())
     }
 
     def setStartDate(LocalDate date) {

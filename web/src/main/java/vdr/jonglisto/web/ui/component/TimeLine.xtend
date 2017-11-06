@@ -17,16 +17,15 @@ class TimeLine extends Composite {
 
     new(int w, LocalDate date, List<Timer> timer) {
         val layout = createRootComponent(w)
-        // height = "80px"
 
         val showTimer = timer.stream //
-            .filter(s | s.startDate == date) //
+            .filter(s | s.startDate.isEqual(date) || s.endDate.isEqual(date)) //
             .sorted([s1,s2 | s1.startTime.compareTo(s2.startTime)]) //
             .collect(Collectors.groupingBy([m | m.channelId], Collectors.toList()))
 
         val idx = new AtomicInteger(0)
         showTimer.keySet.stream.forEach(s | {
-            fillTimeline(layout, idx.incrementAndGet, s, showTimer.get(s))
+            fillTimeline(layout, idx.incrementAndGet, s, showTimer.get(s), date)
         })
     }
 
@@ -55,19 +54,32 @@ class TimeLine extends Composite {
         return a
     }
 
-    private def fillTimeline(AbsoluteLayout layout, int idx, String channelId, List<Timer> timer) {
+    private def fillTimeline(AbsoluteLayout layout, int idx, String channelId, List<Timer> timer, LocalDate date) {
         val channelName = SvdrpClient.get.getChannel(channelId).name
 
         val channelLabel = new Label("<center><p style=\"font-size: 80%;\">" + channelName + "</p><center>", ContentMode.HTML)
         layout.addComponent(channelLabel, "left: 0px; top: " + (idx * 20) + "px;")
 
         timer.stream.forEach(s | {
-            val start = s.startDateTime
-            val hour = start.hour
-            val minute = start.minute
+            var int hour
+            var int minute
+            var long tmpDuration
 
+            if (s.startDate.isBefore(date)) {
+                val end = s.endDateTime
+                hour = 0
+                minute = 0
+                tmpDuration = (end.hour * 60 + end.minute) * 60
+            } else {
+                val start = s.startDateTime
+                hour = start.hour
+                minute = start.minute
+                tmpDuration = s.duration
+            }
+
+            val duration = tmpDuration
             val timeLineLabel = new Label("<center><p style=\"font-size: 80%;border:1px solid;height:15px;background-color:" + "#90EE90;" + "\">&nbsp;</p><center>", ContentMode.HTML) => [
-                width = (((compWidth-100) * s.duration) / (24 * 60 * 60)) + "px"
+                width = (((compWidth-100) * duration) / (24 * 60 * 60)) + "px"
             ]
 
             layout.addComponent(timeLineLabel, "left: " + (100 + ((compWidth-100) * (hour * 60 + minute)) / (24 * 60))  + "px; top: " + (idx * 20) + "px;")
