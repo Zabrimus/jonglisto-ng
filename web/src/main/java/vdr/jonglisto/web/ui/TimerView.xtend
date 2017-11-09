@@ -4,10 +4,10 @@ import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Alignment
 import com.vaadin.ui.DateField
 import com.vaadin.ui.HorizontalLayout
-import com.vaadin.ui.Label
 import java.time.LocalDate
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
+import vdr.jonglisto.util.TimerOverlap
 import vdr.jonglisto.web.ui.component.TimeLine
 import vdr.jonglisto.web.ui.component.TimerGrid
 import vdr.jonglisto.xtend.annotation.Log
@@ -75,6 +75,10 @@ class TimerView extends BaseView {
             timerGrid.grid.getDataProvider().refreshAll();
             timerGrid.grid.recalculateColumnWidths
             timerGrid.currentVdr = vdr
+
+            val overlap = new TimerOverlap(8, SvdrpClient.get.channels)
+            overlap.addTimer(timers)
+            overlap.collisions
         }
 
         refreshTimeLine()

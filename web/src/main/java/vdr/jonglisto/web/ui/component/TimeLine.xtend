@@ -11,9 +11,13 @@ import java.util.stream.Collectors
 import vdr.jonglisto.model.Timer
 import vdr.jonglisto.svdrp.client.SvdrpClient
 
+import static extension vdr.jonglisto.util.TimerOverlap.*
+
 class TimeLine extends Composite {
     var int compWidth
     var int cellWidth
+
+    var lastTransponder = ""
 
     new(int w, LocalDate date, List<Timer> timer) {
         val layout = createRootComponent(w)
@@ -24,7 +28,7 @@ class TimeLine extends Composite {
             .collect(Collectors.groupingBy([m | m.channelId], Collectors.toList()))
 
         val idx = new AtomicInteger(0)
-        showTimer.keySet.stream.forEach(s | {
+        showTimer.keySet.stream.sorted(s1,s2 | s1.transponder.compareTo(s2.transponder)).forEach(s | {
             fillTimeline(layout, idx.incrementAndGet, s, showTimer.get(s), date)
         })
     }
@@ -55,6 +59,19 @@ class TimeLine extends Composite {
     }
 
     private def fillTimeline(AbsoluteLayout layout, int idx, String channelId, List<Timer> timer, LocalDate date) {
+        val transponder = channelId.transponder
+
+        if (lastTransponder != transponder) {
+            // draw line
+            val lineLabel = new Label("<center><p style=\"border-top:1px solid;height:0px;background-color:" + "#000000;" + "\">&nbsp;</p><center>", ContentMode.HTML) => [
+                width = (compWidth-100) + "px"
+            ]
+
+            layout.addComponent(lineLabel, "left: 100px; top: " + (idx * 20 - 1) + "px;")
+
+            lastTransponder = transponder
+        }
+
         val channelName = SvdrpClient.get.getChannel(channelId).name
 
         val channelLabel = new Label("<center><p style=\"font-size: 80%;\">" + channelName + "</p><center>", ContentMode.HTML)
