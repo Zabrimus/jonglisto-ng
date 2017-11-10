@@ -99,7 +99,7 @@ class TimeLine extends Composite {
                 width = (((compWidth-100) * duration) / (24 * 60 * 60)) + "px"
             ]
 
-            layout.addComponent(timeLineLabel, "left: " + (100 + ((compWidth-100) * (hour * 60 + minute)) / (24 * 60))  + "px; top: " + (idx * 20) + "px;")
+            layout.addComponent(timeLineLabel, "left: " + (100 + ((compWidth-100) * (hour * 60 + minute)) / (24 * 60))  + "px; top: " + (idx * 20 + 4) + "px;")
         })
 
         layout.height = ((idx + 1) * 30) + "px"
