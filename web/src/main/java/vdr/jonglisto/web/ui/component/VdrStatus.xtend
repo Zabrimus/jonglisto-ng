@@ -1,8 +1,11 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.event.ShortcutListener
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.shared.ui.ContentMode
+import com.vaadin.ui.Alignment
 import com.vaadin.ui.Button
+import com.vaadin.ui.ComboBox
 import com.vaadin.ui.GridLayout
 import com.vaadin.ui.HorizontalLayout
 import com.vaadin.ui.Label
@@ -21,11 +24,13 @@ import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
+import com.vaadin.event.ShortcutAction.KeyCode
 
 @Log
 class VdrStatus {
     val CPanel panel
     val GridLayout grid
+    var ComboBox box
     val VDR vdr
 
     new(VDR vdr) {
@@ -86,16 +91,31 @@ class VdrStatus {
         val commandResult = new TextArea => [ setSizeFull ]
 
         val verticalLayout = new VerticalLayout => [
-            comboBox(it, Configuration.get.defaultSvdrpCommand) [
+            horizontalLayout(it) [
                 width = "100%"
-                caption = "Command"
-                selectedItem = null
 
-                addSelectionListener(s | {
-                    commandResult.value = SvdrpClient.get.processCommand(vdr, s.value).createResult
-                })
+                box = comboBox(it, Configuration.get.defaultSvdrpCommand) [
+                    width = "100%"
+                    caption = "Command"
+                    selectedItem = null
+                    textInputAllowed = true
 
-                newItemHandler = [ s | commandResult.value = SvdrpClient.get.processCommand(vdr, s).createResult]
+                    newItemHandler = [ s | {
+                        val list = Configuration.get.defaultSvdrpCommand
+                        list.add(s)
+                        box.items = list
+                        box.selectedItem = s
+                    }]
+                ]
+
+                val execute = button(it, "Execute") [
+                    addClickListener(s | {
+                        commandResult.value = SvdrpClient.get.processCommand(vdr, box.optionalValue).createResult
+                    })
+                ]
+
+                it.setExpandRatio(box, 3.0f)
+                it.setComponentAlignment(execute, Alignment.BOTTOM_RIGHT)
             ]
 
             addComponentsAndExpand(commandResult)

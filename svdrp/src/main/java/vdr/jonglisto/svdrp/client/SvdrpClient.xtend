@@ -10,6 +10,7 @@ import java.util.Collections
 import java.util.HashMap
 import java.util.List
 import java.util.Map
+import java.util.Optional
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 import vdr.jonglisto.configuration.Configuration
@@ -267,6 +268,12 @@ class SvdrpClient {
             vdr.command("PLUG epgsearch EDIS " + timer.createSvdrpLine, 900)
         } else {
             vdr.command("PLUG epgsearch NEWS " + timer.createSvdrpLine, 900)
+        }
+    }
+
+    def processCommand(VDR vdr, Optional<String> command) {
+        if (command.isPresent) {
+            processCommand(vdr, command.get)
         }
     }
 
