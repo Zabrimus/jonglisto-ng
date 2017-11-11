@@ -48,6 +48,11 @@ class VdrStatus {
             addComponent(new Label("SVDRP port:"))
             addComponent(new Label(String.valueOf(vdr.port)))
             addComponent(new Label(VaadinIcons.QUESTION_CIRCLE.html, ContentMode.HTML))
+
+            // row 3
+            addComponent(new Label("Disk Free:"))
+            addComponent(new Label("0"))
+            addComponent(new Label(""))
         ]
 
         val layout = new VerticalLayout => [
@@ -83,8 +88,9 @@ class VdrStatus {
     }
 
     private def refreshStatus() {
-        getPingStatus(true)
-        getSvdrpStatus(true)
+        getPingStatus()
+        getSvdrpStatus()
+        getDiskStatus()
     }
 
     private def svdrpCommand() {
@@ -164,24 +170,19 @@ class VdrStatus {
         }
     }
 
-    private def getPingStatus(boolean updateGrid) {
+    private def void getPingStatus() {
         val result = getStatusHtml(Configuration.get.pingHost(vdr))
-
-        if (updateGrid) {
-            grid.replaceComponent(grid.getComponent(2, 0), new Label(result, ContentMode.HTML))
-        }
-
-        return result
+        grid.replaceComponent(grid.getComponent(2, 0), new Label(result, ContentMode.HTML))
     }
 
-    private def getSvdrpStatus(boolean updateGrid) {
+    private def void getSvdrpStatus() {
         val result = getStatusHtml(SvdrpClient.get.pingHost(vdr))
+        grid.replaceComponent(grid.getComponent(2, 1), new Label(result, ContentMode.HTML))
+    }
 
-        if (updateGrid) {
-            grid.replaceComponent(grid.getComponent(2, 1), new Label(result, ContentMode.HTML))
-        }
-
-        return result
+    private def void getDiskStatus() {
+        val result = SvdrpClient.get.getStat(vdr)
+        grid.replaceComponent(grid.getComponent(1, 2), new Label(result.toStringFree))
     }
 
     private def getStatusHtml(boolean b) {

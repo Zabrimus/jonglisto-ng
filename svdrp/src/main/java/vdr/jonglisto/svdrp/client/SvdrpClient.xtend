@@ -205,6 +205,11 @@ class SvdrpClient {
         vdr.command("UPDT " + timer.toVdrString, 250)
     }
 
+    def getStat(VDR vdr) {
+        val response = vdr.command("STAT disk", 250)
+        return Parser.parseStat(response.lines.get(0))
+    }
+
     def getEpgsearchSearchTimerList(VDR vdr) {
         try {
             val timer = new ArrayList<EpgsearchSearchTimer>

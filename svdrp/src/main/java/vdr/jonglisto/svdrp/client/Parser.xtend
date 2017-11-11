@@ -19,6 +19,7 @@ import vdr.jonglisto.model.EpgsearchChannelGroup
 import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.Recording
 import vdr.jonglisto.model.Timer
+import vdr.jonglisto.model.VDRDiskStat
 import vdr.jonglisto.model.VdrPlugin
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.util.Utils
@@ -32,6 +33,7 @@ class Parser {
     static val recordingPattern = Pattern.compile("(\\d+) (\\d{2}.\\d{2}.\\d{2} \\d{2}:\\d{2}) (\\d+:\\d+)(\\*?) (.*)$")
     static val recordingDateFormatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
     static val pluginPattern = Pattern.compile("^(.*?) (.*?) - (.*?)$")
+    static val statPattern = Pattern.compile("(\\d+)MB (\\d+)MB.*?")
 
     static def List<Channel> parseChannel(List<String> input) {
         val result = new ArrayList<Channel>()
@@ -288,6 +290,15 @@ class Parser {
         }
 
         return null
+    }
+
+    def static parseStat(String line) {
+        val matcher = statPattern.matcher(line)
+        if (matcher.matches) {
+            return new VDRDiskStat(Long.parseLong(matcher.group(1)), Long.parseLong(matcher.group(2)))
+        }
+
+        return new VDRDiskStat(0,0)
     }
 
     def static parseEpgsearchList(String line) {

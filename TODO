@@ -2,7 +2,6 @@ TODOs in no specific order:
 
 - channel logos
 - epg overview: implement alarm
-- recording view: show free/used harddisk size
 - OSD view is not implemented
 - channel configuration view: is it possible to update the channel list in live/running vdr?
 - automatically change epg-data (that search timers are able to filter) -> But how to prevent epgd to change the epg entry?
@@ -28,3 +27,4 @@ finished TODOs:
 - main page: ping and svdrp only after requested, not automatically
 - timer page: show timer conflicts and timeline => sorted by transponder
 - epg details view: record, switch channel, find reruns, create searchtimer
+- recording view: show free/used harddisk size

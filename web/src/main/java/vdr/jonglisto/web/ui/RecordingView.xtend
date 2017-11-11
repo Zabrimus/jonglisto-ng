@@ -1,6 +1,9 @@
 package vdr.jonglisto.web.ui
 
 import com.vaadin.icons.VaadinIcons
+import com.vaadin.ui.Alignment
+import com.vaadin.ui.Label
+import com.vaadin.ui.Layout
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.ui.component.RecordingTreeGrid
@@ -11,6 +14,8 @@ import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 @Log
 class RecordingView extends BaseView {
 
+    var Label sizeLabel
+    var Layout layout
     var RecordingTreeGrid recordingTreeGrid
 
     new() {
@@ -18,34 +23,47 @@ class RecordingView extends BaseView {
     }
 
     protected override createMainComponents() {
-        horizontalLayout[
+        layout = horizontalLayout[
+            width = "100%"
             button(messages.recordingRefresh) [
+                setSizeUndefined
                 icon = VaadinIcons.REFRESH
                 addClickListener(s | {
                     changeVdr(selectedVdr)
                 })
             ]
 
-            button(messages.recordingAddFolder) [
+            val b1 = button(messages.recordingAddFolder) [
+                setSizeUndefined
                 icon = VaadinIcons.FOLDER_ADD
                 addClickListener(s | {
                     recordingTreeGrid.addFolder
                 })
             ]
 
-            button(messages.recordingAddRootFolder) [
+            val b2 = button(messages.recordingAddRootFolder) [
+                setSizeUndefined
                 icon = VaadinIcons.FOLDER_ADD
                 addClickListener(s | {
                     recordingTreeGrid.addRootFolder
                 })
             ]
 
-            button(messages.recordingDeleteSelected) [
+            val b3 = button(messages.recordingDeleteSelected) [
+                setSizeUndefined
                 icon = VaadinIcons.TRASH
                 addClickListener(s | {
                     recordingTreeGrid.deleteSelectedRecordings
                 })
             ]
+
+            sizeLabel = label("0") [ ]
+
+            setComponentAlignment(b1, Alignment.MIDDLE_LEFT)
+            setComponentAlignment(b2, Alignment.MIDDLE_LEFT)
+            setComponentAlignment(b3, Alignment.MIDDLE_LEFT)
+            setComponentAlignment(sizeLabel, Alignment.MIDDLE_RIGHT)
+            setExpandRatio(sizeLabel, 4.0f)
         ]
 
         prepareTreeGrid
@@ -56,6 +74,8 @@ class RecordingView extends BaseView {
             recordingTreeGrid.recordings = SvdrpClient.get.getRecordings(vdr)
             recordingTreeGrid.currentVdr = vdr
         }
+
+        updateSizeLabel(vdr)
     }
 
      private def prepareTreeGrid() {
@@ -64,5 +84,14 @@ class RecordingView extends BaseView {
         grid.setSizeFull
 
         addComponentsAndExpand(grid)
+
+        updateSizeLabel(selectedVdr)
+    }
+
+    private def void updateSizeLabel(VDR vdr) {
+        val stat = SvdrpClient.get.getStat(vdr)
+        val newSizeLabel = new Label("Total: " + stat.toStringTotal + ", Free: " + stat.toStringFree + " (" + stat.toStringFreePerc + "%)")
+        layout.replaceComponent(sizeLabel, newSizeLabel)
+        sizeLabel = newSizeLabel
     }
 }
