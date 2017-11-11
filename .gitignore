@@ -8,3 +8,4 @@ bin
 xtend-gen
 .settings
 build
+/external-jar/
