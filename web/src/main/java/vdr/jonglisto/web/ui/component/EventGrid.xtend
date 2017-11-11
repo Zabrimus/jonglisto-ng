@@ -210,12 +210,42 @@ class EventGrid {
         selectedVdr = v
     }
 
+    def void actionPlay(Epg epg) {
+        try {
+            SvdrpClient.get.switchChannel(currentVdr, epg.channelId)
+        } catch (Exception e) {
+            Notification.show(messages.epgErrorSwitchFailed, Type.ERROR_MESSAGE)
+        }
+    }
+
+    def void actionSearch(Epg epg) {
+        if (grid.parent instanceof EpgView) {
+            (grid.parent as EpgView).searchRetransmissions(epg)
+        } else {
+            log.error("Parent component is not of type EpgView.")
+        }
+    }
+
+    def void actionEdit(Epg epg) {
+        editEpgDetails(epg)
+    }
+
+    def void actionRecord(Epg epg) {
+        val w = new TimerEditWindow(currentVdr, messages, epg)
+        UI.current.addWindow(w)
+    }
+
+    def void actionAlarm(Epg epg) {
+        // TODO: implement event/button alarm
+        Notification.show("Not yet implemented: " + "Alarm actions, Switch to channel, OSD message")
+    }
+
     private def showEpgDetails(Epg epg) {
-        UI.current.addWindow(new EpgDetailsWindow(currentVdr, messages, epg, false))
+        UI.current.addWindow(new EpgDetailsWindow(this, currentVdr, messages, epg, false))
     }
 
     private def editEpgDetails(Epg epg) {
-        UI.current.addWindow(new EpgDetailsWindow(currentVdr, messages, epg, true))
+        UI.current.addWindow(new EpgDetailsWindow(this, currentVdr, messages, epg, true))
     }
 
     private def createChannel(Epg ev) {
@@ -297,11 +327,7 @@ class EventGrid {
                 width = "22px"
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                 addClickListener(s | {
-                    try {
-                        SvdrpClient.get.switchChannel(currentVdr, epg.channelId)
-                    } catch (Exception e) {
-                        Notification.show(messages.epgErrorSwitchFailed, Type.ERROR_MESSAGE)
-                    }
+                    actionPlay(epg)
                 })
             ]
 
@@ -311,11 +337,7 @@ class EventGrid {
                 width = "22px"
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                 addClickListener(s | {
-                    if (grid.parent instanceof EpgView) {
-                        (grid.parent as EpgView).searchRetransmissions(epg)
-                    } else {
-                        log.error("Parent component is not of type EpgView.")
-                    }
+                    actionSearch(epg)
                 })
             ]
 
@@ -325,7 +347,7 @@ class EventGrid {
                 width = "22px"
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                 addClickListener(s | {
-                    editEpgDetails(epg)
+                    actionEdit(epg)
                 })
             ]
 
@@ -335,19 +357,17 @@ class EventGrid {
                 width = "22px"
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                 addClickListener(s | {
-                    val w = new TimerEditWindow(currentVdr, messages, epg)
-                    UI.addWindow(w)
+                    actionRecord(epg)
                 })
             ]
 
             button("") [
-                // TODO: implement event/button alarm
                 icon = VaadinIcons.ALARM
                 description = messages.epgAlarm
                 width = "22px"
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                 addClickListener(s | {
-                    Notification.show("Not yet implemented: " + "Alarm actions, Switch to channel, OSD message")
+                    actionAlarm(epg)
                 })
             ]
         ]

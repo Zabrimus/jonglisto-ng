@@ -203,7 +203,7 @@ class TimerGrid {
             }
         ]
 
-        UI.current.addWindow(new EpgDetailsWindow(currentVdr, messages, reduceResult.key, false))
+        UI.current.addWindow(new EpgDetailsWindow(null, currentVdr, messages, reduceResult.key, false))
     }
 
     private def createChannel(Timer ev) {

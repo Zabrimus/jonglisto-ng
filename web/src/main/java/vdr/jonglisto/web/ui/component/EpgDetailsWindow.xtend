@@ -1,10 +1,12 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.icons.VaadinIcons
 import com.vaadin.shared.ui.ContentMode
 import com.vaadin.ui.Button
 import com.vaadin.ui.ComponentContainer
 import com.vaadin.ui.TextArea
 import com.vaadin.ui.Window
+import com.vaadin.ui.themes.ValoTheme
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.VDR
@@ -22,11 +24,13 @@ class EpgDetailsWindow extends Window {
     val Messages messages
     var TextArea epgArea
     var VDR currentVdr
+    val EventGrid parentGrid
 
-    new(VDR vdr, Messages messages, Epg epg, boolean editView) {
+    new(EventGrid parent, VDR vdr, Messages messages, Epg epg, boolean editView) {
         super()
         this.messages = messages
         this.currentVdr = vdr
+        this.parentGrid = parent
 
         caption = createCaption(epg)
 
@@ -42,18 +46,57 @@ class EpgDetailsWindow extends Window {
 
                 addDescription(it, epg, editView)
 
-                button(it, messages.epgClose) [
-                    addCloseButtonClickListener
-                ]
-
-                if (editView) {
-                    button(it, messages.epgSave) [
-                        it.addClickListener(s | {
-                            SvdrpClient.get.saveEpgData(Configuration.get.epgVdr, epg, epgArea.value)
-                            close
-                        })
+                horizontalLayout(it) [
+                    button(it, messages.epgClose) [
+                        addCloseButtonClickListener
                     ]
-                }
+
+                    if (editView) {
+                        button(it, messages.epgSave) [
+                            it.addClickListener(s | {
+                                SvdrpClient.get.saveEpgData(Configuration.get.epgVdr, epg, epgArea.value)
+                                close
+                            })
+                        ]
+                    }
+
+                    if (parentGrid !== null && !editView) {
+                        button(it, messages.epgSwitchChannel) [
+                            icon = VaadinIcons.PLAY
+                            description = messages.epgSwitchChannel
+                            styleName = ValoTheme.BUTTON_BORDERLESS
+                            it.addClickListener(s | parentGrid.actionPlay(epg))
+                        ]
+
+                        button(it, messages.epgSearchRetransmission) [
+                            icon = VaadinIcons.SEARCH
+                            description = messages.epgSearchRetransmission
+                            styleName = ValoTheme.BUTTON_BORDERLESS
+                            it.addClickListener(s | { close; parentGrid.actionSearch(epg) })
+                        ]
+
+                        button(it, messages.epgEditEpg) [
+                            icon = VaadinIcons.EDIT
+                            description = messages.epgEditEpg
+                            styleName = ValoTheme.BUTTON_BORDERLESS
+                            it.addClickListener(s | { close; parentGrid.actionEdit(epg) })
+                        ]
+
+                        button(it, messages.epgRecord) [
+                            icon = VaadinIcons.CIRCLE
+                            description = messages.epgRecord
+                            styleName = ValoTheme.BUTTON_BORDERLESS
+                            it.addClickListener(s | { close; parentGrid.actionRecord(epg) })
+                        ]
+
+                        button(it, messages.epgAlarm) [
+                            icon = VaadinIcons.ALARM
+                            description = messages.epgAlarm
+                            styleName = ValoTheme.BUTTON_BORDERLESS
+                            it.addClickListener(s | { close; parentGrid.actionAlarm(epg) })
+                        ]
+                    }
+                ]
             ]
         )
     }

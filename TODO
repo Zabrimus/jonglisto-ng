@@ -7,7 +7,6 @@ TODOs in no specific order:
 - channel configuration view: is it possible to update the channel list in live/running vdr?
 - automatically change epg-data (that search timers are able to filter) -> But how to prevent epgd to change the epg entry?
 - epgsearch view: save and use templates
-- epg details view: record, switch channel, find reruns, create searchtimer
 - more rights / better password configuration (use e.g. a hashed value)
 - monitor open VDR connections (i'm not sure if everything is working as desired)
 - wake on lan
@@ -28,3 +27,4 @@ finished TODOs:
 - channel configuration view: hide all epgd information, if epgd is not configured
 - main page: ping and svdrp only after requested, not automatically
 - timer page: show timer conflicts and timeline => sorted by transponder
+- epg details view: record, switch channel, find reruns, create searchtimer
