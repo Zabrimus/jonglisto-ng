@@ -50,7 +50,9 @@ class Utils {
             throw t
         } finally {
             if (mainThrowable === null) {
-                resource.close
+                if (resource !== null) {
+                    resource.close
+                }
             } else {
                 try {
                     resource.close

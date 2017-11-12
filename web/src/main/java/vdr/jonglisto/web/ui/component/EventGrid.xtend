@@ -26,11 +26,13 @@ import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.web.ui.EpgView
 import vdr.jonglisto.web.ui.EpgView.EPGTYPE
+import vdr.jonglisto.web.util.ChannelLogoSource
 import vdr.jonglisto.web.util.HtmlSanitizer
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import com.vaadin.ui.Label
 
 @Log
 class EventGrid {
@@ -91,10 +93,11 @@ class EventGrid {
 
         if (epgType == EPGTYPE.TIME || epgType == EPGTYPE.SEARCH) {
             grid.addColumn(ev|createChannel(ev)) //
+                .setRenderer(new ComponentRenderer)
                 .setCaption(messages.epgChannelCaption) //
                 .setId(COL_CHANNEL) //
                 .setExpandRatio(0) //
-                .setComparator([ev1, ev2|createChannel(ev1).compareToIgnoreCase(createChannel(ev2))])
+                .setComparator([ev1, ev2|(createChannel(ev1).data as String).compareToIgnoreCase(createChannel(ev2).data as String)])
         }
 
         if (epgType == EPGTYPE.CHANNEL || epgType == EPGTYPE.SEARCH) {
@@ -249,7 +252,19 @@ class EventGrid {
     }
 
     private def createChannel(Epg ev) {
-        return SvdrpClient.get.getChannel(ev.channelId).name
+        val name = SvdrpClient.get.getChannel(ev.channelId).name
+        val image = new ChannelLogoSource(name).image
+
+        if (image !== null) {
+            image.data = name
+            image.addClickListener(s | (grid.parent as EpgView).switchToChannelView(ev))
+            return image
+        } else {
+            val label = new Label(name)
+            label.addContextClickListener(s | (grid.parent as EpgView).switchToChannelView(ev))
+            label.data = name
+            return label
+        }
     }
 
     private def createDate(Epg ev) {
@@ -500,7 +515,8 @@ class EventGrid {
             var result = true
 
             if ((filterChannel !== null) && (filterChannel.length > 0)) {
-                result = result && createChannel(s).toUpperCase.startsWith(filterChannel.toUpperCase)
+                var name = createChannel(s).data as String
+                result = result && name.toUpperCase.startsWith(filterChannel.toUpperCase)
             }
 
             if ((filterTitle !== null) && (filterTitle.length > 0)) {

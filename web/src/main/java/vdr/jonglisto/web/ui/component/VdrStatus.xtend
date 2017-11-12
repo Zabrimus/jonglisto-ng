@@ -1,13 +1,14 @@
 package vdr.jonglisto.web.ui.component
 
-import com.vaadin.event.ShortcutListener
 import com.vaadin.icons.VaadinIcons
+import com.vaadin.server.ClassResource
 import com.vaadin.shared.ui.ContentMode
 import com.vaadin.ui.Alignment
 import com.vaadin.ui.Button
 import com.vaadin.ui.ComboBox
 import com.vaadin.ui.GridLayout
 import com.vaadin.ui.HorizontalLayout
+import com.vaadin.ui.Image
 import com.vaadin.ui.Label
 import com.vaadin.ui.Panel
 import com.vaadin.ui.TextArea
@@ -21,10 +22,11 @@ import java.util.stream.Collectors
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
+import vdr.jonglisto.web.util.ChannelLogoSource
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.event.ShortcutAction.KeyCode
+import com.vaadin.server.StreamResource
 
 @Log
 class VdrStatus {
@@ -53,6 +55,7 @@ class VdrStatus {
             addComponent(new Label("Disk Free:"))
             addComponent(new Label("0"))
             addComponent(new Label(""))
+            // addComponent(new ChannelLogoSource("zoom").image)
         ]
 
         val layout = new VerticalLayout => [
