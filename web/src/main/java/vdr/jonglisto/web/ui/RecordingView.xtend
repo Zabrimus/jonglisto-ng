@@ -89,9 +89,15 @@ class RecordingView extends BaseView {
     }
 
     private def void updateSizeLabel(VDR vdr) {
-        val stat = SvdrpClient.get.getStat(vdr)
-        val newSizeLabel = new Label("Total: " + stat.toStringTotal + ", Free: " + stat.toStringFree + " (" + stat.toStringFreePerc + "%)")
-        layout.replaceComponent(sizeLabel, newSizeLabel)
-        sizeLabel = newSizeLabel
+        if (layout !== null) {
+            val stat = SvdrpClient.get.getStat(vdr)
+            val newSizeLabel = new Label("Total: " + stat.toStringTotal + ", Free: " + stat.toStringFree + " (" + stat.toStringFreePerc + "%)")
+
+            log.error("Layout: " + layout)
+            log.error("size: " + sizeLabel)
+
+            layout.replaceComponent(sizeLabel, newSizeLabel)
+            sizeLabel = newSizeLabel
+        }
     }
 }
