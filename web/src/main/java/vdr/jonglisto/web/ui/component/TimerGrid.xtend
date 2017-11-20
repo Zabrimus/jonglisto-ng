@@ -5,6 +5,7 @@ import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Grid
 import com.vaadin.ui.Grid.ItemClick
 import com.vaadin.ui.Grid.SelectionMode
+import com.vaadin.ui.Label
 import com.vaadin.ui.Notification
 import com.vaadin.ui.UI
 import com.vaadin.ui.Window.CloseEvent
@@ -18,6 +19,7 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
+import vdr.jonglisto.web.util.ChannelLogoSource
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
@@ -72,12 +74,21 @@ class TimerGrid {
                 .setExpandRatio(0)
                 .setMinimumWidthFromContent(true)
 
+        /*
         grid.addColumn(ev|createChannel(ev)) //
                 .setCaption(messages.timerChannelCaption) //
                 .setId(COL_CHANNEL) //
                 .setExpandRatio(0) //
                 .setComparator([ev1, ev2|createChannel(ev1).compareToIgnoreCase(createChannel(ev2))])
                 .setMinimumWidthFromContent(true)
+        */
+
+        grid.addColumn(ev|createChannel(ev)) //
+                .setRenderer(new ComponentRenderer)
+                .setCaption(messages.epgChannelCaption) //
+                .setId(COL_CHANNEL) //
+                .setExpandRatio(0) //
+                .setComparator([ev1, ev2|(createChannel(ev1).data as String).compareToIgnoreCase(createChannel(ev2).data as String)])
 
         grid.addColumn(ev|createDate(ev)) //
             .setCaption(messages.timerDateCaption) //
@@ -206,8 +217,24 @@ class TimerGrid {
         UI.current.addWindow(new EpgDetailsWindow(null, currentVdr, messages, reduceResult.key, false))
     }
 
+    /*
     private def createChannel(Timer ev) {
         return SvdrpClient.get.getChannel(ev.channelId).name
+    }
+    */
+
+    private def createChannel(Timer ev) {
+        val name = SvdrpClient.get.getChannel(ev.channelId).name
+        val image = new ChannelLogoSource(name).image
+
+        if (image !== null) {
+            image.data = name
+            return image
+        } else {
+            val label = new Label(name)
+            label.data = name
+            return label
+        }
     }
 
     private def createDate(Timer ev) {

@@ -2,8 +2,10 @@ package vdr.jonglisto.web.ui.component
 
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.shared.ui.ContentMode
+import com.vaadin.ui.Alignment
 import com.vaadin.ui.Button
 import com.vaadin.ui.ComponentContainer
+import com.vaadin.ui.Label
 import com.vaadin.ui.TextArea
 import com.vaadin.ui.Window
 import com.vaadin.ui.themes.ValoTheme
@@ -13,6 +15,7 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
+import vdr.jonglisto.web.util.ChannelLogoSource
 import vdr.jonglisto.web.util.HtmlSanitizer
 import vdr.jonglisto.xtend.annotation.Log
 
@@ -42,7 +45,13 @@ class EpgDetailsWindow extends Window {
 
         setContent(
             verticalLayout [
-                label(it, epg.shortText)
+                val headerLabel = label(it, epg.shortText)
+                val header = horizontalLayout(it) [
+                    it.addComponent(createChannel(epg))
+                    it.addComponent(headerLabel)
+                ]
+
+                header.setComponentAlignment(headerLabel, Alignment.MIDDLE_LEFT)
 
                 addDescription(it, epg, editView)
 
@@ -139,5 +148,19 @@ class EpgDetailsWindow extends Window {
         b.addClickListener(s | {
             close
         })
+    }
+
+    private def createChannel(Epg ev) {
+        val name = SvdrpClient.get.getChannel(ev.channelId).name
+        val image = new ChannelLogoSource(name).image
+
+        if (image !== null) {
+            image.data = name
+            return image
+        } else {
+            val label = new Label(name)
+            label.data = name
+            return label
+        }
     }
 }

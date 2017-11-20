@@ -1,6 +1,5 @@
 TODOs in no specific order:
 
-- channel logos
 - epg overview: implement alarm
 - OSD view is not implemented
 - channel configuration view: is it possible to update the channel list in live/running vdr?
@@ -11,6 +10,7 @@ TODOs in no specific order:
 - wake on lan
 - epg view: favourite channel list
 - channel config view: save and load configuration
+- play video in recording view
 
 
 TODOs which are not yet reasoned:
@@ -28,3 +28,4 @@ finished TODOs:
 - timer page: show timer conflicts and timeline => sorted by transponder
 - epg details view: record, switch channel, find reruns, create searchtimer
 - recording view: show free/used harddisk size
+- channel logos
