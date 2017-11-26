@@ -10,7 +10,6 @@ TODOs in no specific order:
 - wake on lan
 - epg view: favourite channel list
 - channel config view: save and load configuration
-- play video in recording view
 
 
 TODOs which are not yet reasoned:
@@ -29,3 +28,4 @@ finished TODOs:
 - epg details view: record, switch channel, find reruns, create searchtimer
 - recording view: show free/used harddisk size
 - channel logos
+- play video in recording view

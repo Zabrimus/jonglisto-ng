@@ -328,6 +328,10 @@ class SvdrpClient {
         vdr.command("DELT " + timer.id, 250)
     }
 
+    def playRecording(VDR vdr, Recording recording) {
+        vdr.command("PLAY " + recording.id, 250)
+    }
+
     private def List<Recording> readRecordings(VDR vdr) {
         return vdr.command("LSTR", 250, [ Parser.parseRecording(it.lines) ], [ Collections.emptyList ])
     }

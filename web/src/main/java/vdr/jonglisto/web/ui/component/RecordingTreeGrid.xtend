@@ -349,6 +349,18 @@ class RecordingTreeGrid {
 
         val levelUpButton = tmpLevelUpButton
         val layout = cssLayout[
+            if (recording.id > 0) {
+                button("") [
+                    icon = VaadinIcons.PLAY
+                    description = messages.recordingPlay
+                    width = "22px"
+                    styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+                    addClickListener(s | {
+                        actionPlayRecording(recording)
+                    })
+                ]
+            }
+
             button("") [
                 icon = VaadinIcons.TRASH
                 width = "22px"
@@ -503,6 +515,14 @@ class RecordingTreeGrid {
         val children = treeGrid.treeData.getChildren(parent)
 
         return children.filter[s | s.folder == folder].size
+    }
+
+    def actionPlayRecording(Recording recording) {
+        try {
+            SvdrpClient.get.playRecording(currentVdr, recording)
+        } catch (Exception e) {
+            Notification.show(messages.epgErrorSwitchFailed, Type.ERROR_MESSAGE)
+        }
     }
 }
 
