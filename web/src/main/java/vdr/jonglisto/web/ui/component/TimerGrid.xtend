@@ -74,19 +74,11 @@ class TimerGrid {
                 .setExpandRatio(0)
                 .setMinimumWidthFromContent(true)
 
-        /*
-        grid.addColumn(ev|createChannel(ev)) //
-                .setCaption(messages.timerChannelCaption) //
-                .setId(COL_CHANNEL) //
-                .setExpandRatio(0) //
-                .setComparator([ev1, ev2|createChannel(ev1).compareToIgnoreCase(createChannel(ev2))])
-                .setMinimumWidthFromContent(true)
-        */
-
         grid.addColumn(ev|createChannel(ev)) //
                 .setRenderer(new ComponentRenderer)
                 .setCaption(messages.epgChannelCaption) //
                 .setId(COL_CHANNEL) //
+                .setMinimumWidth(110) //
                 .setExpandRatio(0) //
                 .setComparator([ev1, ev2|(createChannel(ev1).data as String).compareToIgnoreCase(createChannel(ev2).data as String)])
 
@@ -130,6 +122,7 @@ class TimerGrid {
             .setCaption(messages.timerActionCaption) //
             .setId(COL_ACTION) //
             .setExpandRatio(0) //
+            .setMinimumWidth(100) //
             //.setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
             .setMinimumWidthFromContent(true)
 
