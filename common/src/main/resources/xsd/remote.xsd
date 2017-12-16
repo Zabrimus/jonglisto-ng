@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="remote">
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:element name="button">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="key" type="xs:string" maxOccurs="unbounded" minOccurs="1"/>
+              <xs:element name="style" type="xs:string" maxOccurs="1" minOccurs="0"/>
+              <xs:choice>
+                <xs:element name="icon" type="xs:string"/>
+                <xs:element name="label" type="xs:string"/>
+              </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="row" type="xs:unsignedByte" use="required"/>
+            <xs:attribute name="column" type="xs:unsignedByte" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="colorRow" type="xs:short"></xs:attribute>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

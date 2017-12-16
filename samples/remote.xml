@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<remote xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="remote.xsd" colorRow="10">
+    <!-- Row 1 -->
+    <button row="1" column="3">
+        <key>Power</key>
+        <icon>POWER_OFF</icon>
+    </button>
+
+    <!-- Row 2 (empty) -->
+
+    <!-- Row 3 -->
+    <button row="3" column="1">
+        <key>1</key>
+        <label>1</label>
+    </button>
+
+    <button row="3" column="2">
+        <key>2</key>
+        <label>2</label>
+    </button>
+
+    <button row="3" column="3">
+        <key>3</key>
+        <label>3</label>
+    </button>
+
+    <!-- Row 4 -->
+    <button row="4" column="1">
+        <key>4</key>
+        <label>4</label>
+    </button>
+
+    <button row="4" column="2">
+        <key>5</key>
+        <label>5</label>
+    </button>
+
+    <button row="4" column="3">
+        <key>6</key>
+        <label>6</label>
+    </button>
+
+    <!-- Row 5 -->
+    <button row="5" column="1">
+        <key>7</key>
+        <label>7</label>
+    </button>
+
+    <button row="5" column="2">
+        <key>8</key>
+        <label>8</label>
+    </button>
+
+    <button row="5" column="3">
+        <key>9</key>
+        <label>9</label>
+    </button>
+
+    <!-- Row 6 -->
+    <button row="6" column="2">
+        <key>0</key>
+        <label>0</label>
+    </button>
+
+    <!-- Row 7 (empty) -->
+
+    <!-- Row 8 -->
+    <button row="8" column="1">
+        <key>Menu</key>
+        <label>Menu</label>
+    </button>
+
+    <button row="8" column="3">
+        <key>Back</key>
+        <label>Back</label>
+    </button>
+
+    <!-- Row 9 (empty) -->
+
+    <!-- Row 10 (Farbtasten)     -->
+    <!-- see attribute colorRow -->
+
+    <!-- Row 11 (empty) -->
+
+    <!-- Row 12 -->
+    <button row="12" column="2">
+        <key>Up</key>
+        <icon>CARET_UP</icon>
+    </button>
+
+    <!-- Row 13 -->
+    <button row="13" column="1">
+        <key>Left</key>
+        <icon>CARET_LEFT</icon>
+    </button>
+
+    <button row="13" column="2">
+        <key>Ok</key>
+        <label>OK</label>
+    </button>
+
+    <button row="13" column="3">
+        <key>Right</key>
+        <icon>CARET_RIGHT</icon>
+    </button>
+
+    <!-- Row 14 -->
+    <button row="14" column="2">
+        <key>Down</key>
+        <icon>CARET_DOWN</icon>
+    </button>
+
+    <!-- Row 15 (empty) -->
+
+    <!-- Row 16 -->
+    <button row="16" column="1">
+        <key>Record</key>
+        <icon>CIRCLE</icon>
+    </button>
+
+    <button row="16" column="3">
+        <key>Stop</key>
+        <icon>STOP</icon>
+    </button>
+
+    <!-- Row 17 -->
+    <button row="17" column="1">
+        <key>FastRew</key>
+        <icon>BACKWARDS</icon>
+    </button>
+
+    <button row="17" column="2">
+        <key>Play</key>
+        <icon>PLAY</icon>
+    </button>
+
+    <button row="17" column="3">
+        <key>FastFwd</key>
+        <icon>FORWARD</icon>
+    </button>
+
+    <!-- Row 18 -->
+    <button row="18" column="1">
+        <key>Prev</key>
+        <icon>STEP_BACKWARD</icon>
+    </button>
+
+    <button row="18" column="2">
+        <key>Pause</key>
+        <icon>PAUSE</icon>
+    </button>
+
+    <button row="18" column="3">
+        <key>Next</key>
+        <icon>STEP_FORWARD</icon>
+    </button>
+
+    <!-- Row 19 (empty) -->
+
+    <!-- Row 20 -->
+    <button row="20" column="1">
+        <key>Volume-</key>
+        <icon>VOLUME_DOWN</icon>
+    </button>
+
+    <button row="20" column="2">
+        <key>Mute</key>
+        <icon>VOLUME_OFF</icon>
+    </button>
+
+    <button row="20" column="3">
+        <key>Volume+</key>
+        <icon>VOLUME_UP</icon>
+    </button>
+
+</remote>

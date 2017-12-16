@@ -9,7 +9,6 @@ import com.vaadin.ui.CssLayout
 import com.vaadin.ui.DateField
 import com.vaadin.ui.FormLayout
 import com.vaadin.ui.HorizontalLayout
-import com.vaadin.ui.Image
 import com.vaadin.ui.Label
 import com.vaadin.ui.Layout
 import com.vaadin.ui.ListSelect

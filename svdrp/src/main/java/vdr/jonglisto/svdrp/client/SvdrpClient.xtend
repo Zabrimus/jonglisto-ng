@@ -276,6 +276,12 @@ class SvdrpClient {
         }
     }
 
+    def hitk(VDR vdr, String key) {
+        if (vdr !== null) {
+            vdr.command("HITK " + key, 250)
+        }
+    }
+
     def processCommand(VDR vdr, Optional<String> command) {
         if (command.isPresent) {
             processCommand(vdr, command.get)

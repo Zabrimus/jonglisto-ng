@@ -96,8 +96,8 @@ project(':widgets') {
         compile addons.scaleimage
         compile addons.messagebox
 
-        providedCompile "com.vaadin:vaadin-client:8.1.5"
-        providedCompile "com.vaadin:vaadin-client-compiler:8.1.5"
+        providedCompile "com.vaadin:vaadin-client:8.1.7"
+        providedCompile "com.vaadin:vaadin-client-compiler:8.1.7"
     }
 }
 
