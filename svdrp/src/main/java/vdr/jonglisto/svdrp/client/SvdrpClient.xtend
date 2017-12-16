@@ -296,7 +296,7 @@ class SvdrpClient {
         }
     }
 
-    def isEpgsearchAvailable(String vdrName) {
+    def isPluginAvailable(String vdrName, String pluginName) {
         val vdr = Configuration.get.getVdr(vdrName)
 
         if (vdr === null) {
@@ -307,7 +307,7 @@ class SvdrpClient {
             return false
         }
 
-        val p = getPlugins(vdr).stream.filter(s | s.plugin == "epgsearch").findFirst
+        val p = getPlugins(vdr).stream.filter(s | s.plugin.toLowerCase == pluginName.toLowerCase).findFirst
         if (p.isPresent) {
             return true
         }

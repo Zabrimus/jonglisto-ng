@@ -146,7 +146,7 @@ abstract class BaseView extends VerticalLayout implements View {
         changeVdr(Configuration.get.getVdr(event.selectedItem.get))
 
         // check if epgsearch plugin is available in selectedVdr
-        if (SvdrpClient.get.isEpgsearchAvailable(event.selectedItem.get)) {
+        if (SvdrpClient.get.isPluginAvailable(event.selectedItem.get, "epgsearch")) {
             epgsearchButton.visible = true
         } else {
             epgsearchButton.visible = false
