@@ -282,6 +282,16 @@ class SvdrpClient {
         }
     }
 
+    def getOsd(VDR vdr) {
+        try {
+            val response = vdr.command("PLUG svdrposd LSTO 30", 920)
+            return Parser.parseRemoteOsd(response.lines)
+        } catch (Exception e) {
+            // no open OSD or host down
+            return null
+        }
+    }
+
     def processCommand(VDR vdr, Optional<String> command) {
         if (command.isPresent) {
             processCommand(vdr, command.get)

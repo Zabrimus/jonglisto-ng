@@ -173,4 +173,16 @@
         <icon>VOLUME_UP</icon>
     </button>
 
+    <!-- Row 21 -->
+    <button row="21" column="1">
+        <key>Channel-</key>
+        <label>Chan-</label>
+    </button>
+
+    <button row="21" column="3">
+        <key>Channel+</key>
+        <label>Chan+</label>
+    </button>
+
+
 </remote>

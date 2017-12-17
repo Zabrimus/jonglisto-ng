@@ -4,20 +4,23 @@ import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Button
 import com.vaadin.ui.Composite
 import com.vaadin.ui.GridLayout
+import com.vaadin.ui.HorizontalLayout
 import com.vaadin.ui.Label
 import java.util.HashSet
 import vdr.jonglisto.configuration.jaxb.remote.Remote
 import vdr.jonglisto.model.VDR
-import com.vaadin.ui.HorizontalLayout
 import vdr.jonglisto.svdrp.client.SvdrpClient
+import vdr.jonglisto.web.ui.OsdView
 
 class RemoteComponent extends Composite {
     val Remote remote
     var VDR currentVdr
+    val OsdView parent
 
-    new(VDR vdr, Remote remote) {
+    new(OsdView parent, VDR vdr, Remote remote) {
         this.remote = remote
         this.currentVdr = vdr
+        this.parent = parent
 
         createGrid
     }
@@ -51,7 +54,7 @@ class RemoteComponent extends Composite {
 
             button.addClickListener(event | {
                 s.key.forEach(key | {
-                    SvdrpClient.get.hitk(currentVdr, key);
+                    hitk(key)
                 })
             })
 
@@ -60,29 +63,27 @@ class RemoteComponent extends Composite {
             rows.remove(Integer.valueOf(s.row))
         })
 
-        // rot, grün, gelb, blau
-
         // fill color row
         val redButton = new Button(" ") [
-            SvdrpClient.get.hitk(currentVdr, "Red");
+            hitk("Red")
         ]
         redButton.styleName = "red"
         redButton.width = "100%"
 
         val greenButton = new Button(" ") [
-            SvdrpClient.get.hitk(currentVdr, "Green");
+            hitk("Green")
         ]
         greenButton.styleName = "green"
         greenButton.width = "100%"
 
         val yellowButton = new Button(" ") [
-            SvdrpClient.get.hitk(currentVdr, "Yellow");
+            hitk("Yellow")
         ]
         yellowButton.styleName = "yellow"
         yellowButton.width = "100%"
 
         val blueButton = new Button(" ") [
-            SvdrpClient.get.hitk(currentVdr, "Blue");
+            hitk("Blue")
         ]
         blueButton.styleName = "blue"
         blueButton.width = "100%"
@@ -110,5 +111,11 @@ class RemoteComponent extends Composite {
         ]
 
         compositionRoot = layout
+    }
+
+    private def hitk(String key) {
+        SvdrpClient.get.hitk(currentVdr, key);
+        Thread.sleep(250)
+        parent.updateOsd
     }
 }

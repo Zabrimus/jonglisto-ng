@@ -20,6 +20,7 @@ import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.Recording
 import vdr.jonglisto.model.Timer
 import vdr.jonglisto.model.VDRDiskStat
+import vdr.jonglisto.model.VDROsd
 import vdr.jonglisto.model.VdrPlugin
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.util.Utils
@@ -283,7 +284,7 @@ class Parser {
         return result
     }
 
-    def static parsePlugin(String line) {
+    static def parsePlugin(String line) {
         val matcher = pluginPattern.matcher(line)
         if (matcher.matches) {
             return new VdrPlugin(matcher.group(1), matcher.group(2), matcher.group(3))
@@ -292,7 +293,7 @@ class Parser {
         return null
     }
 
-    def static parseStat(String line) {
+    static def parseStat(String line) {
         val matcher = statPattern.matcher(line)
         if (matcher.matches) {
             return new VDRDiskStat(Long.parseLong(matcher.group(1)), Long.parseLong(matcher.group(2)))
@@ -301,7 +302,7 @@ class Parser {
         return new VDRDiskStat(0,0)
     }
 
-    def static parseEpgsearchList(String line) {
+    static def parseEpgsearchList(String line) {
         val result = new EpgsearchSearchTimer
         val splitted = line.split(":")
 
@@ -323,7 +324,7 @@ class Parser {
         return result
     }
 
-    def static parseEpgsearchCategory(String line) {
+    static def parseEpgsearchCategory(String line) {
         val splitted = line.split("\\|")
         val result = new EpgsearchCategory
 
@@ -342,7 +343,7 @@ class Parser {
         return result
     }
 
-    def static parseEpgsearchChannelGroup(String line) {
+    static def parseEpgsearchChannelGroup(String line) {
         val splitted = line.split("\\|").stream.collect(Collectors.toList)
         val result = new EpgsearchChannelGroup
 
@@ -350,6 +351,30 @@ class Parser {
         result.channelIds = splitted
 
         return result
+    }
+
+    static def VDROsd parseRemoteOsd(List<String> input) {
+        val osd = new VDROsd
+
+        input.forEach(s | {
+            val type = String.valueOf(s.charAt(0))
+            val line = s.substring(2)
+
+            switch(type) {
+                case 'T': osd.title = line
+                case 'C': osd.addLayout(Integer.valueOf(line))
+                case 'I': osd.addMenuItem(type, line)
+                case 'S': osd.addMenuItem(type, line)
+                case 'X': osd.textBlock = line
+                case 'R': osd.red = line
+                case 'G': osd.green = line
+                case 'Y': osd.yellow = line
+                case 'B': osd.blue = line
+                case 'M': osd.statusMessage = line
+            }
+        })
+
+        return osd
     }
 
     /* helper methods */

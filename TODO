@@ -1,16 +1,12 @@
 TODOs in no specific order:
 
 - epg overview: implement alarm
-- OSD view is not implemented
-- channel configuration view: is it possible to update the channel list in live/running vdr?
-- automatically change epg-data (that search timers are able to filter) -> But how to prevent epgd to change the epg entry?
 - epgsearch view: save and use templates
 - more rights / better password configuration (use e.g. a hashed value)
 - monitor open VDR connections (i'm not sure if everything is working as desired)
 - wake on lan
 - epg view: favourite channel list
 - channel config view: save and load configuration
-
 
 TODOs which are not yet reasoned:
 
@@ -19,6 +15,8 @@ TODOs which are not yet reasoned:
 - implement svdrp server to show jonglisto OSD entries:
     e.g. - favourite channel list
          - epg suggestions (together with an epg search mechanism)
+- automatically change epg-data (that search timers are able to filter) -> But how to prevent epgd to change the epg entry?
+- channel configuration view: is it possible to update the channel list in live/running vdr?
 
 finished TODOs:
 
@@ -29,3 +27,4 @@ finished TODOs:
 - recording view: show free/used harddisk size
 - channel logos
 - play video in recording view
+- OSD view is not implemented

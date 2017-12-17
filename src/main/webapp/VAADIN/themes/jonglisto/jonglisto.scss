@@ -54,4 +54,46 @@ $v-focus-style: none;
     .v-button-red {
         @include valo-button-style($background-color: #FF0000, $unit-size: null);
     }
+
+    .v-label-yellow {
+        background-color: #FFFF00;
+        color: #000000;
+        min-width: 80px;
+        padding: 10px;
+        font-weight: bold;
+    }
+
+    .v-label-green {
+        background-color: #008000;
+        color: #000000;
+        min-width: 80px;
+        padding: 10px;
+        font-weight: bold;
+    }
+
+    .v-label-blue {
+        background-color: #0000FF;
+        color: #000000;
+        min-width: 80px;
+        padding: 10px;
+        font-weight: bold;
+    }
+
+    .v-label-red {
+        background-color: #FF0000;
+        color: #000000;
+        min-width: 80px;
+        padding: 10px;
+        font-weight: bold;
+    }
+
+    .v-label-osditem {
+        padding-right: 20px;
+    }
+
+    .v-label-selectedosditem {
+        padding-right: 20px;
+        background-color: #C35817;
+        color: #FFFFFF;
+    }
 }
