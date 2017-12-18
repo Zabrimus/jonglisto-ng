@@ -186,7 +186,14 @@ project(':web') {
     }
 }
 
+task createLogoJar(type: Exec) {
+  executable "sh"
+  args "-c", "cd tools; ./build-logo-jar.sh"
+}
+
 task standaloneWar(type: War) {
+    dependsOn createLogoJar
+
     from "build/classes/java/main"
     include "starter/"
     exclude "vdr"
@@ -205,7 +212,6 @@ task standaloneWar(type: War) {
 
     manifest { attributes 'Main-Class': 'starter.JettyStarter' }
 }
-
 
 task wrapper(type: Wrapper) {
   gradleVersion = '4.2.1'
