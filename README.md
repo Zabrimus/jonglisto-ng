@@ -38,6 +38,7 @@ Build jonglisto using the build image:
 Clone jonglisto-ng
 optional build the channel logos
    > cd tools; ./build-logo-jar.sh
+   
 build jonglisto-ng
    > ./gradlew standaloneWar
    
