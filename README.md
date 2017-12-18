@@ -27,6 +27,9 @@ It's easy to delete the all images. The local system will not be polluted with m
 Build the build image:
 > docker build -t "jonglisto-ng:build" https://github.com/Zabrimus/jonglisto-ng.git#:docker/build-image
 
+Optional task: Create channel logos 
+> cd tools; ./build-logo-jar.sh
+
 Build jonglisto using the build image:
-> docker run -v `pwd`:/tmp/jonglisto-ng/build/libs jonglisto-ng:build /bin/bash -c "cd /tmp/jonglisto-ng; git pull; ./gradlew standaloneWar"
+> docker run -v `` ` ``pwd`` ` ``:/tmp/jonglisto-ng/build/libs jonglisto-ng:build /bin/bash -c "cd /tmp/jonglisto-ng; git pull; ./gradlew standaloneWar"
 
