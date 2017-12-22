@@ -1,6 +1,8 @@
+/*
 plugins {
     id 'com.devsoap.plugin.vaadin' version '1.2.6'
 }
+*/
 
 sourceSets {
     main.resources.srcDirs += ['src/main/webapp', 'src/main/resources']
@@ -23,6 +25,7 @@ eclipse {
 }
 */
 
+/*
 jar.dependsOn vaadinCompile
 
 vaadinCompile {
@@ -42,4 +45,4 @@ vaadinCompile {
     outputDirectory 'src/main/resources'
     manageWidgetset true
 }
-
+*/

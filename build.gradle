@@ -5,6 +5,8 @@ plugins {
     id "org.xtext.xtend" version '1.0.19'
 }
 
+apply plugin: 'war'
+
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
@@ -13,12 +15,6 @@ apply from: "gradle/dependencies.gradle"
 configurations.all {
    exclude group:"com.vaadin", module: "vaadin-client"
    exclude group:"com.vaadin", module: "vaadin-client-compiler"
-}
-
-configurations {
-    embeddedJetty {
-        transitive = false
-    }
 }
 
 dependencies {
@@ -32,7 +28,6 @@ dependencies {
     compile libs.slf4j
     compile libs.xtend
 
-    compile project(':widgets')
     compile project(':annotation')
     compile project(':common')
     compile project(':web')
@@ -40,33 +35,10 @@ dependencies {
     compile project(':database')
 
     runtime 'com.vaadin.external.atmosphere:atmosphere-runtime:2.4.11.vaadin2'
-
-    compileOnly('org.eclipse.jetty:jetty-runner:9.4.7.v20170914') {
-        transitive = false
-    }
-
-    embeddedJetty('org.eclipse.jetty:jetty-runner:9.4.7.v20170914') {
-        transitive = false
-    }
-
-    embeddedJetty('org.eclipse.jetty.websocket:websocket-server:9.4.7.v20170914') {
-        transitive = false
-    }
-}
-
-// precompile addon widgets
-task prepareWidgets(dependsOn: ':widgets:build') {
-}
-
-eclipse {
-    classpath {
-        plusConfigurations += [ configurations.embeddedJetty ]
-    }
 }
 
 allprojects {
     apply plugin: 'java'
-    apply plugin: 'war'
     apply plugin: 'org.xtext.xtend'
     apply plugin: 'eclipse-wtp'
 
@@ -82,22 +54,6 @@ allprojects {
     sourceSets {
         main.xtendOutputDir = 'src/main/xtend-gen'
         main.java.srcDirs += ['src/main/xtend-gen', 'src/main/resources', 'src/main/java']
-    }
-}
-
-project(':widgets') {
-    apply plugin: 'war'
-
-    dependencies {
-        compile libs.vaadinServer
-        compile libs.xtend
-        compile libs.slf4j
-
-        compile addons.scaleimage
-        compile addons.messagebox
-
-        providedCompile "com.vaadin:vaadin-client:8.1.7"
-        providedCompile "com.vaadin:vaadin-client-compiler:8.1.7"
     }
 }
 
@@ -158,7 +114,6 @@ project(':web') {
         compile project(':annotation')
         compile project(':common')
         compile project(':svdrp')
-        compile project(':widgets')
         compile project(':database')
 
         compile libs.vaadinServer
@@ -183,34 +138,14 @@ project(':web') {
         }
 
         compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
+        compileOnly "com.vaadin:vaadin-client:8.1.7"
+        compileOnly "com.vaadin:vaadin-client-compiler:8.1.7"
     }
 }
 
 task createLogoJar(type: Exec) {
   executable "sh"
   args "-c", "cd tools; ./build-logo-jar.sh"
-}
-
-task standaloneWar(type: War) {
-    dependsOn createLogoJar
-
-    from "build/classes/java/main"
-    include "starter/"
-    exclude "vdr"
-
-    delete 'build/extracted-jetty'
-
-    copy {
-        from configurations.embeddedJetty.collect {
-            project.zipTree(it)
-        }
-        into 'build/extracted-jetty'
-    }
-
-    from 'build/extracted-jetty'
-    include '**'
-
-    manifest { attributes 'Main-Class': 'starter.JettyStarter' }
 }
 
 task wrapper(type: Wrapper) {

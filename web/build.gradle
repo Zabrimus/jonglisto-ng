@@ -1,6 +1,8 @@
+/*
 plugins {
     id 'com.devsoap.plugin.vaadin' version '1.2.6'
 }
+*/
 
 jar {
     baseName 'jonglisto-web'
@@ -10,6 +12,7 @@ jar {
     }
 }
 
+/*
 vaadin {
     version '8.1.7'
     manageDependencies true
@@ -21,3 +24,4 @@ vaadin {
 vaadinCompile {
     manageWidgetset false
 }
+*/

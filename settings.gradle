@@ -13,6 +13,5 @@ include 'common'
 include 'svdrp'
 include 'database'
 include 'web'
-include 'widgets'
 
 rootProject.name = 'jonglisto-ng'
