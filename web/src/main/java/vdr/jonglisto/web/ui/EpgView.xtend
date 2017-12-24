@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui
 
+import com.vaadin.cdi.CDIView
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Button
 import com.vaadin.ui.CheckBox
@@ -18,26 +19,33 @@ import java.util.Comparator
 import java.util.List
 import java.util.regex.Pattern
 import java.util.stream.Collectors
+import javax.annotation.PostConstruct
+import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.DateTimeUtil
+import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.EventGrid
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
+@CDIView(MainUI.EPG_VIEW)
 class EpgView extends BaseView {
 
     public enum EPGTYPE {
         TIME, CHANNEL, SEARCH
     }
 
-    var EventGrid eventGrid
+    @Inject
+    private EventGrid eventGrid
+
+    // var EventGrid eventGrid
+
     var EPGTYPE epgType
     var DateField epgDateCriteria
     var List<String> timeSelectValues
@@ -54,8 +62,9 @@ class EpgView extends BaseView {
     var TextField searchDescription
     var Button searchButton
 
-    new() {
-        super(BUTTON.EPG)
+    @PostConstruct
+    def void init() {
+        super.init(BUTTON.EPG)
     }
 
     protected override createMainComponents() {
@@ -152,7 +161,7 @@ class EpgView extends BaseView {
             cssLayout(it) [
                 styleName = "epg-channel"
 
-                epgChannelCriteria = comboBoxChannel(SvdrpClient.get.channels) [
+                epgChannelCriteria = comboBoxChannel(svdrp.channels) [
                     emptySelectionAllowed = false
                     setItemCaptionGenerator(it | it.name)
                     addValueChangeListener(it | listChannel)
@@ -204,7 +213,7 @@ class EpgView extends BaseView {
     }
 
     public def switchToChannelView(Epg epg) {
-        epgChannelCriteria.selectedItem = SvdrpClient.get.getChannel(epg.channelId)
+        epgChannelCriteria.selectedItem = svdrp.getChannel(epg.channelId)
         epgTypeSelect.selectedItem = messages.epgTypeChannel
     }
 
@@ -231,12 +240,12 @@ class EpgView extends BaseView {
     private def getTimeEvents() {
         val millis = secondsForSelectedTime
 
-        val result = SvdrpClient.get.epg.stream //
+        val result = svdrp.epg.stream //
             .filter(it | it.startTime <= millis && it.startTime + it.duration > millis) //
             .collect(Collectors.toList)
             .sortInplace(new Comparator<Epg>() {
                 override compare(Epg o1, Epg o2) {
-                    return SvdrpClient.get.getChannel(o1.channelId).number.compareTo(SvdrpClient.get.getChannel(o2.channelId).number)
+                    return svdrp.getChannel(o1.channelId).number.compareTo(svdrp.getChannel(o2.channelId).number)
                 }
             })
 
@@ -252,7 +261,7 @@ class EpgView extends BaseView {
     private def getChannelEvents() {
         val ch = epgChannelCriteria.selectedItem.get as Channel
 
-        SvdrpClient.get.epg.stream //
+        svdrp.epg.stream //
             .filter(it | it.channelId == ch.id && it.startTime+it.duration >= System.currentTimeMillis / 1000L) //
             .collect(Collectors.toList)
     }
@@ -268,7 +277,7 @@ class EpgView extends BaseView {
                 return Collections.<Epg>emptyList
             }
 
-            return SvdrpClient.get.epg.stream //
+            return svdrp.epg.stream //
                 .filter(it | titlePattern.regexMatcher(it.title)) //
                 .filter(it | shorttextPattern.regexMatcher(it.shortText)) //
                 .filter(it | descriptionPattern.regexMatcher(it.description)) //
@@ -284,7 +293,7 @@ class EpgView extends BaseView {
                 return Collections.<Epg>emptyList
             }
 
-            return SvdrpClient.get.epg.stream //
+            return svdrp.epg.stream //
                 .filter(it | title.stringMatcher(it.title)) //
                 .filter(it | shorttext.stringMatcher(it.shortText)) //
                 .filter(it | description.stringMatcher(it.description)) //
@@ -304,19 +313,16 @@ class EpgView extends BaseView {
         val now = System.currentTimeMillis / 1000L
         switch (epgType) {
             case TIME: {
-                eventGrid = new EventGrid(selectedVdr, epgType, messages)
-                eventGrid.setEvents(getTimeEvents()).createGrid(now)
+                eventGrid.setVdr(selectedVdr).setEpgType(epgType).setEvents(getTimeEvents()).createGrid(now)
                 listTime
             }
 
             case CHANNEL: {
-                eventGrid = new EventGrid(selectedVdr, epgType, messages)
-                eventGrid.setEvents(getChannelEvents()).createGrid(now)
+                eventGrid.setVdr(selectedVdr).setEpgType(epgType).setEvents(getChannelEvents()).createGrid(now)
             }
 
             case SEARCH: {
-                eventGrid = new EventGrid(selectedVdr, epgType, messages)
-                eventGrid.setEvents(getSearchResultEvents()).createGrid(now)
+                eventGrid.setVdr(selectedVdr).setEpgType(epgType).setEvents(getSearchResultEvents()).createGrid(now)
             }
         }
 

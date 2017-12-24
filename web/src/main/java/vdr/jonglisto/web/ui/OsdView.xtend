@@ -1,9 +1,12 @@
 package vdr.jonglisto.web.ui
 
+import com.vaadin.cdi.CDIView
 import com.vaadin.ui.HorizontalLayout
+import javax.annotation.PostConstruct
+import javax.inject.Inject
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
+import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.OsdComponent
 import vdr.jonglisto.web.ui.component.RemoteComponent
 import vdr.jonglisto.xtend.annotation.Log
@@ -11,16 +14,22 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
+@CDIView(MainUI.OSD_VIEW)
 class OsdView extends BaseView {
 
-    val RemoteComponent remote
-    var OsdComponent osd
-    val HorizontalLayout layout
+    @Inject
+    private RemoteComponent remote
 
-    new() {
-        super(BUTTON.OSD)
-        remote = new RemoteComponent(this, selectedVdr, Configuration.get.remoteConfig)
-        osd = new OsdComponent(selectedVdr, SvdrpClient.get.getOsd(selectedVdr))
+    private OsdComponent osd
+    var HorizontalLayout layout
+
+    @PostConstruct
+    def void init() {
+        super.init(BUTTON.OSD)
+        remote.setParent(this).changeVdr(selectedVdr).changeRemote(Configuration.get.remoteConfig).createGrid
+
+        osd = new OsdComponent().changeVdr(selectedVdr).changeOsd(svdrp.getOsd(selectedVdr))
+        osd.createGrid
 
         layout = horizontalLayout[
             setSizeFull
@@ -31,9 +40,11 @@ class OsdView extends BaseView {
         addComponentsAndExpand(layout)
     }
 
+
     def updateOsd() {
         val oldOsd = osd
-        osd = new OsdComponent(selectedVdr, SvdrpClient.get.getOsd(selectedVdr))
+        osd = new OsdComponent().changeVdr(selectedVdr).changeOsd(svdrp.getOsd(selectedVdr))
+        osd.createGrid
         layout.replaceComponent(oldOsd, osd)
     }
 
@@ -42,6 +53,9 @@ class OsdView extends BaseView {
 
     override protected def void changeVdr(VDR vdr) {
         remote.changeVdr(vdr)
-        osd.changeVdr(vdr)
+
+        if (osd !== null) {
+            osd.changeVdr(vdr)
+        }
     }
 }

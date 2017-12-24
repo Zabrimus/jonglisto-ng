@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.cdi.ViewScoped
 import com.vaadin.server.UserError
 import com.vaadin.ui.CheckBox
 import com.vaadin.ui.ComboBox
@@ -12,23 +13,30 @@ import com.vaadin.ui.themes.ValoTheme
 import java.util.ArrayList
 import java.util.List
 import java.util.stream.Collectors
+import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.db.SearchTimerService
 import vdr.jonglisto.db.VdrService
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Channel
+import vdr.jonglisto.model.EpgdSearchTimer
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import vdr.jonglisto.model.EpgdSearchTimer
 
 @Log
+@ViewScoped
 class SearchTimerEpgdEditWindow extends Window {
 
-    val Messages messages
+    @Inject
+    private Svdrp svdrp
+
+    @Inject
+    private Messages messages
+
     val service = new SearchTimerService
     val vdrService = new VdrService
 
@@ -76,15 +84,18 @@ class SearchTimerEpgdEditWindow extends Window {
     private CheckBox searchShortText
     private CheckBox searchDescription
 
-    new(Messages messages, EpgdSearchTimer timer) {
+    new() {
         super()
-        this.messages = messages
+    }
+
+    def showWindow(EpgdSearchTimer timer) {
         closable = true
         modal = true
         width = "60%"
         center();
 
         createLayout(timer)
+        return this
     }
 
     def createLayout(EpgdSearchTimer timer) {
@@ -247,7 +258,7 @@ class SearchTimerEpgdEditWindow extends Window {
             ]
 
             channels = twinColSelect(it, "") [
-                items = SvdrpClient.get.channels
+                items = svdrp.channels
                 setItemCaptionGenerator(it | it.name)
             ]
 
@@ -441,7 +452,7 @@ class SearchTimerEpgdEditWindow extends Window {
         }
 
         if (StringUtils.isNotEmpty(timer.channelIds)) {
-            channels.select(timer.channelIds.split(",").stream.map(s | SvdrpClient.get.getChannel(s)).collect(Collectors.toList()))
+            channels.select(timer.channelIds.split(",").stream.map(s | svdrp.getChannel(s)).collect(Collectors.toList()))
         }
 
         if (timer.chexclude == '0') {

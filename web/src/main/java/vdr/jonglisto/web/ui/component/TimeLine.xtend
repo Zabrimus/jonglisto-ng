@@ -8,19 +8,43 @@ import java.time.LocalDate
 import java.util.List
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Timer
-import vdr.jonglisto.svdrp.client.SvdrpClient
 
 import static extension vdr.jonglisto.util.TimerOverlap.*
 
 class TimeLine extends Composite {
+
     var int compWidth
     var int cellWidth
+    var LocalDate date
+    var List<Timer> timer
+    var Svdrp svdrp
 
     var lastTransponder = ""
 
-    new(int w, LocalDate date, List<Timer> timer) {
-        val layout = createRootComponent(w)
+    def setSvdrp(Svdrp s) {
+        this.svdrp = s
+        return this
+    }
+
+    def setComponentWidth(int w) {
+        compWidth = w
+        return this
+    }
+
+    def setDate(LocalDate date) {
+        this.date = date
+        return this
+    }
+
+    def setTimer(List<Timer> timer) {
+        this.timer = timer
+        return this
+    }
+
+    def createComposite() {
+        val layout = createRootComponent()
 
         val showTimer = timer.stream //
             .filter(s | s.startDate.isEqual(date) || s.endDate.isEqual(date)) //
@@ -33,9 +57,8 @@ class TimeLine extends Composite {
         })
     }
 
-    private def createRootComponent(int w) {
-        compWidth = w
-        cellWidth = (w - 100) / 24
+    private def createRootComponent() {
+        cellWidth = (compWidth - 100) / 24
 
         val a = new AbsoluteLayout => [
             width = compWidth + "px"
@@ -52,7 +75,7 @@ class TimeLine extends Composite {
         }
 
         compositionRoot = a
-        width = w + "px"
+        width = compWidth + "px"
         height = "40px"
 
         return a
@@ -72,7 +95,7 @@ class TimeLine extends Composite {
             lastTransponder = transponder
         }
 
-        val channelName = SvdrpClient.get.getChannel(channelId).name
+        val channelName = svdrp.getChannel(channelId).name
 
         val channelLabel = new Label("<center><p style=\"font-size: 80%;\">" + channelName + "</p><center>", ContentMode.HTML)
         layout.addComponent(channelLabel, "left: 0px; top: " + (idx * 20) + "px;")

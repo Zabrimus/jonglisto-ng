@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.cdi.ViewScoped
 import com.vaadin.data.provider.ListDataProvider
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Grid
@@ -14,9 +15,10 @@ import com.vaadin.ui.renderers.ComponentRenderer
 import com.vaadin.ui.themes.ValoTheme
 import java.util.Collections
 import java.util.List
+import javax.inject.Inject
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Timer
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.web.util.ChannelLogoSource
@@ -25,7 +27,20 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
+@ViewScoped
 class TimerGrid {
+
+    @Inject
+    private Svdrp svdrp
+
+    @Inject
+    private Messages messages
+
+    @Inject
+    private EpgDetailsWindow epgDetails
+
+    @Inject
+    private TimerEditWindow timerEdit
 
     val COL_CHANNEL = "channel"
     val COL_ACTIVE = "active"
@@ -38,16 +53,9 @@ class TimerGrid {
 
     var Grid<Timer> grid
 
-    var List<Timer> timer
-    val Messages messages
+    var List<Timer> timer = Collections.emptyList
 
     var VDR currentVdr
-
-    new (VDR vdr, Messages messages) {
-        this.timer = Collections.emptyList
-        this.currentVdr = vdr
-        this.messages = messages
-    }
 
     def setTimer(List<Timer> timer) {
         this.timer = timer
@@ -56,6 +64,7 @@ class TimerGrid {
 
     def setCurrentVdr(VDR vdr) {
         currentVdr = vdr
+        return this
     }
 
     def getGrid() {
@@ -139,7 +148,7 @@ class TimerGrid {
     def void deleteSelectedTimer() {
         grid.selectedItems.stream.forEach(s | {
             try {
-                SvdrpClient.get.deleteTimer(currentVdr, s)
+                svdrp.deleteTimer(currentVdr, s)
             } catch (Exception e) {
                 // this can happen, if a repeating timer is selected more than once
                 log.debug("Error in deleteSelectedTimer", e)
@@ -159,7 +168,7 @@ class TimerGrid {
 
     private def showEpgDetails(Timer timer) {
         // determine the epg entry for this timer
-        val filterResult = SvdrpClient.get.epg.filter[epg |
+        val filterResult = svdrp.epg.filter[epg |
             // first filter: channel
             epg.channelId == timer.channelId &&
 
@@ -207,7 +216,7 @@ class TimerGrid {
             }
         ]
 
-        UI.current.addWindow(new EpgDetailsWindow(null, currentVdr, messages, reduceResult.key, false))
+        UI.current.addWindow(epgDetails.showWindow(null, currentVdr, reduceResult.key, false))
     }
 
     /*
@@ -217,7 +226,7 @@ class TimerGrid {
     */
 
     private def createChannel(Timer ev) {
-        val name = SvdrpClient.get.getChannel(ev.channelId).name
+        val name = svdrp.getChannel(ev.channelId).name
         val image = new ChannelLogoSource(name).image
 
         if (image !== null) {
@@ -258,7 +267,7 @@ class TimerGrid {
                 width = "22px"
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                 addClickListener(s | {
-                    SvdrpClient.get.deleteTimer(currentVdr, timer)
+                    svdrp.deleteTimer(currentVdr, timer)
                     refreshTimer
                 })
             ]
@@ -322,12 +331,12 @@ class TimerGrid {
 
         provider.items.stream.filter(s | s.id == ev.id).forEach(s | s.enabled = !s.enabled)
 
-        SvdrpClient.get.updateTimer(currentVdr, ev)
+        svdrp.updateTimer(currentVdr, ev)
         grid.dataProvider.refreshAll
     }
 
     private def openEditWindow(Timer timer) {
-        val w = new TimerEditWindow(currentVdr, messages, timer)
+        val w = timerEdit.showWindow(currentVdr, timer)
         w.addCloseListener(new CloseListener() {
             override windowClose(CloseEvent e) {
                 refreshTimer
@@ -338,6 +347,6 @@ class TimerGrid {
     }
 
     private def refreshTimer() {
-        grid.items = SvdrpClient.get.getTimer(currentVdr)
+        grid.items = svdrp.getTimer(currentVdr)
     }
 }

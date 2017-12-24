@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.cdi.ViewScoped
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Button
 import com.vaadin.ui.Grid
@@ -11,18 +12,30 @@ import com.vaadin.ui.Window.CloseListener
 import com.vaadin.ui.renderers.ComponentRenderer
 import com.vaadin.ui.themes.ValoTheme
 import java.util.List
+import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
+@ViewScoped
 class SearchTimerEpgsearchGrid {
+
+    @Inject
+    private Svdrp svdrp
+
+    @Inject
+    private Messages messages
+
+    @Inject
+    private SearchTimerEpgsearchEditWindow editWindow
+
     val COL_ACTIVE = "active"
     val COL_TYPE = "type"
     val COL_CHANNELS = "channels"
@@ -33,13 +46,12 @@ class SearchTimerEpgsearchGrid {
     var Grid<EpgsearchSearchTimer> grid
 
     var List<EpgsearchSearchTimer> searchTimer
-    val Messages messages
     var VDR vdr
 
-    new (VDR vdr, Messages messages) {
+    def init(VDR vdr) {
         this.vdr = vdr
-        this.searchTimer = SvdrpClient.get.getEpgsearchSearchTimerList(vdr)
-        this.messages = messages
+        this.searchTimer = svdrp.getEpgsearchSearchTimerList(vdr)
+        return getGrid()
     }
 
     def getGrid() {
@@ -87,7 +99,7 @@ class SearchTimerEpgsearchGrid {
     }
 
     def refreshSearchTimer() {
-        grid.items = SvdrpClient.get.getEpgsearchSearchTimerList(vdr)
+        grid.items = svdrp.getEpgsearchSearchTimerList(vdr)
     }
 
     def newTimer() {
@@ -163,11 +175,11 @@ class SearchTimerEpgsearchGrid {
                 case "1": { /* intervall */
                     val sp = channels.split("\\|")
 
-                    val chan1 = SvdrpClient.get.getChannel(sp.get(0)).name
+                    val chan1 = svdrp.getChannel(sp.get(0)).name
                     var chan2 = ""
 
                     if (sp.length > 1) {
-                        chan2 = SvdrpClient.get.getChannel(sp.get(1)).name
+                        chan2 = svdrp.getChannel(sp.get(1)).name
                     }
 
                     if (chan2.length > 0) {
@@ -217,7 +229,7 @@ class SearchTimerEpgsearchGrid {
     }
 
     private def openEditWindow(EpgsearchSearchTimer timer) {
-        val w = new SearchTimerEpgsearchEditWindow(vdr, messages, timer)
+        val w = editWindow.showWindow(vdr, timer)
         w.addCloseListener(new CloseListener() {
             override windowClose(CloseEvent e) {
                 refreshSearchTimer

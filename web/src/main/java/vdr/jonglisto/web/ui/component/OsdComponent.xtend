@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.cdi.ViewScoped
 import com.vaadin.shared.ui.ContentMode
 import com.vaadin.ui.Component
 import com.vaadin.ui.Composite
@@ -12,21 +13,23 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.model.VDROsd
 import vdr.jonglisto.web.util.HtmlSanitizer
 
+@ViewScoped
 class OsdComponent extends Composite {
+
     var VDR currentVdr
     var VDROsd osd
 
-    new(VDR vdr, VDROsd osd) {
+    public def changeVdr(VDR vdr) {
         this.currentVdr = vdr
+        return this
+    }
+
+    public def changeOsd(VDROsd osd) {
         this.osd = osd
-        createGrid
+        return this
     }
 
-    public def void changeVdr(VDR vdr) {
-        this.currentVdr = vdr
-    }
-
-    private def createGrid() {
+    public def createGrid() {
         if (osd === null) {
             compositionRoot = new Label("No OSD open")
             return;

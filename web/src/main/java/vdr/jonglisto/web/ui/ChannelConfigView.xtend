@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui
 
+import com.vaadin.cdi.CDIView
 import com.vaadin.data.TreeData
 import com.vaadin.data.provider.TreeDataProvider
 import com.vaadin.server.FileDownloader
@@ -32,20 +33,21 @@ import java.util.Collection
 import java.util.HashSet
 import java.util.List
 import java.util.stream.Collectors
+import javax.annotation.PostConstruct
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.BaseDataWithName
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.EpgProvider
 import vdr.jonglisto.model.EpgProvider.Provider
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.Utils
+import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import vdr.jonglisto.web.ui.BaseView.BUTTON
 
 @Log
+@CDIView(MainUI.CHANNEL_CONFIG_VIEW)
 class ChannelConfigView extends BaseView {
 
     private static val COLUMN_NAME = "NAME"
@@ -58,8 +60,9 @@ class ChannelConfigView extends BaseView {
 
     var TreeGrid<BaseDataWithName> treeGrid
 
-    new() {
-        super(BUTTON.CHANNELCONFIG)
+    @PostConstruct
+    def void init() {
+        super.init(BUTTON.CHANNELCONFIG)
     }
 
     protected override createMainComponents() {
@@ -106,7 +109,7 @@ class ChannelConfigView extends BaseView {
     }
 
     private def createMainLayout() {
-        val channels = SvdrpClient.get.channels
+        val channels = svdrp.channels
 
         val h = new HorizontalLayout()
         h.setSizeFull

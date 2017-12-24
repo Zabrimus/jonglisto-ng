@@ -11,18 +11,30 @@ import com.vaadin.ui.Window.CloseListener
 import com.vaadin.ui.renderers.ComponentRenderer
 import com.vaadin.ui.themes.ValoTheme
 import java.util.List
+import javax.annotation.PostConstruct
+import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.db.SearchTimerService
-import vdr.jonglisto.svdrp.client.SvdrpClient
+import vdr.jonglisto.delegate.Svdrp
+import vdr.jonglisto.model.EpgdSearchTimer
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import vdr.jonglisto.model.EpgdSearchTimer
 
 @Log
 class SearchTimerEpgdGrid {
+
+    @Inject
+    private Svdrp svdrp
+
+    @Inject
+    private Messages messages
+
+    @Inject
+    private SearchTimerEpgdEditWindow editWindow
+
     val COL_ACTIVE = "active"
     val COL_NAME = "name"
     val COL_TYPE = "type"
@@ -37,13 +49,12 @@ class SearchTimerEpgdGrid {
     var Grid<EpgdSearchTimer> grid
 
     var List<EpgdSearchTimer> searchTimer
-    val Messages messages
 
     val service = new SearchTimerService
 
-    new (Messages messages) {
+    @PostConstruct
+    def void init() {
         this.searchTimer = service.searchTimers
-        this.messages = messages
     }
 
     def getGrid() {
@@ -174,7 +185,7 @@ class SearchTimerEpgdGrid {
             val id = channelIds.split(",")
 
             for (ch : id) {
-                result.append(SvdrpClient.get.getChannel(ch).name).append(" ")
+                result.append(svdrp.getChannel(ch).name).append(" ")
             }
 
             return result.toString.trim
@@ -222,7 +233,7 @@ class SearchTimerEpgdGrid {
     }
 
     private def openEditWindow(EpgdSearchTimer timer) {
-        val w = new SearchTimerEpgdEditWindow(messages, timer)
+        val w = editWindow.showWindow(timer)
         w.addCloseListener(new CloseListener() {
             override windowClose(CloseEvent e) {
                 refreshSearchTimer

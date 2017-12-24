@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.cdi.ViewScoped
 import com.vaadin.data.provider.ListDataProvider
 import com.vaadin.server.UserError
 import com.vaadin.ui.Alignment
@@ -12,25 +13,32 @@ import com.vaadin.ui.Window
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.regex.Pattern
+import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
 import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.Timer
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
+@ViewScoped
 class TimerEditWindow extends Window {
 
     private static Pattern timePattern = Pattern.compile("\\d{2}:\\d{2}")
     private static Pattern twoDigitPattern = Pattern.compile("\\d{1,2}")
 
-    val Messages messages
+    @Inject
+    private Svdrp svdrp
+
+    @Inject
+    private Messages messages
+
     var VDR currentVdr
 
     var ComboBox<Channel> channel
@@ -53,21 +61,11 @@ class TimerEditWindow extends Window {
 
     var ComboBox<String> selectVdr
 
-    new(VDR vdr, Messages messages, Timer timer) {
+    new() {
         super()
-        this.messages = messages
-        this.currentVdr = vdr
-        closable = true
-        modal = true
-        width = "60%"
-        center();
-
-        createLayout(timer)
     }
 
-    new(VDR vdr, Messages messages, Epg epg) {
-        super()
-        this.messages = messages
+    def showWindow(VDR vdr, Epg epg) {
         this.currentVdr = vdr
         closable = true
         modal = true
@@ -76,6 +74,20 @@ class TimerEditWindow extends Window {
 
         val timer = createTimerFromEpg(epg)
         createLayout(timer)
+
+        return this
+    }
+
+    def showWindow(VDR vdr, Timer timer) {
+        this.currentVdr = vdr
+        closable = true
+        modal = true
+        width = "60%"
+        center();
+
+        createLayout(timer)
+
+        this
     }
 
     def createLayout(Timer timer) {
@@ -92,7 +104,7 @@ class TimerEditWindow extends Window {
                         selectedItem = currentVdr.name
                     ]
 
-                    channel = comboBoxChannel(it, SvdrpClient.get.channels) [
+                    channel = comboBoxChannel(it, svdrp.channels) [
                         caption = messages.timerChannelCaption
                         emptySelectionAllowed = false
                         setItemCaptionGenerator(it | it.name)
@@ -321,16 +333,16 @@ class TimerEditWindow extends Window {
 
         if (currentVdr.name == selectVdr.selectedItem.get) {
             // VDR has not been changed: Simple
-            SvdrpClient.get.updateTimer(currentVdr, timer)
+            svdrp.updateTimer(currentVdr, timer)
         } else {
             // Another VDR has been selected
             if (timer.id > 0) {
                 // move existing timer: delete and add
-                SvdrpClient.get.deleteTimer(currentVdr, timer)
-                SvdrpClient.get.updateTimer(Configuration.get.getVdr(selectVdr.selectedItem.get), timer)
+                svdrp.deleteTimer(currentVdr, timer)
+                svdrp.updateTimer(Configuration.get.getVdr(selectVdr.selectedItem.get), timer)
             } else {
                 // new timer: simple
-                SvdrpClient.get.updateTimer(Configuration.get.getVdr(selectVdr.selectedItem.get), timer)
+                svdrp.updateTimer(Configuration.get.getVdr(selectVdr.selectedItem.get), timer)
             }
         }
 

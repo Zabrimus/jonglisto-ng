@@ -17,15 +17,20 @@ import com.vaadin.ui.themes.ValoTheme
 import de.steinwedel.messagebox.MessageBox
 import java.util.List
 import java.util.stream.Collectors
+import javax.inject.Inject
 import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
 class VdrStatus {
+
+    @Inject
+    private Svdrp svdrp
+
     val CPanel panel
     val GridLayout grid
     var ComboBox<String> box
@@ -115,7 +120,7 @@ class VdrStatus {
 
                 val execute = button(it, "Execute") [
                     addClickListener(s | {
-                        commandResult.value = SvdrpClient.get.processCommand(vdr, box.optionalValue).createResult
+                        commandResult.value = svdrp.processCommand(vdr, box.optionalValue).createResult
                     })
                 ]
 
@@ -137,7 +142,7 @@ class VdrStatus {
     }
 
     private def showPlugins() {
-        var plugins = SvdrpClient.get.getPlugins(vdr)
+        var plugins = svdrp.getPlugins(vdr)
 
         if (plugins !== null) {
             plugins.sortInplace[s1,s2 | s1.plugin.compareTo(s2.plugin)]
@@ -175,12 +180,12 @@ class VdrStatus {
     }
 
     private def void getSvdrpStatus() {
-        val result = getStatusHtml(SvdrpClient.get.pingHost(vdr))
+        val result = getStatusHtml(svdrp.pingHost(vdr))
         grid.replaceComponent(grid.getComponent(2, 1), new Label(result, ContentMode.HTML))
     }
 
     private def void getDiskStatus() {
-        val result = SvdrpClient.get.getStat(vdr)
+        val result = svdrp.getStat(vdr)
         grid.replaceComponent(grid.getComponent(1, 2), new Label(result.toStringFree))
     }
 

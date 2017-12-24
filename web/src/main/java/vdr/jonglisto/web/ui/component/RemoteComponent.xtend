@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.cdi.ViewScoped
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Button
 import com.vaadin.ui.Composite
@@ -7,29 +8,38 @@ import com.vaadin.ui.GridLayout
 import com.vaadin.ui.HorizontalLayout
 import com.vaadin.ui.Label
 import java.util.HashSet
+import javax.inject.Inject
 import vdr.jonglisto.configuration.jaxb.remote.Remote
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.ui.OsdView
 
+@ViewScoped
 class RemoteComponent extends Composite {
-    val Remote remote
+
+    @Inject
+    private Svdrp svdrp
+
+    var Remote remote
     var VDR currentVdr
-    val OsdView parent
+    var OsdView parent
 
-    new(OsdView parent, VDR vdr, Remote remote) {
+    public def changeVdr(VDR vdr) {
+        this.currentVdr = vdr
+        return this
+    }
+
+    public def changeRemote(Remote remote) {
         this.remote = remote
-        this.currentVdr = vdr
+        return this
+    }
+
+    public def setParent(OsdView parent) {
         this.parent = parent
-
-        createGrid
+        return this
     }
 
-    public def void changeVdr(VDR vdr) {
-        this.currentVdr = vdr
-    }
-
-    private def createGrid() {
+    public def createGrid() {
         val height = remote.button.map[s | s.row].max
         val width = remote.button.map[s | s.column].max
 
@@ -114,7 +124,7 @@ class RemoteComponent extends Composite {
     }
 
     private def hitk(String key) {
-        SvdrpClient.get.hitk(currentVdr, key);
+        svdrp.hitk(currentVdr, key);
         Thread.sleep(250)
         parent.updateOsd
     }

@@ -3,29 +3,24 @@ package vdr.jonglisto.web;
 import com.vaadin.annotations.PreserveOnRefresh
 import com.vaadin.annotations.Theme
 import com.vaadin.annotations.Title
-import com.vaadin.navigator.Navigator
+import com.vaadin.cdi.CDINavigator
+import com.vaadin.cdi.CDIUI
 import com.vaadin.navigator.ViewChangeListener
 import com.vaadin.server.Page
 import com.vaadin.server.VaadinRequest
 import com.vaadin.ui.UI
+import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
-import vdr.jonglisto.web.ui.ChannelConfigView
-import vdr.jonglisto.web.ui.EpgView
 import vdr.jonglisto.web.ui.ErrorView
-import vdr.jonglisto.web.ui.LoginView
-import vdr.jonglisto.web.ui.MainView
-import vdr.jonglisto.web.ui.OsdView
-import vdr.jonglisto.web.ui.RecordingView
-import vdr.jonglisto.web.ui.SearchTimerEpgdView
-import vdr.jonglisto.web.ui.SearchTimerEpgsearchView
-import vdr.jonglisto.web.ui.TimerView
 import vdr.jonglisto.xtend.annotation.Log
 
 @Theme("jonglisto")
 @Title("VDR Jonglisto")
 @PreserveOnRefresh
 @Log
+@CDIUI("")
 class MainUI extends UI implements ViewChangeListener {
+
     public static val MAIN_VIEW = "MainView"
     public static val EPG_VIEW = "EpgView"
     public static val CHANNEL_CONFIG_VIEW = "ChannelConfigView"
@@ -35,24 +30,28 @@ class MainUI extends UI implements ViewChangeListener {
     public static val SEARCHTIMER_EPGD_VIEW = "SearchTimerEpgd"
     public static val SEARCHTIMER_EPGSEARCH_VIEW = "SearchTimerEpgsearch"
 
-    var Navigator navigator;
+    @Inject
+    private CDINavigator navigator;
 
     new() {
     }
 
     override protected init(VaadinRequest request) {
-        navigator = new Navigator(this, this)
+        navigator.init(this, this)
+
+        //navigator = new Navigator(this, this)
         navigator.addViewChangeListener(this)
 
-        navigator.addView("", new LoginView(request.locale));
-        navigator.addView(MainUI.MAIN_VIEW, MainView)
-        navigator.addView(MainUI.EPG_VIEW, EpgView)
-        navigator.addView(MainUI.CHANNEL_CONFIG_VIEW, ChannelConfigView)
-        navigator.addView(MainUI.OSD_VIEW, OsdView)
-        navigator.addView(MainUI.RECORDING_VIEW, RecordingView)
-        navigator.addView(MainUI.TIMER_VIEW, TimerView)
-        navigator.addView(MainUI.SEARCHTIMER_EPGD_VIEW, SearchTimerEpgdView)
-        navigator.addView(MainUI.SEARCHTIMER_EPGSEARCH_VIEW, SearchTimerEpgsearchView)
+        // navigator.addView("", new LoginView(request.locale));
+        // navigator.addView("", LoginView);
+        // navigator.addView(MainUI.MAIN_VIEW, MainView)
+        // navigator.addView(MainUI.EPG_VIEW, EpgView)
+        // navigator.addView(MainUI.CHANNEL_CONFIG_VIEW, ChannelConfigView)
+        // navigator.addView(MainUI.OSD_VIEW, OsdView)
+        // navigator.addView(MainUI.RECORDING_VIEW, RecordingView)
+        // navigator.addView(MainUI.TIMER_VIEW, TimerView)
+        // navigator.addView(MainUI.SEARCHTIMER_EPGD_VIEW, SearchTimerEpgdView)
+        // navigator.addView(MainUI.SEARCHTIMER_EPGSEARCH_VIEW, SearchTimerEpgsearchView)
 
         navigator.errorView = ErrorView
     }

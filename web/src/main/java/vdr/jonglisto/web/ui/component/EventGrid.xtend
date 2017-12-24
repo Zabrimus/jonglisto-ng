@@ -6,6 +6,7 @@ import com.vaadin.ui.ComboBox
 import com.vaadin.ui.Grid
 import com.vaadin.ui.Grid.ItemClick
 import com.vaadin.ui.Grid.SelectionMode
+import com.vaadin.ui.Label
 import com.vaadin.ui.Notification
 import com.vaadin.ui.Notification.Type
 import com.vaadin.ui.TextField
@@ -17,11 +18,13 @@ import com.vaadin.ui.themes.ValoTheme
 import java.util.Collections
 import java.util.HashSet
 import java.util.List
+import javax.annotation.PostConstruct
+import javax.inject.Inject
 import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.EpgCustomColumn
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.web.ui.EpgView
@@ -32,10 +35,21 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.ui.Label
 
 @Log
 class EventGrid {
+
+    @Inject
+    private Svdrp svdrp
+
+    @Inject
+    private Messages messages
+
+    @Inject
+    private EpgDetailsWindow epgDetails
+
+    @Inject
+    private TimerEditWindow timerEdit
 
     val COL_CHANNEL = "channel"
     val COL_DATE = "date"
@@ -56,33 +70,31 @@ class EventGrid {
 
     var VDR currentVdr
 
-    var List<Epg> events
-    val Messages messages
+    var List<Epg> events = Collections.emptyList
     var long usedUnixTime
 
     var ComboBox<String> genreFilter
     var ComboBox<String> categoryFilter
 
-    val EPGTYPE epgType
-
-    new (VDR vdr, EPGTYPE epgType, Messages messages) {
-        this.currentVdr = vdr
-        this.events = Collections.emptyList
-        this.messages = messages
-        this.epgType = epgType
-    }
+    var EPGTYPE epgType
 
     def setEvents(List<Epg> events) {
         this.events = events
         return this
     }
 
-    def getGrid() {
-        return grid
-    }
-
     def setVdr(VDR vdr) {
         currentVdr = vdr
+        return this
+    }
+
+    def setEpgType(EPGTYPE epgType) {
+        this.epgType = epgType
+        return this
+    }
+
+    def getGrid() {
+        return grid
     }
 
     def void createGrid(long unixTime) {
@@ -215,7 +227,7 @@ class EventGrid {
 
     def void actionPlay(Epg epg) {
         try {
-            SvdrpClient.get.switchChannel(currentVdr, epg.channelId)
+            svdrp.switchChannel(currentVdr, epg.channelId)
         } catch (Exception e) {
             Notification.show(messages.epgErrorSwitchFailed, Type.ERROR_MESSAGE)
         }
@@ -234,8 +246,7 @@ class EventGrid {
     }
 
     def void actionRecord(Epg epg) {
-        val w = new TimerEditWindow(currentVdr, messages, epg)
-        UI.current.addWindow(w)
+        UI.current.addWindow(timerEdit.showWindow(currentVdr, epg))
     }
 
     def void actionAlarm(Epg epg) {
@@ -244,15 +255,15 @@ class EventGrid {
     }
 
     private def showEpgDetails(Epg epg) {
-        UI.current.addWindow(new EpgDetailsWindow(this, currentVdr, messages, epg, false))
+        UI.current.addWindow(epgDetails.showWindow(this, currentVdr, epg, false))
     }
 
     private def editEpgDetails(Epg epg) {
-        UI.current.addWindow(new EpgDetailsWindow(this, currentVdr, messages, epg, true))
+        UI.current.addWindow(epgDetails.showWindow(this, currentVdr, epg, true))
     }
 
     private def createChannel(Epg ev) {
-        val name = SvdrpClient.get.getChannel(ev.channelId).name
+        val name = svdrp.getChannel(ev.channelId).name
         val image = new ChannelLogoSource(name).image
 
         if (image !== null) {

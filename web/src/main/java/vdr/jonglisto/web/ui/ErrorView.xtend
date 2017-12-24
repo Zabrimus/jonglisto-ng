@@ -1,14 +1,18 @@
 package vdr.jonglisto.web.ui
 
+import com.vaadin.cdi.CDIView
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
+import javax.annotation.PostConstruct
 import vdr.jonglisto.model.VDR
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
+@CDIView
 class ErrorView extends BaseView {
 
-    new() {
-        super(null)
+    @PostConstruct
+    def void init() {
+        super.init(null)
     }
 
     override enter(ViewChangeEvent event) {

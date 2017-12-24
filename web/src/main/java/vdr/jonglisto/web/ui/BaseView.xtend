@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui
 
+import com.vaadin.cdi.CDINavigator
 import com.vaadin.event.selection.SingleSelectionEvent
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.navigator.View
@@ -9,10 +10,10 @@ import com.vaadin.ui.Button
 import com.vaadin.ui.ComboBox
 import com.vaadin.ui.VerticalLayout
 import com.vaadin.ui.themes.ValoTheme
-import java.util.Locale
+import javax.inject.Inject
 import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
@@ -25,9 +26,13 @@ abstract class BaseView extends VerticalLayout implements View {
         HOME, TIMER, EPG, EPGD, EPGSEARCH, RECORDING, CHANNELCONFIG, OSD, LOGOUT
     }
 
-    protected val navigator = MainUI.current.navigator
+    @Inject
+    protected Svdrp svdrp
 
-    protected var Locale locale = null
+    @Inject
+    protected CDINavigator navigator;
+
+    @Inject
     protected var Messages messages
 
     var ComboBox<String> selectVdr
@@ -35,16 +40,11 @@ abstract class BaseView extends VerticalLayout implements View {
 
     private BUTTON currentView
 
-    new(BUTTON selectedButton) {
-        locale = VaadinSession.current.locale
-        messages = new Messages(locale)
-
+    public def init(BUTTON selectedButton) {
         createLayout(selectedButton)
-
         createMainComponents()
 
         setSizeFull
-
         currentView = selectedButton
     }
 
@@ -146,7 +146,7 @@ abstract class BaseView extends VerticalLayout implements View {
         changeVdr(Configuration.get.getVdr(event.selectedItem.get))
 
         // check if epgsearch plugin is available in selectedVdr
-        if (SvdrpClient.get.isPluginAvailable(event.selectedItem.get, "epgsearch")) {
+        if (svdrp.isPluginAvailable(event.selectedItem.get, "epgsearch")) {
             epgsearchButton.visible = true
         } else {
             epgsearchButton.visible = false

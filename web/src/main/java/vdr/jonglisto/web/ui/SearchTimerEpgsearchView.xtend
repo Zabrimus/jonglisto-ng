@@ -1,22 +1,29 @@
 package vdr.jonglisto.web.ui
 
+import com.vaadin.cdi.CDIView
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Layout
+import javax.annotation.PostConstruct
+import javax.inject.Inject
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.db.Database
 import vdr.jonglisto.model.VDR
+import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.SearchTimerEpgsearchGrid
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
+@CDIView(MainUI.SEARCHTIMER_EPGSEARCH_VIEW)
 class SearchTimerEpgsearchView extends BaseView {
 
-    var SearchTimerEpgsearchGrid epgsearchGrid
+    @Inject
+    private SearchTimerEpgsearchGrid epgsearchGrid
 
-    new() {
-        super(BUTTON.EPGSEARCH)
+    @PostConstruct
+    def void init() {
+        super.init(BUTTON.EPGSEARCH)
     }
 
     protected override createMainComponents() {
@@ -52,8 +59,7 @@ class SearchTimerEpgsearchView extends BaseView {
     }
 
     private def prepareEpgdGrid(Layout layout) {
-        epgsearchGrid = new SearchTimerEpgsearchGrid(selectedVdr, messages)
-        layout.addComponent(epgsearchGrid.grid)
+        layout.addComponent(epgsearchGrid.init(selectedVdr))
     }
 
     override protected def void changeVdr(VDR vdr) {

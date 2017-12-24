@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.cdi.ViewScoped
 import com.vaadin.data.TreeData
 import com.vaadin.data.provider.TreeDataProvider
 import com.vaadin.icons.VaadinIcons
@@ -27,9 +28,10 @@ import java.util.Collection
 import java.util.HashMap
 import java.util.List
 import java.util.stream.Collectors
+import javax.inject.Inject
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Recording
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.web.util.HtmlSanitizer
@@ -38,24 +40,37 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
+@ViewScoped
 class RecordingTreeGrid {
     private static val COLUMN_NAME = "NAME"
     private static val COLUMN_START = "START"
     private static val COLUMN_DURATION = "DURATION"
     private static val COLUMN_ACTION = "ACTION"
 
+    @Inject
+    private Svdrp svdrp
+
+    @Inject
+    private Messages messages
+
+    @Inject
+    private EpgDetailsWindow epgDetails
+
     var TreeGrid<Recording> treeGrid
 
     var VDR currentVdr
-    val Messages messages
 
-    new (VDR currentVdr, Messages messages) {
-        this.messages = messages
-        this.currentVdr = currentVdr
+    def setCurrentVdr(VDR vdr) {
+        this.currentVdr = vdr
+        return this
     }
 
     def setRecordings(List<Recording> recs) {
         treeGrid.dataProvider =  getTreeDataProvider(recs)
+    }
+
+    def getTreeGrid() {
+        return treeGrid
     }
 
     def createTreeGrid(List<Recording> recordings) {
@@ -170,11 +185,7 @@ class RecordingTreeGrid {
             }
         }]
 
-        return treeGrid
-    }
-
-    def setCurrentVdr(VDR vdr) {
-        this.currentVdr = vdr
+        return this
     }
 
     def renameRecordingSvdrp(Recording rec, String newName) {
@@ -185,7 +196,7 @@ class RecordingTreeGrid {
         val completePath = getCompleteRecName(rec, fixedName)
 
         try {
-            val response = SvdrpClient.get.renameRecording(currentVdr, rec.id, completePath)
+            val response = svdrp.renameRecording(currentVdr, rec.id, completePath)
 
             rec.folder = fixedName
             treeGrid.dataProvider.refreshItem(rec)
@@ -417,7 +428,7 @@ class RecordingTreeGrid {
     }
 
     private def deleteRecording(Recording rec) {
-        SvdrpClient.get.deleteRecording(currentVdr, rec)
+        svdrp.deleteRecording(currentVdr, rec)
 
         // update all parent folder
         val newDec = if (rec.seen) 0 else 1
@@ -438,7 +449,7 @@ class RecordingTreeGrid {
         val map = new HashMap<Long, String>
         moveRecordingSvdrp(rec, map)
 
-        SvdrpClient.get.batchRenameRecording(currentVdr, map)
+        svdrp.batchRenameRecording(currentVdr, map)
     }
 
     private def levelUpRecording(Recording recording) {
@@ -491,9 +502,9 @@ class RecordingTreeGrid {
 
         if ((click.column.id == COLUMN_DURATION || click.column.id == COLUMN_START) && (rec.id > 0)) {
             if (rec.epg === null) {
-                SvdrpClient.get.getRecordingEpg(currentVdr, rec)
+                svdrp.getRecordingEpg(currentVdr, rec)
             }
-            UI.current.addWindow(new EpgDetailsWindow(null, currentVdr, messages, rec.epg, false))
+            UI.current.addWindow(epgDetails.showWindow(null, currentVdr, rec.epg, false))
         }
     }
 
@@ -519,7 +530,7 @@ class RecordingTreeGrid {
 
     def actionPlayRecording(Recording recording) {
         try {
-            SvdrpClient.get.playRecording(currentVdr, recording)
+            svdrp.playRecording(currentVdr, recording)
         } catch (Exception e) {
             Notification.show(messages.epgErrorSwitchFailed, Type.ERROR_MESSAGE)
         }

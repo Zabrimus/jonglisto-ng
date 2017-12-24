@@ -1,19 +1,15 @@
 package vdr.jonglisto.web
 
-import com.vaadin.annotations.VaadinServletConfiguration
-import com.vaadin.server.VaadinServlet
+import com.vaadin.cdi.server.VaadinCDIServlet
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.servlet.ServletException
-import javax.servlet.annotation.WebServlet
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.xtend.annotation.Log
 
 @Log
-@WebServlet(value = "/*", loadOnStartup = 1, asyncSupported = true)
-@VaadinServletConfiguration(productionMode = false, ui = MainUI)
-class JonglistoNgServlet extends VaadinServlet {
+class JonglistoNgServlet extends VaadinCDIServlet {
 
     private val scheduledExecutorService = Executors.newScheduledThreadPool(2);
 
@@ -28,7 +24,7 @@ class JonglistoNgServlet extends VaadinServlet {
         scheduledExecutorService.scheduleAtFixedRate(
             new Runnable() {
                 override run() {
-                    SvdrpClient.get.doOneMinuteEvent()
+                    SvdrpClient.getInstance.doOneMinuteEvent()
                 }
             }, 1, 1, TimeUnit.MINUTES);
     }
@@ -36,7 +32,7 @@ class JonglistoNgServlet extends VaadinServlet {
     override def destroy() {
         scheduledExecutorService.shutdown()
 
-        SvdrpClient.get.doShutdown
+        SvdrpClient.getInstance.doShutdown
 
         super.destroy();
     }

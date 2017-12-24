@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.cdi.ViewScoped
 import com.vaadin.data.Binder
 import com.vaadin.data.ValueProvider
 import com.vaadin.data.validator.LongRangeValidator
@@ -24,11 +25,12 @@ import java.util.Collections
 import java.util.List
 import java.util.Set
 import java.util.stream.Collectors
+import javax.inject.Inject
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
@@ -44,12 +46,19 @@ import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 // See 6.2.9 Content descriptor in http://www.etsi.org/deliver/etsi_en/300400_300499/300468/01.15.01_60/en_300468v011501p.pdf
 
 @Log
+@ViewScoped
 class SearchTimerEpgsearchEditWindow extends Window {
-    val Messages messages
+
+    @Inject
+    private Svdrp svdrp
+
+    @Inject
+    private Messages messages
+
     var VDR vdr
 
     val binder = new Binder<EpgsearchSearchTimer>
-    val EpgsearchSearchTimer currentTimer
+    var EpgsearchSearchTimer currentTimer
 
     var CheckBox matchCase
     var CheckBox useTime
@@ -132,10 +141,12 @@ class SearchTimerEpgsearchEditWindow extends Window {
     var extendedEpg = new ArrayList<AbstractComponent>
     var compExtendedEpg = new ArrayList<CheckBox>
 
-    new(VDR vdr, Messages messages, EpgsearchSearchTimer timer) {
+    new() {
         super()
+    }
+
+    def showWindow(VDR vdr, EpgsearchSearchTimer timer) {
         this.vdr = vdr
-        this.messages = messages
         closable = true
         modal = true
         width = "60%"
@@ -147,6 +158,8 @@ class SearchTimerEpgsearchEditWindow extends Window {
         createLayout(timer)
         createBinder()
         fillTimerValues()
+
+        return this
     }
 
     def createLayout(EpgsearchSearchTimer timer) {
@@ -196,7 +209,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
             ]
 
             horizontalLayout(it) [
-                val blacklist = SvdrpClient.get.getEpgsearchSearchBlacklist(vdr)
+                val blacklist = svdrp.getEpgsearchSearchBlacklist(vdr)
 
                 if (blacklist.size > 0) {
                     val names = blacklist.stream().map[s | s.getField(Field.pattern)].collect(Collectors.toList)
@@ -281,7 +294,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
                 ignoreMissingEpg = checkbox(messages.searchtimerIgnoreMissingCategories) [
                 ]
 
-                val categories = SvdrpClient.get.getEpgsearchCategories(vdr)
+                val categories = svdrp.getEpgsearchCategories(vdr)
                 if (categories !== null && categories.size > 0) {
                     horizontalLayout(it) [
                         for (s : categories) {
@@ -311,7 +324,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
         ]
 
         val tab3 = verticalLayout[
-            val channelGroups = SvdrpClient.get.getEpgsearchChannelGroups(vdr)
+            val channelGroups = svdrp.getEpgsearchChannelGroups(vdr)
 
             channelGroupSelect = comboBox(channelGroupSelectItems) [
                 caption = messages.searchtimerUseChannel
@@ -355,7 +368,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
             ]
 
             channelIntervalSelect = horizontalLayout(it) [
-                val channelList = SvdrpClient.get.channels
+                val channelList = svdrp.channels
 
                 channelFrom = nativeChannelSelect [
                     items = channelList
@@ -537,7 +550,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
                 ]
 
                 horizontalLayout(it) [
-                    val categories = SvdrpClient.get.getEpgsearchCategories(vdr)
+                    val categories = svdrp.getEpgsearchCategories(vdr)
                     if (categories !== null && categories.size > 0) {
                         for (s : categories) {
                             val c = checkbox(s.publicName) [
@@ -824,13 +837,13 @@ class SearchTimerEpgsearchEditWindow extends Window {
         if (idx == 1) {
             val splitted = channels.split("\\|")
             if (splitted.length == 1) {
-                channelFrom.selectedItem = SvdrpClient.get.getChannel(splitted.get(0))
-                channelTo.selectedItem = SvdrpClient.get.getChannel(splitted.get(0))
+                channelFrom.selectedItem = svdrp.getChannel(splitted.get(0))
+                channelTo.selectedItem = svdrp.getChannel(splitted.get(0))
             } else if (splitted.length == 2 && splitted.get(0).isNotEmpty) {
-                channelFrom.selectedItem = SvdrpClient.get.getChannel(splitted.get(0))
-                channelTo.selectedItem = SvdrpClient.get.getChannel(splitted.get(1))
+                channelFrom.selectedItem = svdrp.getChannel(splitted.get(0))
+                channelTo.selectedItem = svdrp.getChannel(splitted.get(1))
             } else if (splitted.length == 2 && !splitted.get(0).isNotEmpty) {
-                channelTo.selectedItem = SvdrpClient.get.getChannel(splitted.get(1))
+                channelTo.selectedItem = svdrp.getChannel(splitted.get(1))
             }
         } else if (idx == 2) {
             channelGroupCombo.selectedItem = channels
@@ -851,7 +864,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
             if (channelFrom.selectedItem.isPresent) {
                 result = channelFrom.selectedItem.get.id
             } else {
-                result = SvdrpClient.get.channels.get(0).id
+                result = svdrp.channels.get(0).id
             }
 
             if (channelTo.selectedItem.isPresent && result != channelTo.selectedItem.get.id) {
@@ -904,7 +917,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
         isValid = isValid && doManualBindingWrite
 
         if (isValid) {
-            SvdrpClient.get.saveEpgsearchTimer(vdr, currentTimer)
+            svdrp.saveEpgsearchTimer(vdr, currentTimer)
             return true
         } else {
             val  status = binder.validate();

@@ -1,5 +1,6 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.cdi.ViewScoped
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.shared.ui.ContentMode
 import com.vaadin.ui.Alignment
@@ -9,10 +10,11 @@ import com.vaadin.ui.Label
 import com.vaadin.ui.TextArea
 import com.vaadin.ui.Window
 import com.vaadin.ui.themes.ValoTheme
+import javax.inject.Inject
 import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.web.util.ChannelLogoSource
@@ -22,16 +24,24 @@ import vdr.jonglisto.xtend.annotation.Log
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
+@ViewScoped
 class EpgDetailsWindow extends Window {
 
-    val Messages messages
+    @Inject
+    private Svdrp svdrp
+
+    @Inject
+    private Messages messages
+
     var TextArea epgArea
     var VDR currentVdr
-    val EventGrid parentGrid
+    var EventGrid parentGrid
 
-    new(EventGrid parent, VDR vdr, Messages messages, Epg epg, boolean editView) {
+    new() {
         super()
-        this.messages = messages
+    }
+
+    def showWindow(EventGrid parent, VDR vdr, Epg epg, boolean editView) {
         this.currentVdr = vdr
         this.parentGrid = parent
 
@@ -63,7 +73,7 @@ class EpgDetailsWindow extends Window {
                     if (editView) {
                         button(it, messages.epgSave) [
                             it.addClickListener(s | {
-                                SvdrpClient.get.saveEpgData(Configuration.get.epgVdr, epg, epgArea.value)
+                                svdrp.saveEpgData(Configuration.get.epgVdr, epg, epgArea.value)
                                 close
                             })
                         ]
@@ -108,6 +118,8 @@ class EpgDetailsWindow extends Window {
                 ]
             ]
         )
+
+        return this
     }
 
     def createCaption(Epg epg) {
@@ -151,7 +163,7 @@ class EpgDetailsWindow extends Window {
     }
 
     private def createChannel(Epg ev) {
-        val name = SvdrpClient.get.getChannel(ev.channelId).name
+        val name = svdrp.getChannel(ev.channelId).name
         val image = new ChannelLogoSource(name).image
 
         if (image !== null) {

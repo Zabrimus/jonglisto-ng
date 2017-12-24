@@ -1,6 +1,7 @@
 ext {
     versions = [
-        vaadin            : '8.1.+',        // Vaadin, Web
+        // vaadin            : '8.2.+',        // Vaadin, Web
+        vaadin            : '8.1.7',        // Vaadin, Web
         shiro             : '1.4.0',        // Apache Shiro, Security
         commons           : '3.6',          // Apache commons
         logback           : '1.2.3',        // Logging

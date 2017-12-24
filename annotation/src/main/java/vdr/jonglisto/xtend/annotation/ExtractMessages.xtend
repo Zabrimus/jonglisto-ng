@@ -48,18 +48,41 @@ annotation ExtractMessages {
 class ExtractMessagesProcessor extends AbstractClassProcessor {
 
     override doTransform(MutableClassDeclaration cls, extension TransformationContext context) {
+        cls.addAnnotation(newAnnotationReference("com.vaadin.cdi.UIScoped"))
+
         val bundleField = cls.addField("bundle") [
             type = ResourceBundle.newTypeReference
-            final = true
+            final = false
             primarySourceElement = cls
         ]
 
+        /*
         cls.addConstructor [
             addParameter("locale", Locale.newTypeReference)
             body = '''
                 this.bundle = «ResourceBundle».getBundle("«cls.qualifiedName»", locale);
             '''
             bundleField.markAsInitializedBy(it)
+            primarySourceElement = cls
+        ]
+        */
+
+        cls.addConstructor [
+            body = '''
+                // use default locale
+                this.bundle = «ResourceBundle».getBundle("«cls.qualifiedName»", com.vaadin.server.VaadinService.getCurrentRequest().getLocale());
+            '''
+            addAnnotation(newAnnotationReference("javax.inject.Inject"))
+            bundleField.markAsInitializedBy(it)
+            primarySourceElement = cls
+        ]
+
+        cls.addMethod("changeLocale") [
+            addParameter("locale", Locale.newTypeReference)
+            body = '''
+                this.bundle = «ResourceBundle».getBundle("«cls.qualifiedName»", locale);
+            '''
+            docComment = "Change the default locale"
             primarySourceElement = cls
         ]
 

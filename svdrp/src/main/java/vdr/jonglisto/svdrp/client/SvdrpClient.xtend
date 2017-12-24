@@ -81,7 +81,7 @@ class SvdrpClient {
         });
     }
 
-    static def get() {
+    static def getInstance() {
         if (instance === null) {
             synchronized (SvdrpClient) {
                 if (instance === null) {
@@ -325,31 +325,12 @@ class SvdrpClient {
         return false
     }
 
-    private def List<Channel> readChannels(VDR vdr) {
-        return Parser.parseChannel(vdr.command("LSTC :ids :groups", 250).lines)
-    }
-
-    private def List<Epg> readEpg(VDR vdr) {
-        val response = vdr.command("LSTE", 215)
-        response.lines.remove(response.lines.size() - 1);
-
-        return Parser.parseEpg(response.lines)
-    }
-
-    private def List<Timer> readTimer(VDR vdr) {
-        return vdr.command("LSTT id", 250, [ Parser.parseTimer(it.lines) ], [ Collections.emptyList ])
-    }
-
     def void deleteTimer(VDR vdr, Timer timer) {
         vdr.command("DELT " + timer.id, 250)
     }
 
     def playRecording(VDR vdr, Recording recording) {
         vdr.command("PLAY " + recording.id, 250)
-    }
-
-    private def List<Recording> readRecordings(VDR vdr) {
-        return vdr.command("LSTR", 250, [ Parser.parseRecording(it.lines) ], [ Collections.emptyList ])
     }
 
     def void saveEpgData(VDR vdr, Epg epg, String text) {
@@ -382,6 +363,25 @@ class SvdrpClient {
         if (response.code != 250) {
             throw new RuntimeException("Code != 250")
         }
+    }
+
+    private def List<Recording> readRecordings(VDR vdr) {
+        return vdr.command("LSTR", 250, [ Parser.parseRecording(it.lines) ], [ Collections.emptyList ])
+    }
+
+    private def List<Channel> readChannels(VDR vdr) {
+        return Parser.parseChannel(vdr.command("LSTC :ids :groups", 250).lines)
+    }
+
+    private def List<Epg> readEpg(VDR vdr) {
+        val response = vdr.command("LSTE", 215)
+        response.lines.remove(response.lines.size() - 1);
+
+        return Parser.parseEpg(response.lines)
+    }
+
+    private def List<Timer> readTimer(VDR vdr) {
+        return vdr.command("LSTT id", 250, [ Parser.parseTimer(it.lines) ], [ Collections.emptyList ])
     }
 
     private def command(VDR vdr, String command, int desiredCode) {
