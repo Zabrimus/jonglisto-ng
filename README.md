@@ -9,7 +9,7 @@ A web GUI for VDR (see http://www.tvdr.de/ and https://www.vdr-portal.de/).
 * manage recordings (rename, move via drag and drop, create new folders, ...)
 * manage EPGD search timers, if the epgd database is configured (optional)
 * manage epgsearch search timers, if epgsearch plugin is installed on the selected VDR instance (optional)
-* higly configurable remote control 
+* higly configurable remote control
 * OSD view, if svdrposd plugin is installed on the selected VDR instance (optional)
 * organize channels.conf via drag and drop
 * organize epgd channelmap.conf via drag and drop, if epgd database is configured
@@ -23,24 +23,60 @@ A web GUI for VDR (see http://www.tvdr.de/ and https://www.vdr-portal.de/).
 * VDR plugin epgsearch (http://www.vdr-wiki.de/wiki/index.php/Epgsearch-plugin)
 * VDR epgd database (https://projects.vdr-developer.org/projects/vdr-epg-daemon/wiki)
 
-## Build using docker
-It's easy to delete the all images. The local system will not be polluted with maven dependencies.
-Build the build image:
-> docker build -t "jonglisto-ng:build" https://github.com/Zabrimus/jonglisto-ng.git#:docker/build-image
+# Howto Build jonglisto-ng
+The build itself creates only a web-archive (war) file, which has to be deployed in a server. Tested servers are
+* Apache TomEE (at least version apache-tomee-webprofile-7.0.4). This server is also used to implementent jonglisto-ng
+* Payara Micro 174
+More Information can be found in the deployment chapter.
 
-Build jonglisto using the build image:
-> docker run -v `` ` ``pwd`` ` ``:/tmp/jonglisto-ng/build/libs jonglisto-ng:build /bin/bash -c "cd /tmp/jonglisto-ng; git pull; ./gradlew standaloneWar"
+## channel logos (optional)
+If you want to see channel logos, the go to directory tools and start the shell script build-logo-jar.sh. This script clones the picons github repository and creates png files for a massive amount of channel logos.
+The channel logo images are then copied to the application directory are then part of the application.
 
-## traditional build 
+## Build using Gradle
 Clone jonglisto-ng
 
 build jonglisto-ng
    > ./gradlew standaloneWar
-   
-### Start jonglisto-ng
-Before starting jonglisto-ng, you have to edit or copy two configuration files into /etc/jonglisto (see below).
-You can either deploy the jonglisto-ng.war into an existing servlet container (jetty, tomcat, tomee and others), or you can start the application using the embedded jetty server. The default port is 8080.
-> java -jar jonglisto-ng.war
+
+The war file can be found in build/libs/jonglisto-ng.<version>.war
+
+## Build using docker
+It's easy to delete all images. The local system will not be polluted with maven dependencies. The build is a two step process.
+Build the buld image:
+> docker build -t "jonglisto-ng:build" https://github.com/Zabrimus/jonglisto-ng.git#:docker/build-image
+
+Build jonglisto using the build image:
+> docker run -v `` ` ``pwd`` ` ``:/tmp/jonglisto-ng/build/libs jonglisto-ng:build /bin/bash -c "cd /tmp/jonglisto-ng; git pull; ./gradlew war"
+
+The war file can be found in the current directory with name jonglistp-ng.<version>.war
+
+# Deployment and running jonglisto-ng
+Generally for all described solutions to run jonglisto-ng are the following step
+* edit or copy two configuration files to /etc/jonglisto: jonglisto-ng.xml and remote.xml. The configuration is described below.
+
+## Using TomEE (at least version 7.0.4)
+A hint before: TomEE Embedded 7.0.4 will not work. Unfortunetely the packaged libraries differ between TomEE 7.0.4 and TomEE Embedded 7.0.4.
+* Download the TomEE distribution (http://tomee.apache.org/download-ng.html, web profile) and extract the archive to a directory of your choice
+* optional: delete all (or unused) directories in apache-tomee-webprofile-7.0.4/webapps. Please be aware: If you not delete the directories additional applications are deployed. But this can be desired, see below.
+* copy jonglisto-ng.<version>.war to apache-tomee-webprofile-7.0.4/webapps
+* start TomEE with ``apache-tomee-webprofile-7.0.4/bin/catalina.sh start`` or ``apache-tomee-webprofile-7.0.4/bin/catalina.sh run``
+* stop with ``apache-tomee-webprofile-7.0.4/bin/catalina.sh stop``
+The application will be accessible with http://<server>:8080/jonglisto-ng-<version> (e.g.http://<server>:8080/jonglisto-ng-0.0.1)
+
+If you want another context, e.g. http://<server>:8080/japp, then rename the war file in directory webapps to the desired name, e.g. japp.war.
+To access jonglisto-ng with http://<server>:8080/ then rename the war file to ROOT.war.
+
+A TomEE manager application is available (apache-tomee-webprofile-7.0.4/webapps/manager) which is a minimal management application, which could be useful. But before using this application a change of ``apache-tomee-webprofile-7.0.4/conf/tomcat-users.xml`` is necessary.
+
+## Using Payara Micro (at least version 174)
+* Download the Payara Micro distribution from https://www.payara.fish/downloads to a directory of your choice but don't extract the archive.
+There exists two possibilities to start jonglisto-ng
+* Start jonglisto-ng using the downloaded Payara Micro jar file: ``java -jar payara-micro-4.1.2.174.jar --disablephonehome --nocluster --deploy jonglisto-ng-<version>.war``
+* create a self running jar with ``java -jar payara-micro-4.1.2.174.jar --disablephonehome --nocluster --deploy jonglisto-ng-<version>.war --outputuberjar <my_new_name>.jar`` and start the server and application with ``java -jar <my_new_name>.jar``
+
+The server announces the URL to access the application. In my example it is ``http://<server>:8080/jonglisto-ng-0.0.1``
+
 
 ### Configuration
 There exists two configuration files which have to be installed in /etc/jonglisto
@@ -171,15 +207,15 @@ The custom column consists of three parts: header, pattern and output. The heade
 ## remote.xml (sample can be found in samples/remote.xml)
 The remote.xml contains the configuration and layout of the remote control. The remote control uses a grid as layout component, therefore columns and rows have to be defined.
 ```xml
-<remote xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<remote xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="remote.xsd" colorRow="10">
-      
+
     <!-- Row 1 -->
     <button row="1" column="3">
         <key>Power</key>
         <icon>POWER_OFF</icon>
     </button>
-    
+
     <!-- Row 17 -->
     <button row="17" column="1">
         <key>FastRew</key>
@@ -195,11 +231,11 @@ The remote.xml contains the configuration and layout of the remote control. The 
         <key>FastFwd</key>
         <icon>FORWARD</icon>
     </button>
-    
+
     <button row="21" column="3">
         <key>Channel+</key>
         <label>Chan+</label>
     </button>
-</remote>    
+</remote>
 ```
 

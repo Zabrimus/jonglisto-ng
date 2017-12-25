@@ -7,6 +7,9 @@ plugins {
 
 apply plugin: 'war'
 
+group 'jonglisto-ng'
+version '0.0.1'
+
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
@@ -39,8 +42,10 @@ dependencies {
 
     compileOnly 'javax.enterprise:cdi-api:1.2'
 
-    providedRuntime 'commons-collections:commons-collections:3.2.2'
-    providedRuntime 'commons-beanutils:commons-beanutils:1.9.3'
+    // providedRuntime 'commons-collections:commons-collections:3.2.2'
+    // providedRuntime 'commons-beanutils:commons-beanutils:1.9.3'
+    // compile 'commons-collections:commons-collections:3.2.2'
+    // compile 'commons-beanutils:commons-beanutils:1.9.3'
 }
 
 allprojects {
@@ -67,11 +72,10 @@ allprojects {
     }
 
     dependencies {
-        // these libraries also exists tomcat
-        compileOnly 'org.apache.commons:commons-lang3:3.5'
-        compileOnly 'commons-beanutils:commons-beanutils:1.9.3'
-        compileOnly 'commons-collections:commons-collections:3.2.2'
-        compileOnly 'org.apache.tomcat:tomcat-jdbc:8.5.20'
+        compile 'org.apache.commons:commons-lang3:3.5'
+        compile 'commons-beanutils:commons-beanutils:1.9.3'
+        compile 'commons-collections:commons-collections:3.2.2'
+        compile 'org.apache.tomcat:tomcat-jdbc:8.5.20'
     }
 }
 
