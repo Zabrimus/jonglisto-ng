@@ -9,7 +9,6 @@ ext {
         sanitizer         : '20170515.1',   // OWASP Java HTML sanitizer
         guava             : '23.0',         // Google guava
 
-        tomjdbc           : '9.0.1',        // Tomcat JDBC
         sql2o             : '1.6.0-RC3',    // SQL2O
         mysqljdbc         : '5.1.44',       // Mysql JDBC - don't use 6.0.6! See: https://stackoverflow.com/questions/26515700/mysql-jdbc-driver-5-1-33-time-zone-issue#
 
@@ -33,7 +32,6 @@ ext {
         sanitizer            : "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:$versions.sanitizer",
         guava                : "com.google.guava:guava:$versions.guava",
 
-        tomjdbc              : "org.apache.tomcat:tomcat-jdbc:$versions.tomjdbc",
         sql2o                : "org.sql2o:sql2o:$versions.sql2o",
         mysqljdbc            : "mysql:mysql-connector-java:$versions.mysqljdbc"
    ]

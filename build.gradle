@@ -20,8 +20,6 @@ configurations.all {
 dependencies {
     compileOnly "javax.servlet:javax.servlet-api:3.1.0"
 
-    compile files('external-jar/logo.jar')
-
     compile libs.guava
     compile libs.xtend
 
@@ -40,6 +38,9 @@ dependencies {
     compile 'org.apache.deltaspike.core:deltaspike-core-impl:1.8.0'
 
     compileOnly 'javax.enterprise:cdi-api:1.2'
+
+    providedRuntime 'commons-collections:commons-collections:3.2.2'
+    providedRuntime 'commons-beanutils:commons-beanutils:1.9.3'
 }
 
 allprojects {
@@ -64,6 +65,14 @@ allprojects {
         main.xtendOutputDir = 'src/main/xtend-gen'
         main.java.srcDirs += ['src/main/xtend-gen', 'src/main/resources', 'src/main/java']
     }
+
+    dependencies {
+        // these libraries also exists tomcat
+        compileOnly 'org.apache.commons:commons-lang3:3.5'
+        compileOnly 'commons-beanutils:commons-beanutils:1.9.3'
+        compileOnly 'commons-collections:commons-collections:3.2.2'
+        compileOnly 'org.apache.tomcat:tomcat-jdbc:8.5.20'
+    }
 }
 
 project(':annotation') {
@@ -78,7 +87,6 @@ project(':common') {
         compile libs.xtend
         compile libs.gson
         compile libs.guava
-        compile libs.commons
 
         compile project(':annotation')
     }
@@ -88,7 +96,6 @@ project(':svdrp') {
     dependencies {
         compile libs.xtend
         compile libs.guava
-        compile libs.commons
 
         compile project(':annotation')
         compile project(':common')
@@ -99,14 +106,8 @@ project(':database') {
     dependencies {
         compile libs.xtend
         compile libs.guava
-        compile libs.commons
-        compile libs.tomjdbc
         compile libs.sql2o
         compile libs.mysqljdbc
-
-        compile(libs.tomjdbc) {
-           transitive = false
-        }
 
         compile project(':annotation')
         compile project(':common')
@@ -128,6 +129,11 @@ project(':web') {
         compile libs.sanitizer
         compile libs.guava
         compile libs.xtend
+
+        compile('org.apache.shiro:shiro-config-ogdl:1.4.0') {
+            exclude group: 'commons-beanutils', module: 'commons-beanutils'
+            exclude group: 'commons-collections', module: 'commons-collections'
+        }
 
         compile addons.vicons
 
