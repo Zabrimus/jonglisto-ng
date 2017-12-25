@@ -3,9 +3,7 @@ package vdr.jonglisto.delegate
 import java.io.Serializable
 import java.util.HashMap
 import java.util.Optional
-import javax.annotation.PostConstruct
 import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.Recording

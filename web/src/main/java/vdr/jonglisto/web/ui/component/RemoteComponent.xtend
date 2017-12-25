@@ -39,7 +39,7 @@ class RemoteComponent extends Composite {
         return this
     }
 
-    public def createGrid() {
+    public def void createGrid() {
         val height = remote.button.map[s | s.row].max
         val width = remote.button.map[s | s.column].max
 

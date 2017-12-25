@@ -21,7 +21,6 @@ import vdr.jonglisto.model.Timer
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
-import vdr.jonglisto.web.util.ChannelLogoSource
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
@@ -41,6 +40,9 @@ class TimerGrid {
 
     @Inject
     private TimerEditWindow timerEdit
+
+    @Inject
+    private ChannelLogo channelLogo
 
     val COL_CHANNEL = "channel"
     val COL_ACTIVE = "active"
@@ -227,7 +229,7 @@ class TimerGrid {
 
     private def createChannel(Timer ev) {
         val name = svdrp.getChannel(ev.channelId).name
-        val image = new ChannelLogoSource(name).image
+        val image = channelLogo.getImage(name)
 
         if (image !== null) {
             image.data = name

@@ -18,7 +18,6 @@ import com.vaadin.ui.themes.ValoTheme
 import java.util.Collections
 import java.util.HashSet
 import java.util.List
-import javax.annotation.PostConstruct
 import javax.inject.Inject
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.delegate.Svdrp
@@ -29,7 +28,6 @@ import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.web.ui.EpgView
 import vdr.jonglisto.web.ui.EpgView.EPGTYPE
-import vdr.jonglisto.web.util.ChannelLogoSource
 import vdr.jonglisto.web.util.HtmlSanitizer
 import vdr.jonglisto.xtend.annotation.Log
 
@@ -50,6 +48,9 @@ class EventGrid {
 
     @Inject
     private TimerEditWindow timerEdit
+
+    @Inject
+    private ChannelLogo channelLogo
 
     val COL_CHANNEL = "channel"
     val COL_DATE = "date"
@@ -264,7 +265,7 @@ class EventGrid {
 
     private def createChannel(Epg ev) {
         val name = svdrp.getChannel(ev.channelId).name
-        val image = new ChannelLogoSource(name).image
+        val image = channelLogo.getImage(name)
 
         if (image !== null) {
             image.data = name

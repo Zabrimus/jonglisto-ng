@@ -15,7 +15,13 @@ cd picicon-repo
 # repack the result
 mkdir -p logo
 tar -xf build-output/binaries-snp-full/snp-full.*hardlink.tar.xz -C logo --strip 1
-jar -cf logo.jar logo/*
-mkdir -p ../../external-jar
-mv logo.jar ../../external-jar
+
+# copy to theme directory
+mkdir -p ../../src/main/webapp/VAADIN/themes/jonglisto/channellogo/
+cp  logo/*.png ../../src/main/webapp/VAADIN/themes/jonglisto/channellogo/
+
+# create jar
+# jar -cf logo.jar logo/*
+# mkdir -p ../../external-jar
+# mv logo.jar ../../external-jar
 

@@ -17,7 +17,6 @@ import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
-import vdr.jonglisto.web.util.ChannelLogoSource
 import vdr.jonglisto.web.util.HtmlSanitizer
 import vdr.jonglisto.xtend.annotation.Log
 
@@ -32,6 +31,9 @@ class EpgDetailsWindow extends Window {
 
     @Inject
     private Messages messages
+
+    @Inject
+    private ChannelLogo channelLogo
 
     var TextArea epgArea
     var VDR currentVdr
@@ -164,7 +166,7 @@ class EpgDetailsWindow extends Window {
 
     private def createChannel(Epg ev) {
         val name = svdrp.getChannel(ev.channelId).name
-        val image = new ChannelLogoSource(name).image
+        val image = channelLogo.getImage(name)
 
         if (image !== null) {
             image.data = name
