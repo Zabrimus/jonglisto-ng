@@ -303,7 +303,7 @@ class Configuration {
         try {
             return Pattern.compile(str)
         } catch (Exception e) {
-            log.error("Regex Pattern '" + str + "' is invalid and will be ignored")
+            log.warning("Regex Pattern '" + str + "' is invalid and will be ignored")
             return null
         }
     }

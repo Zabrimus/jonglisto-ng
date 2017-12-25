@@ -1,7 +1,6 @@
 TODOs in no specific order:
 
 technisch:
-- Fix logging (either parent-last in tomee or use the tomcat logging)
 - if parent-first is still used, then some libraries are not used anymore
 
 fachlich:
@@ -36,3 +35,4 @@ finished TODOs:
 - play video in recording view
 - OSD view is not implemented
 - change channel logo creation (logo as theme component(?), not as logo.jar anymore). This is a performance issue.
+- Fix logging (either parent-last in tomee or use the tomcat logging)

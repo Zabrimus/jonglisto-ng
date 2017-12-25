@@ -4,15 +4,11 @@ ext {
         vaadin            : '8.1.7',        // Vaadin, Web
         shiro             : '1.4.0',        // Apache Shiro, Security
         commons           : '3.6',          // Apache commons
-        logback           : '1.2.3',        // Logging
-        slf4j             : '1.7.25',       // Logging
-        jcl_over_slf4j    : '1.7.25',       // Bridge commons logging to SLF4j
         xtend             : '2.13.0',       // xtend
         gson              : '2.8.1',        // Google gson
         sanitizer         : '20170515.1',   // OWASP Java HTML sanitizer
         guava             : '23.0',         // Google guava
 
-        juli              : '8.5.23',       // Tomcat Juli replacement (SLF4j, de.mklinger.tomcat)
         tomjdbc           : '9.0.1',        // Tomcat JDBC
         sql2o             : '1.6.0-RC3',    // SQL2O
         mysqljdbc         : '5.1.44',       // Mysql JDBC - don't use 6.0.6! See: https://stackoverflow.com/questions/26515700/mysql-jdbc-driver-5-1-33-time-zone-issue#
@@ -29,10 +25,6 @@ ext {
         vaadinClientCompiler : "com.vaadin:vaadin-client-compiler:$versions.vaadin",
         vaadinBuildHelper    : "com.vaadin:vaadin-buildhelpers:7.4.0.beta1",
 
-        logback              : "ch.qos.logback:logback-classic:$versions.logback",
-        slf4j                : "org.slf4j:slf4j-api:$versions.slf4j",
-        jcl_over_slf4j       : "org.slf4j:jcl-over-slf4j:$versions.jcl_over_slf4j",
-
         xtend                : "org.eclipse.xtend:org.eclipse.xtend.lib:$versions.xtend",
         commons              : "org.apache.commons:commons-lang3:$versions.commons",
         shiroweb             : "org.apache.shiro:shiro-web:$versions.shiro",
@@ -41,7 +33,6 @@ ext {
         sanitizer            : "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:$versions.sanitizer",
         guava                : "com.google.guava:guava:$versions.guava",
 
-        juli                 : "de.mklinger.tomcat:tomcat-juli-slf4j:$versions.juli",
         tomjdbc              : "org.apache.tomcat:tomcat-jdbc:$versions.tomjdbc",
         sql2o                : "org.sql2o:sql2o:$versions.sql2o",
         mysqljdbc            : "mysql:mysql-connector-java:$versions.mysqljdbc"

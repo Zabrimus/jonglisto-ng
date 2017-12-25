@@ -1,7 +1,9 @@
 package vdr.jonglisto.xtend.annotation
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
+import java.util.logging.Logger
+
 import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
 import org.eclipse.xtend.lib.macro.TransformationContext
@@ -16,9 +18,20 @@ class LogProcessor extends AbstractClassProcessor {
     override doTransform(MutableClassDeclaration clazz, extension TransformationContext context) {
         clazz.addField("log") [
             static = true
-            final = true            
+            final = true
             type = Logger.newTypeReference
-            initializer = '''«LoggerFactory».getLogger("«clazz.qualifiedName»")'''            
+            // initializer = '''«LoggerFactory».getLogger("«clazz.qualifiedName»")'''
+            initializer = '''«Logger».getLogger("«clazz.qualifiedName»")'''
         ]
     }
 }
+
+/*
+severe
+warning
+info
+config
+fine
+finer
+finest
+*/

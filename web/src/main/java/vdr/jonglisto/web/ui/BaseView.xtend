@@ -140,7 +140,7 @@ abstract class BaseView extends VerticalLayout implements View {
     }
 
     def selectVdr(SingleSelectionEvent<String> event) {
-        log.debug("Got Event: " + event +  " --> " + event.selectedItem.get)
+        log.fine("Got Event: " + event +  " --> " + event.selectedItem.get)
 
         VaadinSession.current.setAttribute("SELECTED_VDR", event.selectedItem.get)
         changeVdr(Configuration.get.getVdr(event.selectedItem.get))

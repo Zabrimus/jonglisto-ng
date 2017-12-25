@@ -18,14 +18,11 @@ configurations.all {
 }
 
 dependencies {
-    runtime libs.jcl_over_slf4j
-
     compileOnly "javax.servlet:javax.servlet-api:3.1.0"
 
     compile files('external-jar/logo.jar')
 
     compile libs.guava
-    compile libs.slf4j
     compile libs.xtend
 
     compile project(':annotation')
@@ -72,7 +69,6 @@ allprojects {
 project(':annotation') {
     dependencies {
         compile libs.xtend
-        compile libs.slf4j
         compile libs.guava
     }
 }
@@ -83,7 +79,6 @@ project(':common') {
         compile libs.gson
         compile libs.guava
         compile libs.commons
-        compile libs.slf4j
 
         compile project(':annotation')
     }
@@ -94,7 +89,6 @@ project(':svdrp') {
         compile libs.xtend
         compile libs.guava
         compile libs.commons
-        compile libs.slf4j
 
         compile project(':annotation')
         compile project(':common')
@@ -106,8 +100,6 @@ project(':database') {
         compile libs.xtend
         compile libs.guava
         compile libs.commons
-        compile libs.slf4j
-        compile libs.juli
         compile libs.tomjdbc
         compile libs.sql2o
         compile libs.mysqljdbc
@@ -133,10 +125,8 @@ project(':web') {
         compile libs.vaadinClient
         compile libs.shirocore
         compile libs.shiroweb
-        compile libs.logback
         compile libs.sanitizer
         compile libs.guava
-        compile libs.slf4j
         compile libs.xtend
 
         compile addons.vicons

@@ -32,6 +32,7 @@ import java.util.ArrayList
 import java.util.Collection
 import java.util.HashSet
 import java.util.List
+import java.util.logging.Level
 import java.util.stream.Collectors
 import javax.annotation.PostConstruct
 import vdr.jonglisto.configuration.Configuration
@@ -188,7 +189,7 @@ class ChannelConfigView extends BaseView {
                                 val addEpg = new EpgProvider(p.provider, p.epgid, p.name, p.normalizedName)
                                 treeData.addItem(target, addEpg)
                             } catch (Exception e) {
-                                log.info("Ignoring error: ", e)
+                                log.log(Level.INFO, "Ignoring error: ", e);
                             }
                         }
                     }
@@ -519,7 +520,7 @@ class ChannelConfigView extends BaseView {
                         } catch (Exception e) {
                             // it's possible that the mapping already exists
                             // => ignore this exception
-                            log.debug("Ignoring error in epgProviderAutoMapping: " + e.localizedMessage)
+                            log.fine("Ignoring error in epgProviderAutoMapping: " + e.localizedMessage)
                         }
                     ]
                 }

@@ -4,10 +4,17 @@ import com.vaadin.cdi.server.VaadinCDIServlet
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.servlet.ServletException
+import javax.servlet.annotation.WebInitParam
+import javax.servlet.annotation.WebServlet
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.xtend.annotation.Log
 
+@WebServlet(urlPatterns = #["/*", "/VAADIN/"],
+            name = "VaadinServlet",
+            asyncSupported = true,
+            initParams = #[@WebInitParam(name = "closeIdleSessions", value = "true") ]
+            )
 @Log
 class JonglistoNgServlet extends VaadinCDIServlet {
 

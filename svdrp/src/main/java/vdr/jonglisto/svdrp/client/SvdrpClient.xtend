@@ -12,6 +12,7 @@ import java.util.List
 import java.util.Map
 import java.util.Optional
 import java.util.concurrent.TimeUnit
+import java.util.logging.Level
 import java.util.stream.Collectors
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.BaseData
@@ -39,7 +40,7 @@ class SvdrpClient {
     static val Map<String, Channel> channelMap = new HashMap<String, Channel>()
 
     private new() {
-        log.debug("Init SvdrpClient...")
+        log.fine("Init SvdrpClient...")
 
         // init caches
         connections = CacheBuilder.newBuilder() //
@@ -244,7 +245,7 @@ class SvdrpClient {
 
             return result
         } catch (Exception e) {
-            log.debug("Exception: " + e, e)
+            log.log(Level.FINE, "Exception", e);
 
             // no categories defined or host down
             return Collections.emptyList
@@ -260,7 +261,7 @@ class SvdrpClient {
 
             return result
         } catch (Exception e) {
-            log.debug("Exception: " + e, e)
+            log.log(Level.FINE, "Exception", e);
 
             // no channel groups defined or host down
             return Collections.emptyList

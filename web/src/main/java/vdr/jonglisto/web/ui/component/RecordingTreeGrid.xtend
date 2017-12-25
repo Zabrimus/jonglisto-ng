@@ -478,7 +478,7 @@ class RecordingTreeGrid {
             rec.folder = name
 
             // simple recording
-            log.debug("Move: " + rec.id + " to " + rec.getCompleteRecName(name))
+            log.fine("Move: " + rec.id + " to " + rec.getCompleteRecName(name))
             result.put(rec.id, rec.getCompleteRecName(name))
         } else if (treeGrid.treeData.getChildren(rec).size > 0) {
             // it's a folder with children
