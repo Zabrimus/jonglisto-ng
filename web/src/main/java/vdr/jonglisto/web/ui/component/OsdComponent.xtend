@@ -69,7 +69,8 @@ class OsdComponent extends Composite {
 
         panel.setContent = mainLayout
 
-        panel.setSizeFull
+        panel.height = "32em"
+        panel.width = "100%"
 
         compositionRoot = panel
     }
@@ -85,6 +86,7 @@ class OsdComponent extends Composite {
 
     private def gridOsd(int width, int height) {
         val layout = new GridLayout(width + 1, height)
+        layout.spacing = false
 
         var int currentRow = 0
         for (var i = 0; i <= Math.min(osd.menuItems.size-1, height-1); i++) {
