@@ -1,6 +1,8 @@
 # jonglisto-ng
 A web GUI for VDR (see http://www.tvdr.de/ and https://www.vdr-portal.de/).
 
+First version without CDI. This branch exists for documentation purposes.
+
 ### features
 * Multiple VDR instances can be used in parallel. e.g. server and/or client instances
 * EPG view with configurable columns (using regular expressions)
@@ -9,7 +11,7 @@ A web GUI for VDR (see http://www.tvdr.de/ and https://www.vdr-portal.de/).
 * manage recordings (rename, move via drag and drop, create new folders, ...)
 * manage EPGD search timers, if the epgd database is configured (optional)
 * manage epgsearch search timers, if epgsearch plugin is installed on the selected VDR instance (optional)
-* higly configurable remote control 
+* higly configurable remote control
 * OSD view, if svdrposd plugin is installed on the selected VDR instance (optional)
 * organize channels.conf via drag and drop
 * organize epgd channelmap.conf via drag and drop, if epgd database is configured
@@ -31,12 +33,12 @@ Build the build image:
 Build jonglisto using the build image:
 > docker run -v `` ` ``pwd`` ` ``:/tmp/jonglisto-ng/build/libs jonglisto-ng:build /bin/bash -c "cd /tmp/jonglisto-ng; git pull; ./gradlew standaloneWar"
 
-## traditional build 
+## traditional build
 Clone jonglisto-ng
 
 build jonglisto-ng
    > ./gradlew standaloneWar
-   
+
 ### Start jonglisto-ng
 Before starting jonglisto-ng, you have to edit or copy two configuration files into /etc/jonglisto (see below).
 You can either deploy the jonglisto-ng.war into an existing servlet container (jetty, tomcat, tomee and others), or you can start the application using the embedded jetty server. The default port is 8080.
@@ -171,15 +173,15 @@ The custom column consists of three parts: header, pattern and output. The heade
 ## remote.xml (sample can be found in samples/remote.xml)
 The remote.xml contains the configuration and layout of the remote control. The remote control uses a grid as layout component, therefore columns and rows have to be defined.
 ```xml
-<remote xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<remote xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="remote.xsd" colorRow="10">
-      
+
     <!-- Row 1 -->
     <button row="1" column="3">
         <key>Power</key>
         <icon>POWER_OFF</icon>
     </button>
-    
+
     <!-- Row 17 -->
     <button row="17" column="1">
         <key>FastRew</key>
@@ -195,11 +197,11 @@ The remote.xml contains the configuration and layout of the remote control. The 
         <key>FastFwd</key>
         <icon>FORWARD</icon>
     </button>
-    
+
     <button row="21" column="3">
         <key>Channel+</key>
         <label>Chan+</label>
     </button>
-</remote>    
+</remote>
 ```
 
