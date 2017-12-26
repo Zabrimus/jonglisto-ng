@@ -6,10 +6,10 @@ A web GUI for VDR (see http://www.tvdr.de/ and https://www.vdr-portal.de/).
 * EPG view with configurable columns (using regular expressions)
 * edit EPG entries
 * manage timers (create, delete, move, ...)
-* manage recordings (rename, move via drag and drop, create new folders, ...)
+* manage recordings (rename, delete, move via drag and drop, create new folders, ...)
 * manage EPGD search timers, if the epgd database is configured (optional)
 * manage epgsearch search timers, if epgsearch plugin is installed on the selected VDR instance (optional)
-* higly configurable remote control
+* configurable remote control
 * OSD view, if svdrposd plugin is installed on the selected VDR instance (optional)
 * organize channels.conf via drag and drop
 * organize epgd channelmap.conf via drag and drop, if epgd database is configured
@@ -25,7 +25,7 @@ A web GUI for VDR (see http://www.tvdr.de/ and https://www.vdr-portal.de/).
 
 # Howto Build jonglisto-ng
 The build itself creates only a web-archive (war) file, which has to be deployed in a server. Tested servers are
-* Apache TomEE (at least version apache-tomee-webprofile-7.0.4). This server is also used to implementent jonglisto-ng
+* Apache TomEE (at least version apache-tomee-webprofile-7.0.4). This server is also used to implement jonglisto-ng
 * Payara Micro 174
 More Information can be found in the deployment chapter.
 
