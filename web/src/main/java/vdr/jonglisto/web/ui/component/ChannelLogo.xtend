@@ -2,6 +2,7 @@ package vdr.jonglisto.web.ui.component
 
 import com.vaadin.server.ThemeResource
 import com.vaadin.server.VaadinServlet
+import com.vaadin.shared.ui.ContentMode
 import com.vaadin.ui.Image
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -10,6 +11,7 @@ import java.util.Map
 import java.util.Set
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
+import vdr.jonglisto.web.util.HtmlSanitizer
 
 import static extension org.apache.commons.lang3.StringUtils.*
 
@@ -67,6 +69,9 @@ class ChannelLogo {
         val resource = new ThemeResource("channellogo/" + fileName + ".png")
         val image = new Image(null, resource)
         image.alternateText = channelName
+
+        image.setDescription("<h2>" + HtmlSanitizer.clean(channelName) + "</h2>", ContentMode.HTML)
+
         return image
     }
 }

@@ -63,7 +63,7 @@ class VDR extends BaseData {
     }
 
     override def boolean equals(Object obj) {
-        if (this == obj) {
+        if (this === obj) {
             return true;
         }
 
