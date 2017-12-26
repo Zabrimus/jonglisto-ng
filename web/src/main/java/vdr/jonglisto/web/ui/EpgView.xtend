@@ -59,6 +59,9 @@ class EpgView extends BaseView {
     var TextField searchDescription
     var Button searchButton
 
+    var NativeSelect<String> tvRadioSelect
+    var NativeSelect<String> ftaEncSelect
+
     @PostConstruct
     def void init() {
         super.init(BUTTON.EPG)
@@ -94,6 +97,9 @@ class EpgView extends BaseView {
                             searchDescription.visible = false
                             searchButton.visible = false
 
+                            tvRadioSelect.visible = true
+                            ftaEncSelect.visible = true
+
                             epgType = EPGTYPE.TIME
                         }
 
@@ -109,6 +115,9 @@ class EpgView extends BaseView {
                             searchDescription.visible = false
                             searchButton.visible = false
 
+                            tvRadioSelect.visible = false
+                            ftaEncSelect.visible = false
+
                             epgType = EPGTYPE.CHANNEL
                         }
 
@@ -123,6 +132,9 @@ class EpgView extends BaseView {
                             searchShortText.visible = true
                             searchDescription.visible = true
                             searchButton.visible = true
+
+                            tvRadioSelect.visible = true
+                            ftaEncSelect.visible = true
 
                             epgType = EPGTYPE.SEARCH
                         }
@@ -193,6 +205,44 @@ class EpgView extends BaseView {
                 ]
             ]
 
+            cssLayout(it) [
+                tvRadioSelect = nativeSelect [
+                    emptySelectionAllowed = false
+                    items = #["TV/Radio", "TV", "Radio"]
+                    selectedItem = "TV/Radio"
+
+                    addSelectionListener(it | {
+                        switch(epgTypeSelect.selectedItem.get) {
+                            case messages.epgTypeTime : {
+                                listTime
+                            }
+
+                            case messages.epgTypeSearch: {
+                                listSearchResult
+                            }
+                        }
+                    })
+                ]
+
+                ftaEncSelect = nativeSelect [
+                    emptySelectionAllowed = false
+                    items = #["All", "FTA", "Encrypted"]
+                    selectedItem = "All"
+
+                    addSelectionListener(it | {
+                        switch(epgTypeSelect.selectedItem.get) {
+                            case messages.epgTypeTime : {
+                                listTime
+                            }
+
+                            case messages.epgTypeSearch: {
+                                listSearchResult
+                            }
+                        }
+                    })
+                ]
+            ]
+
             epgTypeSelect.selectedItem = messages.epgTypeTime
         ]
 
@@ -234,10 +284,28 @@ class EpgView extends BaseView {
         eventGrid.items = searchResultEvents
     }
 
+    def filterChannel() {
+        val tvRadio = tvRadioSelect.selectedItem.orElse("TV/Radio")
+        val ftaEnc = ftaEncSelect.selectedItem.orElse("All")
+
+        val tvRadioType = if (tvRadio == "TV/Radio") 1 else if (tvRadio == "Radio") 2 else 3
+        val ftaEncType = if (ftaEnc == "All") 1 else if (ftaEnc == "Encrypted") 2 else 3
+
+        return svdrp.channels.stream.filter[ s | {
+                ((tvRadioType == 1) || (s.isRadio && (tvRadioType == 2)) || (!s.isRadio && (tvRadioType == 3)))
+            &&  ((ftaEncType == 1) || (s.encrypted && (ftaEncType == 2)) || (!s.encrypted && (ftaEncType == 3)))
+        }]
+        .map[s | s.id]
+        .collect(Collectors.toSet)
+    }
+
     private def getTimeEvents() {
         val millis = secondsForSelectedTime
 
+        val filteredChannels = filterChannel
+
         val result = svdrp.epg.stream //
+            .filter(it | filteredChannels.contains(it.channelId))
             .filter(it | it.startTime <= millis && it.startTime + it.duration > millis) //
             .collect(Collectors.toList)
             .sortInplace(new Comparator<Epg>() {
@@ -264,6 +332,8 @@ class EpgView extends BaseView {
     }
 
     private def getSearchResultEvents() {
+        val filteredChannels = filterChannel
+
         if (searchRegex.value) {
             val Pattern titlePattern = createPattern(searchTitle.value)
             val Pattern shorttextPattern = createPattern(searchShortText.value)
@@ -275,6 +345,7 @@ class EpgView extends BaseView {
             }
 
             return svdrp.epg.stream //
+                .filter(it | filteredChannels.contains(it.channelId))
                 .filter(it | titlePattern.regexMatcher(it.title)) //
                 .filter(it | shorttextPattern.regexMatcher(it.shortText)) //
                 .filter(it | descriptionPattern.regexMatcher(it.description)) //
@@ -291,6 +362,7 @@ class EpgView extends BaseView {
             }
 
             return svdrp.epg.stream //
+                .filter(it | filteredChannels.contains(it.channelId))
                 .filter(it | title.stringMatcher(it.title)) //
                 .filter(it | shorttext.stringMatcher(it.shortText)) //
                 .filter(it | description.stringMatcher(it.description)) //
