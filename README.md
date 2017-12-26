@@ -52,8 +52,8 @@ Build jonglisto using the build image:
 The war file can be found in the current directory with name jonglistp-ng.'version'.war
 
 # Deployment and running jonglisto-ng
-Generally for all described solutions to run jonglisto-ng are the following step
-* edit or copy two configuration files to /etc/jonglisto: jonglisto-ng.xml and remote.xml. The configuration is described below.
+Generally for all described solutions to run jonglisto-ng is the following step
+* copy two configuration files to directory /etc/jonglisto: jonglisto-ng.xml and remote.xml. The configuration is described below.
 
 ## Using TomEE (at least version 7.0.4)
 A hint before: TomEE Embedded 7.0.4 will not work. Unfortunately the packaged libraries differ between TomEE 7.0.4 and TomEE Embedded 7.0.4.
@@ -76,6 +76,7 @@ There exists two possibilities to start jonglisto-ng
 * create a self running jar with ``java -jar payara-micro-4.1.2.174.jar --disablephonehome --nocluster --deploy jonglisto-ng-'version'.war --outputuberjar <my_new_name>.jar`` and start the server and application with ``java -jar <my_new_name>.jar``
 
 The server announces the URL to access the application. In my example it is ``http://<server>:8080/jonglisto-ng-0.0.1``
+As described in the TomEE part, you could rename the war file to be able to access jonglisto-ng with a different URL.
 
 
 ### Configuration
