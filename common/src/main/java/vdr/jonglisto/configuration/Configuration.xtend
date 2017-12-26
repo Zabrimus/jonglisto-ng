@@ -261,19 +261,44 @@ class Configuration {
 
     private def registerEpgInformation(Jonglisto cfg) {
         epgSeriesSeason = cfg.epgColumns?.series?.season?.pattern.compilePattern
-        epgSeriesSeasonGroup = cfg.epgColumns?.series?.season?.group
+
+        try {
+            epgSeriesSeasonGroup = cfg.epgColumns.series.season.group
+        } catch (NullPointerException e) {
+            epgSeriesSeasonGroup = 0
+        }
 
         epgSeriesPart = cfg.epgColumns?.series?.part?.pattern.compilePattern
-        epgSeriesPartGroup = cfg.epgColumns?.series?.part?.group
+
+        try {
+            epgSeriesPartGroup = cfg.epgColumns.series.part.group
+        } catch (NullPointerException e) {
+            epgSeriesPartGroup = 0
+        }
 
         epgSeriesParts = cfg.epgColumns?.series?.parts?.pattern.compilePattern
-        epgSeriesPartsGroup = cfg.epgColumns?.series?.parts?.group
+
+        try {
+            epgSeriesPartsGroup = cfg.epgColumns.series.parts.group
+        } catch (NullPointerException e) {
+            epgSeriesPartsGroup = 0
+        }
 
         epgGenre = cfg.epgColumns?.genre?.pattern.compilePattern
-        epgGenreGroup = cfg.epgColumns?.genre?.group
+
+        try {
+            epgGenreGroup = cfg.epgColumns.genre.group
+        } catch (NullPointerException e) {
+            epgGenreGroup = 0
+        }
 
         epgCategory = cfg.epgColumns?.category?.pattern.compilePattern
-        epgCategoryGroup = cfg.epgColumns?.category?.group
+
+        try {
+            epgCategoryGroup = cfg.epgColumns.category.group
+        } catch (NullPointerException e) {
+            epgCategoryGroup = 0
+        }
 
         for (custom : cfg.epgColumns?.customPattern?.custom) {
             val p = custom.pattern.compilePattern

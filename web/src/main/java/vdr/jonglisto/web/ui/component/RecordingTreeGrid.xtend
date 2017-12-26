@@ -148,7 +148,7 @@ class RecordingTreeGrid {
                 tmpTarget = treeData.getParent(tmpTarget)
             };
 
-            val target = tmpTarget as Recording
+            val target = tmpTarget
 
             // create summary
             val builder = new StringBuilder

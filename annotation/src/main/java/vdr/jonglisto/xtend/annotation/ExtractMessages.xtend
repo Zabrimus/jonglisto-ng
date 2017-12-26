@@ -56,17 +56,6 @@ class ExtractMessagesProcessor extends AbstractClassProcessor {
             primarySourceElement = cls
         ]
 
-        /*
-        cls.addConstructor [
-            addParameter("locale", Locale.newTypeReference)
-            body = '''
-                this.bundle = «ResourceBundle».getBundle("«cls.qualifiedName»", locale);
-            '''
-            bundleField.markAsInitializedBy(it)
-            primarySourceElement = cls
-        ]
-        */
-
         cls.addConstructor [
             body = '''
                 // use default locale

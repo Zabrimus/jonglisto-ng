@@ -405,7 +405,7 @@ class Parser {
             resultDate = resultDate.with(TemporalAdjusters.next(day));
         }
 
-        return #[resultDate, resultDate.with(TemporalAdjusters.next(day))] as List<LocalDate>
+        return #[resultDate, resultDate.with(TemporalAdjusters.next(day))]
     }
 
     private static class LoopBreakException extends RuntimeException {

@@ -259,7 +259,7 @@ class EpgView extends BaseView {
     }
 
     private def getChannelEvents() {
-        val ch = epgChannelCriteria.selectedItem.get as Channel
+        val ch = epgChannelCriteria.selectedItem.get
 
         svdrp.epg.stream //
             .filter(it | it.channelId == ch.id && it.startTime+it.duration >= System.currentTimeMillis / 1000L) //

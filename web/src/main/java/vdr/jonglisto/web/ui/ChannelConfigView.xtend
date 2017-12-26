@@ -274,7 +274,7 @@ class ChannelConfigView extends BaseView {
 
     private def displayName(BaseDataWithName n) {
         if (n instanceof EpgProvider) {
-            return (n as EpgProvider).provider + ":" + n.name
+            return n.provider + ":" + n.name
         } else {
             return n.name
         }
