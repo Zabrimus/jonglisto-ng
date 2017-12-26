@@ -206,7 +206,19 @@ Default configuration of the EPG view. The columns can be customized using a reg
 The custom column consists of three parts: header, pattern and output. The header is the column header name. The pattern is a regular expression which shall be search within the EPG details. The output contains the data and format which shall shown in the grid row.
 
 ## remote.xml (sample can be found in samples/remote.xml)
-The remote.xml contains the configuration and layout of the remote control. The remote control uses a grid as layout component, therefore columns and rows have to be defined.
+The remote.xml contains the configuration and layout of the remote control. The remote control uses a grid as layout component, therefore columns and rows have to be defined for each button together with either an label or icon and the correspondig key(s), which has to be sent to VDR. Multiple keys are supported with one button. A senseless example is
+```xml
+    <button row="1" column="3">        
+        <key>Channel+</key>
+        <key>Menu</key>
+        <key>Power</key>
+        <icon>POWER_OFF</icon>
+    </button>
+```
+
+The attribute ``colorRow="10"`` indicates, that the 4 color buttons shall be shown in row 10.
+The possible icons can be found at https://vaadin.com/elements/vaadin-icons/html-examples/icons-basic-demos. The name of the icon has to be modified a little bit: Uppercase and replace '-' with '_', e.g. ``vaadin:power-off`` has to be translated to ``POWER_OFF``.
+
 ```xml
 <remote xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="remote.xsd" colorRow="10">
