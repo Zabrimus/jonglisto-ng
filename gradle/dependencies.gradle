@@ -2,7 +2,7 @@ ext {
     versions = [
         // vaadin            : '8.2.+',        // Vaadin, Web
         vaadin            : '8.1.7',        // Vaadin, Web
-        shiro             : '1.4.0',        // Apache Shiro, Security
+        shiro             : '1.3.2',        // Apache Shiro, Security
         commons           : '3.6',          // Apache commons
         xtend             : '2.13.0',       // xtend
         gson              : '2.8.1',        // Google gson
@@ -27,7 +27,7 @@ ext {
         xtend                : "org.eclipse.xtend:org.eclipse.xtend.lib:$versions.xtend",
         commons              : "org.apache.commons:commons-lang3:$versions.commons",
         shiroweb             : "org.apache.shiro:shiro-web:$versions.shiro",
-        shirocore            : "org.apache.shiro:shiro-web:$versions.shiro",
+        shirocore            : "org.apache.shiro:shiro-core:$versions.shiro",
         gson                 : "com.google.code.gson:gson:$versions.gson",
         sanitizer            : "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:$versions.sanitizer",
         guava                : "com.google.guava:guava:$versions.guava",

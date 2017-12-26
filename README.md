@@ -53,7 +53,7 @@ The war file can be found in the current directory with name jonglistp-ng.'versi
 
 # Deployment and running jonglisto-ng
 Generally for all described solutions to run jonglisto-ng is the following step
-* copy two configuration files to directory /etc/jonglisto: jonglisto-ng.xml and remote.xml. The configuration is described below.
+* copy two configuration files to directory /etc/jonglisto: jonglisto-ng.xml, remote.xml and security.ini. The configuration is described below.
 
 ## Using TomEE (at least version 7.0.4)
 A hint before: TomEE Embedded 7.0.4 will not work. Unfortunately the packaged libraries differ between TomEE 7.0.4 and TomEE Embedded 7.0.4.
@@ -205,10 +205,13 @@ Default configuration of the EPG view. The columns can be customized using a reg
 ```
 The custom column consists of three parts: header, pattern and output. The header is the column header name. The pattern is a regular expression which shall be search within the EPG details. The output contains the data and format which shall shown in the grid row.
 
+## security (sample can be found in samples/security.ini
+TODO....
+
 ## remote.xml (sample can be found in samples/remote.xml)
 The remote.xml contains the configuration and layout of the remote control. The remote control uses a grid as layout component, therefore columns and rows have to be defined for each button together with either an label or icon and the correspondig key(s), which has to be sent to VDR. Multiple keys are supported with one button. A senseless example is
 ```xml
-    <button row="1" column="3">        
+    <button row="1" column="3">
         <key>Channel+</key>
         <key>Menu</key>
         <key>Power</key>
