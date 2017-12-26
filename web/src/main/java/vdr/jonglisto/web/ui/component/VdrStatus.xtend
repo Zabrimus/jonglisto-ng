@@ -17,7 +17,6 @@ import com.vaadin.ui.themes.ValoTheme
 import de.steinwedel.messagebox.MessageBox
 import java.util.List
 import java.util.stream.Collectors
-import javax.inject.Inject
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
@@ -28,18 +27,16 @@ import static vdr.jonglisto.web.xtend.UIBuilder.*
 @Log
 class VdrStatus {
 
-    @Inject
-    private Svdrp svdrp
+    private Svdrp svdrp = new Svdrp()
 
-    @Inject
-    private Config config
+    private Config config = new Config()
 
-    val CPanel panel
-    val GridLayout grid
+    var CPanel panel
+    var GridLayout grid
     var ComboBox<String> box
-    val VDR vdr
+    var VDR vdr
 
-    new(VDR vdr) {
+    def setVdr(VDR vdr) {
         this.vdr = vdr
 
         grid = new GridLayout(3, 2) => [
@@ -88,6 +85,8 @@ class VdrStatus {
             addComponent(layout)
             addHeaderComponent(refreshButton)
         ]
+
+        return this
     }
 
     def getPanel() {

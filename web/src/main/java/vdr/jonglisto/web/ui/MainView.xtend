@@ -24,7 +24,7 @@ class MainView extends BaseView {
     protected override createMainComponents() {
         val css = new CssLayout => [
             config.vdrNames.forEach[s |
-                addComponent(new VdrStatus(config.getVdr(s)).panel)
+                addComponent(new VdrStatus().setVdr(config.getVdr(s)).panel)
             ]
         ]
 
