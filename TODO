@@ -2,12 +2,10 @@ TODOs in no specific order:
 
 technisch:
 
-
 fachlich:
 - epg overview: implement alarm
 - epgsearch view: save and use templates
 - more rights / better password configuration (use e.g. a hashed value)
-- monitor open VDR connections (i'm not sure if everything is working as desired)
 - wake on lan
 - epg view: favourite channel list
 - channel config view: save and load configuration
@@ -37,3 +35,4 @@ finished TODOs:
 - change channel logo creation (logo as theme component(?), not as logo.jar anymore). This is a performance issue.
 - Fix logging (either parent-last in tomee or use the tomcat logging)
 - if parent-first is still used, then some libraries are not used anymore
+- monitor open VDR connections (i'm not sure if everything is working as desired)
