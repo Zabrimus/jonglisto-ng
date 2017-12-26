@@ -29,6 +29,10 @@ class RecordingView extends BaseView {
         super.init(BUTTON.RECORDING)
     }
 
+    public def reloadRecordings() {
+        changeVdr(selectedVdr)
+    }
+
     protected override createMainComponents() {
         layout = horizontalLayout[
             width = "100%"
@@ -88,7 +92,7 @@ class RecordingView extends BaseView {
     }
 
     private def prepareTreeGrid() {
-        recordingTreeGrid.setCurrentVdr(selectedVdr).createTreeGrid(svdrp.getRecordings(selectedVdr))
+        recordingTreeGrid.setParent(this).setCurrentVdr(selectedVdr).createTreeGrid(svdrp.getRecordings(selectedVdr))
         val grid = recordingTreeGrid.treeGrid
         grid.setSizeFull
 

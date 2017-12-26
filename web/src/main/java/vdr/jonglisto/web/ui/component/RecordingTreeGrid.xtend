@@ -34,6 +34,7 @@ import vdr.jonglisto.model.Recording
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
+import vdr.jonglisto.web.ui.RecordingView
 import vdr.jonglisto.web.util.HtmlSanitizer
 import vdr.jonglisto.xtend.annotation.Log
 
@@ -58,10 +59,17 @@ class RecordingTreeGrid {
 
     var TreeGrid<Recording> treeGrid
 
+    var RecordingView parentView
+
     var VDR currentVdr
 
     def setCurrentVdr(VDR vdr) {
         this.currentVdr = vdr
+        return this
+    }
+
+    def setParent(RecordingView parent) {
+        this.parentView = parent
         return this
     }
 
@@ -397,7 +405,7 @@ class RecordingTreeGrid {
         return layout
     }
 
-    private def showDeleteConfirmDialog(List<Recording> toDeleteRecordings) {
+    private def void showDeleteConfirmDialog(List<Recording> toDeleteRecordings) {
         val builder = new StringBuilder
 
         if (toDeleteRecordings.size > 0) {
@@ -410,6 +418,10 @@ class RecordingTreeGrid {
             .withYesButton([
                     toDeleteRecordings.stream.forEach(s | { deleteRecording(s) })
                     treeGrid.dataProvider.refreshAll
+
+                    // bad hack: After deletion of recordings the internal tree structure can be wrong :(
+                    // I have not foung the cause for this problem. So reload to ensure the correct tree hierarchy.
+                    parentView.reloadRecordings
                 ], ButtonOption.caption(messages.confirmDeletionYes))
             .withNoButton()
             .open();
@@ -442,6 +454,10 @@ class RecordingTreeGrid {
 
         // delete now the recording in TreeGrid
         treeGrid.treeData.removeItem(rec)
+
+        // bad hack: After deletion of recordings the internal tree structure can be wrong :(
+        // I have not foung the cause for this problem. So reload to ensure the correct tree hierarchy.
+        parentView.reloadRecordings()
     }
 
     private def moveRecording(Recording rec) {
@@ -499,6 +515,12 @@ class RecordingTreeGrid {
 
     private def getShowEpgDetails(ItemClick<Recording> click) {
         val rec = click.item
+
+        if (click.column === null) {
+            // i don't know why this can happen. With my understanding, this should be impossible.
+            // But to prevent subsequent errors, directly return
+            return
+        }
 
         if ((click.column.id == COLUMN_DURATION || click.column.id == COLUMN_START) && (rec.id > 0)) {
             if (rec.epg === null) {
