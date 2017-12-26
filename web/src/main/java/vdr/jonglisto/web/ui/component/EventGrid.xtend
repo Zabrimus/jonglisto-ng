@@ -19,7 +19,7 @@ import java.util.Collections
 import java.util.HashSet
 import java.util.List
 import javax.inject.Inject
-import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.EpgCustomColumn
@@ -39,6 +39,9 @@ class EventGrid {
 
     @Inject
     private Svdrp svdrp
+
+    @Inject
+    private Config config
 
     @Inject
     private Messages messages
@@ -145,7 +148,7 @@ class EventGrid {
             // .setComparator([ev1, ev2|ev1.description.compareToIgnoreCase(ev2.description)])
             .setMinimumWidthFromContent(false)
 
-        if (Configuration.get.epgGenre.key !== null) {
+        if (config.epgGenre.key !== null) {
             grid.addColumn(ev|createGenre(ev)) //
                 .setCaption(messages.epgGenreCaption) //
                 .setId(COL_GENRE) //
@@ -154,7 +157,7 @@ class EventGrid {
                 .setMinimumWidthFromContent(false)
         }
 
-        if (Configuration.get.epgCategory.key !== null) {
+        if (config.epgCategory.key !== null) {
             grid.addColumn(ev|createCategory(ev)) //
                 .setCaption(messages.epgCategoryCaption) //
                 .setId(COL_CATEGORY) //
@@ -163,7 +166,7 @@ class EventGrid {
                 .setMinimumWidthFromContent(false)
         }
 
-        val customList = Configuration.get.epgCustom
+        val customList = config.epgCustom
         for (var i = 0; i < customList.size; i++) {
             val idx = i
             grid.addColumn(ev|createCustom(ev, customList.get(idx))) //
@@ -203,11 +206,11 @@ class EventGrid {
     def setItems(List<Epg> list) {
         grid.items = list
 
-        if (Configuration.get.epgGenre.key !== null) {
+        if (config.epgGenre.key !== null) {
             fillGenreFilter
         }
 
-        if (Configuration.get.epgCategory.key !== null) {
+        if (config.epgCategory.key !== null) {
             fillCategoryFilter
         }
 
@@ -416,11 +419,11 @@ class EventGrid {
 
         filterRow.initTitleFilter
 
-        if (Configuration.get.epgGenre.key !== null) {
+        if (config.epgGenre.key !== null) {
             filterRow.initGenreFilter
         }
 
-        if (Configuration.get.epgCategory.key !== null) {
+        if (config.epgCategory.key !== null) {
             filterRow.initCategoryFilter
         }
 

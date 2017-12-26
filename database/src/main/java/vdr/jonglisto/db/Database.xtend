@@ -35,7 +35,7 @@ class Database {
     }
 
     private static def createInstance() {
-        val infos = Configuration.get().dbInformation
+        val infos = Configuration.getInstance().dbInformation
 
         val username = infos.get("username") as String
         val password = infos.get("password") as String

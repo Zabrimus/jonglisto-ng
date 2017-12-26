@@ -22,7 +22,6 @@ import java.util.stream.Collectors
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
-import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.VDR
@@ -43,8 +42,6 @@ class EpgView extends BaseView {
 
     @Inject
     private EventGrid eventGrid
-
-    // var EventGrid eventGrid
 
     var EPGTYPE epgType
     var DateField epgDateCriteria
@@ -68,7 +65,7 @@ class EpgView extends BaseView {
     }
 
     protected override createMainComponents() {
-        timeSelectValues = Configuration.get.epgTimeSelect
+        timeSelectValues = config.epgTimeSelect
 
         cssLayout(this) [
             height = null

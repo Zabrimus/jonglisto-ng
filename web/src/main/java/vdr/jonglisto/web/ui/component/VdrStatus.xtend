@@ -18,7 +18,7 @@ import de.steinwedel.messagebox.MessageBox
 import java.util.List
 import java.util.stream.Collectors
 import javax.inject.Inject
-import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.xtend.annotation.Log
@@ -30,6 +30,9 @@ class VdrStatus {
 
     @Inject
     private Svdrp svdrp
+
+    @Inject
+    private Config config
 
     val CPanel panel
     val GridLayout grid
@@ -104,14 +107,14 @@ class VdrStatus {
             horizontalLayout(it) [
                 width = "100%"
 
-                box = comboBox(it, Configuration.get.defaultSvdrpCommand) [
+                box = comboBox(it, config.defaultSvdrpCommand) [
                     width = "100%"
                     caption = "Command"
                     selectedItem = null
                     textInputAllowed = true
 
                     newItemHandler = [ s | {
-                        val list = Configuration.get.defaultSvdrpCommand
+                        val list = config.defaultSvdrpCommand
                         list.add(s)
                         box.items = list
                         box.selectedItem = s
@@ -175,7 +178,7 @@ class VdrStatus {
     }
 
     private def void getPingStatus() {
-        val result = getStatusHtml(Configuration.get.pingHost(vdr))
+        val result = getStatusHtml(config.pingHost(vdr))
         grid.replaceComponent(grid.getComponent(2, 0), new Label(result, ContentMode.HTML))
     }
 

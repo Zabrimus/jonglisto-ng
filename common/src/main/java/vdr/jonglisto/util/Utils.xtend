@@ -1,7 +1,6 @@
 package vdr.jonglisto.util
 
 import java.io.Closeable
-import vdr.jonglisto.configuration.Configuration
 
 import static extension org.apache.commons.lang3.StringUtils.*
 
@@ -61,9 +60,5 @@ class Utils {
                 }
             }
         }
-    }
-
-    def static Configuration getJonglisto() {
-        return Configuration.get
     }
 }

@@ -15,7 +15,7 @@ import java.time.LocalDate
 import java.util.regex.Pattern
 import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
-import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.Epg
@@ -35,6 +35,9 @@ class TimerEditWindow extends Window {
 
     @Inject
     private Svdrp svdrp
+
+    @Inject
+    private Config config
 
     @Inject
     private Messages messages
@@ -98,7 +101,7 @@ class TimerEditWindow extends Window {
                 label(it, "Edit Timer")
 
                 horizontalLayout(it) [
-                    selectVdr = comboBox(it, Configuration.get.vdrNames) [
+                    selectVdr = comboBox(it, config.vdrNames) [
                         caption = messages.timerVdrCaption
                         emptySelectionAllowed = false
                         selectedItem = currentVdr.name
@@ -339,10 +342,10 @@ class TimerEditWindow extends Window {
             if (timer.id > 0) {
                 // move existing timer: delete and add
                 svdrp.deleteTimer(currentVdr, timer)
-                svdrp.updateTimer(Configuration.get.getVdr(selectVdr.selectedItem.get), timer)
+                svdrp.updateTimer(config.getVdr(selectVdr.selectedItem.get), timer)
             } else {
                 // new timer: simple
-                svdrp.updateTimer(Configuration.get.getVdr(selectVdr.selectedItem.get), timer)
+                svdrp.updateTimer(config.getVdr(selectVdr.selectedItem.get), timer)
             }
         }
 

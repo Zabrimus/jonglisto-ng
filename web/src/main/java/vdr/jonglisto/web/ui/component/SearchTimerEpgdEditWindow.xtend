@@ -15,9 +15,9 @@ import java.util.List
 import java.util.stream.Collectors
 import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
-import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.db.SearchTimerService
 import vdr.jonglisto.db.VdrService
+import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.EpgdSearchTimer
@@ -33,6 +33,9 @@ class SearchTimerEpgdEditWindow extends Window {
 
     @Inject
     private Svdrp svdrp
+
+    @Inject
+    private Config config
 
     @Inject
     private Messages messages
@@ -536,7 +539,7 @@ class SearchTimerEpgdEditWindow extends Window {
         resultVdr.add(new VDR("Auto", null, null))
 
         vdrService.configuredVdr.stream.forEach[ v |
-            val vdr = Configuration.get.findVdr(v.ip, v.port)
+            val vdr = config.findVdr(v.ip, v.port)
             if (vdr.isPresent && vdr.get.name != v.name) {
                 v.name = vdr.get.name + " (" + v.name + ")"
             }

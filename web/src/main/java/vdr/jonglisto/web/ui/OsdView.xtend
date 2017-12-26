@@ -4,7 +4,7 @@ import com.vaadin.cdi.CDIView
 import com.vaadin.ui.HorizontalLayout
 import javax.annotation.PostConstruct
 import javax.inject.Inject
-import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.OsdComponent
@@ -20,13 +20,16 @@ class OsdView extends BaseView {
     @Inject
     private RemoteComponent remote
 
+    @Inject
+    private Config config
+
     private OsdComponent osd
     var HorizontalLayout layout
 
     @PostConstruct
     def void init() {
         super.init(BUTTON.OSD)
-        remote.setParent(this).changeVdr(selectedVdr).changeRemote(Configuration.get.remoteConfig).createGrid
+        remote.setParent(this).changeVdr(selectedVdr).changeRemote(config.remoteConfig).createGrid
 
         osd = new OsdComponent().changeVdr(selectedVdr).changeOsd(svdrp.getOsd(selectedVdr))
         osd.createGrid

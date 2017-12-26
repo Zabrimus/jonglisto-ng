@@ -11,9 +11,6 @@ import vdr.jonglisto.model.Timer
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
 
-// @SessionScoped
-// @UIScoped
-// @ViewScoped
 @ApplicationScoped
 class Svdrp implements Serializable {
 

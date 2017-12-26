@@ -139,13 +139,13 @@ class Parser {
                             lastEpg.get.channelId = lastChannel.get
                         }
 
-                        lastEpg.get.genre = lastEpg.get.findPattern(Configuration.get.epgGenre)
-                        lastEpg.get.category = lastEpg.get.findPattern(Configuration.get.epgCategory)
-                        lastEpg.get.season = lastEpg.get.findPattern(Configuration.get.epgSeriesSeason)
-                        lastEpg.get.part = lastEpg.get.findPattern(Configuration.get.epgSeriesPart)
-                        lastEpg.get.parts = lastEpg.get.findPattern(Configuration.get.epgSeriesParts)
+                        lastEpg.get.genre = lastEpg.get.findPattern(Configuration.getInstance().epgGenre)
+                        lastEpg.get.category = lastEpg.get.findPattern(Configuration.getInstance().epgCategory)
+                        lastEpg.get.season = lastEpg.get.findPattern(Configuration.getInstance().epgSeriesSeason)
+                        lastEpg.get.part = lastEpg.get.findPattern(Configuration.getInstance().epgSeriesPart)
+                        lastEpg.get.parts = lastEpg.get.findPattern(Configuration.getInstance().epgSeriesParts)
 
-                        for (custom : Configuration.get.epgCustom) {
+                        for (custom : Configuration.getInstance().epgCustom) {
                             lastEpg.get.findPattern(custom)
                         }
 

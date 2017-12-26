@@ -4,7 +4,6 @@ import com.vaadin.cdi.CDIView
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
 import com.vaadin.ui.CssLayout
 import javax.annotation.PostConstruct
-import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.VdrStatus
@@ -24,8 +23,8 @@ class MainView extends BaseView {
 
     protected override createMainComponents() {
         val css = new CssLayout => [
-            Configuration.get.vdrNames.forEach[s |
-                addComponent(new VdrStatus(Configuration.get.getVdr(s)).panel)
+            config.vdrNames.forEach[s |
+                addComponent(new VdrStatus(config.getVdr(s)).panel)
             ]
         ]
 

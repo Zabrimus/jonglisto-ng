@@ -188,7 +188,7 @@ class Configuration {
         return true;
     }
 
-    public static def get() {
+    public static def getInstance() {
         return instance
     }
 

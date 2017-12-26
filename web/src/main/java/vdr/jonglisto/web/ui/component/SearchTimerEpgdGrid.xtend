@@ -14,8 +14,8 @@ import java.util.List
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
-import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.db.SearchTimerService
+import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.EpgdSearchTimer
 import vdr.jonglisto.web.i18n.Messages
@@ -28,6 +28,9 @@ class SearchTimerEpgdGrid {
 
     @Inject
     private Svdrp svdrp
+
+    @Inject
+    private Config config
 
     @Inject
     private Messages messages
@@ -196,7 +199,7 @@ class SearchTimerEpgdGrid {
 
     private def createVdrName(EpgdSearchTimer timer) {
         if (timer.ip !== null) {
-            val vdr = Configuration.get.findVdr(timer.ip, timer.svdrp)
+            val vdr = config.findVdr(timer.ip, timer.svdrp)
 
             if (vdr.present) {
                 return vdr.get.name

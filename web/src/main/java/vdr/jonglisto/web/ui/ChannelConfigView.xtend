@@ -35,7 +35,6 @@ import java.util.List
 import java.util.logging.Level
 import java.util.stream.Collectors
 import javax.annotation.PostConstruct
-import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.BaseDataWithName
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.EpgProvider
@@ -94,15 +93,15 @@ class ChannelConfigView extends BaseView {
                     epgProviderAutoMapping()
                 ]
 
-                visible = Configuration.get.isDatabaseConfigured
+                visible = config.isDatabaseConfigured
             ]
 
             val download1 = getChannelMapDownloadButton(messages.createChannelMap, "channelmap.conf")
-            download1.visible = Configuration.get.isDatabaseConfigured
+            download1.visible = config.isDatabaseConfigured
             addComponent(download1)
 
             val download2 = getMappingDownloadButton(messages.createExtMapping, "mapping.jonglisto")
-            download2.visible = Configuration.get.isDatabaseConfigured
+            download2.visible = config.isDatabaseConfigured
             addComponent(download2)
         ]
 
@@ -239,7 +238,7 @@ class ChannelConfigView extends BaseView {
             width = null
 
             verticalLayout(it) [
-                Configuration.get.epgProvider //
+                config.epgProvider //
                     .filter(s | s.provider == Provider.TVM && s.visible) //
                     .sortBy[it.name.toUpperCase] //
                     .forEach[ s | label(it, s.name).addDragSource(s)]
@@ -247,7 +246,7 @@ class ChannelConfigView extends BaseView {
 
             addPanelDropTarget(it)
 
-            visible = Configuration.get.isDatabaseConfigured
+            visible = config.isDatabaseConfigured
         ]
 
         /*****************************
@@ -258,7 +257,7 @@ class ChannelConfigView extends BaseView {
             width = null
 
             verticalLayout(it) [
-                Configuration.get.epgProvider //
+                config.epgProvider //
                     .filter(s | s.provider == Provider.TVSP && s.visible) //
                     .sortBy[it.name.toUpperCase] //
                     .forEach[ s | label(it, s.name).addDragSource(s)]
@@ -266,7 +265,7 @@ class ChannelConfigView extends BaseView {
 
             addPanelDropTarget(it)
 
-            visible = Configuration.get.isDatabaseConfigured
+            visible = config.isDatabaseConfigured
         ]
 
         return h
@@ -505,7 +504,7 @@ class ChannelConfigView extends BaseView {
 
     private def epgProviderAutoMapping() {
         // create map for faster access
-        val epgProvider = Configuration.get.epgProvider.stream().collect(Collectors.groupingBy([m | m.normalizedName], Collectors.toList()));
+        val epgProvider = config.epgProvider.stream().collect(Collectors.groupingBy([m | m.normalizedName], Collectors.toList()));
 
         treeGrid.treeData.rootItems.forEach [ rootItem |
             treeGrid.treeData.getChildren(rootItem).forEach[child |

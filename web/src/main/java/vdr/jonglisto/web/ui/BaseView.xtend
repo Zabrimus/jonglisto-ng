@@ -11,7 +11,7 @@ import com.vaadin.ui.ComboBox
 import com.vaadin.ui.VerticalLayout
 import com.vaadin.ui.themes.ValoTheme
 import javax.inject.Inject
-import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
@@ -28,6 +28,9 @@ abstract class BaseView extends VerticalLayout implements View {
 
     @Inject
     protected Svdrp svdrp
+
+    @Inject
+    protected Config config
 
     @Inject
     protected CDINavigator navigator;
@@ -73,7 +76,7 @@ abstract class BaseView extends VerticalLayout implements View {
                 addClickListener(s | { navigator.navigateTo(MainUI.MAIN_VIEW) })
             ]
 
-            selectVdr = comboBox(Configuration.get.vdrNames) [
+            selectVdr = comboBox(config.vdrNames) [
                 emptySelectionAllowed = false
                 addSelectionListener [
                     selectVdr(it)
@@ -93,7 +96,7 @@ abstract class BaseView extends VerticalLayout implements View {
             ]
 
             // Show the button only, if database is configured
-            if (Configuration.get.isDatabaseConfigured) {
+            if (config.isDatabaseConfigured) {
                 button(messages.menuSearchTimerEpgd) [
                     icon = VaadinIcons.CLOCK
                     styleName = (if (selectedButton == BUTTON.EPGD) ValoTheme.BUTTON_PRIMARY else "")
@@ -143,7 +146,7 @@ abstract class BaseView extends VerticalLayout implements View {
         log.fine("Got Event: " + event +  " --> " + event.selectedItem.get)
 
         VaadinSession.current.setAttribute("SELECTED_VDR", event.selectedItem.get)
-        changeVdr(Configuration.get.getVdr(event.selectedItem.get))
+        changeVdr(config.getVdr(event.selectedItem.get))
 
         // check if epgsearch plugin is available in selectedVdr
         if (svdrp.isPluginAvailable(event.selectedItem.get, "epgsearch")) {
@@ -158,6 +161,6 @@ abstract class BaseView extends VerticalLayout implements View {
     }
 
     def getSelectedVdr() {
-        Configuration.get.getVdr(selectVdr.selectedItem.get)
+        config.getVdr(selectVdr.selectedItem.get)
     }
 }

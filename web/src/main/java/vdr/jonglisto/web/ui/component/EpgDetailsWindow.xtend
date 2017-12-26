@@ -11,7 +11,7 @@ import com.vaadin.ui.TextArea
 import com.vaadin.ui.Window
 import com.vaadin.ui.themes.ValoTheme
 import javax.inject.Inject
-import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.VDR
@@ -28,6 +28,9 @@ class EpgDetailsWindow extends Window {
 
     @Inject
     private Svdrp svdrp
+
+    @Inject
+    private Config config
 
     @Inject
     private Messages messages
@@ -75,7 +78,7 @@ class EpgDetailsWindow extends Window {
                     if (editView) {
                         button(it, messages.epgSave) [
                             it.addClickListener(s | {
-                                svdrp.saveEpgData(Configuration.get.epgVdr, epg, epgArea.value)
+                                svdrp.saveEpgData(config.epgVdr, epg, epgArea.value)
                                 close
                             })
                         ]

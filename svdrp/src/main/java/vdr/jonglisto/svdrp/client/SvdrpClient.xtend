@@ -67,9 +67,9 @@ class SvdrpClient {
         .build(new CacheLoader<String, List<? extends BaseData>>() {
             override def List<? extends BaseData> load(String key) {
                 if (key == "EPG") {
-                    return readEpg(Configuration.get.epgVdr)
+                    return readEpg(Configuration.getInstance().epgVdr)
                 } else if (key == "CHANNEL") {
-                    val result = readChannels(Configuration.get.channelVdr)
+                    val result = readChannels(Configuration.getInstance().channelVdr)
 
                     channelMap.clear
                     result.stream.forEach[s|channelMap.put(s.id, s)]
@@ -308,13 +308,13 @@ class SvdrpClient {
     }
 
     def isPluginAvailable(String vdrName, String pluginName) {
-        val vdr = Configuration.get.getVdr(vdrName)
+        val vdr = Configuration.getInstance().getVdr(vdrName)
 
         if (vdr === null) {
             return false
         }
 
-        if (!pingHost(vdr) || !Configuration.get.pingHost(vdr)) {
+        if (!pingHost(vdr) || !Configuration.getInstance().pingHost(vdr)) {
             return false
         }
 
