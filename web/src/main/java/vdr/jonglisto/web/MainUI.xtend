@@ -21,14 +21,14 @@ import vdr.jonglisto.xtend.annotation.Log
 @CDIUI("")
 class MainUI extends UI implements ViewChangeListener {
 
-    public static val MAIN_VIEW = "MainView"
-    public static val EPG_VIEW = "EpgView"
-    public static val CHANNEL_CONFIG_VIEW = "ChannelConfigView"
-    public static val OSD_VIEW = "OsdView"
-    public static val RECORDING_VIEW = "RecordingView"
-    public static val TIMER_VIEW = "TimerView"
-    public static val SEARCHTIMER_EPGD_VIEW = "SearchTimerEpgd"
-    public static val SEARCHTIMER_EPGSEARCH_VIEW = "SearchTimerEpgsearch"
+    public static val MAIN_VIEW = "main"
+    public static val EPG_VIEW = "epg"
+    public static val CHANNEL_CONFIG_VIEW = "channelconfig"
+    public static val OSD_VIEW = "osd"
+    public static val RECORDING_VIEW = "recordings"
+    public static val TIMER_VIEW = "timer"
+    public static val SEARCHTIMER_EPGD_VIEW = "searchtimer:epgd"
+    public static val SEARCHTIMER_EPGSEARCH_VIEW = "searchtimer:epgsearch"
 
     @Inject
     private CDINavigator navigator;
@@ -39,20 +39,7 @@ class MainUI extends UI implements ViewChangeListener {
     override protected init(VaadinRequest request) {
         navigator.init(this, this)
 
-        //navigator = new Navigator(this, this)
         navigator.addViewChangeListener(this)
-
-        // navigator.addView("", new LoginView(request.locale));
-        // navigator.addView("", LoginView);
-        // navigator.addView(MainUI.MAIN_VIEW, MainView)
-        // navigator.addView(MainUI.EPG_VIEW, EpgView)
-        // navigator.addView(MainUI.CHANNEL_CONFIG_VIEW, ChannelConfigView)
-        // navigator.addView(MainUI.OSD_VIEW, OsdView)
-        // navigator.addView(MainUI.RECORDING_VIEW, RecordingView)
-        // navigator.addView(MainUI.TIMER_VIEW, TimerView)
-        // navigator.addView(MainUI.SEARCHTIMER_EPGD_VIEW, SearchTimerEpgdView)
-        // navigator.addView(MainUI.SEARCHTIMER_EPGSEARCH_VIEW, SearchTimerEpgsearchView)
-
         navigator.errorView = ErrorView
     }
 
@@ -64,8 +51,13 @@ class MainUI extends UI implements ViewChangeListener {
             return false
         }
 
-
         if (!currentUser.authenticated && !(event.viewName == "")) {
+            event.navigator.navigateTo("")
+            return false;
+        }
+
+        // check view permission. Login and Main are always allowed for authenticated users
+        if (!(event.viewName == "") && !(event.viewName == MainUI.MAIN_VIEW) && !currentUser.isPermitted("view:" + event.viewName)) {
             event.navigator.navigateTo("")
             return false;
         }
@@ -78,10 +70,6 @@ class MainUI extends UI implements ViewChangeListener {
 
     override protected void refresh(VaadinRequest request) {
         super.refresh(request);
-    }
-
-    def static MainUI getMainUI() {
-        current as MainUI
     }
 
     def doLogout() {

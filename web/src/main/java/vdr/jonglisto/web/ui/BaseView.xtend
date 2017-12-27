@@ -11,6 +11,7 @@ import com.vaadin.ui.ComboBox
 import com.vaadin.ui.VerticalLayout
 import com.vaadin.ui.themes.ValoTheme
 import javax.inject.Inject
+import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
@@ -58,6 +59,8 @@ abstract class BaseView extends VerticalLayout implements View {
     }
 
     private def createLayout(BUTTON selectedButton) {
+        val currentUser = SecurityUtils.subject
+
         setSizeFull
 
         margin = false
@@ -83,51 +86,65 @@ abstract class BaseView extends VerticalLayout implements View {
                 ]
             ]
 
-            button(messages.menuEpg) [
-                icon = VaadinIcons.NEWSPAPER
-                styleName = (if (selectedButton == BUTTON.EPG) ValoTheme.BUTTON_PRIMARY else "")
-                addClickListener(s | { navigator.navigateTo(MainUI.EPG_VIEW) })
-            ]
-
-            button(messages.menuTimer) [
-                icon = VaadinIcons.CLOCK
-                styleName = (if (selectedButton == BUTTON.TIMER) ValoTheme.BUTTON_PRIMARY else "")
-                addClickListener(s | { navigator.navigateTo(MainUI.TIMER_VIEW) })
-            ]
-
-            // Show the button only, if database is configured
-            if (config.isDatabaseConfigured) {
-                button(messages.menuSearchTimerEpgd) [
-                    icon = VaadinIcons.CLOCK
-                    styleName = (if (selectedButton == BUTTON.EPGD) ValoTheme.BUTTON_PRIMARY else "")
-                    addClickListener(s | { navigator.navigateTo(MainUI.SEARCHTIMER_EPGD_VIEW) })
+            if (currentUser.isPermitted("view:" + MainUI.EPG_VIEW)) {
+                button(messages.menuEpg) [
+                    icon = VaadinIcons.NEWSPAPER
+                    styleName = (if (selectedButton == BUTTON.EPG) ValoTheme.BUTTON_PRIMARY else "")
+                    addClickListener(s | { navigator.navigateTo(MainUI.EPG_VIEW) })
                 ]
             }
 
-            epgsearchButton = button(messages.menuSearchTimerEpgsearch) [
-                icon = VaadinIcons.CLOCK
-                visible = false // disabled per default
-                styleName = (if (selectedButton == BUTTON.EPGSEARCH) ValoTheme.BUTTON_PRIMARY else "")
-                addClickListener(s | { navigator.navigateTo(MainUI.SEARCHTIMER_EPGSEARCH_VIEW) })
-            ]
+            if (currentUser.isPermitted("view:" + MainUI.TIMER_VIEW)) {
+                button(messages.menuTimer) [
+                    icon = VaadinIcons.CLOCK
+                    styleName = (if (selectedButton == BUTTON.TIMER) ValoTheme.BUTTON_PRIMARY else "")
+                    addClickListener(s | { navigator.navigateTo(MainUI.TIMER_VIEW) })
+                ]
+            }
 
-            button(messages.menuRecordings) [
-                icon = VaadinIcons.FILM
-                styleName = (if (selectedButton == BUTTON.RECORDING) ValoTheme.BUTTON_PRIMARY else "")
-                addClickListener(s | { navigator.navigateTo(MainUI.RECORDING_VIEW) })
-            ]
+            if (currentUser.isPermitted("view:" + MainUI.SEARCHTIMER_EPGD_VIEW)) {
+                // Show the button only, if database is configured
+                if (config.isDatabaseConfigured) {
+                    button(messages.menuSearchTimerEpgd) [
+                        icon = VaadinIcons.CLOCK
+                        styleName = (if (selectedButton == BUTTON.EPGD) ValoTheme.BUTTON_PRIMARY else "")
+                        addClickListener(s | { navigator.navigateTo(MainUI.SEARCHTIMER_EPGD_VIEW) })
+                    ]
+                }
+            }
 
-            button(messages.menuOsd) [
-                icon = VaadinIcons.LAPTOP
-                styleName = (if (selectedButton == BUTTON.OSD) ValoTheme.BUTTON_PRIMARY else "")
-                addClickListener(s | { navigator.navigateTo(MainUI.OSD_VIEW) })
-            ]
+            if (currentUser.isPermitted("view:" + MainUI.SEARCHTIMER_EPGSEARCH_VIEW)) {
+                epgsearchButton = button(messages.menuSearchTimerEpgsearch) [
+                    icon = VaadinIcons.CLOCK
+                    visible = svdrp.isPluginAvailable(selectedVdr.name, "epgsearch")
+                    styleName = (if (selectedButton == BUTTON.EPGSEARCH) ValoTheme.BUTTON_PRIMARY else "")
+                    addClickListener(s | { navigator.navigateTo(MainUI.SEARCHTIMER_EPGSEARCH_VIEW) })
+                ]
+            }
 
-            button(messages.channelConfig) [
-                icon = VaadinIcons.COG
-                styleName = (if (selectedButton == BUTTON.CHANNELCONFIG) ValoTheme.BUTTON_PRIMARY else "")
-                addClickListener(s | { navigator.navigateTo(MainUI.CHANNEL_CONFIG_VIEW) })
-            ]
+            if (currentUser.isPermitted("view:" + MainUI.RECORDING_VIEW)) {
+                button(messages.menuRecordings) [
+                    icon = VaadinIcons.FILM
+                    styleName = (if (selectedButton == BUTTON.RECORDING) ValoTheme.BUTTON_PRIMARY else "")
+                    addClickListener(s | { navigator.navigateTo(MainUI.RECORDING_VIEW) })
+                ]
+            }
+
+            if (currentUser.isPermitted("view:" + MainUI.OSD_VIEW)) {
+                button(messages.menuOsd) [
+                    icon = VaadinIcons.LAPTOP
+                    styleName = (if (selectedButton == BUTTON.OSD) ValoTheme.BUTTON_PRIMARY else "")
+                    addClickListener(s | { navigator.navigateTo(MainUI.OSD_VIEW) })
+                ]
+            }
+
+            if (currentUser.isPermitted("view:" + MainUI.CHANNEL_CONFIG_VIEW)) {
+                button(messages.channelConfig) [
+                    icon = VaadinIcons.COG
+                    styleName = (if (selectedButton == BUTTON.CHANNELCONFIG) ValoTheme.BUTTON_PRIMARY else "")
+                    addClickListener(s | { navigator.navigateTo(MainUI.CHANNEL_CONFIG_VIEW) })
+                ]
+            }
 
             button(messages.menuLogout) [
                 icon = VaadinIcons.EXIT
@@ -149,13 +166,15 @@ abstract class BaseView extends VerticalLayout implements View {
         changeVdr(config.getVdr(event.selectedItem.get))
 
         // check if epgsearch plugin is available in selectedVdr
-        if (svdrp.isPluginAvailable(event.selectedItem.get, "epgsearch")) {
-            epgsearchButton.visible = true
-        } else {
-            epgsearchButton.visible = false
-            if (currentView == BUTTON.EPGSEARCH) {
-                // this view do not exists for this VDR -> change to home
-                UI.navigator.navigateTo(MainUI.MAIN_VIEW)
+        if (epgsearchButton !== null) {
+            if (svdrp.isPluginAvailable(event.selectedItem.get, "epgsearch")) {
+                epgsearchButton.visible = true
+            } else {
+                epgsearchButton.visible = false
+                if (currentView == BUTTON.EPGSEARCH) {
+                    // this view do not exists for this VDR -> change to home
+                    UI.navigator.navigateTo(MainUI.MAIN_VIEW)
+                }
             }
         }
     }

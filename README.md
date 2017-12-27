@@ -79,7 +79,7 @@ The server announces the URL to access the application. In my example it is ``ht
 As described in the TomEE part, you could rename the war file to be able to access jonglisto-ng with a different URL.
 
 
-### Configuration
+# Configuration
 There exists two configuration files which have to be installed in /etc/jonglisto
 ## jonglisto-ng.xml (sample can be found in samples/jonglisto-ng.xml)
 The directory in which jonglisto-ng can write some configuration data.
@@ -206,7 +206,36 @@ Default configuration of the EPG view. The columns can be customized using a reg
 The custom column consists of three parts: header, pattern and output. The header is the column header name. The pattern is a regular expression which shall be search within the EPG details. The output contains the data and format which shall shown in the grid row.
 
 ## security (sample can be found in samples/security.ini
-TODO....
+The security configuration can be done in /etc/jonglisto/security.ini.
+There exists two parts
+* [users]
+* [roles]
+
+Within users authenticated users with password and attached roles can be configured. The format is
+``username = password, role1, role2, ... ``
+
+Within roles roles can be configured with all permissions a role have. The format is
+``role = permission1, permission2, ... ``
+
+Wildcard permissions are also available, e.g. the admin role has permission * (which means everything).
+Another permission is e.g. view:searchtimer:* which means all permissions starting with view:searchtimer (view:searchtimer:epgd and view:searchtimer:epgsearch)
+
+The following permissions are currently available:
+* view:epg
+* view:timer
+* view:searchtimer:epgd
+* view:searchtimer:epgsearch
+* view:recordings
+* view:osd
+* view:channelconfig
+* vdr:<instance name in jonglisto-ng.xml>
+* svdrp:execute
+
+view: Menu entries (views) in the main menu
+vdr: access granted to the selected VDR
+svdrp:execute: Execution of SVDRP commands granted (in combination with permission vdr:XXX)
+
+For more information about this configuration, you can check Apache Shiro (https://shiro.apache.org/configuration.html)
 
 ## remote.xml (sample can be found in samples/remote.xml)
 The remote.xml contains the configuration and layout of the remote control. The remote control uses a grid as layout component, therefore columns and rows have to be defined for each button together with either an label or icon and the correspondig key(s), which has to be sent to VDR. Multiple keys are supported with one button. A senseless example is
