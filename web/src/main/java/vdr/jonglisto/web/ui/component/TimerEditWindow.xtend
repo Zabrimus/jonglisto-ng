@@ -15,6 +15,7 @@ import java.time.LocalDate
 import java.util.regex.Pattern
 import javax.inject.Inject
 import org.apache.commons.lang3.StringUtils
+import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Channel
@@ -94,6 +95,8 @@ class TimerEditWindow extends Window {
     }
 
     def createLayout(Timer timer) {
+        val currentUser = SecurityUtils.subject
+
         caption = createCaption(timer)
 
         setContent(
@@ -101,7 +104,7 @@ class TimerEditWindow extends Window {
                 label(it, "Edit Timer")
 
                 horizontalLayout(it) [
-                    selectVdr = comboBox(it, config.vdrNames) [
+                    selectVdr = comboBox(it, config.getVdrNames(currentUser)) [
                         caption = messages.timerVdrCaption
                         emptySelectionAllowed = false
                         selectedItem = currentVdr.name

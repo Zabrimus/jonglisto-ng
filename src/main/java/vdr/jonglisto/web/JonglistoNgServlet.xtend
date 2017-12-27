@@ -26,7 +26,7 @@ class JonglistoNgServlet extends VaadinCDIServlet {
 
     override protected def servletInitialized() throws ServletException {
         log.info("Found configured VDRs:")
-        val names = config.getVdrNames
+        val names = config.getVdrNames(null)
         names.forEach[log.info("   " + it)]
 
         // init scheduling

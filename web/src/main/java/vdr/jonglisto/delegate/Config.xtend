@@ -1,7 +1,9 @@
 package vdr.jonglisto.delegate
 
 import java.io.Serializable
+import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
+import org.apache.shiro.subject.Subject
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.VDR
 
@@ -56,8 +58,14 @@ class Config implements Serializable {
         return Configuration.getInstance().getChannelVdr
     }
 
-    public def getVdrNames() {
-        return Configuration.getInstance().getVdrNames
+    public def getVdrNames(Subject currentUser) {
+        if (currentUser === null) {
+            return Configuration.getInstance().getVdrNames
+        } else {
+            return Configuration.getInstance().getVdrNames.stream() //
+                .filter[s | currentUser.isPermitted("vdr:" + Configuration.getInstance().getVdr(s).instance)]
+                .collect(Collectors.toList)
+        }
     }
 
     public def findVdr(String ip, int port) {

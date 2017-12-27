@@ -4,6 +4,7 @@ import com.vaadin.cdi.CDIView
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
 import com.vaadin.ui.CssLayout
 import javax.annotation.PostConstruct
+import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.VdrStatus
@@ -22,8 +23,10 @@ class MainView extends BaseView {
     }
 
     protected override createMainComponents() {
+        val currentUser = SecurityUtils.subject
+
         val css = new CssLayout => [
-            config.vdrNames.forEach[s |
+            config.getVdrNames(currentUser).forEach[s |
                 addComponent(new VdrStatus().setVdr(config.getVdr(s)).panel)
             ]
         ]

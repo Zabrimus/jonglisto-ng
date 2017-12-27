@@ -243,14 +243,14 @@ class Configuration {
 
             val port = if (v.port == 0) null else Integer.valueOf(v.port)
 
-            vdrs.put(v.displayName, new VDR(v.displayName, v.host, port))
+            vdrs.put(v.displayName, new VDR(v.displayName, v.host, port, v.name))
 
             if (v.name == cfg.epg.ref) {
-                vdrs.put(EPG_VDR, new VDR(EPG_VDR, v.host, port))
+                vdrs.put(EPG_VDR, new VDR(EPG_VDR, v.host, port, v.name))
             }
 
             if (v.name == cfg.channel.ref) {
-                vdrs.put(CHANNEL_VDR, new VDR(CHANNEL_VDR, v.host, port))
+                vdrs.put(CHANNEL_VDR, new VDR(CHANNEL_VDR, v.host, port, v.name))
             }
         })
     }

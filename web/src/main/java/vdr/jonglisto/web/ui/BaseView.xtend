@@ -79,7 +79,7 @@ abstract class BaseView extends VerticalLayout implements View {
                 addClickListener(s | { navigator.navigateTo(MainUI.MAIN_VIEW) })
             ]
 
-            selectVdr = comboBox(config.vdrNames) [
+            selectVdr = comboBox(config.getVdrNames(currentUser)) [
                 emptySelectionAllowed = false
                 addSelectionListener [
                     selectVdr(it)
