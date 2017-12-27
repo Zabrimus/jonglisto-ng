@@ -83,7 +83,7 @@ As described in the TomEE part, you could rename the war file to be able to acce
 
 
 # Configuration
-There exists two configuration files which have to be installed in /etc/jonglisto
+There exists three configuration files which have to be installed in /etc/jonglisto
 ## jonglisto-ng.xml (sample can be found in samples/jonglisto-ng.xml)
 The directory in which jonglisto-ng can write some configuration data.
 ```xml
@@ -134,7 +134,7 @@ Predefined time values used in EPG view. Exists only for convinience.
     </epgTimeList>
 ```
 
-Predefined SVDRP command. Exists only for convinience.
+Predefined SVDRP commands. Exists only for convinience.
 ```xml
     <!-- preconfigured common SVDRP commands -->
     <svdrpCommandList>
@@ -206,7 +206,7 @@ Default configuration of the EPG view. The columns can be customized using a reg
         </custom-pattern>
 </epg-columns>
 ```
-The custom column consists of three parts: header, pattern and output. The header is the column header name. The pattern is a regular expression which shall be search within the EPG details. The output contains the data and format which shall shown in the grid row.
+The custom column consists of three parts: header, pattern and output. The header is the column header name. The pattern is a regular expression which shall be search within the EPG details. The output contains the data and format which shall be shown in the grid row.
 
 ## security (sample can be found in samples/security.ini
 The security configuration can be done in /etc/jonglisto/security.ini.
@@ -215,13 +215,13 @@ There exists three parts
 * [users]
 * [roles]
 
-Within users authenticated users with password and attached roles can be configured. The format is
+Within [users] authenticated users with password and attached roles can be configured. The format is
 ``username = password, role1, role2, ... ``
 
 You can use plain text or salted hashed passwords for more security. If you want to use the hashed password configuration, then you need the password hash tool described in https://shiro.apache.org/command-line-hasher.html. Currently http://repo1.maven.org/maven2/org/apache/shiro/tools/shiro-tools-hasher/1.3.2/shiro-tools-hasher-1.3.2-cli.jar is available.
-Usage is ``java -jar shiro-tools-hasher-1.3.2-cli.jar -p``. Then use the created password.
+Usage is ``java -jar shiro-tools-hasher-1.3.2-cli.jar -p``. Then copy the created password.
 
-Within roles roles can be configured with all permissions a role have. The format is
+Within [roles] roles can be configured with all permissions a role have. The format is
 ``role = permission1, permission2, ... ``
 
 Wildcard permissions are also available, e.g. the admin role has permission * (which means everything).
