@@ -45,6 +45,12 @@ abstract class BaseView extends VerticalLayout implements View {
     private BUTTON currentView
 
     public def init(BUTTON selectedButton) {
+        // sanitiy check
+        val currentUser = SecurityUtils.subject
+        if (!currentUser.isAuthenticated) {
+            navigator.navigateTo("")
+        }
+
         createLayout(selectedButton)
         createMainComponents()
 
@@ -180,6 +186,6 @@ abstract class BaseView extends VerticalLayout implements View {
     }
 
     def getSelectedVdr() {
-        config.getVdr(selectVdr.selectedItem.get)
+        config.getVdr(selectVdr.selectedItem.orElse(""))
     }
 }
