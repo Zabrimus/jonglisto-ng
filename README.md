@@ -3,11 +3,11 @@ A web GUI for VDR (see http://www.tvdr.de/ and https://www.vdr-portal.de/).
 
 ### features
 * Multiple VDR instances can be used in parallel. e.g. server and/or client instances
-* EPG view with configurable columns (using regular expressions)
+* EPG view with configurable columns (using regular expressions), search repeatings, add Timer and more
 * edit EPG entries
 * manage timers (create, delete, move, ...)
-* manage recordings (rename, delete, move via drag and drop, create new folders, ...)
-* manage EPGD search timers, if the epgd database is configured (optional)
+* manage recordings (rename, delete, move recordings and whole directories via drag and drop, create new folders, ...)
+* manage epgd search timers, if the epgd database is configured (optional)
 * manage epgsearch search timers, if epgsearch plugin is installed on the selected VDR instance (optional)
 * configurable remote control
 * OSD view, if svdrposd plugin is installed on the selected VDR instance (optional)
