@@ -9,4 +9,4 @@ RUN apt-get update -qq && \
     git clone https://github.com/Zabrimus/jonglisto-ng.git && \
     cd jonglisto-ng && \
     chmod +x ./gradlew && \
-    ./gradlew standaloneWar
+    ./gradlew war
