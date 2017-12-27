@@ -207,12 +207,16 @@ The custom column consists of three parts: header, pattern and output. The heade
 
 ## security (sample can be found in samples/security.ini
 The security configuration can be done in /etc/jonglisto/security.ini.
-There exists two parts
+There exists three parts
+* [main]
 * [users]
 * [roles]
 
 Within users authenticated users with password and attached roles can be configured. The format is
 ``username = password, role1, role2, ... ``
+
+You can use plain text or salted hashed passwords for more security. If you want to use the hashed password configuration, then you need the password hash tool described in https://shiro.apache.org/command-line-hasher.html. Currently http://repo1.maven.org/maven2/org/apache/shiro/tools/shiro-tools-hasher/1.3.2/shiro-tools-hasher-1.3.2-cli.jar is available.
+Usage is ``java -jar shiro-tools-hasher-1.3.2-cli.jar -p``. Then use the created password.
 
 Within roles roles can be configured with all permissions a role have. The format is
 ``role = permission1, permission2, ... ``
