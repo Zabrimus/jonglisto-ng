@@ -17,6 +17,7 @@ import com.vaadin.ui.themes.ValoTheme
 import de.steinwedel.messagebox.MessageBox
 import java.util.List
 import java.util.stream.Collectors
+import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
@@ -37,6 +38,8 @@ class VdrStatus {
     var VDR vdr
 
     def setVdr(VDR vdr) {
+        val currentUser = SecurityUtils.subject
+
         this.vdr = vdr
 
         grid = new GridLayout(3, 2) => [
@@ -66,9 +69,11 @@ class VdrStatus {
                     addClickListener(s | showPlugins)
                 ]
 
-                button(it, "SVDRP") [
-                    addClickListener(s | svdrpCommand)
-                ]
+                if (currentUser.isPermitted("svdrp:execute")) {
+                    button(it, "SVDRP") [
+                        addClickListener(s | svdrpCommand)
+                    ]
+                }
             ])
         ]
 
