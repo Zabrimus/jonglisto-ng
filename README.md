@@ -53,7 +53,7 @@ The war file can be found in the current directory with name jonglistp-ng.'versi
 
 # Deployment and running jonglisto-ng
 Generally for all described solutions to run jonglisto-ng is the following step
-* copy two configuration files to directory /etc/jonglisto: jonglisto-ng.xml, remote.xml and security.ini. The configuration is described below.
+* copy three configuration files to directory /etc/jonglisto: jonglisto-ng.xml, remote.xml and security.ini. The configuration is described below.
 
 ## Using TomEE (at least version 7.0.4)
 A hint before: TomEE Embedded 7.0.4 will not work. Unfortunately the packaged libraries differ between TomEE 7.0.4 and TomEE Embedded 7.0.4.
