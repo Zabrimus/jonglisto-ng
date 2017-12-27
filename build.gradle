@@ -170,6 +170,11 @@ task createLogoJar(type: Exec) {
   args "-c", "cd tools; ./build-logo-jar.sh"
 }
 
+task copySamples(type: Exec) {
+  executable "sh"
+  args "-c", "cp samples/* build/libs"
+}
+
 task wrapper(type: Wrapper) {
   gradleVersion = '4.2.1'
 }
