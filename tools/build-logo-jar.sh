@@ -10,7 +10,11 @@ fi;
 # create logos
 cp icon-settings/*.conf picicon-repo/build-input
 cd picicon-repo
+
+echo "Start building the channel logos... This can take some time."
 ./2-build-picons.sh snp-full
+
+echo "Building finished..."
 
 # repack the result
 mkdir -p logo

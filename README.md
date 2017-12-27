@@ -46,8 +46,11 @@ It's easy to delete all images. The local system will not be polluted with maven
 Build the buld image:
 > docker build -t "jonglisto-ng:build" https://github.com/Zabrimus/jonglisto-ng.git#:docker/build-image
 
-Build jonglisto using the build image:
-> docker run -v `` ` ``pwd`` ` ``:/tmp/jonglisto-ng/build/libs jonglisto-ng:build /bin/bash -c "cd /tmp/jonglisto-ng; git pull; ./gradlew war"
+Build jonglisto using the build image (without channel logos):
+> docker run -v `` ` ``pwd`` ` ``:/tmp/jonglisto-ng/build/libs jonglisto-ng:build /bin/bash -c "cd /tmp/jonglisto-ng; git pull; ./gradlew war; ./gradlew copySamples"
+
+Build jonglisto using the build image (with channel logos):
+> docker run -v `` ` ``pwd`` ` ``:/tmp/jonglisto-ng/build/libs jonglisto-ng:build /bin/bash -c "cd /tmp/jonglisto-ng; git pull; (cd tools; ./build-logo-jar.sh); ././gradlew war; ./gradlew copySamples"
 
 The war file can be found in the current directory with name jonglistp-ng.'version'.war
 
