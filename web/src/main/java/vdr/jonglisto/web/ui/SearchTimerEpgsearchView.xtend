@@ -65,7 +65,5 @@ class SearchTimerEpgsearchView extends BaseView {
         if (epgsearchGrid !== null) {
             epgsearchGrid.setVdr(vdr)
         }
-
-        // FIXME: Do something useful. e.g. check if the newly selected VDR has epgsearch plugin
     }
 }

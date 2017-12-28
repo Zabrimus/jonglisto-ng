@@ -107,6 +107,10 @@ class SvdrpClient {
         cleanupCache
     }
 
+    def void invalidateConnection(Connection con) {
+        connections.invalidate(con)
+    }
+
     def doOneMinuteEvent() {
         cleanupCache
     }

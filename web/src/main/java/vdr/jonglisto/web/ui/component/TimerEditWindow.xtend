@@ -243,7 +243,7 @@ class TimerEditWindow extends Window {
 
 
     private def createCaption(Timer timer) {
-        return  "TODO: implement me"
+        return  messages.timerEdit
     }
 
     private def createTimerFromEpg(Epg epg) {

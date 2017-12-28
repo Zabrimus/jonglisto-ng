@@ -6,6 +6,7 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.InetSocketAddress
 import java.net.Socket
+import java.net.SocketException
 import java.util.List
 import java.util.regex.Pattern
 import vdr.jonglisto.xtend.annotation.Log
@@ -100,21 +101,33 @@ class Connection {
     }
 
     def Response send(String command) {
-        output.write(command.replaceAll("\n", "|"))
-        output.newLine
-        output.flush
+        try {
+            output.write(command.replaceAll("\n", "|"))
+            output.newLine
+            output.flush
+        } catch (SocketException e) {
+            // connection is broken -> invalidate
+            SvdrpClient.getInstance().invalidateConnection(this)
+            throw new ConnectionException(e.getMessage)
+        }
 
         return readResponse
     }
 
     def Response sendBatch(List<String> command) {
-        command.stream.forEach(s |
-            {
-            output.write(s.replaceAll("\n", "|"))
-            output.newLine
-            })
+        try {
+            command.stream.forEach(s |
+                {
+                output.write(s.replaceAll("\n", "|"))
+                output.newLine
+                })
 
-        output.flush
+            output.flush
+        } catch (SocketException e) {
+            // connection is broken -> invalidate
+            SvdrpClient.getInstance().invalidateConnection(this)
+            throw new ConnectionException(e.getMessage)
+        }
 
         return readResponse
     }

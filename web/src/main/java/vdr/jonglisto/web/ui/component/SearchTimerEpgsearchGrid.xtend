@@ -99,7 +99,9 @@ class SearchTimerEpgsearchGrid {
     }
 
     def refreshSearchTimer() {
-        grid.items = svdrp.getEpgsearchSearchTimerList(vdr)
+        if (grid !== null) {
+            grid.items = svdrp.getEpgsearchSearchTimerList(vdr)
+        }
     }
 
     def newTimer() {
