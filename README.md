@@ -65,10 +65,10 @@ A hint before: TomEE Embedded 7.0.4 will not work. Unfortunately the packaged li
 * copy jonglisto-ng.'version'.war to apache-tomee-webprofile-7.0.4/webapps
 * start TomEE with ``apache-tomee-webprofile-7.0.4/bin/catalina.sh start`` or ``apache-tomee-webprofile-7.0.4/bin/catalina.sh run``
 * stop with ``apache-tomee-webprofile-7.0.4/bin/catalina.sh stop``
-The application will be accessible with http://<server>:8080/jonglisto-ng-'version' (e.g.http://<server>:8080/jonglisto-ng-0.0.1)
+The application will be accessible with http://server:8080/jonglisto-ng-'version' (e.g.http://server:8080/jonglisto-ng-0.0.1)
 
-If you want another context, e.g. http://<server>:8080/japp, then rename the war file in directory webapps to the desired name, e.g. japp.war.
-To access jonglisto-ng with http://<server>:8080/ then rename the war file to ROOT.war.
+If you want another context, e.g. http://server:8080/japp, then rename the war file in directory webapps to the desired name, e.g. japp.war.
+To access jonglisto-ng with http://server:8080/ then rename the war file to ROOT.war.
 
 A TomEE manager application is available (apache-tomee-webprofile-7.0.4/webapps/manager) which is a minimal management application, which could be useful. But before using this application a change of ``apache-tomee-webprofile-7.0.4/conf/tomcat-users.xml`` is necessary.
 
