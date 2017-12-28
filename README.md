@@ -1,6 +1,8 @@
 # jonglisto-ng
 A web GUI for VDR (see http://www.tvdr.de/ and https://www.vdr-portal.de/).
 
+At the end of this page you can find some screenshots of the currently existing version.
+
 ### features
 * Multiple VDR instances can be used in parallel. e.g. server and/or client instances
 * EPG view with configurable columns (using regular expressions), search repeatings, add Timer and more
@@ -290,4 +292,59 @@ The possible icons can be found at https://vaadin.com/elements/vaadin-icons/html
     </button>
 </remote>
 ```
+
+# Screenhots
+## Main Page
+![Main](https://github.com/Zabrimus/page/blob/master/jng-main.png)
+
+## EPG list
+![EPG1](https://github.com/Zabrimus/page/blob/master/jng-epg1.png)
+![EPG2](https://github.com/Zabrimus/page/blob/master/jng-epg2.png)
+
+## EPG search (retransmissions)
+![EPG3](https://github.com/Zabrimus/page/blob/master/jng-epg-retransmission.png)
+
+## EPG details
+![EPG4](https://github.com/Zabrimus/page/blob/master/jng-epg-details.png)
+
+## Timer list
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-timer.png)
+
+## epgd searchtimer list
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-epgd-list.png)
+
+## epgd searchtimer edit
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-epgd-edit1.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-epgd-edit2.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-epgd-edit3.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-epgd-edit4.png)
+
+## epgsearch searchtimer list
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-epgsearch-list.png)
+
+## epgsearch searchtimer edit
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-epgsearch-edit1.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-epgsearch-edit2.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-epgsearch-edit3.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-epgsearch-edit4.png)
+
+## Recordings list
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-recording-list.png)
+
+## Recordings rename/move/delete
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-recording-rename.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-recording-move1.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-recording-delete.png)
+
+## OSD
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-osd.png)
+
+## channel config
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-channelconfig.png)
+
+
+
+
+
+
 
