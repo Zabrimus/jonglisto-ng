@@ -69,9 +69,6 @@ class OsdComponent extends Composite {
 
         panel.setContent = mainLayout
 
-        // panel.height = "64em"
-        // panel.width = "100%"
-
         compositionRoot = panel
     }
 

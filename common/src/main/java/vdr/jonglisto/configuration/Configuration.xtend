@@ -1,26 +1,29 @@
 package vdr.jonglisto.configuration
 
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStreamReader
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
 import java.util.Map
+import java.util.Optional
 import java.util.regex.Pattern
 import javax.xml.bind.JAXBContext
+import javax.xml.bind.Marshaller
 import vdr.jonglisto.configuration.jaxb.config.Jonglisto
+import vdr.jonglisto.configuration.jaxb.favourite.Favourites
+import vdr.jonglisto.configuration.jaxb.favourite.ObjectFactory
 import vdr.jonglisto.configuration.jaxb.remote.Remote
 import vdr.jonglisto.model.EpgCustomColumn
 import vdr.jonglisto.model.EpgProvider
+import vdr.jonglisto.model.EpgProvider.Provider
 import vdr.jonglisto.model.VDR
+import vdr.jonglisto.util.ClasspathFileReader
+import vdr.jonglisto.util.Utils
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
-import java.util.Optional
-import vdr.jonglisto.util.ClasspathFileReader
-import vdr.jonglisto.util.Utils
-import vdr.jonglisto.model.EpgProvider.Provider
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 @Log
 class Configuration {
@@ -60,20 +63,24 @@ class Configuration {
     private static int dbPort
 
     private static Remote remoteConfig
+    private static Favourites favouriteConfig
+
+    private static String customDirectory
 
     private static Configuration instance = new Configuration
+
+    private static Marshaller marshaller
 
     private new() {
         var configObjectFactory = new vdr.jonglisto.configuration.jaxb.config.ObjectFactory
         var remoteObjectFactory = new vdr.jonglisto.configuration.jaxb.remote.ObjectFactory
+        var favouriteObjectFactory = new ObjectFactory
 
-        val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class);
-        // val jc = JAXBContext.newInstance(ObjectFactory);
-        // val jcRemote = JAXBContext.newInstance(vdr.jonglisto.configuration.jaxb.remote.ObjectFactory);
-
-        // val o = null as vdr.jonglisto.configuration.jaxb.config.ObjectFactory
+        val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class);
 
         val unmarshaller = jc.createUnmarshaller()
+        marshaller = jc.createMarshaller()
+
         val xmlFile = new File(configurationFile)
         val remoteFile = new File(remoteFile)
 
@@ -86,8 +93,30 @@ class Configuration {
         registerDbInformation(config)
 
         defaultSvdrp = config.svdrpCommandList?.command
+        customDirectory = config.directory?.dir
+
+        try {
+            favouriteConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "favourites.xml")) as Favourites
+        } catch (Exception e) {
+            favouriteConfig = new Favourites
+        }
 
         loadEpgProvider
+    }
+
+    public def getCustomDirectory() {
+        return customDirectory
+    }
+
+    public def getFavourites() {
+        return favouriteConfig
+    }
+
+    public def saveFavourites() {
+        val out = new File(customDirectory + File.separator + "favourites.xml")
+        marshaller.marshal(favouriteConfig, out)
+
+        println("TODO: Speichere Favoriten...")
     }
 
     public def isDatabaseConfigured() {

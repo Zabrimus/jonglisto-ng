@@ -24,7 +24,7 @@ import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 @Log
 abstract class BaseView extends VerticalLayout implements View {
     protected enum BUTTON {
-        HOME, TIMER, EPG, EPGD, EPGSEARCH, RECORDING, CHANNELCONFIG, OSD, LOGOUT
+        HOME, TIMER, EPG, EPGD, EPGSEARCH, RECORDING, CHANNELCONFIG, OSD, CONFIG, LOGOUT
     }
 
     @Inject
@@ -149,6 +149,14 @@ abstract class BaseView extends VerticalLayout implements View {
                     icon = VaadinIcons.COG
                     styleName = (if (selectedButton == BUTTON.CHANNELCONFIG) ValoTheme.BUTTON_PRIMARY else "")
                     addClickListener(s | { navigator.navigateTo(MainUI.CHANNEL_CONFIG_VIEW) })
+                ]
+            }
+
+            if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW)) {
+                button(messages.configView) [
+                    icon = VaadinIcons.LIFEBUOY
+                    styleName = (if (selectedButton == BUTTON.CONFIG) ValoTheme.BUTTON_PRIMARY else "")
+                    addClickListener(s | { navigator.navigateTo(MainUI.CONFIG_VIEW) })
                 ]
             }
 

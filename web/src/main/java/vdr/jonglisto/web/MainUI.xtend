@@ -29,6 +29,7 @@ class MainUI extends UI implements ViewChangeListener {
     public static val TIMER_VIEW = "timer"
     public static val SEARCHTIMER_EPGD_VIEW = "searchtimer:epgd"
     public static val SEARCHTIMER_EPGSEARCH_VIEW = "searchtimer:epgsearch"
+    public static val CONFIG_VIEW = "config"
 
     @Inject
     private CDINavigator navigator;

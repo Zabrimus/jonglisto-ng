@@ -14,6 +14,18 @@ class Config implements Serializable {
         return Configuration.getInstance().isDatabaseConfigured()
     }
 
+    public def getCustomDirectory() {
+        return Configuration.getInstance().customDirectory
+    }
+
+    public def getFavourites() {
+        return Configuration.getInstance().favourites
+    }
+
+    public def saveFavourites() {
+        Configuration.getInstance().saveFavourites()
+    }
+
     public def getRemoteConfig() {
         return Configuration.getInstance().getRemoteConfig()
     }
