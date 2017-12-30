@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- configuration of jonglisto-ng -->
-<configuration>
+<jonglisto>
     <!-- configuration directory in which jonglisto-ng can store some configuration files -->
     <directory dir="/var/jonglisto-ng" />
 
@@ -106,4 +106,4 @@
         </custom-pattern>
     </epg-columns>
 
-</configuration>
+</jonglisto>
