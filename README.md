@@ -6,6 +6,7 @@ At the end of this page you can find some screenshots of the currently existing 
 ### features
 * Multiple VDR instances can be used in parallel. e.g. server and/or client instances
 * EPG view with configurable columns (using regular expressions), search repeatings, add Timer and more
+* possibibilty to define several channel favourites and to use them in the epg view
 * edit EPG entries
 * manage timers (create, delete, move, ...)
 * manage recordings (rename, delete, move recordings and whole directories via drag and drop, create new folders, ...)

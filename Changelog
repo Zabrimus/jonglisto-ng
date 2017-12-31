@@ -1,9 +1,11 @@
-0.0.3 (not published yet):
+0.0.3 (not yet published):
 Bugfixes:
 - exception in channel configuration, if no channel groups are defined
+- empty epgsearch view (but only if epgd is not configured. Reason: nonsense condition in the code)
 
 New:
 - channel favourites (configuration)
+- channel favourites can be used in epg view to filter the channel list
 - new permission view:configuration:favourite
 
 0.0.2:

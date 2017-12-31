@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Collections
 import java.util.Comparator
 import java.util.List
+import java.util.Set
 import java.util.regex.Pattern
 import java.util.stream.Collectors
 import javax.annotation.PostConstruct
@@ -61,6 +62,7 @@ class EpgView extends BaseView {
 
     var NativeSelect<String> tvRadioSelect
     var NativeSelect<String> ftaEncSelect
+    var NativeSelect<String> favouriteSelect
 
     @PostConstruct
     def void init() {
@@ -97,9 +99,6 @@ class EpgView extends BaseView {
                             searchDescription.visible = false
                             searchButton.visible = false
 
-                            tvRadioSelect.visible = true
-                            ftaEncSelect.visible = true
-
                             epgType = EPGTYPE.TIME
                         }
 
@@ -115,10 +114,10 @@ class EpgView extends BaseView {
                             searchDescription.visible = false
                             searchButton.visible = false
 
-                            tvRadioSelect.visible = false
-                            ftaEncSelect.visible = false
-
                             epgType = EPGTYPE.CHANNEL
+
+                            updateChannelSelect
+                            listChannel
                         }
 
                         case messages.epgTypeSearch: {
@@ -133,9 +132,6 @@ class EpgView extends BaseView {
                             searchDescription.visible = true
                             searchButton.visible = true
 
-                            tvRadioSelect.visible = true
-                            ftaEncSelect.visible = true
-
                             epgType = EPGTYPE.SEARCH
                         }
                     }
@@ -143,6 +139,30 @@ class EpgView extends BaseView {
                     prepareGrid
                 })
             ]
+
+            if (config?.favourites?.favourite.size > 0) {
+                favouriteSelect = nativeSelect [
+                    emptySelectionAllowed = true
+                    items = config.favourites.favourite.map[s | s.name]
+
+                    addSelectionListener(it | {
+                        switch(epgTypeSelect.selectedItem.get) {
+                            case messages.epgTypeTime : {
+                                listTime
+                            }
+
+                            case messages.epgTypeChannel : {
+                                updateChannelSelect
+                                listChannel
+                            }
+
+                            case messages.epgTypeSearch: {
+                                listSearchResult
+                            }
+                        }
+                    })
+                ]
+            }
 
             epgNowButton = button(messages.epgFilterNow) [
                 styleName = "epg-now"
@@ -217,6 +237,10 @@ class EpgView extends BaseView {
                                 listTime
                             }
 
+                            case messages.epgTypeChannel : {
+                                updateChannelSelect
+                            }
+
                             case messages.epgTypeSearch: {
                                 listSearchResult
                             }
@@ -233,6 +257,10 @@ class EpgView extends BaseView {
                         switch(epgTypeSelect.selectedItem.get) {
                             case messages.epgTypeTime : {
                                 listTime
+                            }
+
+                            case messages.epgTypeChannel : {
+                                updateChannelSelect
                             }
 
                             case messages.epgTypeSearch: {
@@ -291,12 +319,37 @@ class EpgView extends BaseView {
         val tvRadioType = if (tvRadio == "TV/Radio") 1 else if (tvRadio == "Radio") 2 else 3
         val ftaEncType = if (ftaEnc == "All") 1 else if (ftaEnc == "Encrypted") 2 else 3
 
+        var filterFavourite = false
+        var Set<String> filterChannel
+        if (favouriteSelect !== null) {
+            val favouriteList = config.favourites.favourite.findFirst[s | s.name == favouriteSelect.selectedItem.orElse("")]
+            if (favouriteList !== null && favouriteList.channel.size > 0) {
+                filterFavourite = true
+                filterChannel = favouriteList.channel.toSet
+            }
+        }
+
+        val tmpFilter = filterFavourite
+        val tmpChannel = filterChannel
         return svdrp.channels.stream.filter[ s | {
                 ((tvRadioType == 1) || (s.isRadio && (tvRadioType == 2)) || (!s.isRadio && (tvRadioType == 3)))
             &&  ((ftaEncType == 1) || (s.encrypted && (ftaEncType == 2)) || (!s.encrypted && (ftaEncType == 3)))
+            &&  (!tmpFilter || tmpChannel.contains(s.id))
         }]
         .map[s | s.id]
         .collect(Collectors.toSet)
+    }
+
+    private def updateChannelSelect() {
+        val channels = filterChannel.map[s | svdrp.getChannel(s)].toList
+            .sortInplace(new Comparator<Channel>() {
+                override compare(Channel o1, Channel o2) {
+                    return o1.number.compareTo(o2.number)
+                }
+            })
+
+        epgChannelCriteria.items = channels
+        epgChannelCriteria.selectedItem = channels.get(0)
     }
 
     private def getTimeEvents() {
@@ -324,6 +377,11 @@ class EpgView extends BaseView {
     }
 
     private def getChannelEvents() {
+        if (!epgChannelCriteria.selectedItem.isPresent) {
+            epgChannelCriteria.selectedItem = null
+            return Collections.emptyList
+        }
+
         val ch = epgChannelCriteria.selectedItem.get
 
         svdrp.epg.stream //
