@@ -73,9 +73,16 @@ class ChannelConfigView extends BaseView {
                 addClickListener[
                     treeGrid.selectedItems.forEach(ch |
                         try {
+                            if (ch instanceof Channel) {
+                                if (ch.name == Channel.ROOT_GROUP && ch.id === null) {
+                                    throw new RuntimeException("do nothing")
+                                }
+                            }
+
                             treeGrid.treeData.removeItem(ch)
                         } catch (Exception e) {
                             // ignore problems which could happen if a channel is already deleted
+                            // or the root group shall be deleted
                         }
                     )
                     treeGrid.dataProvider.refreshAll
@@ -84,7 +91,8 @@ class ChannelConfigView extends BaseView {
 
             button(it, messages.channelConfigNewGroup) [
                 addClickListener[
-                    treeGrid.treeData.addRootItems(new Channel("NAME"))
+                    treeGrid.treeData.addRootItems(new Channel("New Group"))
+                    treeGrid.dataProvider.refreshAll
                 ]
             ]
 
@@ -398,10 +406,22 @@ class ChannelConfigView extends BaseView {
     private def createChannelsConf() {
         val channelsConf = new StringBuilder()
 
+        // 1. save the group root element
         treeGrid.treeData.rootItems.forEach[ ch |
             if (ch instanceof Channel) {
-                channelsConf.appendChannel(ch)
-                channelsConf.appendChildren(treeGrid.treeData.getChildren(ch))
+                if (ch.name == Channel.ROOT_GROUP && ch.id === null) {
+                    channelsConf.appendChildren(treeGrid.treeData.getChildren(ch))
+                }
+            }
+        ]
+
+        // 2. save all other channels
+        treeGrid.treeData.rootItems.forEach[ ch |
+            if (ch instanceof Channel) {
+                if (ch.name != Channel.ROOT_GROUP) {
+                    channelsConf.appendChannel(ch)
+                    channelsConf.appendChildren(treeGrid.treeData.getChildren(ch))
+                }
             }
         ]
 

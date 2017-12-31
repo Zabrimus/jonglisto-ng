@@ -40,6 +40,9 @@ class Parser {
         val result = new ArrayList<Channel>()
         val lastGroup = new AtomicReference<String>()
 
+        // set a root value for the group
+        lastGroup.set(Channel.ROOT_GROUP)
+
         input.forEach [ s |
             {
                 val sp = s.split(":")

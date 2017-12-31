@@ -7,23 +7,25 @@ import org.eclipse.xtend.lib.annotations.ToString
 // @EqualsHashCode
 @ToString
 class Channel extends BaseDataWithName {
-	private int number
-	private String id
-	private String group
-	private boolean radio
-	private boolean encrypted
-	private String source
-	
-	private String raw
-	private Long frequence
-	private String bouquet
+    public final static String ROOT_GROUP = "*"
+
+    private int number
+    private String id
+    private String group
+    private boolean radio
+    private boolean encrypted
+    private String source
+
+    private String raw
+    private Long frequence
+    private String bouquet
 
     private String normalizedName
-    	
-	new() {	    
-	}
-	
-	new(String name) {
+
+    new() {
+    }
+
+    new(String name) {
         this.name = name
     }
 }

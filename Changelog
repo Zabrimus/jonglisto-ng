@@ -1,0 +1,10 @@
+0.0.3 (not published yet):
+bugfix: exception in channel configuration, if no channel groups are defined
+new: channel favourites (configuration)
+
+0.0.2:
+some small bugfixes
+
+0.0.1:
+first version
+
