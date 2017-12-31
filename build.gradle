@@ -165,9 +165,14 @@ project(':web') {
     }
 }
 
-task createLogoJar(type: Exec) {
+task createLogos(type: Exec) {
   executable "sh"
   args "-c", "cd tools; ./build-logo-jar.sh"
+}
+
+task deleteLogos(type: Exec) {
+  executable "sh"
+  args "-c", "cd src/main/webapp/VAADIN/themes/jonglisto/channellogo; rm *.png"
 }
 
 task copySamples(type: Exec) {
