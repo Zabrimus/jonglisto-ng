@@ -6,7 +6,6 @@ fachlich:
 - epg overview: implement alarm
 - epgsearch view: save and use templates
 - wake on lan
-- epg view: favourite channel list
 - channel config view: save and load configuration
 
 
@@ -36,3 +35,4 @@ finished TODOs:
 - if parent-first is still used, then some libraries are not used anymore
 - monitor open VDR connections (i'm not sure if everything is working as desired)
 - more rights / better password configuration (use e.g. a hashed value)
+- epg view: favourite channel list
