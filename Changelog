@@ -1,10 +1,13 @@
 0.0.3 (not published yet):
-bugfix: exception in channel configuration, if no channel groups are defined
-new: channel favourites (configuration)
+Bugfixes:
+- exception in channel configuration, if no channel groups are defined
+
+New:
+- channel favourites (configuration)
+- new permission view:configuration:favourite
 
 0.0.2:
 some small bugfixes
 
 0.0.1:
 first version
-

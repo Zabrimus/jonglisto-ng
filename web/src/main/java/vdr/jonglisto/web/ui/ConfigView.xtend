@@ -10,6 +10,7 @@ import de.steinwedel.messagebox.MessageBox
 import java.util.logging.Level
 import javax.annotation.PostConstruct
 import javax.inject.Inject
+import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.configuration.jaxb.favourite.Favourites.Favourite
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
@@ -44,6 +45,7 @@ class ConfigView extends BaseView {
     }
 
     protected override createMainComponents() {
+        val currentUser = SecurityUtils.subject
 
         val channelFavouriteTab = verticalLayout [
             horizontalLayout(it) [
@@ -116,7 +118,9 @@ class ConfigView extends BaseView {
         ]
 
         val tabsheet = tabsheet[
-            addTab(channelFavouriteTab, messages.configFavouriteChannel)
+            if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":favourite")) {
+                addTab(channelFavouriteTab, messages.configFavouriteChannel)
+            }
 
             addStyleName(ValoTheme.TABSHEET_FRAMED);
             addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);

@@ -237,7 +237,8 @@ The following permissions are currently available:
 * view:recordings
 * view:osd
 * view:channelconfig
-* vdr:<instance name in jonglisto-ng.xml>
+* view:config:favourite
+* vdr:"instance name in jonglisto-ng.xml"
 * svdrp:execute
 
 view: Menu entries (views) in the main menu

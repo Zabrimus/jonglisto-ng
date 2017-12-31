@@ -5,7 +5,7 @@ import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Layout
 import javax.annotation.PostConstruct
 import javax.inject.Inject
-import vdr.jonglisto.db.Database
+import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.SearchTimerEpgsearchGrid
@@ -26,11 +26,6 @@ class SearchTimerEpgsearchView extends BaseView {
     }
 
     protected override createMainComponents() {
-        // sanity check
-        if (!config.isDatabaseConfigured) {
-            return
-        }
-
         horizontalLayout[
             button(messages.searchtimerRefresh) [
                 icon = VaadinIcons.REFRESH
@@ -47,14 +42,12 @@ class SearchTimerEpgsearchView extends BaseView {
             ]
         ]
 
-        if (Database.isConfigured) {
-            val epgsearch = verticalLayout[
-                setSizeFull
-                prepareEpgdGrid(it)
-            ]
+        val epgsearch = verticalLayout[
+            setSizeFull
+            prepareEpgdGrid(it)
+        ]
 
-            addComponentsAndExpand(epgsearch)
-        }
+        addComponentsAndExpand(epgsearch)
     }
 
     private def prepareEpgdGrid(Layout layout) {
