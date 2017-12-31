@@ -7,6 +7,7 @@ New:
 - channel favourites (configuration)
 - channel favourites can be used in epg view to filter the channel list
 - new permission view:configuration:favourite
+- build image is available at dockerhub: docker pull zabrimus/jonglisto-ng. This results in much faster subsequent builds.
 
 0.0.2:
 some small bugfixes

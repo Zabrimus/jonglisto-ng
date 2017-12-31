@@ -46,14 +46,16 @@ The war file can be found in build/libs/jonglisto-ng.'version'.war
 
 ## Build using docker
 It's easy to delete all images. The local system will not be polluted with maven dependencies. The build is a two step process.
-Build the buld image:
-> docker build -t "jonglisto-ng:build" https://github.com/Zabrimus/jonglisto-ng.git#:docker/build-image
+The automatically created build image is available at DockerHub and contains also the channel logos: https://hub.docker.com/r/zabrimus/jonglisto-ng/
 
-Build jonglisto using the build image (without channel logos):
-> docker run -v `` ` ``pwd`` ` ``:/tmp/jonglisto-ng/build/libs jonglisto-ng:build /bin/bash -c "cd /tmp/jonglisto-ng; git pull; ./gradlew war; ./gradlew copySamples"
+Build jonglisto-ng without channel logos:
+> docker run -v `` ` ``pwd`` ` ``:/tmp/jonglisto-ng/build/libs zabrimus/jonglisto-ng /bin/bash -c "cd /tmp/jonglisto-ng; git pull; ./gradlew deleteLogos; ./gradlew war; ./gradlew copySamples"
 
-Build jonglisto using the build image (with channel logos):
-> docker run -v `` ` ``pwd`` ` ``:/tmp/jonglisto-ng/build/libs jonglisto-ng:build /bin/bash -c "cd /tmp/jonglisto-ng; git pull; cd tools; ./build-logo-jar.sh; cd ..; ./gradlew war; ./gradlew copySamples"
+Build jonglisto-ng with channel logos:
+> docker run -v `` ` ``pwd`` ` ``:/tmp/jonglisto-ng/build/libs zabrimus/jonglisto-ng /bin/bash -c "cd /tmp/jonglisto-ng; git pull; ./gradlew war; ./gradlew copySamples"
+
+If someone wants to build the build image itself, it's also possible with
+> docker build -t "zabrimus/jonglisto-ng" https://github.com/Zabrimus/jonglisto-ng.git#:docker/build-image
 
 The war file can be found in the current directory with name jonglistp-ng.'version'.war
 
