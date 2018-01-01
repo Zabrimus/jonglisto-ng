@@ -13,3 +13,4 @@ RUN apt-get update -qq && \
     ./gradlew copySamples && \
     cd tools && \
     rm -Rf picicon-repo
+
