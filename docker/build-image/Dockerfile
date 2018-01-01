@@ -10,4 +10,6 @@ RUN apt-get update -qq && \
     chmod +x ./gradlew && \
     ./gradlew createLogos && \
     ./gradlew war && \
-    ./gradlew copySamples
+    ./gradlew copySamples && \
+    cd tools && \
+    rm -Rf picicon-repo
