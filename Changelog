@@ -2,6 +2,7 @@
 Bugfixes:
 - exception in channel configuration, if no channel groups are defined
 - empty epgsearch view (but only if epgd is not configured. Reason: nonsense condition in the code)
+- tried to fix too small column in timer view for date, time and duration
 
 New:
 - channel favourites (configuration)
