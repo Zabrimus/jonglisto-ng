@@ -96,4 +96,19 @@ $v-focus-style: none;
         background-color: #C35817;
         color: #FFFFFF;
     }
+
+     .timergrid td, .timergrid th {
+         padding-right: 5px;
+         padding-left: 5px;
+         margin: 0px;
+     }
+
+     .timerdate {
+         min-width: 100px;
+     }
+
+     .timertime {
+         min-width: 60px;
+     }
+
 }

@@ -25,6 +25,7 @@ import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import com.vaadin.ui.StyleGenerator
 
 @Log
 @ViewScoped
@@ -78,6 +79,7 @@ class TimerGrid {
         grid = new Grid
         grid.items = timer
         grid.setSizeFull
+        grid.setStyleName("timergrid", true)
 
         grid.addColumn(ev| createTimerActive(ev)) //
                 .setCaption(messages.timerActiveCaption) //
@@ -100,6 +102,7 @@ class TimerGrid {
             .setExpandRatio(0) //
             .setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
             .setMinimumWidthFromContent(true)
+            .setStyleGenerator(s | "timerdate");
 
         grid.addColumn(ev|createStart(ev)) //
             .setCaption(messages.timerStartCaption) //
@@ -107,6 +110,7 @@ class TimerGrid {
             .setExpandRatio(0) //
             //.setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
             .setMinimumWidthFromContent(true)
+            .setStyleGenerator(s | "timertime");
 
         grid.addColumn(ev|createEnd(ev)) //
             .setCaption(messages.timerEndCaption) //
@@ -114,6 +118,7 @@ class TimerGrid {
             .setExpandRatio(0) //
             //.setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
             .setMinimumWidthFromContent(true)
+            .setStyleGenerator(s | "timertime");
 
         grid.addColumn(ev|createDuration(ev)) //
             .setCaption(messages.timerDurationCaption) //
@@ -121,11 +126,12 @@ class TimerGrid {
             .setExpandRatio(0) //
             //.setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
             .setMinimumWidthFromContent(true)
+            .setStyleGenerator(s | "timertime");
 
         grid.addColumn(ev|createTitle(ev)) //
             .setCaption(messages.timerTitleCaption) //
             .setId(COL_TITLE) //
-            .setExpandRatio(2) //
+            .setExpandRatio(10) //
             .setMinimumWidthFromContent(false)
             //.setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
 
