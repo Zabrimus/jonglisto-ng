@@ -25,7 +25,6 @@ import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.ui.StyleGenerator
 
 @Log
 @ViewScoped

@@ -1,5 +1,6 @@
 package vdr.jonglisto.configuration
 
+import com.coreoz.wisp.Scheduler
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -12,8 +13,9 @@ import java.util.regex.Pattern
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
 import vdr.jonglisto.configuration.jaxb.config.Jonglisto
+import vdr.jonglisto.configuration.jaxb.config.ObjectFactory
 import vdr.jonglisto.configuration.jaxb.favourite.Favourites
-import vdr.jonglisto.configuration.jaxb.favourite.ObjectFactory
+import vdr.jonglisto.configuration.jaxb.jcron.Jcron
 import vdr.jonglisto.configuration.jaxb.remote.Remote
 import vdr.jonglisto.model.EpgCustomColumn
 import vdr.jonglisto.model.EpgProvider
@@ -64,19 +66,22 @@ class Configuration {
 
     private static Remote remoteConfig
     private static Favourites favouriteConfig
+    private static Jcron jcronConfig
 
     private static String customDirectory
 
     private static Configuration instance = new Configuration
+    private static Scheduler scheduler
 
     private static Marshaller marshaller
 
     private new() {
-        var configObjectFactory = new vdr.jonglisto.configuration.jaxb.config.ObjectFactory
+        var configObjectFactory = new ObjectFactory
         var remoteObjectFactory = new vdr.jonglisto.configuration.jaxb.remote.ObjectFactory
-        var favouriteObjectFactory = new ObjectFactory
+        var favouriteObjectFactory = new vdr.jonglisto.configuration.jaxb.favourite.ObjectFactory
+        var jcronObjectFactory = new vdr.jonglisto.configuration.jaxb.jcron.ObjectFactory
 
-        val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class);
+        val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class, jcronObjectFactory.class);
 
         val unmarshaller = jc.createUnmarshaller()
         marshaller = jc.createMarshaller()
@@ -101,6 +106,16 @@ class Configuration {
             favouriteConfig = new Favourites
         }
 
+        scheduler = new Scheduler
+
+        try {
+            jcronConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "jcron.xml")) as Jcron
+        } catch (Exception e) {
+            jcronConfig = new Jcron
+        }
+
+        registerSchedules
+
         loadEpgProvider
     }
 
@@ -112,11 +127,22 @@ class Configuration {
         return favouriteConfig
     }
 
-    public def saveFavourites() {
+    public def void saveFavourites() {
         val out = new File(customDirectory + File.separator + "favourites.xml")
         marshaller.marshal(favouriteConfig, out)
+    }
 
-        println("TODO: Speichere Favoriten...")
+    public def getJcron() {
+        return jcronConfig
+    }
+
+    public def saveJcron() {
+        val out = new File(customDirectory + File.separator + "jcron.xml")
+        marshaller.marshal(jcronConfig, out)
+    }
+
+    public def getScheduler() {
+        return scheduler
     }
 
     public def isDatabaseConfigured() {
@@ -347,6 +373,10 @@ class Configuration {
             dbHost = mc.host
             dbPort = mc.port
         }
+    }
+
+    private def registerSchedules() {
+        // TODO: implement me
     }
 
     private def compilePattern(String str) {

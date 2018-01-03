@@ -4,14 +4,14 @@ plugins {
 
 sourceSets {
     // configuration after the jaxb classes have been generated
-    main.java.srcDirs += ['src/main/jaxb2']
+    // main.java.srcDirs += ['src/main/jaxb2']
 }
 
 jar {
     baseName 'jonglisto-common'
 }
 
-/*
+
 jaxb2 {
   xjc {
     'configuration-classes' {
@@ -39,5 +39,15 @@ jaxb2 {
       encoding = 'UTF-8'
     }
   }
+
+  xjc {
+    'remote-classes' {
+      generatedSourcesDir = 'src/main/jaxb2/'
+      basePackage = 'vdr.jonglisto.configuration.jaxb.jcron'
+      schema = 'src/main/resources/xsd/jcron.xsd'
+      encoding = 'UTF-8'
+    }
+  }
+
 }
-*/
+

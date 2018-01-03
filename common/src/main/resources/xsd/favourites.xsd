@@ -7,9 +7,10 @@
         <xs:element name="favourite">
           <xs:complexType>
           <xs:sequence maxOccurs="unbounded" minOccurs="0">
-            <xs:element name="channel" type="xs:string" maxOccurs="unbounded"
-              minOccurs="1" />
+          		<xs:element name="channel" type="xs:string"
+          			maxOccurs="unbounded" minOccurs="1" />
           </xs:sequence>
+          	<xs:attribute name="user" type="xs:string"></xs:attribute>
           <xs:attribute name="name" type="xs:string"></xs:attribute>
           </xs:complexType>
         </xs:element>

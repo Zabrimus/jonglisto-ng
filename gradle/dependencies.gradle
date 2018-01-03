@@ -9,6 +9,10 @@ ext {
         sanitizer         : '20170515.1',   // OWASP Java HTML sanitizer
         guava             : '23.0',         // Google guava
 
+        wisp              : '1.0.0',        // Wisp Scheduler
+        cronutils         : '6.0.5',        // Cron utils
+        threeten          : '1.3.6',        // threetenbp
+
         sql2o             : '1.6.0-RC3',    // SQL2O
         mysqljdbc         : '5.1.44',       // Mysql JDBC - don't use 6.0.6! See: https://stackoverflow.com/questions/26515700/mysql-jdbc-driver-5-1-33-time-zone-issue#
 
@@ -31,6 +35,10 @@ ext {
         gson                 : "com.google.code.gson:gson:$versions.gson",
         sanitizer            : "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:$versions.sanitizer",
         guava                : "com.google.guava:guava:$versions.guava",
+
+        wisp                 : "com.coreoz:wisp:$versions.wisp",
+        cronutils            : "com.cronutils:cron-utils:$versions.cronutils",
+        threeten             : "org.threeten:threetenbp:$versions.threeten",
 
         sql2o                : "org.sql2o:sql2o:$versions.sql2o",
         mysqljdbc            : "mysql:mysql-connector-java:$versions.mysqljdbc"

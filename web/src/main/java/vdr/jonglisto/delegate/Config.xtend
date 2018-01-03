@@ -22,8 +22,20 @@ class Config implements Serializable {
         return Configuration.getInstance().favourites
     }
 
-    public def saveFavourites() {
+    public def void saveFavourites() {
         Configuration.getInstance().saveFavourites()
+    }
+
+    public def getJcron() {
+        return Configuration.getInstance().jcron
+    }
+
+    public def void saveJcron() {
+        Configuration.getInstance().saveJcron()
+    }
+
+    public def getScheduker() {
+        return Configuration.getInstance().getScheduler()
     }
 
     public def getRemoteConfig() {
