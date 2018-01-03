@@ -20,8 +20,8 @@ import static vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log
 class FavouriteComponent extends Composite {
-	
-	@Inject
+
+    @Inject
     private Svdrp svdrp
 
     @Inject
@@ -29,27 +29,26 @@ class FavouriteComponent extends Composite {
 
     @Inject
     private Messages messages
-	
-	private NativeSelect<String> favourites
+
+    private NativeSelect<String> favourites
+
     private TwinColSelect<Channel> channelSelect
-	
-	def showAll() {
-		createLayout(null)
-		return this
-	}
-	
-	def showUser(Subject subject) {
-		createLayout(subject.principal as String)
-		return this
-	}
-	
+
+    def showAll() {
+        createLayout(null)
+        return this
+    }
+
+    def showUser(Subject subject) {
+        createLayout(subject.principal as String)
+        return this
+    }
+
     private def void createLayout(String user) {
-    	val root = verticalLayout [
+        val root = verticalLayout [
             horizontalLayout(it) [
                 favourites = nativeSelect(it) [
-                	
-                	// TODO: filter favourites  
-                	
+                    // TODO: filter favourites
                     items = config.favourites.favourite.map[s|s.name]
                     emptySelectionAllowed = true
 
@@ -66,7 +65,7 @@ class FavouriteComponent extends Composite {
                     })
                 ]
 
-				// TODO: depending on parameter show the currentUser or a list of users 
+                // TODO: depending on parameter show the currentUser or a list of users
 
                 button(it, messages.configFavouriteRename) [
                     addClickListener(s | {
@@ -118,10 +117,10 @@ class FavouriteComponent extends Composite {
                 })
             ]
         ]
-        
+
         compositionRoot = root
     }
-    
+
     private def addNewList() {
         val input = new TextField("name");
 

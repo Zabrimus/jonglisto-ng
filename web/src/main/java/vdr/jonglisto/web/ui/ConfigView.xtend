@@ -8,6 +8,7 @@ import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.FavouriteComponent
+import vdr.jonglisto.web.ui.component.JobComponent
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
@@ -17,7 +18,10 @@ import static vdr.jonglisto.web.xtend.UIBuilder.*
 class ConfigView extends BaseView {
 
     @Inject
-	private FavouriteComponent favourites
+    private FavouriteComponent favourites
+
+    @Inject
+    private JobComponent jobs
 
     @PostConstruct
     def void init() {
@@ -27,20 +31,17 @@ class ConfigView extends BaseView {
     protected override createMainComponents() {
         val currentUser = SecurityUtils.subject
 
-        val channelFavouriteTab = favourites
-        val jobTab = favourites // FIXME
-
         val tabsheet = tabsheet [
             if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":favourite:all")) {
-            	addTab(channelFavouriteTab.showAll(), messages.configFavouriteChannel)
-			} else if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":favourite:user")) {
-                addTab(channelFavouriteTab.showUser(currentUser), messages.configFavouriteChannel)
-                        }
+                addTab(favourites.showAll(), messages.configFavouriteChannel)
+            } else if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":favourite:user")) {
+                addTab(favourites.showUser(currentUser), messages.configFavouriteChannel)
+            }
 
             if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:all")) {
-                addTab(jobTab.showAll(), "TODO: JOBS")
+                addTab(jobs.showAll(), "TODO: JOBS")
             } else if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:user")) {
-            	addTab(jobTab.showUser(currentUser), "TODO: JOBS")
+                addTab(jobs.showUser(currentUser), "TODO: JOBS")
             }
 
             addStyleName(ValoTheme.TABSHEET_FRAMED);
