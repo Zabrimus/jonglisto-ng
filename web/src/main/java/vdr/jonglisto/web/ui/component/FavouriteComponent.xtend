@@ -8,7 +8,7 @@ import de.steinwedel.messagebox.ButtonOption
 import de.steinwedel.messagebox.MessageBox
 import java.util.logging.Level
 import javax.inject.Inject
-import org.apache.shiro.subject.Subject
+import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.configuration.jaxb.favourite.Favourites.Favourite
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
@@ -30,17 +30,21 @@ class FavouriteComponent extends Composite {
     @Inject
     private Messages messages
 
+    private String currentUser
+
     private NativeSelect<String> favourites
 
     private TwinColSelect<Channel> channelSelect
 
     def showAll() {
+        currentUser = null
         createLayout(null)
         return this
     }
 
-    def showUser(Subject subject) {
-        createLayout(subject.principal as String)
+    def showUser() {
+        currentUser = SecurityUtils.subject.principal as String
+        createLayout(currentUser)
         return this
     }
 

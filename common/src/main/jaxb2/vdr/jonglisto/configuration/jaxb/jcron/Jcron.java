@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.01.03 um 04:46:12 PM CET 
+// Generiert: 2018.01.04 um 07:29:52 PM CET 
 //
 
 
@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent&gt;
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *                 &lt;sequence&gt;
+ *                   &lt;element name="active" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
  *                   &lt;element name="user" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *                   &lt;element name="time" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *                   &lt;element name="action"&gt;
@@ -139,6 +140,7 @@ public class Jcron {
      *   &lt;complexContent&gt;
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
      *       &lt;sequence&gt;
+     *         &lt;element name="active" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
      *         &lt;element name="user" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
      *         &lt;element name="time" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
      *         &lt;element name="action"&gt;
@@ -194,18 +196,36 @@ public class Jcron {
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
+        "active",
         "user",
         "time",
         "action"
     })
     public static class Jobs {
 
+        protected boolean active;
         @XmlElement(required = true)
         protected String user;
         @XmlElement(required = true)
         protected String time;
         @XmlElement(required = true)
         protected Jcron.Jobs.Action action;
+
+        /**
+         * Ruft den Wert der active-Eigenschaft ab.
+         * 
+         */
+        public boolean isActive() {
+            return active;
+        }
+
+        /**
+         * Legt den Wert der active-Eigenschaft fest.
+         * 
+         */
+        public void setActive(boolean value) {
+            this.active = value;
+        }
 
         /**
          * Ruft den Wert der user-Eigenschaft ab.

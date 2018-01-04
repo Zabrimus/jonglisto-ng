@@ -35,13 +35,13 @@ class ConfigView extends BaseView {
             if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":favourite:all")) {
                 addTab(favourites.showAll(), messages.configFavouriteChannel)
             } else if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":favourite:user")) {
-                addTab(favourites.showUser(currentUser), messages.configFavouriteChannel)
+                addTab(favourites.showUser(), messages.configFavouriteChannel)
             }
 
             if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:all")) {
                 addTab(jobs.showAll(), "TODO: JOBS")
             } else if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:user")) {
-                addTab(jobs.showUser(currentUser), "TODO: JOBS")
+                addTab(jobs.showUser(), "TODO: JOBS")
             }
 
             addStyleName(ValoTheme.TABSHEET_FRAMED);
