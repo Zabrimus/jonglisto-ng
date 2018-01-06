@@ -12,6 +12,7 @@ import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
 import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs.Action
 import vdr.jonglisto.delegate.Config
+import vdr.jonglisto.util.Utils
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
@@ -53,46 +54,63 @@ class JobComponent extends Composite {
         grid.setSizeFull
 
         grid.addColumn(ev| createJobActive(ev)) //
-                .setCaption("Active") //
+                .setCaption(messages.configJobsActive) //
                 .setRenderer(new ComponentRenderer) //
                 .setId("ACTIVE") //
+                .setExpandRatio(1) //
                 .setMinimumWidthFromContent(true)
 
-        grid.addColumn(job | job.user) //
-            .setCaption("User") //
-            .setId("USER") //
-            .setMinimumWidthFromContent(true)
+        if (currentUser === null) {
+            grid.addColumn(job | job.user) //
+                .setCaption(messages.configJobsUser) //
+                .setId("USER") //
+                .setExpandRatio(1) //
+                .setMinimumWidthFromContent(true)
+        }
 
         grid.addColumn(job | job.time) //
-            .setCaption("Time") //
+            .setCaption(messages.configJobsTimeFormat) //
             .setId("TIME") //
+            .setExpandRatio(1) //
+            .setMinimumWidthFromContent(true)
+
+        grid.addColumn(job | getNextTime(job.time)) //
+            .setCaption(messages.configJobsNextExecution) //
+            .setId("NEXT") //
+            .setExpandRatio(1) //
             .setMinimumWidthFromContent(true)
 
         grid.addColumn(job | createActionType(job.action)) //
             .setCaption("Type") //
             .setId("TYPE") //
+            .setExpandRatio(1) //
             .setMinimumWidthFromContent(true)
 
         grid.addColumn(job | createScriptOrVdr(job.action)) //
-            .setCaption("Script/VDR") //
+            .setCaption(messages.configJobsScriptVdr) //
             .setId("DEST") //
+            .setExpandRatio(1) //
             .setMinimumWidthFromContent(true)
 
         grid.addColumn(job | createParameter(job.action)) //
-            .setCaption("Parameter") //
+            .setCaption(messages.configJobsParameter) //
             .setId("PARAM") //
+            .setExpandRatio(1) //
             .setMinimumWidthFromContent(true)
 
-        grid.addColumn(job | createActionButton(job.action)) //
-            .setCaption("Action") //
+        grid.addColumn(job | createActionButton(job)) //
+            .setRenderer(new ComponentRenderer) //
+            .setCaption(messages.configJobsAction) //
             .setId("ACTION") //
+            .setExpandRatio(0) //
+            .setMinimumWidth(100) //
             .setMinimumWidthFromContent(true)
 
         val root = verticalLayout [
             horizontalLayout(it) [
-                button(it, "Create new Job") [
+                button(it, messages.configJobsNewJob) [
                     addClickListener(s | {
-                        openNewJobWindow(new Jobs)
+                        openEditJobWindow(new Jobs)
                     })
                 ]
             ]
@@ -105,12 +123,12 @@ class JobComponent extends Composite {
 
     private def createActionType(Action action) {
         if (action.shellAction !== null) {
-            return "Shell script"
+            return messages.configJobsShell
         } else if (action.vdrAction !== null) {
             switch (action.vdrAction.type) {
-                case "switchChannel": return "Switch channel"
-                case "osdMessage" : return "OSD message"
-                case "svdrp" : return "SVDRP command"
+                case "switchChannel": return messages.configJobsVdrSwitchChannel
+                case "osdMessage" : return messages.configJobsVdrOsdMessage
+                case "svdrp" : return messages.configJobsVdrSvdrpCommand
             }
         }
     }
@@ -131,12 +149,32 @@ class JobComponent extends Composite {
         }
     }
 
-    private def createActionButton(Action action) {
-        // TODO: Implement something useful
-        return null;
+    private def createActionButton(Jobs job) {
+        val layout = cssLayout[
+            button(it, "") [
+                icon = VaadinIcons.TRASH
+                description = messages.configJobsDelete
+                width = "22px"
+                styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+                addClickListener(s | {
+                    //svdrp.deleteTimer(currentVdr, timer)
+                    // refreshTimer
+                })
+            ]
+
+            button(it, "") [
+                icon = VaadinIcons.EDIT
+                description = messages.configJobsEdit
+                width = "22px"
+                styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+                addClickListener(s | openEditJobWindow(job))
+            ]
+        ]
+
+        return layout
     }
 
-    private def void openNewJobWindow(Jobs job) {
+    private def void openEditJobWindow(Jobs job) {
         val w = jobEdit.showWindow(job)
         w.addCloseListener(new CloseListener() {
             override windowClose(CloseEvent e) {
@@ -160,7 +198,7 @@ class JobComponent extends Composite {
             if (ev.active) {
                 button(it, "") [
                     icon = VaadinIcons.CHECK
-                    description = "AKTIV"
+                    description = messages.configJobsActive
                     width = "22px"
                     styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                     addClickListener(s | toggleJobActive(ev))
@@ -168,7 +206,7 @@ class JobComponent extends Composite {
             } else {
                 button(it, "") [
                     icon = VaadinIcons.CLOSE
-                    description = "AKTIV"
+                    description = messages.configJobsInactive
                     width = "22px"
                     styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                     addClickListener(s | toggleJobActive(ev))
@@ -182,5 +220,15 @@ class JobComponent extends Composite {
     private def toggleJobActive(Jobs job) {
         job.active = !job.active
         config.saveJcron
+        refreshJobs
+    }
+
+
+    private def getNextTime(String cronAsString) {
+        try {
+            Utils.getNextScheduleTime(cronAsString, messages.formatDate, messages.formatTime)
+        } catch (Exception e) {
+            return messages.configJobsTimeInvalid
+        }
     }
 }

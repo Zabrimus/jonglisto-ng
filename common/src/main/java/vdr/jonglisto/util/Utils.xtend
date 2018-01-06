@@ -1,5 +1,6 @@
 package vdr.jonglisto.util
 
+import com.coreoz.wisp.schedule.cron.CronSchedule
 import java.io.Closeable
 
 import static extension org.apache.commons.lang3.StringUtils.*
@@ -29,6 +30,13 @@ class Utils {
         .replaceAll("[^A-Za-z0-9]", "") //
         .trim() //
         .toLowerCase();
+    }
+
+    def static getNextScheduleTime(String cronAsString, String dateFormat, String timeFormat) {
+        val s = CronSchedule.parseQuartzCron(cronAsString);
+        val nextTime = s.nextExecutionInMillis(System.currentTimeMillis(), 1, null) / 1000;
+
+        return DateTimeUtil.toDate(nextTime, dateFormat) + " " + DateTimeUtil.toTime(nextTime, timeFormat)
     }
 
     /**

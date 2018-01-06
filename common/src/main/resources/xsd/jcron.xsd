@@ -6,9 +6,13 @@
     			<xs:element name="jobs" maxOccurs="unbounded" minOccurs="0">
     				<xs:complexType>
     					<xs:sequence>
-                            <xs:element name="active" type="xs:boolean">
+    						<xs:element name="id"
+    							type="xs:string">
     						</xs:element>
-                            <xs:element name="user" type="xs:string" />
+    						<xs:element name="active"
+    							type="xs:boolean">
+    						</xs:element>
+    						<xs:element name="user" type="xs:string" />
     						<xs:element name="time" type="xs:string" />
     						<xs:element name="action">
     							<xs:complexType>

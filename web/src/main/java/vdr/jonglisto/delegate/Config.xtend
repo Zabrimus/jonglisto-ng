@@ -34,7 +34,7 @@ class Config implements Serializable {
         Configuration.getInstance().saveJcron()
     }
 
-    public def getScheduker() {
+    public def getScheduler() {
         return Configuration.getInstance().getScheduler()
     }
 

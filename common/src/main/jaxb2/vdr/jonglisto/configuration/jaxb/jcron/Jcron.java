@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.01.04 um 07:29:52 PM CET 
+// Generiert: 2018.01.05 um 10:34:39 PM CET 
 //
 
 
@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;complexContent&gt;
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *                 &lt;sequence&gt;
+ *                   &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *                   &lt;element name="active" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
  *                   &lt;element name="user" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *                   &lt;element name="time" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
@@ -140,6 +141,7 @@ public class Jcron {
      *   &lt;complexContent&gt;
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
      *       &lt;sequence&gt;
+     *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
      *         &lt;element name="active" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
      *         &lt;element name="user" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
      *         &lt;element name="time" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
@@ -196,6 +198,7 @@ public class Jcron {
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
+        "id",
         "active",
         "user",
         "time",
@@ -203,6 +206,8 @@ public class Jcron {
     })
     public static class Jobs {
 
+        @XmlElement(required = true)
+        protected String id;
         protected boolean active;
         @XmlElement(required = true)
         protected String user;
@@ -210,6 +215,30 @@ public class Jcron {
         protected String time;
         @XmlElement(required = true)
         protected Jcron.Jobs.Action action;
+
+        /**
+         * Ruft den Wert der id-Eigenschaft ab.
+         * 
+         * @return
+         *     possible object is
+         *     {@link String }
+         *     
+         */
+        public String getId() {
+            return id;
+        }
+
+        /**
+         * Legt den Wert der id-Eigenschaft fest.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *     
+         */
+        public void setId(String value) {
+            this.id = value;
+        }
 
         /**
          * Ruft den Wert der active-Eigenschaft ab.

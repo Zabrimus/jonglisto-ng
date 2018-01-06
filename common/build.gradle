@@ -4,14 +4,14 @@ plugins {
 
 sourceSets {
     // configuration after the jaxb classes have been generated
-    // main.java.srcDirs += ['src/main/jaxb2']
+    main.java.srcDirs += ['src/main/jaxb2']
 }
 
 jar {
     baseName 'jonglisto-common'
 }
 
-
+/*
 jaxb2 {
   xjc {
     'configuration-classes' {
@@ -49,4 +49,4 @@ jaxb2 {
     }
   }
 }
-
+*/
