@@ -16,6 +16,7 @@ import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs.Action.ShellAction
 import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs.Action.VdrAction
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.util.Utils
+import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
@@ -48,6 +49,8 @@ class JobEditWindow extends Window {
     }
 
     def showWindow(Jobs job) {
+        val currentUser = SecurityUtils.subject
+
         editJob = job
 
         caption = messages.configJobsEditJob
@@ -93,9 +96,21 @@ class JobEditWindow extends Window {
                     type = nativeSelect(it) [
                         width = "100%"
                         caption = "Type"
-                        items =  #[messages.configJobsVdr, messages.configJobsShell]
+
+                        val typeList = #[]
+
+                        if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:svdrp")) {
+                            typeList += messages.configJobsVdr
+                        }
+
+                        if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:shell")) {
+                            typeList += messages.configJobsShell
+                        }
+
+                        items =  typeList
+
                         emptySelectionAllowed = false
-                        selectedItem = messages.configJobsVdr
+                        selectedItem = typeList.get(0)
 
                         if (editJob.action !== null) {
                             if (editJob.action.vdrAction !== null) {

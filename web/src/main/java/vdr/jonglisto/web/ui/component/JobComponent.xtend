@@ -9,10 +9,12 @@ import com.vaadin.ui.renderers.ComponentRenderer
 import com.vaadin.ui.themes.ValoTheme
 import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
+import org.apache.shiro.subject.Subject
 import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
 import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs.Action
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.util.Utils
+import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
@@ -32,7 +34,8 @@ class JobComponent extends Composite {
 
     private Grid<Jobs> grid
 
-    String currentUser
+    private Subject currentSubject
+    private String currentUser
 
     def showAll() {
         currentUser = null
@@ -47,6 +50,8 @@ class JobComponent extends Composite {
     }
 
     private def void createLayout(String user) {
+        currentSubject = SecurityUtils.subject
+
         grid = new Grid
 
         refreshJobs
@@ -157,18 +162,25 @@ class JobComponent extends Composite {
                 width = "22px"
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                 addClickListener(s | {
-                    //svdrp.deleteTimer(currentVdr, timer)
-                    // refreshTimer
+                    val old = config.jcron.jobs.findFirst[j | j.id == job.id]
+                    config.jcron.jobs.remove(old)
+                    config.saveJcron
+                    refreshJobs
                 })
             ]
 
-            button(it, "") [
-                icon = VaadinIcons.EDIT
-                description = messages.configJobsEdit
-                width = "22px"
-                styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
-                addClickListener(s | openEditJobWindow(job))
-            ]
+            val editEnabled = ((job.action.vdrAction !== null) && currentSubject.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:svdrp"))
+                           || ((job.action.shellAction !== null) && currentSubject.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:shell"))
+
+            if (editEnabled) {
+                button(it, "") [
+                    icon = VaadinIcons.EDIT
+                    description = messages.configJobsEdit
+                    width = "22px"
+                    styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+                    addClickListener(s | openEditJobWindow(job))
+                ]
+            }
         ]
 
         return layout

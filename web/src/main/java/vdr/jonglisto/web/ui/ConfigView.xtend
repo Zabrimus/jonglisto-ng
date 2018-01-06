@@ -39,9 +39,9 @@ class ConfigView extends BaseView {
             }
 
             if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:all")) {
-                addTab(jobs.showAll(), "TODO: JOBS")
+                addTab(jobs.showAll(), messages.configJobs)
             } else if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:user")) {
-                addTab(jobs.showUser(), "TODO: JOBS")
+                addTab(jobs.showUser(), messages.configJobs)
             }
 
             addStyleName(ValoTheme.TABSHEET_FRAMED);
