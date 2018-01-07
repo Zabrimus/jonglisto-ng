@@ -162,9 +162,11 @@ class JobComponent extends Composite {
                 width = "22px"
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                 addClickListener(s | {
-                    val old = config.jcron.jobs.findFirst[j | j.id == job.id]
-                    config.jcron.jobs.remove(old)
-                    config.saveJcron
+                    config.deleteJob(job)
+
+                    // val old = config.jcron.jobs.findFirst[j | j.id == job.id]
+                    // config.jcron.jobs.remove(old)
+                    // config.saveJcron
                     refreshJobs
                 })
             ]

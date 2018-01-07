@@ -17,6 +17,7 @@ At the end of this page you can find some screenshots of the currently existing 
 * organize channels.conf via drag and drop
 * organize epgd channelmap.conf via drag and drop, if epgd database is configured
 * easily execute SVDRP commands on one VDR instance
+* create cronjob like jobs (shell command or svdrp commands are possible)
 
 ### minimal requirement
 * one VDR instance without any plugin. jonglisto-ng uses mainly only SVDRP commands.
@@ -243,6 +244,13 @@ The following permissions are currently available:
 * view:config:favourite
 * vdr:"instance name in jonglisto-ng.xml"
 * svdrp:execute
+* view:config:favourite
+* view:config:favourite:all
+* view:config:favourite:user
+* view:config:jobs:all
+* view:config:jobs:user
+* view:config:jobs:shell
+* view:config:jobs:svdrp
 
 view: Menu entries (views) in the main menu
 vdr: access granted to the selected VDR

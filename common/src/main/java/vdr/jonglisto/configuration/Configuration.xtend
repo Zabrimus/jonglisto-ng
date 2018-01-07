@@ -1,6 +1,5 @@
 package vdr.jonglisto.configuration
 
-import com.coreoz.wisp.Scheduler
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -16,6 +15,7 @@ import vdr.jonglisto.configuration.jaxb.config.Jonglisto
 import vdr.jonglisto.configuration.jaxb.config.ObjectFactory
 import vdr.jonglisto.configuration.jaxb.favourite.Favourites
 import vdr.jonglisto.configuration.jaxb.jcron.Jcron
+import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
 import vdr.jonglisto.configuration.jaxb.remote.Remote
 import vdr.jonglisto.model.EpgCustomColumn
 import vdr.jonglisto.model.EpgProvider
@@ -71,7 +71,6 @@ class Configuration {
     private static String customDirectory
 
     private static Configuration instance = new Configuration
-    private static Scheduler scheduler
 
     private static Marshaller marshaller
 
@@ -106,8 +105,6 @@ class Configuration {
             favouriteConfig = new Favourites
         }
 
-        scheduler = new Scheduler
-
         try {
             jcronConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "jcron.xml")) as Jcron
         } catch (Exception e) {
@@ -139,10 +136,6 @@ class Configuration {
     public def saveJcron() {
         val out = new File(customDirectory + File.separator + "jcron.xml")
         marshaller.marshal(jcronConfig, out)
-    }
-
-    public def getScheduler() {
-        return scheduler
     }
 
     public def isDatabaseConfigured() {
@@ -241,6 +234,30 @@ class Configuration {
         }
 
         return true;
+    }
+
+    public def void addJob(Jobs job) {
+        jcron.jobs.add(job)
+        saveJcron
+
+        // FIXME: Start job if active
+    }
+
+    public def void deleteJob(Jobs job) {
+        val old = jcron.jobs.findFirst[j | j.id == job.id]
+        jcron.jobs.remove(old)
+        saveJcron
+
+
+        // FIXME: Kill job
+    }
+
+    public def void changeJob(Jobs job) {
+        val old = jcron.jobs.findFirst[j | j.id == job.id]
+        jcron.jobs.remove(old)
+        jcron.jobs.add(job)
+
+        // FIXME: Kill old job and start new
     }
 
     public static def getInstance() {

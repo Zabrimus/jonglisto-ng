@@ -1,7 +1,14 @@
 package vdr.jonglisto.util
 
-import com.coreoz.wisp.schedule.cron.CronSchedule
+import com.cronutils.model.Cron
+import com.cronutils.model.CronType
+import com.cronutils.model.definition.CronDefinitionBuilder
+import com.cronutils.model.time.ExecutionTime
+import com.cronutils.parser.CronParser
 import java.io.Closeable
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 
 import static extension org.apache.commons.lang3.StringUtils.*
 
@@ -32,9 +39,11 @@ class Utils {
         .toLowerCase();
     }
 
+    private static val CronParser QUARTZ_CRON_PARSER = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ));
+
     def static getNextScheduleTime(String cronAsString, String dateFormat, String timeFormat) {
-        val s = CronSchedule.parseQuartzCron(cronAsString);
-        val nextTime = s.nextExecutionInMillis(System.currentTimeMillis(), 1, null) / 1000;
+        val cron = QUARTZ_CRON_PARSER.parse(cronAsString)
+        val nextTime = nextExecutionInMillis(System.currentTimeMillis(), cron) / 1000;
 
         return DateTimeUtil.toDate(nextTime, dateFormat) + " " + DateTimeUtil.toTime(nextTime, timeFormat)
     }
@@ -68,5 +77,12 @@ class Utils {
                 }
             }
         }
+    }
+
+    private static def long nextExecutionInMillis(long currentTimeInMillis, Cron cron) {
+        val currentInstant = Instant.ofEpochMilli(currentTimeInMillis);
+        return ExecutionTime.forCron(cron).timeToNextExecution(ZonedDateTime.ofInstant(currentInstant, ZoneId.systemDefault()))
+                .transform(s | currentInstant.plus(s).toEpochMilli())
+                .or(-1L);
     }
 }

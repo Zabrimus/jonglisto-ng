@@ -5,6 +5,7 @@ import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import org.apache.shiro.subject.Subject
 import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
 import vdr.jonglisto.model.VDR
 
 @ApplicationScoped
@@ -32,10 +33,6 @@ class Config implements Serializable {
 
     public def void saveJcron() {
         Configuration.getInstance().saveJcron()
-    }
-
-    public def getScheduler() {
-        return Configuration.getInstance().getScheduler()
     }
 
     public def getRemoteConfig() {
@@ -110,5 +107,17 @@ class Config implements Serializable {
 
     public def pingHost(VDR vdr) {
         return Configuration.getInstance().pingHost(vdr)
+    }
+
+    public def void addJob(Jobs job) {
+        Configuration.getInstance().addJob(job)
+    }
+
+    public def void deleteJob(Jobs job) {
+        Configuration.getInstance().deleteJob(job)
+    }
+
+    public def void changeJob(Jobs job) {
+        Configuration.getInstance().changeJob(job)
     }
 }

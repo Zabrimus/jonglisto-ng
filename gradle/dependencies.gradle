@@ -9,7 +9,7 @@ ext {
         sanitizer         : '20170515.1',   // OWASP Java HTML sanitizer
         guava             : '23.0',         // Google guava
 
-        wisp              : '1.0.0',        // Wisp Scheduler
+        sundial           : '2.1.3',        // Sundial Scheduler
         cronutils         : '6.0.5',        // Cron utils
         threeten          : '1.3.6',        // threetenbp
 
@@ -36,7 +36,7 @@ ext {
         sanitizer            : "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:$versions.sanitizer",
         guava                : "com.google.guava:guava:$versions.guava",
 
-        wisp                 : "com.coreoz:wisp:$versions.wisp",
+        sundial              : "org.knowm:sundial:$versions.sundial",
         cronutils            : "com.cronutils:cron-utils:$versions.cronutils",
         threeten             : "org.threeten:threetenbp:$versions.threeten",
 

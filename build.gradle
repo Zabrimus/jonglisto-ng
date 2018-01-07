@@ -94,7 +94,7 @@ project(':common') {
         compile libs.xtend
         compile libs.gson
         compile libs.guava
-        compile libs.wisp
+        compile libs.sundial
         compile libs.threeten
         compile(libs.cronutils) {
             exclude group:'org.threeten', module:'threetenbp'
@@ -141,7 +141,7 @@ project(':web') {
         compile libs.sanitizer
         compile libs.guava
         compile libs.xtend
-        compile libs.wisp
+        compile libs.sundial
         compile libs.threeten
         compile(libs.cronutils) {
             exclude group:'org.threeten', module:'threetenbp'

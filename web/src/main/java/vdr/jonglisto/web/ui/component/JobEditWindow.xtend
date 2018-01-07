@@ -261,11 +261,14 @@ class JobEditWindow extends Window {
                             }
 
                             if (newJob) {
-                                config.jcron.jobs.add(editJob)
+                                config.addJob(editJob)
+                                // config.jcron.jobs.add(editJob)
                             } else {
-                                val old = config.jcron.jobs.findFirst[j | j.id == editJob.id]
-                                config.jcron.jobs.remove(old)
-                                config.jcron.jobs.add(editJob)
+                                config.changeJob(editJob)
+
+                                // val old = config.jcron.jobs.findFirst[j | j.id == editJob.id]
+                                // config.jcron.jobs.remove(old)
+                                // config.jcron.jobs.add(editJob)
                             }
 
                             config.saveJcron
