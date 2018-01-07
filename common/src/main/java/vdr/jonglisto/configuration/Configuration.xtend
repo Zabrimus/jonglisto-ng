@@ -11,6 +11,7 @@ import java.util.Optional
 import java.util.regex.Pattern
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
+import org.knowm.sundial.SundialJobScheduler
 import vdr.jonglisto.configuration.jaxb.config.Jonglisto
 import vdr.jonglisto.configuration.jaxb.config.ObjectFactory
 import vdr.jonglisto.configuration.jaxb.favourite.Favourites
@@ -111,6 +112,7 @@ class Configuration {
             jcronConfig = new Jcron
         }
 
+        SundialJobScheduler.startScheduler
         registerSchedules
 
         loadEpgProvider
@@ -240,7 +242,9 @@ class Configuration {
         jcron.jobs.add(job)
         saveJcron
 
-        // FIXME: Start job if active
+        if (job.active) {
+            addJobScheduler(job)
+        }
     }
 
     public def void deleteJob(Jobs job) {
@@ -248,16 +252,17 @@ class Configuration {
         jcron.jobs.remove(old)
         saveJcron
 
-
-        // FIXME: Kill job
+        removeJobScheduler(job)
     }
 
     public def void changeJob(Jobs job) {
         val old = jcron.jobs.findFirst[j | j.id == job.id]
         jcron.jobs.remove(old)
         jcron.jobs.add(job)
+        saveJcron
 
-        // FIXME: Kill old job and start new
+        removeJobScheduler(old)
+        addJobScheduler(job)
     }
 
     public static def getInstance() {
@@ -407,5 +412,39 @@ class Configuration {
             log.warning("Regex Pattern '" + str + "' is invalid and will be ignored")
             return null
         }
+    }
+
+    private def void addJobScheduler(Jobs job) {
+        if (job.action.vdrAction !== null) {
+            val Map<String, Object> paramMap = new HashMap<String, Object>
+            paramMap.put("VDR_NAME", job.action.vdrAction.vdr)
+
+            switch(job.action.vdrAction.type) {
+                case "switchChannel": {
+                    paramMap.put("COMMAND", "CHAN " + job.action.vdrAction.parameter)
+                }
+
+                case "osdMessage": {
+                    paramMap.put("COMMAND", "MESG " + job.action.vdrAction.parameter)
+                }
+
+                case "svdrp": {
+                    paramMap.put("COMMAND", job.action.vdrAction.parameter)
+                }
+            }
+
+            println("Add Job: " + job.user + ":" + job.id)
+
+            val jobName = job.user + ":" + job.id
+            SundialJobScheduler.addJob(jobName, "vdr.jonglisto.svdrp.client.jobs.SvdrpCommandJob", paramMap, false);
+            SundialJobScheduler.addCronTrigger(jobName + ".trigger", jobName, job.time);
+        } else if (job.action.shellAction !== null) {
+            // TODO: implement addJobScheduler for ShellAction
+        }
+    }
+
+    private def void removeJobScheduler(Jobs job) {
+        SundialJobScheduler.stopJob(job.user + ":" + job.id);
+        SundialJobScheduler.removeJob(job.user + ":" + job.id);
     }
 }

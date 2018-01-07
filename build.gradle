@@ -71,6 +71,7 @@ allprojects {
         compile 'commons-beanutils:commons-beanutils:1.9.3'
         compile 'commons-collections:commons-collections:3.2.2'
         compile 'org.apache.tomcat:tomcat-jdbc:8.5.20'
+        compile libs.slf4jjdk
     }
 
     /*

@@ -7,6 +7,7 @@ import com.vaadin.ui.Label
 import com.vaadin.ui.NativeSelect
 import com.vaadin.ui.TextField
 import com.vaadin.ui.Window
+import java.util.ArrayList
 import java.util.Random
 import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
@@ -97,14 +98,14 @@ class JobEditWindow extends Window {
                         width = "100%"
                         caption = "Type"
 
-                        val typeList = #[]
+                        var typeList = new ArrayList<String>
 
                         if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:svdrp")) {
-                            typeList += messages.configJobsVdr
+                            typeList.add(messages.configJobsVdr)
                         }
 
                         if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:shell")) {
-                            typeList += messages.configJobsShell
+                            typeList.add(messages.configJobsShell)
                         }
 
                         items =  typeList
@@ -141,11 +142,13 @@ class JobEditWindow extends Window {
                     ]
 
                     vdr = nativeSelect(it) [
+                        val vdrNames = config.getVdrNames(currentUser)
                         width = "100%"
                         caption = messages.configJobsVdr
-                        items = #["VDR 1", "VDR 2", "VDR 3"]
+
+                        items = vdrNames
                         emptySelectionAllowed = false
-                        selectedItem = "VDR 1"
+                        selectedItem = vdrNames.get(0)
 
                         if (editJob.action !== null && editJob.action.vdrAction !== null) {
                             selectedItem = editJob.action.vdrAction.vdr
