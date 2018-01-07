@@ -120,4 +120,9 @@ class Config implements Serializable {
     public def void changeJob(Jobs job) {
         Configuration.getInstance().changeJob(job)
     }
+
+    def toggleJob(Jobs job) {
+        Configuration.getInstance().toggleJob(job)
+    }
+
 }

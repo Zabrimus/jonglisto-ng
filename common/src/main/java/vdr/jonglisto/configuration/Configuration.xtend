@@ -265,6 +265,17 @@ class Configuration {
         addJobScheduler(job)
     }
 
+    public def void toggleJob(Jobs job) {
+        job.active = !job.active
+        saveJcron
+
+        if (job.active) {
+            addJobScheduler(job)
+        } else {
+            removeJobScheduler(job)
+        }
+    }
+
     public static def getInstance() {
         return instance
     }

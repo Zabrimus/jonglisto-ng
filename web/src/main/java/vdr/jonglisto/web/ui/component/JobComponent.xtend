@@ -163,10 +163,6 @@ class JobComponent extends Composite {
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                 addClickListener(s | {
                     config.deleteJob(job)
-
-                    // val old = config.jcron.jobs.findFirst[j | j.id == job.id]
-                    // config.jcron.jobs.remove(old)
-                    // config.saveJcron
                     refreshJobs
                 })
             ]
@@ -232,8 +228,7 @@ class JobComponent extends Composite {
     }
 
     private def toggleJobActive(Jobs job) {
-        job.active = !job.active
-        config.saveJcron
+        config.toggleJob(job)
         refreshJobs
     }
 
