@@ -9,6 +9,7 @@ New:
 - cron-like jobs are available (shell script calls or svdrp commands), also used for epg alarm
 - channel favourites can be used in epg view to filter the channel list
 - build image is available at dockerhub: docker pull zabrimus/jonglisto-ng. This results in much faster subsequent builds.
+- epg alarm button implemented (osd message, channel switch, custom SVDRP command)
 - new permission view:configuration:favourite:all
 - new permission view:configuration:favourite:user
 - new permission view:configuration:jobs:all

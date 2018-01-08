@@ -444,11 +444,12 @@ class Configuration {
                 }
             }
 
-            println("Add Job: " + job.user + ":" + job.id)
-
-            val jobName = job.user + ":" + job.id
-            SundialJobScheduler.addJob(jobName, "vdr.jonglisto.svdrp.client.jobs.SvdrpCommandJob", paramMap, false);
-            SundialJobScheduler.addCronTrigger(jobName + ".trigger", jobName, job.time);
+            // add the job only, if the next execution time is in the future
+            if (Utils.nextExecutionInMillis(System.currentTimeMillis, job.time) != 0) {
+                val jobName = job.user + ":" + job.id
+                SundialJobScheduler.addJob(jobName, "vdr.jonglisto.svdrp.client.jobs.SvdrpCommandJob", paramMap, false);
+                SundialJobScheduler.addCronTrigger(jobName + ".trigger", jobName, job.time);
+            }
         } else if (job.action.shellAction !== null) {
             // TODO: implement addJobScheduler for ShellAction
         }

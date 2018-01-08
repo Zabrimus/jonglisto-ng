@@ -45,7 +45,23 @@ class Utils {
         val cron = QUARTZ_CRON_PARSER.parse(cronAsString)
         val nextTime = nextExecutionInMillis(System.currentTimeMillis(), cron) / 1000;
 
-        return DateTimeUtil.toDate(nextTime, dateFormat) + " " + DateTimeUtil.toTime(nextTime, timeFormat)
+        if (nextTime == 0) {
+            return "-"
+        } else {
+            return DateTimeUtil.toDate(nextTime, dateFormat) + " " + DateTimeUtil.toTime(nextTime, timeFormat)
+        }
+    }
+
+    public def static long nextExecutionInMillis(long currentTimeInMillis, String timeFormat) {
+        val cron = QUARTZ_CRON_PARSER.parse(timeFormat)
+        return nextExecutionInMillis(System.currentTimeMillis(), cron) / 1000;
+    }
+
+    private def static long nextExecutionInMillis(long currentTimeInMillis, Cron cron) {
+        val currentInstant = Instant.ofEpochMilli(currentTimeInMillis);
+        return ExecutionTime.forCron(cron).timeToNextExecution(ZonedDateTime.ofInstant(currentInstant, ZoneId.systemDefault()))
+                .transform(s | currentInstant.plus(s).toEpochMilli())
+                .or(-1L);
     }
 
     /**
@@ -77,12 +93,5 @@ class Utils {
                 }
             }
         }
-    }
-
-    private static def long nextExecutionInMillis(long currentTimeInMillis, Cron cron) {
-        val currentInstant = Instant.ofEpochMilli(currentTimeInMillis);
-        return ExecutionTime.forCron(cron).timeToNextExecution(ZonedDateTime.ofInstant(currentInstant, ZoneId.systemDefault()))
-                .transform(s | currentInstant.plus(s).toEpochMilli())
-                .or(-1L);
     }
 }

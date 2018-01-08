@@ -53,7 +53,11 @@ class EventGrid {
     private TimerEditWindow timerEdit
 
     @Inject
+    private EpgAlarmWindow alarmEdit
+
+    @Inject
     private ChannelLogo channelLogo
+
 
     val COL_CHANNEL = "channel"
     val COL_DATE = "date"
@@ -254,8 +258,7 @@ class EventGrid {
     }
 
     def void actionAlarm(Epg epg) {
-        // TODO: implement event/button alarm
-        Notification.show("Not yet implemented: " + "Alarm actions, Switch to channel, OSD message")
+        UI.current.addWindow(alarmEdit.showWindow(currentVdr.name, epg))
     }
 
     private def showEpgDetails(Epg epg) {
