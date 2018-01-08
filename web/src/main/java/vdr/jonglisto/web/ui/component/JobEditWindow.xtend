@@ -163,7 +163,17 @@ class JobEditWindow extends Window {
                         caption = messages.configJobsVdrCommandType
                         items = #[messages.configJobsVdrSwitchChannel, messages.configJobsVdrOsdMessage, messages.configJobsVdrSvdrpCommand]
                         emptySelectionAllowed = false
-                        selectedItem = messages.configJobsVdrSwitchChannel
+
+                        if (editJob.action.vdrAction !== null) {
+                            switch (editJob.action.vdrAction.type) {
+                                case "switchChannel": selectedItem = messages.configJobsVdrSwitchChannel
+                                case "osdMessage": selectedItem = messages.configJobsVdrOsdMessage
+                                case "svdrp": selectedItem = messages.configJobsVdrSvdrpCommand
+                            }
+                        } else {
+                            // default
+                            selectedItem = messages.configJobsVdrSwitchChannel
+                        }
 
                         visible = type.selectedItem.get == messages.configJobsVdr
                     ]
