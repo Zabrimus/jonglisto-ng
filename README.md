@@ -88,10 +88,10 @@ The server announces the URL to access the application. In my example it is ``ht
 As described in the TomEE part, you could rename the war file to be able to access jonglisto-ng with a different URL.
 
 ## Using a precompiled docker container (Alpine Linux with TomEE)
-On DockerHub exists a docker image already containing TomEE and the lastest version of jonglisto-ng.
+On DockerHub exists a docker image `zabrimus/jonglisto-ng-runtime` already containing TomEE and the lastest version of jonglisto-ng.
 Create two local directories `var` and `etc` and start jonglisto-ng  with
 ```
-docker run -v `pwd`/var:/var/jonglisto-ng -v `pwd`/etc:/etc/jonglisto -p 8080:8080 zabrimus/jonglisto-ng-runtime
+docker run -v `pwd`/var:/var/jonglisto-ng -v `pwd`/etc:/etc/jonglisto -p 8080:8080 zabrimus/jonglisto-ng-runtime:0.0.3
 ```
 After the first start, you will find the configuration files inside your directories, which then can be modified.
 
