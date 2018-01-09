@@ -409,7 +409,8 @@ class Configuration {
     }
 
     private def registerSchedules() {
-        // TODO: implement me
+        // start all jobs after server restart
+        jcron.jobs.forEach[s | addJobScheduler(s)]
     }
 
     private def compilePattern(String str) {
@@ -426,6 +427,11 @@ class Configuration {
     }
 
     private def void addJobScheduler(Jobs job) {
+        if (!job.active) {
+            // do nothing
+            return
+        }
+
         if (job.action.vdrAction !== null) {
             val Map<String, Object> paramMap = new HashMap<String, Object>
             paramMap.put("VDR_NAME", job.action.vdrAction.vdr)
@@ -449,6 +455,8 @@ class Configuration {
                 val jobName = job.user + ":" + job.id
                 SundialJobScheduler.addJob(jobName, "vdr.jonglisto.svdrp.client.jobs.SvdrpCommandJob", paramMap, false);
                 SundialJobScheduler.addCronTrigger(jobName + ".trigger", jobName, job.time);
+            } else {
+                job.active = false
             }
         } else if (job.action.shellAction !== null) {
             // TODO: implement addJobScheduler for ShellAction

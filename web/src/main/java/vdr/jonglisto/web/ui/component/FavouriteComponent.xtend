@@ -52,7 +52,6 @@ class FavouriteComponent extends Composite {
         val root = verticalLayout [
             horizontalLayout(it) [
                 favourites = nativeSelect(it) [
-                    // TODO: filter favourites
                     items = config.favourites.favourite.map[s|s.name]
                     emptySelectionAllowed = true
 
@@ -68,8 +67,6 @@ class FavouriteComponent extends Composite {
                         }
                     })
                 ]
-
-                // TODO: depending on parameter show the currentUser or a list of users
 
                 button(it, messages.configFavouriteRename) [
                     addClickListener(s | {
