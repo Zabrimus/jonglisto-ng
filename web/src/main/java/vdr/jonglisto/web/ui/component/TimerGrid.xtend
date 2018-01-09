@@ -3,6 +3,7 @@ package vdr.jonglisto.web.ui.component
 import com.vaadin.cdi.ViewScoped
 import com.vaadin.data.provider.ListDataProvider
 import com.vaadin.icons.VaadinIcons
+import com.vaadin.shared.data.sort.SortDirection
 import com.vaadin.ui.Grid
 import com.vaadin.ui.Grid.ItemClick
 import com.vaadin.ui.Grid.SelectionMode
@@ -24,8 +25,8 @@ import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
+import static extension org.apache.commons.lang3.StringUtils.*
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.ui.StyleGenerator
 
 @Log
 @ViewScoped
@@ -145,6 +146,8 @@ class TimerGrid {
             .setMinimumWidthFromContent(true)
 
         grid.addItemClickListener[event | clickListener(event)]
+
+        grid.sort(COL_DATE, SortDirection.ASCENDING)
 
         grid.selectionMode = SelectionMode.MULTI
         grid.rowHeight = 55
