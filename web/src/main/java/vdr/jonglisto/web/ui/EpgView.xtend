@@ -73,7 +73,6 @@ class EpgView extends BaseView {
     protected override createMainComponents() {
         timeSelectValues = new ArrayList<String>
         timeSelectValues.addAll(config.epgTimeSelect)
-        // timeSelectValues = config.epgTimeSelect
 
         cssLayout(this) [
             height = null
@@ -291,8 +290,8 @@ class EpgView extends BaseView {
     }
 
     public def switchToChannelView(Epg epg) {
-        epgChannelCriteria.selectedItem = svdrp.getChannel(epg.channelId)
         epgTypeSelect.selectedItem = messages.epgTypeChannel
+        epgChannelCriteria.selectedItem = svdrp.getChannel(epg.channelId)
     }
 
     private def listNow() {

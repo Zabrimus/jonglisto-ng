@@ -2,6 +2,7 @@ package vdr.jonglisto.web.ui.component
 
 import com.vaadin.data.provider.ListDataProvider
 import com.vaadin.icons.VaadinIcons
+import com.vaadin.ui.Button
 import com.vaadin.ui.ComboBox
 import com.vaadin.ui.Grid
 import com.vaadin.ui.Grid.ItemClick
@@ -278,10 +279,11 @@ class EventGrid {
             image.addClickListener(s | (grid.parent as EpgView).switchToChannelView(ev))
             return image
         } else {
-            val label = new Label(name)
-            label.addContextClickListener(s | (grid.parent as EpgView).switchToChannelView(ev))
-            label.data = name
-            return label
+            val button = new Button(name)
+            button.styleName = ValoTheme.BUTTON_BORDERLESS
+            button.data = name
+            button.addClickListener(s | (grid.parent as EpgView).switchToChannelView(ev))
+            return button
         }
     }
 
