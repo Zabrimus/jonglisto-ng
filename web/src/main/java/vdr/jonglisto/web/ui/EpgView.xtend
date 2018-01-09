@@ -32,6 +32,7 @@ import vdr.jonglisto.web.ui.component.EventGrid
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import java.util.ArrayList
 
 @Log
 @CDIView(MainUI.EPG_VIEW)
@@ -70,7 +71,9 @@ class EpgView extends BaseView {
     }
 
     protected override createMainComponents() {
-        timeSelectValues = config.epgTimeSelect
+        timeSelectValues = new ArrayList<String>
+        timeSelectValues.addAll(config.epgTimeSelect)
+        // timeSelectValues = config.epgTimeSelect
 
         cssLayout(this) [
             height = null
