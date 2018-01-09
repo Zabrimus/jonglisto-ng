@@ -94,7 +94,7 @@ Create two local directories `var` and `etc` and start jonglisto-ng  with
 docker run -v `pwd`/var:/var/jonglisto-ng -v `pwd`/etc:/etc/jonglisto -p 8080:8080 zabrimus/jonglisto-ng-runtime:0.0.3
 ```
 After the first start, you will find the configuration files inside your directories, which then can be modified.
-
+Jonglisto can then be reached e.g. via http://localhost:8080/jonglisto-ng
 
 # Configuration
 There exists three configuration files which have to be installed in /etc/jonglisto
