@@ -183,7 +183,7 @@ class EpgView extends BaseView {
                 epgTimeCriteria = comboBox(timeSelectValues) [
                     value = DateTimeUtil.toTime(messages.formatTime)
                     addValueChangeListener(it | listTime)
-                    setNewItemHandler(it | timeSelectValues.add(it))
+                    setNewItemHandler(it | {timeSelectValues.add(it); epgTimeCriteria.selectedItem = it})
                 ]
             ]
 
@@ -371,7 +371,15 @@ class EpgView extends BaseView {
     }
 
     private def getSecondsForSelectedTime() {
-        val time = LocalTime.parse(epgTimeCriteria.value, DateTimeFormatter.ofPattern(messages.formatTime))
+        var LocalTime time
+        try {
+            time = LocalTime.parse(epgTimeCriteria.value, DateTimeFormatter.ofPattern(messages.formatTime))
+        } catch (Exception e) {
+            // time value is not valid -> switch back to current time
+            epgTimeCriteria.value = DateTimeUtil.toTime(messages.formatTime)
+            time = LocalTime.parse(epgTimeCriteria.value, DateTimeFormatter.ofPattern(messages.formatTime))
+        }
+
         val date = epgDateCriteria.value.atTime(time)
         return date.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() / 1000L
     }
