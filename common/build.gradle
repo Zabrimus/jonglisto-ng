@@ -32,10 +32,19 @@ jaxb2 {
   }
 
   xjc {
-    'remote-classes' {
+    'favourite-classes' {
       generatedSourcesDir = 'src/main/jaxb2/'
       basePackage = 'vdr.jonglisto.configuration.jaxb.favourite'
       schema = 'src/main/resources/xsd/favourites.xsd'
+      encoding = 'UTF-8'
+    }
+  }
+
+  xjc {
+    'jcron-classes' {
+      generatedSourcesDir = 'src/main/jaxb2/'
+      basePackage = 'vdr.jonglisto.configuration.jaxb.jcron'
+      schema = 'src/main/resources/xsd/jcron.xsd'
       encoding = 'UTF-8'
     }
   }

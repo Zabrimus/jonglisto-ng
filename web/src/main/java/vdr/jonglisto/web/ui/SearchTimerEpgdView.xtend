@@ -58,7 +58,7 @@ class SearchTimerEpgdView extends BaseView {
     }
 
     override protected def void changeVdr(VDR vdr) {
-       // FIXME: Do something useful
+       // not needed
     }
 
     private def prepareEpgdGrid(Layout layout) {

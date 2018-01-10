@@ -17,6 +17,7 @@ At the end of this page you can find some screenshots of the currently existing 
 * organize channels.conf via drag and drop
 * organize epgd channelmap.conf via drag and drop, if epgd database is configured
 * easily execute SVDRP commands on one VDR instance
+* create cronjob like jobs (shell command or svdrp commands are possible). jonglisto-ng uses quartz (http://www.quartz-scheduler.org) like triggers. Configuration and samples can be found at http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html.
 
 ### minimal requirement
 * one VDR instance without any plugin. jonglisto-ng uses mainly only SVDRP commands.
@@ -70,7 +71,7 @@ A hint before: TomEE Embedded 7.0.4 will not work. Unfortunately the packaged li
 * copy jonglisto-ng.'version'.war to apache-tomee-webprofile-7.0.4/webapps
 * start TomEE with ``apache-tomee-webprofile-7.0.4/bin/catalina.sh start`` or ``apache-tomee-webprofile-7.0.4/bin/catalina.sh run``
 * stop with ``apache-tomee-webprofile-7.0.4/bin/catalina.sh stop``
-The application will be accessible with http://server:8080/jonglisto-ng-'version' (e.g.http://server:8080/jonglisto-ng-0.0.1)
+The application will be accessible with http://server:8080/jonglisto-ng-'version' (e.g.http://server:8080/jonglisto-ng-0.0.3)
 
 If you want another context, e.g. http://server:8080/japp, then rename the war file in directory webapps to the desired name, e.g. japp.war.
 To access jonglisto-ng with http://server:8080/ then rename the war file to ROOT.war.
@@ -83,9 +84,17 @@ There exists two possibilities to start jonglisto-ng
 * Start jonglisto-ng using the downloaded Payara Micro jar file: ``java -jar payara-micro-4.1.2.174.jar --disablephonehome --nocluster --deploy jonglisto-ng-'version'.war``
 * create a self running jar with ``java -jar payara-micro-4.1.2.174.jar --disablephonehome --nocluster --deploy jonglisto-ng-'version'.war --outputuberjar <my_new_name>.jar`` and start the server and application with ``java -jar <my_new_name>.jar``
 
-The server announces the URL to access the application. In my example it is ``http://<server>:8080/jonglisto-ng-0.0.1``
+The server announces the URL to access the application. In my example it is ``http://<server>:8080/jonglisto-ng-0.0.3``
 As described in the TomEE part, you could rename the war file to be able to access jonglisto-ng with a different URL.
 
+## Using a precompiled docker container (Alpine Linux with TomEE)
+On DockerHub exists a docker image `zabrimus/jonglisto-ng-runtime` already containing TomEE and the lastest version of jonglisto-ng.
+Create two local directories `var` and `etc` and start jonglisto-ng  with
+```
+docker run -v `pwd`/var:/var/jonglisto-ng -v `pwd`/etc:/etc/jonglisto -p 8080:8080 zabrimus/jonglisto-ng-runtime:0.0.3
+```
+After the first start, you will find the configuration files inside your directories, which then can be modified.
+Jonglisto can then be reached e.g. via http://localhost:8080/jonglisto-ng
 
 # Configuration
 There exists three configuration files which have to be installed in /etc/jonglisto
@@ -243,6 +252,13 @@ The following permissions are currently available:
 * view:config:favourite
 * vdr:"instance name in jonglisto-ng.xml"
 * svdrp:execute
+* view:config:favourite
+* view:config:favourite:all
+* view:config:favourite:user
+* view:config:jobs:all
+* view:config:jobs:user
+* view:config:jobs:shell
+* view:config:jobs:svdrp
 
 view: Menu entries (views) in the main menu
 vdr: access granted to the selected VDR

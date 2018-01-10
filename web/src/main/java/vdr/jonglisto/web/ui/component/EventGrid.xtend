@@ -2,6 +2,7 @@ package vdr.jonglisto.web.ui.component
 
 import com.vaadin.data.provider.ListDataProvider
 import com.vaadin.icons.VaadinIcons
+import com.vaadin.ui.Button
 import com.vaadin.ui.ComboBox
 import com.vaadin.ui.Grid
 import com.vaadin.ui.Grid.ItemClick
@@ -53,7 +54,11 @@ class EventGrid {
     private TimerEditWindow timerEdit
 
     @Inject
+    private EpgAlarmWindow alarmEdit
+
+    @Inject
     private ChannelLogo channelLogo
+
 
     val COL_CHANNEL = "channel"
     val COL_DATE = "date"
@@ -254,8 +259,7 @@ class EventGrid {
     }
 
     def void actionAlarm(Epg epg) {
-        // TODO: implement event/button alarm
-        Notification.show("Not yet implemented: " + "Alarm actions, Switch to channel, OSD message")
+        UI.current.addWindow(alarmEdit.showWindow(currentVdr.name, epg))
     }
 
     private def showEpgDetails(Epg epg) {
@@ -275,10 +279,11 @@ class EventGrid {
             image.addClickListener(s | (grid.parent as EpgView).switchToChannelView(ev))
             return image
         } else {
-            val label = new Label(name)
-            label.addContextClickListener(s | (grid.parent as EpgView).switchToChannelView(ev))
-            label.data = name
-            return label
+            val button = new Button(name)
+            button.styleName = ValoTheme.BUTTON_BORDERLESS
+            button.data = name
+            button.addClickListener(s | (grid.parent as EpgView).switchToChannelView(ev))
+            return button
         }
     }
 

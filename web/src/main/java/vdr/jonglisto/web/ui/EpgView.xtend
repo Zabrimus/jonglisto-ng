@@ -32,6 +32,7 @@ import vdr.jonglisto.web.ui.component.EventGrid
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import java.util.ArrayList
 
 @Log
 @CDIView(MainUI.EPG_VIEW)
@@ -70,7 +71,8 @@ class EpgView extends BaseView {
     }
 
     protected override createMainComponents() {
-        timeSelectValues = config.epgTimeSelect
+        timeSelectValues = new ArrayList<String>
+        timeSelectValues.addAll(config.epgTimeSelect)
 
         cssLayout(this) [
             height = null
@@ -183,7 +185,7 @@ class EpgView extends BaseView {
                 epgTimeCriteria = comboBox(timeSelectValues) [
                     value = DateTimeUtil.toTime(messages.formatTime)
                     addValueChangeListener(it | listTime)
-                    setNewItemHandler(it | timeSelectValues.add(it))
+                    setNewItemHandler(it | {timeSelectValues.add(it); epgTimeCriteria.selectedItem = it})
                 ]
             ]
 
@@ -288,8 +290,8 @@ class EpgView extends BaseView {
     }
 
     public def switchToChannelView(Epg epg) {
-        epgChannelCriteria.selectedItem = svdrp.getChannel(epg.channelId)
         epgTypeSelect.selectedItem = messages.epgTypeChannel
+        epgChannelCriteria.selectedItem = svdrp.getChannel(epg.channelId)
     }
 
     private def listNow() {
@@ -371,7 +373,15 @@ class EpgView extends BaseView {
     }
 
     private def getSecondsForSelectedTime() {
-        val time = LocalTime.parse(epgTimeCriteria.value, DateTimeFormatter.ofPattern(messages.formatTime))
+        var LocalTime time
+        try {
+            time = LocalTime.parse(epgTimeCriteria.value, DateTimeFormatter.ofPattern(messages.formatTime))
+        } catch (Exception e) {
+            // time value is not valid -> switch back to current time
+            epgTimeCriteria.value = DateTimeUtil.toTime(messages.formatTime)
+            time = LocalTime.parse(epgTimeCriteria.value, DateTimeFormatter.ofPattern(messages.formatTime))
+        }
+
         val date = epgDateCriteria.value.atTime(time)
         return date.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() / 1000L
     }

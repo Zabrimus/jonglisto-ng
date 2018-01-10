@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2017.12.30 um 05:17:48 PM CET 
+// Generiert: 2018.01.09 um 06:13:20 PM CET 
 //
 
 
@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlType;
  *                 &lt;sequence maxOccurs="unbounded" minOccurs="0"&gt;
  *                   &lt;element name="channel" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded"/&gt;
  *                 &lt;/sequence&gt;
+ *                 &lt;attribute name="user" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *                 &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *               &lt;/restriction&gt;
  *             &lt;/complexContent&gt;
@@ -98,6 +99,7 @@ public class Favourites {
      *       &lt;sequence maxOccurs="unbounded" minOccurs="0"&gt;
      *         &lt;element name="channel" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded"/&gt;
      *       &lt;/sequence&gt;
+     *       &lt;attribute name="user" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
      *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
      *     &lt;/restriction&gt;
      *   &lt;/complexContent&gt;
@@ -113,6 +115,8 @@ public class Favourites {
     public static class Favourite {
 
         protected List<String> channel;
+        @XmlAttribute(name = "user")
+        protected String user;
         @XmlAttribute(name = "name")
         protected String name;
 
@@ -143,6 +147,30 @@ public class Favourites {
                 channel = new ArrayList<String>();
             }
             return this.channel;
+        }
+
+        /**
+         * Ruft den Wert der user-Eigenschaft ab.
+         * 
+         * @return
+         *     possible object is
+         *     {@link String }
+         *     
+         */
+        public String getUser() {
+            return user;
+        }
+
+        /**
+         * Legt den Wert der user-Eigenschaft fest.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *     
+         */
+        public void setUser(String value) {
+            this.user = value;
         }
 
         /**

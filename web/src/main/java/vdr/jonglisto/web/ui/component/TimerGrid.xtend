@@ -231,12 +231,6 @@ class TimerGrid {
         UI.current.addWindow(epgDetails.showWindow(null, currentVdr, reduceResult.key, false))
     }
 
-    /*
-    private def createChannel(Timer ev) {
-        return SvdrpClient.get.getChannel(ev.channelId).name
-    }
-    */
-
     private def createChannel(Timer ev) {
         val name = svdrp.getChannel(ev.channelId).name
         val image = channelLogo.getImage(name)

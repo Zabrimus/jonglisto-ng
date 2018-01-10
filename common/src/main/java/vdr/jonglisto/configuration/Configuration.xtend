@@ -11,9 +11,12 @@ import java.util.Optional
 import java.util.regex.Pattern
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
+import org.knowm.sundial.SundialJobScheduler
 import vdr.jonglisto.configuration.jaxb.config.Jonglisto
+import vdr.jonglisto.configuration.jaxb.config.ObjectFactory
 import vdr.jonglisto.configuration.jaxb.favourite.Favourites
-import vdr.jonglisto.configuration.jaxb.favourite.ObjectFactory
+import vdr.jonglisto.configuration.jaxb.jcron.Jcron
+import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
 import vdr.jonglisto.configuration.jaxb.remote.Remote
 import vdr.jonglisto.model.EpgCustomColumn
 import vdr.jonglisto.model.EpgProvider
@@ -64,6 +67,7 @@ class Configuration {
 
     private static Remote remoteConfig
     private static Favourites favouriteConfig
+    private static Jcron jcronConfig
 
     private static String customDirectory
 
@@ -72,11 +76,12 @@ class Configuration {
     private static Marshaller marshaller
 
     private new() {
-        var configObjectFactory = new vdr.jonglisto.configuration.jaxb.config.ObjectFactory
+        var configObjectFactory = new ObjectFactory
         var remoteObjectFactory = new vdr.jonglisto.configuration.jaxb.remote.ObjectFactory
-        var favouriteObjectFactory = new ObjectFactory
+        var favouriteObjectFactory = new vdr.jonglisto.configuration.jaxb.favourite.ObjectFactory
+        var jcronObjectFactory = new vdr.jonglisto.configuration.jaxb.jcron.ObjectFactory
 
-        val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class);
+        val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class, jcronObjectFactory.class);
 
         val unmarshaller = jc.createUnmarshaller()
         marshaller = jc.createMarshaller()
@@ -101,6 +106,15 @@ class Configuration {
             favouriteConfig = new Favourites
         }
 
+        try {
+            jcronConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "jcron.xml")) as Jcron
+        } catch (Exception e) {
+            jcronConfig = new Jcron
+        }
+
+        SundialJobScheduler.startScheduler
+        registerSchedules
+
         loadEpgProvider
     }
 
@@ -112,11 +126,18 @@ class Configuration {
         return favouriteConfig
     }
 
-    public def saveFavourites() {
+    public def void saveFavourites() {
         val out = new File(customDirectory + File.separator + "favourites.xml")
         marshaller.marshal(favouriteConfig, out)
+    }
 
-        println("TODO: Speichere Favoriten...")
+    public def getJcron() {
+        return jcronConfig
+    }
+
+    public def saveJcron() {
+        val out = new File(customDirectory + File.separator + "jcron.xml")
+        marshaller.marshal(jcronConfig, out)
     }
 
     public def isDatabaseConfigured() {
@@ -215,6 +236,44 @@ class Configuration {
         }
 
         return true;
+    }
+
+    public def void addJob(Jobs job) {
+        jcron.jobs.add(job)
+        saveJcron
+
+        if (job.active) {
+            addJobScheduler(job)
+        }
+    }
+
+    public def void deleteJob(Jobs job) {
+        val old = jcron.jobs.findFirst[j | j.id == job.id]
+        jcron.jobs.remove(old)
+        saveJcron
+
+        removeJobScheduler(job)
+    }
+
+    public def void changeJob(Jobs job) {
+        val old = jcron.jobs.findFirst[j | j.id == job.id]
+        jcron.jobs.remove(old)
+        jcron.jobs.add(job)
+        saveJcron
+
+        removeJobScheduler(old)
+        addJobScheduler(job)
+    }
+
+    public def void toggleJob(Jobs job) {
+        job.active = !job.active
+        saveJcron
+
+        if (job.active) {
+            addJobScheduler(job)
+        } else {
+            removeJobScheduler(job)
+        }
     }
 
     public static def getInstance() {
@@ -349,6 +408,11 @@ class Configuration {
         }
     }
 
+    private def registerSchedules() {
+        // start all jobs after server restart
+        jcron.jobs.forEach[s | addJobScheduler(s)]
+    }
+
     private def compilePattern(String str) {
         if (str === null) {
             return null
@@ -360,5 +424,47 @@ class Configuration {
             log.warning("Regex Pattern '" + str + "' is invalid and will be ignored")
             return null
         }
+    }
+
+    private def void addJobScheduler(Jobs job) {
+        if (!job.active) {
+            // do nothing
+            return
+        }
+
+        if (job.action.vdrAction !== null) {
+            val Map<String, Object> paramMap = new HashMap<String, Object>
+            paramMap.put("VDR_NAME", job.action.vdrAction.vdr)
+
+            switch(job.action.vdrAction.type) {
+                case "switchChannel": {
+                    paramMap.put("COMMAND", "CHAN " + job.action.vdrAction.parameter)
+                }
+
+                case "osdMessage": {
+                    paramMap.put("COMMAND", "MESG " + job.action.vdrAction.parameter)
+                }
+
+                case "svdrp": {
+                    paramMap.put("COMMAND", job.action.vdrAction.parameter)
+                }
+            }
+
+            // add the job only, if the next execution time is in the future
+            if (Utils.nextExecutionInMillis(System.currentTimeMillis, job.time) != 0) {
+                val jobName = job.user + ":" + job.id
+                SundialJobScheduler.addJob(jobName, "vdr.jonglisto.svdrp.client.jobs.SvdrpCommandJob", paramMap, false);
+                SundialJobScheduler.addCronTrigger(jobName + ".trigger", jobName, job.time);
+            } else {
+                job.active = false
+            }
+        } else if (job.action.shellAction !== null) {
+            // TODO: implement addJobScheduler for ShellAction
+        }
+    }
+
+    private def void removeJobScheduler(Jobs job) {
+        SundialJobScheduler.stopJob(job.user + ":" + job.id);
+        SundialJobScheduler.removeJob(job.user + ":" + job.id);
     }
 }
