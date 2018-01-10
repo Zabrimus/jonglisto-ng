@@ -1,4 +1,4 @@
-0.0.3 (not yet published):
+0.0.3:
 Bugfixes:
 - exception in channel configuration, if no channel groups are defined
 - empty epgsearch view (but only if epgd is not configured. Reason: nonsense condition in the code)
@@ -18,7 +18,7 @@ New:
 - new permission view:configuration:favourite:user
 - new permission view:configuration:jobs:all
 - new permission view:configuration:jobs:user
-- new permission view:configuration:jobs:shell
+- new permission view:configuration:jobs:shell <-- not yet used
 - new permission view:configuration:jobs:svdrp
 
 0.0.2:
