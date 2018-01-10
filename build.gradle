@@ -34,11 +34,11 @@ dependencies {
 
     // runtime 'com.vaadin.external.atmosphere:atmosphere-runtime:2.4.11.vaadin2'
 
-    compile('com.vaadin:vaadin-cdi:3.0.0.alpha2') {
+    compile(libs.vaadincdi) {
        transitive = false
     }
 
-    compile 'org.apache.deltaspike.core:deltaspike-core-impl:1.8.0'
+    compile libs.deltaspike
 
     compileOnly 'javax.enterprise:cdi-api:1.2'
 }
@@ -67,10 +67,10 @@ allprojects {
     }
 
     dependencies {
-        compile 'org.apache.commons:commons-lang3:3.5'
-        compile 'commons-beanutils:commons-beanutils:1.9.3'
-        compile 'commons-collections:commons-collections:3.2.2'
-        compile 'org.apache.tomcat:tomcat-jdbc:8.5.20'
+        compile libs.commons
+        compile libs.beanutils
+        compile libs.collections
+        compile libs.tomjdbc
         compile libs.slf4jjdk
     }
 
@@ -148,13 +148,6 @@ project(':web') {
             exclude group:'org.threeten', module:'threetenbp'
         }
 
-        /*
-        compile('org.apache.shiro:shiro-config-ogdl:1.4.0') {
-            exclude group: 'commons-beanutils', module: 'commons-beanutils'
-            exclude group: 'commons-collections', module: 'commons-collections'
-        }
-        */
-
         compile addons.vicons
 
         compile(addons.scaleimage) {
@@ -165,11 +158,11 @@ project(':web') {
             transitive = false
         }
 
-        compile('com.vaadin:vaadin-cdi:3.0.0.alpha2') {
+        compile(libs.vaadincdi) {
             transitive = false
         }
 
-        compile 'org.apache.deltaspike.core:deltaspike-core-impl:1.8.0'
+        compile libs.deltaspike
 
         compileOnly 'javax.enterprise:cdi-api:1.2'
         compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
