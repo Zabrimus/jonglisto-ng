@@ -104,9 +104,12 @@ class JobEditWindow extends Window {
                             typeList.add(messages.configJobsVdr)
                         }
 
+                        // TODO: Currently disabled, because i don't know if this is really a good idea
+                        /*
                         if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:shell")) {
                             typeList.add(messages.configJobsShell)
                         }
+                        */
 
                         items =  typeList
 
@@ -164,7 +167,7 @@ class JobEditWindow extends Window {
                         items = #[messages.configJobsVdrSwitchChannel, messages.configJobsVdrOsdMessage, messages.configJobsVdrSvdrpCommand]
                         emptySelectionAllowed = false
 
-                        if (editJob.action.vdrAction !== null) {
+                        if (editJob.action !== null && editJob.action.vdrAction !== null) {
                             switch (editJob.action.vdrAction.type) {
                                 case "switchChannel": selectedItem = messages.configJobsVdrSwitchChannel
                                 case "osdMessage": selectedItem = messages.configJobsVdrOsdMessage
