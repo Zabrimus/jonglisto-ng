@@ -1,3 +1,10 @@
+0.0.4-snapshot
+Bugfixes:
+
+New:
+- new optionel dependency: vdr plugin osdserver (see http://www.udo-richter.de/vdr/osdserver.html)
+- show favourite list of jonglisto-ng in VDR OSD (needs osdserver plugin)
+
 0.0.3:
 Bugfixes:
 - exception in channel configuration, if no channel groups are defined

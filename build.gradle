@@ -31,6 +31,7 @@ dependencies {
     compile project(':web')
     compile project(':svdrp')
     compile project(':database')
+    compile project(':osdserver')
 
     // runtime 'com.vaadin.external.atmosphere:atmosphere-runtime:2.4.11.vaadin2'
 
@@ -124,6 +125,17 @@ project(':database') {
 
         compile project(':annotation')
         compile project(':common')
+    }
+}
+
+project(':osdserver') {
+    dependencies {
+        compile libs.xtend
+        compile libs.guava
+
+        compile project(':annotation')
+        compile project(':common')
+        compile project(':svdrp')
     }
 }
 

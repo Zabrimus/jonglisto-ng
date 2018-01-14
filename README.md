@@ -18,6 +18,7 @@ At the end of this page you can find some screenshots of the currently existing 
 * organize epgd channelmap.conf via drag and drop, if epgd database is configured
 * easily execute SVDRP commands on one VDR instance
 * create cronjob like jobs (shell command or svdrp commands are possible). jonglisto-ng uses quartz (http://www.quartz-scheduler.org) like triggers. Configuration and samples can be found at http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html.
+* show channel favourite list in VDR OSD (needs plugin osdserver)
 
 ### minimal requirement
 * one VDR instance without any plugin. jonglisto-ng uses mainly only SVDRP commands.
@@ -26,6 +27,7 @@ At the end of this page you can find some screenshots of the currently existing 
 * VDR plugin svdrposd to use the OSD view in jonglisto-ng (http://www.vdr-wiki.de/wiki/index.php/Svdrposd-plugin, http://vdr.schmirler.de/)
 * VDR plugin epgsearch (http://www.vdr-wiki.de/wiki/index.php/Epgsearch-plugin)
 * VDR epgd database (https://projects.vdr-developer.org/projects/vdr-epg-daemon/wiki)
+* VDR plugin osdserver (http://www.udo-richter.de/vdr/osdserver.html)
 
 # Howto Build jonglisto-ng
 The build itself creates only a web-archive (war) file, which has to be deployed in a server. Tested servers are
@@ -311,6 +313,27 @@ The possible icons can be found at https://vaadin.com/elements/vaadin-icons/html
         <label>Chan+</label>
     </button>
 </remote>
+```
+
+## osdserver configuration
+jonglisto-ng provides functionality to show an OSD on VDR directly using vdr plugin osdserver. The following functionality exists
+* Show an OSD entry as additional possibility for EPG alarms
+* Shows the channel favourite list in VDR OSD
+### trigger channel favourite list
+To enable this, there exists multiple possible solutions. At first jonglisto-ng must be triggered to show the OSD menu.
+This can be done by starting a HTTP request to e.g. http://<server>:8080/osdserver?port=2010&command=favourite.
+Either configure commands.conf of VDR with e.g.
+```
+favourites: curl -s  "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite" -o /dev/null
+favourites: wget "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite" -o /dev/null
+```
+or define an entry in /etc/lirc/irexec.lircrc using an existing key of your remote control
+```
+begin
+    prog = irexec
+    button = KEY_F23
+    config = curl -s  "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite" -o /dev/null
+end
 ```
 
 # Screenhots
