@@ -27,6 +27,10 @@ public class DateTimeUtil {
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), ZoneId.systemDefault()).toLocalDate().format(dateFormatter);
     }
 
+    public static String toDateName(long unixTime, String dateFormat) {
+        return toDate(unixTime, "EEEE, " + dateFormat);
+    }
+
     public static LocalDateTime toDateTime(long unixTime) {
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), ZoneId.systemDefault());
     }

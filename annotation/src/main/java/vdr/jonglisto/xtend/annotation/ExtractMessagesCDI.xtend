@@ -41,13 +41,15 @@ import org.eclipse.xtend.lib.macro.services.TypeReferenceProvider
  * ResourceBundle lookup mechanism.
  */
 @Target(ElementType.TYPE)
-@Active(ExtractMessagesProcessor)
-annotation ExtractMessages {
+@Active(ExtractMessagesProcessorCDI)
+annotation ExtractMessagesCDI {
 }
 
-class ExtractMessagesProcessor extends AbstractClassProcessor {
+class ExtractMessagesProcessorCDI extends AbstractClassProcessor {
 
     override doTransform(MutableClassDeclaration cls, extension TransformationContext context) {
+        cls.addAnnotation(newAnnotationReference("com.vaadin.cdi.UIScoped"))
+
         val bundleField = cls.addField("bundle") [
             type = ResourceBundle.newTypeReference
             final = false
@@ -56,17 +58,10 @@ class ExtractMessagesProcessor extends AbstractClassProcessor {
 
         cls.addConstructor [
             body = '''
-                this.bundle = «ResourceBundle».getBundle("«cls.qualifiedName»");
+                // use default locale
+                this.bundle = «ResourceBundle».getBundle("«cls.qualifiedName»", com.vaadin.server.VaadinService.getCurrentRequest().getLocale());
             '''
-            bundleField.markAsInitializedBy(it)
-            primarySourceElement = cls
-        ]
-
-        cls.addConstructor [
-            addParameter("locale", Locale.newTypeReference)
-            body = '''
-                this.bundle = «ResourceBundle».getBundle("«cls.qualifiedName»", locale);
-            '''
+            addAnnotation(newAnnotationReference("javax.inject.Inject"))
             bundleField.markAsInitializedBy(it)
             primarySourceElement = cls
         ]

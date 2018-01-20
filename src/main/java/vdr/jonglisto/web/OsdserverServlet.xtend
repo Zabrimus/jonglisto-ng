@@ -1,5 +1,6 @@
 package vdr.jonglisto.web
 
+import java.util.Locale
 import javax.inject.Inject
 import javax.servlet.annotation.WebInitParam
 import javax.servlet.annotation.WebServlet
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.osdserver.OsdserverDispatch
+import vdr.jonglisto.osdserver.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 @WebServlet(urlPatterns = #["/osdserver/*"], name = "OsdServer",
@@ -35,6 +37,11 @@ class OsdserverServlet extends HttpServlet {
             svdrpPort = 6419
         }
 
+        var String localeStr = req.getParameter("locale")
+        if (localeStr === null || localeStr.length == 0) {
+            localeStr = "en"
+        }
+
         val user = req.getParameter("user")
         val command = req.getParameter("command")
 
@@ -48,7 +55,7 @@ class OsdserverServlet extends HttpServlet {
 
         if (vdr.isPresent) {
             resp.closeConnection
-            OsdserverDispatch.showOsd(vdr.get, osdServerPort, user, command)
+            OsdserverDispatch.showOsd(vdr.get, osdServerPort, user, command, localeStr)
         } else {
             log.warning("Cannot identify VDR at " + req.remoteAddr + ":" + svdrpPort)
             resp.closeConnection

@@ -2,12 +2,13 @@ package vdr.jonglisto.osdserver
 
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.VDR
+import vdr.jonglisto.osdserver.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 @Log
 class OsdserverDispatch {
 
-    public def static showOsd(VDR vdr, Integer port, String user, String command) {
+    public def static showOsd(VDR vdr, Integer port, String user, String command, String localeStr) {
         if (vdr === null || port === null || port == 0 || command === null) {
             log.warning("Ignore OsdServer command: " + vdr + ", " + port + ", " + command)
             return
@@ -19,7 +20,7 @@ class OsdserverDispatch {
 
         switch(command) {
             case "favourite": {
-                val fav = new OsdserverFavourite(vdr, connection)
+                val fav = new OsdserverFavourite(vdr, connection, localeStr)
                 fav.show
            }
         }

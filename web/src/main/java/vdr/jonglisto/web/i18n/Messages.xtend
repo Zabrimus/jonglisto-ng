@@ -1,7 +1,7 @@
 package vdr.jonglisto.web.i18n;
 
-import vdr.jonglisto.xtend.annotation.ExtractMessages
+import vdr.jonglisto.xtend.annotation.ExtractMessagesCDI
 
-@ExtractMessages
+@ExtractMessagesCDI
 class Messages {
 }

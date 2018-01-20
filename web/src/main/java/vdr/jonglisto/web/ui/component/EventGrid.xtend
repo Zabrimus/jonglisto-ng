@@ -7,7 +7,6 @@ import com.vaadin.ui.ComboBox
 import com.vaadin.ui.Grid
 import com.vaadin.ui.Grid.ItemClick
 import com.vaadin.ui.Grid.SelectionMode
-import com.vaadin.ui.Label
 import com.vaadin.ui.Notification
 import com.vaadin.ui.Notification.Type
 import com.vaadin.ui.TextField
