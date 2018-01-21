@@ -8,6 +8,8 @@ New:
     - shows the diffrent lists
     - shows program on channel
     - shows epg information
+- epg alarm message using osdserver implemented
+- configurable time before or after event start to fire the alarm job
 - URL parameter 'locale=de' or 'locale=en' are supported to choose another locale (other language files currently do not exists). Normally the browser locale is used.
 
 0.0.3:
