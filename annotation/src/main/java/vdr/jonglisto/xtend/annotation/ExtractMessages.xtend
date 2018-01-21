@@ -80,6 +80,15 @@ class ExtractMessagesProcessor extends AbstractClassProcessor {
             primarySourceElement = cls
         ]
 
+        cls.addMethod("getLocaleLanguage") [
+            returnType = string
+            body = '''
+                return this.bundle.getLocale().getLanguage();
+            '''
+            docComment = "Returns the current locale"
+            primarySourceElement = cls
+        ]
+
         cls.addMethod("getMessage") [
             addParameter("key", string)
             returnType = string

@@ -2,7 +2,6 @@ package vdr.jonglisto.osdserver
 
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.osdserver.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 @Log
@@ -28,7 +27,7 @@ class OsdserverDispatch {
         connection.close
     }
 
-    public def static showEpgAlarmOsd(VDR vdr, Integer port, Epg epg) {
+    public def static showEpgAlarmMessageOsd(VDR vdr, Integer port, Epg epg, String localeStr) {
         if (vdr === null || port === null || port == 0 || epg === null) {
             log.warning("Ignore OsdServer command: " + vdr + ", " + port + ", " + epg.title)
             return
@@ -37,7 +36,8 @@ class OsdserverDispatch {
         // connect
         val connection = new OsdserverConnection(vdr.host, port)
         connection.connect
+        val m = new OsdserverAlarmMessage(vdr, connection, localeStr, epg)
+        m.show
         connection.close
     }
-
 }

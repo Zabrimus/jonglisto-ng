@@ -445,7 +445,8 @@ class Configuration {
                     paramMap.put("COMMAND", "MESG " + job.action.vdrAction.parameter)
                 }
 
-                case "svdrp": {
+                case "svdrp",
+                case "osdserverMessage": {
                     paramMap.put("COMMAND", job.action.vdrAction.parameter)
                 }
             }
@@ -453,7 +454,19 @@ class Configuration {
             // add the job only, if the next execution time is in the future
             if (Utils.nextExecutionInMillis(System.currentTimeMillis, job.time) != 0) {
                 val jobName = job.user + ":" + job.id
-                SundialJobScheduler.addJob(jobName, "vdr.jonglisto.svdrp.client.jobs.SvdrpCommandJob", paramMap, false);
+
+                switch(job.action.vdrAction.type) {
+                    case "switchChannel",
+                    case "osdMessage",
+                    case "svdrp": {
+                        SundialJobScheduler.addJob(jobName, "vdr.jonglisto.svdrp.client.jobs.SvdrpCommandJob", paramMap, false);
+                    }
+
+                    case "osdserverMessage": {
+                        SundialJobScheduler.addJob(jobName, "vdr.jonglisto.osdserver.jobs.OsdServerMessageJob", paramMap, false);
+                    }
+                }
+
                 SundialJobScheduler.addCronTrigger(jobName + ".trigger", jobName, job.time);
             } else {
                 job.active = false

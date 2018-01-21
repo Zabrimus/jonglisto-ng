@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.01.09 um 06:12:21 PM CET 
+// Generiert: 2018.01.21 um 01:14:00 PM CET 
 //
 
 
@@ -52,6 +52,7 @@ import javax.xml.bind.annotation.XmlType;
  *                                             &lt;enumeration value="switchChannel"/&gt;
  *                                             &lt;enumeration value="osdMessage"/&gt;
  *                                             &lt;enumeration value="svdrp"/&gt;
+ *                                             &lt;enumeration value="osdserverMessage"/&gt;
  *                                           &lt;/restriction&gt;
  *                                         &lt;/simpleType&gt;
  *                                       &lt;/element&gt;
@@ -161,6 +162,7 @@ public class Jcron {
      *                                   &lt;enumeration value="switchChannel"/&gt;
      *                                   &lt;enumeration value="osdMessage"/&gt;
      *                                   &lt;enumeration value="svdrp"/&gt;
+     *                                   &lt;enumeration value="osdserverMessage"/&gt;
      *                                 &lt;/restriction&gt;
      *                               &lt;/simpleType&gt;
      *                             &lt;/element&gt;
@@ -350,6 +352,7 @@ public class Jcron {
          *                         &lt;enumeration value="switchChannel"/&gt;
          *                         &lt;enumeration value="osdMessage"/&gt;
          *                         &lt;enumeration value="svdrp"/&gt;
+         *                         &lt;enumeration value="osdserverMessage"/&gt;
          *                       &lt;/restriction&gt;
          *                     &lt;/simpleType&gt;
          *                   &lt;/element&gt;
@@ -537,6 +540,7 @@ public class Jcron {
              *               &lt;enumeration value="switchChannel"/&gt;
              *               &lt;enumeration value="osdMessage"/&gt;
              *               &lt;enumeration value="svdrp"/&gt;
+             *               &lt;enumeration value="osdserverMessage"/&gt;
              *             &lt;/restriction&gt;
              *           &lt;/simpleType&gt;
              *         &lt;/element&gt;

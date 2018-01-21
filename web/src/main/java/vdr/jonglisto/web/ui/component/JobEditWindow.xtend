@@ -39,6 +39,7 @@ class JobEditWindow extends Window {
     private NativeSelect<String> vdr
     private TextField script
     private TextField parameter
+    private TextField osdserverPort
     private NativeSelect<String> vdrType
     private Label next
 
@@ -164,7 +165,7 @@ class JobEditWindow extends Window {
                     vdrType = nativeSelect(it) [
                         width = "100%"
                         caption = messages.configJobsVdrCommandType
-                        items = #[messages.configJobsVdrSwitchChannel, messages.configJobsVdrOsdMessage, messages.configJobsVdrSvdrpCommand]
+                        items = #[messages.configJobsVdrSwitchChannel, messages.configJobsVdrOsdMessage, messages.configJobsVdrOsdMessage2, messages.configJobsVdrSvdrpCommand]
                         emptySelectionAllowed = false
 
                         if (editJob.action !== null && editJob.action.vdrAction !== null) {
@@ -172,6 +173,7 @@ class JobEditWindow extends Window {
                                 case "switchChannel": selectedItem = messages.configJobsVdrSwitchChannel
                                 case "osdMessage": selectedItem = messages.configJobsVdrOsdMessage
                                 case "svdrp": selectedItem = messages.configJobsVdrSvdrpCommand
+                                case "osdserverMessage": selectedItem = messages.configJobsVdrOsdMessage2
                             }
                         } else {
                             // default
@@ -203,6 +205,12 @@ class JobEditWindow extends Window {
                         } else {
                             visible = false
                         }
+                    ]
+
+                    osdserverPort = textField(it, messages.configJobsOsdserverPort) [
+                        value = "2010"
+                        width = "100%"
+                        visible = false
                     ]
 
                     if (job.id === null) {
@@ -255,6 +263,10 @@ class JobEditWindow extends Window {
                                             vdrAction.type = "osdMessage"
                                         }
 
+                                        case messages.configJobsVdrOsdMessage2: {
+                                            vdrAction.type = "osdserverMessage"
+                                        }
+
                                         case messages.configJobsVdrSvdrpCommand: {
                                             vdrAction.type = "svdrp"
                                         }
@@ -281,10 +293,6 @@ class JobEditWindow extends Window {
                                 // config.jcron.jobs.add(editJob)
                             } else {
                                 config.changeJob(editJob)
-
-                                // val old = config.jcron.jobs.findFirst[j | j.id == editJob.id]
-                                // config.jcron.jobs.remove(old)
-                                // config.jcron.jobs.add(editJob)
                             }
 
                             config.saveJcron
