@@ -32,7 +32,7 @@ class MainUI extends UI implements ViewChangeListener {
     public static val CONFIG_VIEW = "config"
 
     @Inject
-    private CDINavigator navigator;
+    private CDINavigator navigator
 
     new() {
     }

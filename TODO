@@ -13,8 +13,7 @@ TODOs which are not yet reasoned:
 - implement SVDRP-only VDR plugin to get more information / do something useful
     e.g. - get list of deleted recordings / undelete recordings
 - implement svdrp server to show jonglisto OSD entries:
-    e.g. - favourite channel list
-         - epg suggestions (together with an epg search mechanism)
+    e.g. - epg suggestions (together with an epg search mechanism)
 - automatically change epg-data (that search timers are able to filter) -> But how to prevent epgd to change the epg entry?
 - channel configuration view: is it possible to update the channel list in live/running vdr?
 
@@ -36,3 +35,5 @@ finished TODOs:
 - more rights / better password configuration (use e.g. a hashed value)
 - epg view: favourite channel list
 - epg overview: implement alarm
+- channel favourite list can be shown in VDR using vdr plugin osdserver
+- possibility to select the desired locale as URL parameter

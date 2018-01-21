@@ -1,6 +1,5 @@
 package vdr.jonglisto.web
 
-import java.util.Locale
 import javax.inject.Inject
 import javax.servlet.annotation.WebInitParam
 import javax.servlet.annotation.WebServlet
@@ -9,7 +8,6 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.osdserver.OsdserverDispatch
-import vdr.jonglisto.osdserver.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 @WebServlet(urlPatterns = #["/osdserver/*"], name = "OsdServer",

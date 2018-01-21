@@ -13,6 +13,7 @@ import com.vaadin.ui.Label
 import com.vaadin.ui.PasswordField
 import com.vaadin.ui.TextField
 import com.vaadin.ui.VerticalLayout
+import java.util.Locale
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
@@ -41,6 +42,14 @@ class LoginView extends VerticalLayout implements View {
 
     @PostConstruct
     def void init() {
+        val req = VaadinService.getCurrentRequest()
+
+        val localeStr = req.getParameter("locale")
+        if (localeStr !== null && localeStr.length > 0) {
+            // switch locale
+            messages.changeLocale(new Locale(localeStr))
+        }
+
         setSizeFull
 
         panel(messages.loginRequired) [

@@ -18,7 +18,8 @@ At the end of this page you can find some screenshots of the currently existing 
 * organize epgd channelmap.conf via drag and drop, if epgd database is configured
 * easily execute SVDRP commands on one VDR instance
 * create cronjob like jobs (shell command or svdrp commands are possible). jonglisto-ng uses quartz (http://www.quartz-scheduler.org) like triggers. Configuration and samples can be found at http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html.
-* show channel favourite list in VDR OSD (needs plugin osdserver)
+* show channel favourite list (channels and epg) in VDR OSD (needs plugin osdserver)
+* use URL parameter locale as the locale to use (see chapter i18n)
 
 ### minimal requirement
 * one VDR instance without any plugin. jonglisto-ng uses mainly only SVDRP commands.
@@ -334,6 +335,32 @@ begin
     button = KEY_F23
     config = curl -s  "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite" -o /dev/null
 end
+```
+
+The following URL parameters exists:
+```
+port=2010   -> The configured port of osdserver (default is 2010)
+svdrp=6419  -> The configured SVDRP port of VDR (default is 6419)
+locale=de   -> The language which shall be used in the OSD (default is the system locale).
+locale=en
+user=root   -> The jonglisto-ng user (not used at this moment)
+command=XXX -> What exactly shall be shown in VDR OSD?
+command=favourite
+```
+
+# i18N
+Currently the german and english localization files exists. Feel free to create new language files or fix existing ones.
+They can be found in directories
+```
+web/src/main/java/vdr/jonglisto/web/i18n
+osdserver/src/main/java/vdr/jonglisto/osdserver/i18n
+```
+See Messages_en.properties and Messages_de.properties in both directories.
+
+With the URL parameter ``locale`` it is possible to preselect the desired locale (normally the browser locale is used).
+```
+http://<server>:8080/jonglisto-ng?locale=de
+http://<server>:8080/jonglisto-ng?locale=en
 ```
 
 # Screenhots

@@ -1,13 +1,14 @@
 0.0.4-snapshot
 Bugfixes:
-- locale settings always defaults to german. English is now working again
+- accidentally use only german locale, now other (english currently exists) languages are working.
 
 New:
-- new optionel dependency: vdr plugin osdserver (see http://www.udo-richter.de/vdr/osdserver.html)
-- show favourite list of jonglisto-ng in VDR OSD (needs osdserver plugin)
+- new optional dependency: vdr plugin osdserver (see http://www.udo-richter.de/vdr/osdserver.html)
+- show favourite channel list of jonglisto-ng in VDR OSD (needs osdserver plugin)
     - shows the diffrent lists
     - shows program on channel
     - shows epg information
+- URL parameter 'locale=de' or 'locale=en' are supported to choose another locale (other language files currently do not exists). Normally the browser locale is used.
 
 0.0.3:
 Bugfixes:
