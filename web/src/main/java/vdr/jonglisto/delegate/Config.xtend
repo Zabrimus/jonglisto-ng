@@ -125,4 +125,16 @@ class Config implements Serializable {
         Configuration.getInstance().toggleJob(job)
     }
 
+    public def showScraperImages() {
+        Configuration.getInstance().isShowScraperImages()
+    }
+
+    public def getScraperFrom() {
+        Configuration.getInstance().scraperFrom
+    }
+
+    public def getScraperTo() {
+        Configuration.getInstance().scraperTo
+    }
+
 }

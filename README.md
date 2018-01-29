@@ -20,6 +20,7 @@ At the end of this page you can find some screenshots of the currently existing 
 * create cronjob like jobs (shell command or svdrp commands are possible). jonglisto-ng uses quartz (http://www.quartz-scheduler.org) like triggers. Configuration and samples can be found at http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html.
 * show channel favourite list (channels and epg) in VDR OSD (needs plugin osdserver)
 * use URL parameter locale as the locale to use (see chapter i18n)
+* show EPG scraper information: images, extended information. (needs plugin jonglisto)
 
 ### minimal requirement
 * one VDR instance without any plugin. jonglisto-ng uses mainly only SVDRP commands.
@@ -29,6 +30,7 @@ At the end of this page you can find some screenshots of the currently existing 
 * VDR plugin epgsearch (http://www.vdr-wiki.de/wiki/index.php/Epgsearch-plugin)
 * VDR epgd database (https://projects.vdr-developer.org/projects/vdr-epg-daemon/wiki)
 * VDR plugin osdserver (http://www.udo-richter.de/vdr/osdserver.html)
+* VDR plugin jonglisto (https://github.com/Zabrimus/vdr-plugin-jonglisto)
 
 # Howto Build jonglisto-ng
 The build itself creates only a web-archive (war) file, which has to be deployed in a server. Tested servers are
@@ -137,6 +139,26 @@ Optional configuration of the VDR epg daemon database
 ```xml
     <!-- optional configuration of the epg2vdr database, used for e.g. search timers -->
     <epg2vdr host="epgd" port="3306" username="epg2vdr" password="epg" />
+```
+
+Optional scraper information, extended EPG information and images. Needs vdr-plugin-jonglisto on same VDR as the epg VDR
+```xml
+    <!-- images: can be true or false to show scraper images in EPG details view                                                     -->
+    <!-- If jonglisto-ng and vdr with vdr-plugin-jonglisto are running on the same machine, then the imagePath substitution is       -->
+    <!-- is not necessary, but if e.g. the image directory is shared via NFS or Samba, then the path information of                  -->
+    <!-- of vdr-plugin-jonglisto and the machine which runs jonglisto-ng will probably differ. A path replacement is then necessary. -->
+    <!-- e.g. vdr-jonglisto-ng returns this path:                                                                                    -->
+    <!--      /home/vdr/vdr-2.3.8/videodir/plugins/scraper2vdr/series/71470/fanart3.jpg                                              -->
+    <!-- which shall be mapped to another path for jonglisto-ng                                                                      -->
+    <!--      /nfs/vdr/configuration/plugins/scraper2vdr/series/71470/fanart3.jpg                                                    -->
+    <!-- then the following configuration is necessary. Otherwise jonglisto-ng will not find any image.                              -->
+    <scraper>
+        <images>true</images>
+        <imagePath>
+            <replace><![CDATA[/home/vdr/vdr-2.3.8/videodir/plugins/]]></replace>
+            <to><![CDATA[/nfs/vdr/configuration/plugins/]]></to>
+        </imagePath>
+    </scraper>
 ```
 
 Predefined time values used in EPG view. Exists only for convinience.

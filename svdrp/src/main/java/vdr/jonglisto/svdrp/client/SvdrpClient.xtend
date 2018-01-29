@@ -29,6 +29,8 @@ import vdr.jonglisto.model.VdrPlugin
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
+import java.io.StringReader
+import vdr.jonglisto.configuration.jaxb.scraper.Scraper
 
 @Log
 class SvdrpClient {
@@ -367,6 +369,23 @@ class SvdrpClient {
 
         if (response.code != 250) {
             throw new RuntimeException("Code != 250")
+        }
+    }
+
+    def getScraperData(Epg epg) {
+        val epgVdr = Configuration.instance.epgVdr
+        if (isPluginAvailable(epgVdr.name, "jonglisto")) {
+            try {
+                val response = epgVdr.command("PLUG jonglisto EINF " + epg.channelId + " " + epg.eventId, 900)
+                val xml = response.lines.get(0)
+
+                return Configuration.instance.unmarshaller.unmarshal(new StringReader(xml)) as Scraper
+            } catch (Exception e) {
+                log.log(Level.FINE, "Get Scraper data failed.", e)
+
+                // no epg data found
+                return null;
+            }
         }
     }
 

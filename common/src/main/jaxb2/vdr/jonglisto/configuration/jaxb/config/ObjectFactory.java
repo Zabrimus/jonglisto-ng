@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.01.09 um 06:12:21 PM CET 
+// Generiert: 2018.01.27 um 11:50:46 AM CET 
 //
 
 
@@ -66,6 +66,14 @@ public class ObjectFactory {
      */
     public Jonglisto.EpgColumns.Series createJonglistoEpgColumnsSeries() {
         return new Jonglisto.EpgColumns.Series();
+    }
+
+    /**
+     * Create an instance of {@link Jonglisto.Scraper }
+     * 
+     */
+    public Jonglisto.Scraper createJonglistoScraper() {
+        return new Jonglisto.Scraper();
     }
 
     /**
@@ -170,6 +178,14 @@ public class ObjectFactory {
      */
     public Jonglisto.EpgColumns.Series.Parts createJonglistoEpgColumnsSeriesParts() {
         return new Jonglisto.EpgColumns.Series.Parts();
+    }
+
+    /**
+     * Create an instance of {@link Jonglisto.Scraper.ImagePath }
+     * 
+     */
+    public Jonglisto.Scraper.ImagePath createJonglistoScraperImagePath() {
+        return new Jonglisto.Scraper.ImagePath();
     }
 
     /**

@@ -97,18 +97,41 @@ $v-focus-style: none;
         color: #FFFFFF;
     }
 
-     .timergrid td, .timergrid th {
-         padding-right: 5px;
-         padding-left: 5px;
-         margin: 0px;
-     }
+    .timergrid td, .timergrid th {
+        padding-right: 5px;
+        padding-left: 5px;
+        margin: 0px;
+    }
 
-     .timerdate {
-         min-width: 100px;
-     }
+    .timerdate {
+        min-width: 100px;
+    }
 
-     .timertime {
-         min-width: 60px;
-     }
+    .timertime {
+        min-width: 60px;
+    }
 
+    .v-image-poster {
+       width: 45%;
+       margin:10px;
+    }
+
+    .v-image-banner {
+       width: 100%;
+    }
+
+    .v-image-fanart {
+       width: 98%;
+       margin: 10px
+    }
+
+    .v-image-actor {
+       width: 23%;
+       margin: 10px;
+    }
+
+    .v-image-seasonposter {
+       width: 98%;
+       margin: 10px;
+    }
 }

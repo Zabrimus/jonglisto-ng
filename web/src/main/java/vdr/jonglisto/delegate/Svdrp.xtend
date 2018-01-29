@@ -121,4 +121,8 @@ class Svdrp implements Serializable {
     def void saveEpgData(VDR vdr, Epg epg, String text) {
         SvdrpClient.getInstance.saveEpgData(vdr, epg, text)
     }
+
+    def getScraperData(Epg epg) {
+        SvdrpClient.instance.getScraperData(epg);
+    }
 }

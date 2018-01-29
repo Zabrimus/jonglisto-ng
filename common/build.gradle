@@ -48,5 +48,15 @@ jaxb2 {
       encoding = 'UTF-8'
     }
   }
+
+  xjc {
+    'scraper-classes' {
+      generatedSourcesDir = 'src/main/jaxb2/'
+      basePackage = 'vdr.jonglisto.configuration.jaxb.scraper'
+      schema = 'src/main/resources/xsd/scraper.xsd'
+      encoding = 'UTF-8'
+    }
+  }
 }
 */
+

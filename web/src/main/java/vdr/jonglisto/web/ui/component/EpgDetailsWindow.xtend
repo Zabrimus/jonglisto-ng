@@ -6,8 +6,10 @@ import com.vaadin.shared.ui.ContentMode
 import com.vaadin.ui.Alignment
 import com.vaadin.ui.Button
 import com.vaadin.ui.ComponentContainer
+import com.vaadin.ui.CssLayout
 import com.vaadin.ui.Label
 import com.vaadin.ui.TextArea
+import com.vaadin.ui.VerticalLayout
 import com.vaadin.ui.Window
 import com.vaadin.ui.themes.ValoTheme
 import javax.inject.Inject
@@ -21,6 +23,9 @@ import vdr.jonglisto.web.util.HtmlSanitizer
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
+import com.vaadin.server.FileResource
+import java.io.File
+import com.vaadin.ui.Image
 
 @Log
 @ViewScoped
@@ -50,6 +55,9 @@ class EpgDetailsWindow extends Window {
         this.currentVdr = vdr
         this.parentGrid = parent
 
+        val scraper = svdrp.getScraperData(epg)
+        println("Scraper data: " + scraper)
+
         caption = createCaption(epg)
 
         center();
@@ -58,17 +66,258 @@ class EpgDetailsWindow extends Window {
         modal = true
         width = "60%"
 
+        // VDR EPG
+        val tab1 = verticalLayout [
+            val headerLabel = label(it, epg.shortText)
+            val header = horizontalLayout(it) [
+                it.addComponent(createChannel(epg))
+                it.addComponent(headerLabel)
+            ]
+
+            header.setComponentAlignment(headerLabel, Alignment.MIDDLE_LEFT)
+
+            addDescription(it, epg.description, editView)
+        ]
+
+        var VerticalLayout extended = null
+        var CssLayout posterImages = null
+        var CssLayout actorImages = null
+        var CssLayout fanartImages = null
+        var CssLayout seriesImages = null
+
+        // scraper extended epg
+        if (scraper?.series !== null) {
+            extended = verticalLayout [
+                val series = scraper.series
+
+                if (series.banner !== null && series.banner.size > 0) {
+                    addComponent(createImage(series.banner.get(0).value, "banner"))
+                }
+
+                val builder = new StringBuilder
+                if (series.name !== null) {
+                    builder.append("Name: ").append(series.name).append("|")
+                }
+
+                if (series.firstAired !== null) {
+                    builder.append("FirstAired: ").append(series.firstAired).append("|")
+                }
+
+                if (series.rating !== null) {
+                    builder.append("Rating: ").append(series.rating).append("|")
+                }
+
+                if (series.status !== null) {
+                    builder.append("Status: ").append(series.status).append("|")
+                }
+
+                builder.append("|")
+
+                if (series.overview !== null) {
+                    builder.append(series.overview)
+                }
+
+                addDescription(builder.toString, false)
+
+                if (series.episode !== null && series.episode.width > 0) {
+                    label(it, "Episode: " + series.episode.value + ", " + series.episode.width + "," + series.episode.height)
+                }
+            ]
+        }
+
+        if (scraper?.movie !== null) {
+            extended = verticalLayout [
+                // movie
+
+                val movie = scraper.movie
+
+                val builder = new StringBuilder
+                if (movie.title !== null) {
+                    builder.append("Title: ").append(movie.title)
+                    if (movie.originalTitle !== null) {
+                        builder.append(" [Original: ").append(movie.originalTitle).append("]")
+                    }
+                    builder.append("|")
+                }
+
+                if (movie.tagline !== null) {
+                    builder.append("Tagline: ").append(movie.tagline).append("|")
+                }
+
+                if (movie.releaseDate !== null) {
+                    builder.append("Date: ").append(movie.releaseDate).append("|")
+                }
+
+                if (movie.genre !== null) {
+                    builder.append("Genre: ").append(movie.genre).append("|")
+                }
+
+                if (movie.runtime !== null) {
+                    builder.append("Runtime: ").append(movie.runtime).append("|")
+                }
+
+                if (movie.budget !== null) {
+                    builder.append("Budget: ").append(movie.budget)
+                    if (movie.revenue !== null) {
+                        builder.append(" , Revenue: ").append(movie.revenue)
+                    }
+
+                    builder.append("|")
+                }
+
+                if (movie.popularity !== null) {
+                    builder.append("Popu: ").append(movie.popularity)
+                    if (movie.voteAverage !== null) {
+                        builder.append(" , Vote: ").append(movie.voteAverage)
+                    }
+
+                    builder.append("|")
+                }
+
+                if (movie.adult !== null) {
+                    builder.append("Adult: ").append(movie.adult).append("|")
+                }
+
+                if (movie.homepage !== null) {
+                    builder.append("Homepage: ").append(movie.homepage).append("|")
+                }
+
+                builder.append("|")
+                builder.append(movie.overview)
+                addDescription(builder.toString, false)
+            ]
+        }
+
+        if (config.showScraperImages) {
+            // Poster
+            val seriesPoster = scraper?.series?.poster?.size > 0
+            val moviePoster = scraper?.movie?.poster?.size > 0
+            if (seriesPoster || moviePoster) {
+                posterImages = new CssLayout
+
+                if (seriesPoster) {
+                    for (s : scraper.series.poster) {
+                        if (s.width > 0) {
+                            posterImages.addComponent(createImage(s.value, "poster"))
+                        }
+                    }
+                }
+
+                if (moviePoster) {
+                    for (s : scraper.movie.poster) {
+                        if (s.width > 0) {
+                            posterImages.addComponent(createImage(s.value, "poster"))
+                        }
+                    }
+                }
+            }
+
+            // Fanart
+            val seriesFanart = scraper?.series?.fanart?.size > 0
+            val movieFanart = scraper?.movie?.fanart?.size > 0
+            if (seriesFanart || movieFanart) {
+                fanartImages = new CssLayout
+
+                if (seriesFanart) {
+                    for (s : scraper.series.fanart) {
+                        if (s.width > 0) {
+                            fanartImages.addComponent(createImage(s.value, "fanart"))
+                        }
+                    }
+                }
+
+                if (movieFanart) {
+                    for (s : scraper.movie.fanart) {
+                        if (s.width > 0) {
+                            fanartImages.addComponent(createImage(s.value, "fanart"))
+                        }
+                    }
+                }
+            }
+
+            // Actor
+            val seriesActor = scraper?.series?.actor?.size > 0
+            val movieActor = scraper?.movie?.actor?.size > 0
+            if (seriesActor || movieActor) {
+                actorImages = new CssLayout
+
+                if (seriesActor) {
+                    for (s : scraper.series.actor) {
+                        if (s.width > 0 && s.path.startsWith(config.scraperFrom)) {
+                            actorImages.addComponent(createImage(s.path, "actor"))
+                        }
+                    }
+                }
+
+                if (movieActor) {
+                    for (s : scraper.movie.actor) {
+                        if (s.width > 0) {
+                            actorImages.addComponent(createImage(s.path, "actor"))
+                        }
+                    }
+                }
+            }
+
+            // Series images
+            if (scraper?.series?.banner?.size > 0) {
+                if (seriesImages === null) {
+                    seriesImages = new CssLayout
+                }
+
+                for (s : scraper.series.banner) {
+                    if (s.width > 0) {
+                        seriesImages.addComponent(createImage(s.value, "banner"))
+                    }
+                }
+            }
+
+            if (scraper?.series?.seasonPoster !== null) {
+                if (seriesImages === null) {
+                    seriesImages = new CssLayout
+                }
+
+                if (scraper.series.seasonPoster.width > 0) {
+                    seriesImages.addComponent(createImage(scraper.series.seasonPoster.value, "seasonposter"))
+                }
+            }
+        }
+
+        val extendedEpg = extended
+        val poster = posterImages
+        val actor = actorImages
+        val fanart = fanartImages
+        val series = seriesImages
+
+        val tabsheet = tabsheet[
+            addTab(tab1, "Standard")
+
+            if (extendedEpg !== null) {
+                addTab(extendedEpg, "Extended")
+            }
+
+            if (poster !== null) {
+                addTab(poster, "Poster")
+            }
+
+            if (actor !== null) {
+                addTab(actor, "Actors")
+            }
+
+            if (fanart!== null) {
+                addTab(fanart, "Fanart")
+            }
+
+            if (series !== null) {
+                addTab(series, "Series")
+            }
+
+            addStyleName(ValoTheme.TABSHEET_FRAMED);
+            addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
+        ]
+
         setContent(
             verticalLayout [
-                val headerLabel = label(it, epg.shortText)
-                val header = horizontalLayout(it) [
-                    it.addComponent(createChannel(epg))
-                    it.addComponent(headerLabel)
-                ]
-
-                header.setComponentAlignment(headerLabel, Alignment.MIDDLE_LEFT)
-
-                addDescription(it, epg, editView)
+                addComponent(tabsheet)
 
                 horizontalLayout(it) [
                     button(it, messages.epgClose) [
@@ -137,9 +386,9 @@ class EpgDetailsWindow extends Window {
         )
     }
 
-    def addDescription(ComponentContainer container, Epg epg, boolean editView) {
+    def addDescription(ComponentContainer container, String description, boolean editView) {
         // clean description
-        val epgdesc = HtmlSanitizer.clean(epg.description)
+        val epgdesc = HtmlSanitizer.clean(description)
 
         if (!editView) {
             // prepare html code
@@ -179,5 +428,22 @@ class EpgDetailsWindow extends Window {
             label.data = name
             return label
         }
+    }
+
+    private def createImage(String scraperPath, String style) {
+        if (scraperPath !== null) {
+            val newPath = scraperPath.changeScraperPath
+            val resource = new FileResource(new File(newPath));
+            val image = new Image(null, resource);
+            image.styleName = style
+
+            return image
+        } else {
+            return null
+        }
+    }
+
+    private def changeScraperPath(String input) {
+        return config.scraperTo + input.substring(config.scraperFrom.length)
     }
 }

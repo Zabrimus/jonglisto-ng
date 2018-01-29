@@ -27,6 +27,7 @@ import vdr.jonglisto.util.Utils
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
+import javax.xml.bind.Unmarshaller
 
 @Log
 class Configuration {
@@ -71,8 +72,13 @@ class Configuration {
 
     private static String customDirectory
 
+    private static boolean showScraperImage
+    private static String scraperFrom
+    private static String scraperTo
+
     private static Configuration instance = new Configuration
 
+    private static Unmarshaller unmarshaller
     private static Marshaller marshaller
 
     private new() {
@@ -80,10 +86,11 @@ class Configuration {
         var remoteObjectFactory = new vdr.jonglisto.configuration.jaxb.remote.ObjectFactory
         var favouriteObjectFactory = new vdr.jonglisto.configuration.jaxb.favourite.ObjectFactory
         var jcronObjectFactory = new vdr.jonglisto.configuration.jaxb.jcron.ObjectFactory
+        var scraperObjectFactory = new vdr.jonglisto.configuration.jaxb.scraper.ObjectFactory
 
-        val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class, jcronObjectFactory.class);
+        val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class, jcronObjectFactory.class, scraperObjectFactory.class);
 
-        val unmarshaller = jc.createUnmarshaller()
+        unmarshaller = jc.createUnmarshaller()
         marshaller = jc.createMarshaller()
 
         val xmlFile = new File(configurationFile)
@@ -110,6 +117,13 @@ class Configuration {
             jcronConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "jcron.xml")) as Jcron
         } catch (Exception e) {
             jcronConfig = new Jcron
+        }
+
+        showScraperImage = (config.scraper !== null) && config.scraper.images
+
+        if (config.scraper !== null && config.scraper.imagePath !== null) {
+            scraperFrom = config.scraper.imagePath.replace ?: "/"
+            scraperTo = config.scraper.imagePath.to ?: "/"
         }
 
         SundialJobScheduler.startScheduler
@@ -274,6 +288,26 @@ class Configuration {
         } else {
             removeJobScheduler(job)
         }
+    }
+
+    public def isShowScraperImages() {
+        return showScraperImage
+    }
+
+    public def getScraperFrom() {
+        return scraperFrom
+    }
+
+    public def getScraperTo() {
+        return scraperTo
+    }
+
+    public def getMarshaller() {
+        return marshaller
+    }
+
+    public def getUnmarshaller() {
+        return unmarshaller
     }
 
     public static def getInstance() {

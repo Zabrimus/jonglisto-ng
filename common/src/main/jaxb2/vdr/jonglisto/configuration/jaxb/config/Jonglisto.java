@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.01.09 um 06:12:21 PM CET 
+// Generiert: 2018.01.27 um 11:50:46 AM CET 
 //
 
 
@@ -91,6 +91,29 @@ import javax.xml.bind.annotation.XmlValue;
  *                 &lt;attribute name="database" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *               &lt;/extension&gt;
  *             &lt;/simpleContent&gt;
+ *           &lt;/complexType&gt;
+ *         &lt;/element&gt;
+ *         &lt;element name="scraper" minOccurs="0"&gt;
+ *           &lt;complexType&gt;
+ *             &lt;complexContent&gt;
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                 &lt;sequence&gt;
+ *                   &lt;element name="images" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
+ *                   &lt;element name="imagePath"&gt;
+ *                     &lt;complexType&gt;
+ *                       &lt;complexContent&gt;
+ *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                           &lt;sequence&gt;
+ *                             &lt;element name="replace" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *                             &lt;element name="to" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *                           &lt;/sequence&gt;
+ *                         &lt;/restriction&gt;
+ *                       &lt;/complexContent&gt;
+ *                     &lt;/complexType&gt;
+ *                   &lt;/element&gt;
+ *                 &lt;/sequence&gt;
+ *               &lt;/restriction&gt;
+ *             &lt;/complexContent&gt;
  *           &lt;/complexType&gt;
  *         &lt;/element&gt;
  *         &lt;element name="epgTimeList"&gt;
@@ -233,6 +256,7 @@ import javax.xml.bind.annotation.XmlValue;
     "epg",
     "channel",
     "epg2Vdr",
+    "scraper",
     "epgTimeList",
     "svdrpCommandList",
     "epgColumns"
@@ -250,6 +274,7 @@ public class Jonglisto {
     protected Jonglisto.Channel channel;
     @XmlElement(name = "epg2vdr", required = true)
     protected Jonglisto.Epg2Vdr epg2Vdr;
+    protected Jonglisto.Scraper scraper;
     @XmlElement(required = true)
     protected Jonglisto.EpgTimeList epgTimeList;
     @XmlElement(required = true)
@@ -375,6 +400,30 @@ public class Jonglisto {
      */
     public void setEpg2Vdr(Jonglisto.Epg2Vdr value) {
         this.epg2Vdr = value;
+    }
+
+    /**
+     * Ruft den Wert der scraper-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Jonglisto.Scraper }
+     *     
+     */
+    public Jonglisto.Scraper getScraper() {
+        return scraper;
+    }
+
+    /**
+     * Legt den Wert der scraper-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Jonglisto.Scraper }
+     *     
+     */
+    public void setScraper(Jonglisto.Scraper value) {
+        this.scraper = value;
     }
 
     /**
@@ -2136,6 +2185,174 @@ public class Jonglisto {
                 value = new ArrayList<String>();
             }
             return this.value;
+        }
+
+    }
+
+
+    /**
+     * <p>Java-Klasse für anonymous complex type.
+     * 
+     * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+     * 
+     * <pre>
+     * &lt;complexType&gt;
+     *   &lt;complexContent&gt;
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *       &lt;sequence&gt;
+     *         &lt;element name="images" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
+     *         &lt;element name="imagePath"&gt;
+     *           &lt;complexType&gt;
+     *             &lt;complexContent&gt;
+     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *                 &lt;sequence&gt;
+     *                   &lt;element name="replace" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+     *                   &lt;element name="to" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+     *                 &lt;/sequence&gt;
+     *               &lt;/restriction&gt;
+     *             &lt;/complexContent&gt;
+     *           &lt;/complexType&gt;
+     *         &lt;/element&gt;
+     *       &lt;/sequence&gt;
+     *     &lt;/restriction&gt;
+     *   &lt;/complexContent&gt;
+     * &lt;/complexType&gt;
+     * </pre>
+     * 
+     * 
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+        "images",
+        "imagePath"
+    })
+    public static class Scraper {
+
+        protected boolean images;
+        @XmlElement(required = true)
+        protected Jonglisto.Scraper.ImagePath imagePath;
+
+        /**
+         * Ruft den Wert der images-Eigenschaft ab.
+         * 
+         */
+        public boolean isImages() {
+            return images;
+        }
+
+        /**
+         * Legt den Wert der images-Eigenschaft fest.
+         * 
+         */
+        public void setImages(boolean value) {
+            this.images = value;
+        }
+
+        /**
+         * Ruft den Wert der imagePath-Eigenschaft ab.
+         * 
+         * @return
+         *     possible object is
+         *     {@link Jonglisto.Scraper.ImagePath }
+         *     
+         */
+        public Jonglisto.Scraper.ImagePath getImagePath() {
+            return imagePath;
+        }
+
+        /**
+         * Legt den Wert der imagePath-Eigenschaft fest.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link Jonglisto.Scraper.ImagePath }
+         *     
+         */
+        public void setImagePath(Jonglisto.Scraper.ImagePath value) {
+            this.imagePath = value;
+        }
+
+
+        /**
+         * <p>Java-Klasse für anonymous complex type.
+         * 
+         * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+         * 
+         * <pre>
+         * &lt;complexType&gt;
+         *   &lt;complexContent&gt;
+         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+         *       &lt;sequence&gt;
+         *         &lt;element name="replace" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+         *         &lt;element name="to" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+         *       &lt;/sequence&gt;
+         *     &lt;/restriction&gt;
+         *   &lt;/complexContent&gt;
+         * &lt;/complexType&gt;
+         * </pre>
+         * 
+         * 
+         */
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+            "replace",
+            "to"
+        })
+        public static class ImagePath {
+
+            @XmlElement(required = true)
+            protected String replace;
+            @XmlElement(required = true)
+            protected String to;
+
+            /**
+             * Ruft den Wert der replace-Eigenschaft ab.
+             * 
+             * @return
+             *     possible object is
+             *     {@link String }
+             *     
+             */
+            public String getReplace() {
+                return replace;
+            }
+
+            /**
+             * Legt den Wert der replace-Eigenschaft fest.
+             * 
+             * @param value
+             *     allowed object is
+             *     {@link String }
+             *     
+             */
+            public void setReplace(String value) {
+                this.replace = value;
+            }
+
+            /**
+             * Ruft den Wert der to-Eigenschaft ab.
+             * 
+             * @return
+             *     possible object is
+             *     {@link String }
+             *     
+             */
+            public String getTo() {
+                return to;
+            }
+
+            /**
+             * Legt den Wert der to-Eigenschaft fest.
+             * 
+             * @param value
+             *     allowed object is
+             *     {@link String }
+             *     
+             */
+            public void setTo(String value) {
+                this.to = value;
+            }
+
         }
 
     }
