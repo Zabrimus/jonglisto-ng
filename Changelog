@@ -1,6 +1,7 @@
 0.0.4-snapshot
 Bugfixes:
 - accidentally use only german locale, now other (english currently exists) languages are working.
+- create channels.conf
 
 New:
 - new optional dependency: vdr plugin osdserver (see http://www.udo-richter.de/vdr/osdserver.html)
