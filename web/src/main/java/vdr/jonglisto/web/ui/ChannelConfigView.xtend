@@ -45,6 +45,11 @@ import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
+import com.vaadin.icons.VaadinIcons
+import com.vaadin.ui.themes.ValoTheme
+import com.vaadin.ui.Notification
+import com.vaadin.ui.Notification.Type
+import com.vaadin.ui.renderers.ComponentRenderer
 
 @Log
 @CDIView(MainUI.CHANNEL_CONFIG_VIEW)
@@ -54,6 +59,7 @@ class ChannelConfigView extends BaseView {
     private static val COLUMN_METADATA = "METADATA"
     private static val COLUMN_FREQUENCE = "FREQUENCE"
     private static val COLUMN_BOUQUET = "BOUQUET"
+    private static val COLUMN_ACTION = "ACTION"
 
     var Panel tvmPanel
     var Panel tvspPanel
@@ -138,6 +144,11 @@ class ChannelConfigView extends BaseView {
         treeGrid.addColumn([s | s.metadata]).setCaption(messages.captionSource).setId(COLUMN_METADATA).sortable = false
         treeGrid.addColumn([s | s.frequence]).setCaption(messages.captionFrequence).setId(COLUMN_FREQUENCE).sortable = false
         treeGrid.addColumn([s | s.bouquet]).setCaption(messages.captionBouquet).setId(COLUMN_BOUQUET).sortable = false
+
+        treeGrid.addColumn([s | createAction(s)]) //
+           .setRenderer(new ComponentRenderer()) //
+           .setId(COLUMN_ACTION) //
+           .setSortable(false)
 
         treeGrid.editor.addOpenListener(new EditorOpenListener<BaseDataWithName>() {
             override onEditorOpen(EditorOpenEvent<BaseDataWithName> event) {
@@ -277,6 +288,28 @@ class ChannelConfigView extends BaseView {
         ]
 
         return h
+    }
+
+    private def createAction(BaseDataWithName name) {
+        if (name instanceof Channel) {
+            val button = new Button()
+            button.icon = VaadinIcons.PLAY
+            button.description = messages.epgSwitchChannel
+            button.width = "22px"
+            button.styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+
+            button.addClickListener(s | {
+                try {
+                    svdrp.switchChannel(selectedVdr, name.id)
+                } catch (Exception e) {
+                    Notification.show(messages.epgErrorSwitchFailed, Type.ERROR_MESSAGE)
+                }
+            })
+
+            return button
+        } else {
+            return null;
+        }
     }
 
     private def displayName(BaseDataWithName n) {
