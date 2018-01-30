@@ -58,8 +58,7 @@ class Parser {
 
                     val ch = new Channel
 
-                    val idx = s.indexOf(" ")
-                    ch.raw = s.substring(idx+1)
+                    ch.raw = s.substring(s.ordinalIndexOf(" ", 2)+1)
 
                     ch.group = lastGroup.get
                     ch.radio = "0" == sp.get(5) || "1" == sp.get(5)
