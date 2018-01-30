@@ -15,6 +15,7 @@ New:
 - optional dependency to vdr plugin jonglisto (https://github.com/Zabrimus/vdr-plugin-jonglisto) to get extended epg information and images.
 - new optional configuration elememt <scraper></scraper> which could be set, if extended EPG information and/or images shall be shown.
 - scraper images and informations can be displayed (needs vdr-plugin-jonglisto)
+- channel switch in channel configuration (it's easier to sort channels, if the channel can be switched)
 
 0.0.3:
 Bugfixes:
