@@ -11,6 +11,7 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.osdserver.i18n.Messages
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.DateTimeUtil
+import java.time.LocalDateTime
 
 class OsdserverFavourite {
 
@@ -74,10 +75,13 @@ class OsdserverFavourite {
 
                         connection.send("submenu.SetColorKeyText -red '" + messages.timeMinus30.replace("'", "\\'") + "'")
                         connection.send("submenu.SetColorKeyText -green '"+ messages.timePlus30.replace("'", "\\'") + "'")
-                        connection.send("submenu.SetColorKeyText -yellow '" + messages.timeNow.replace("'", "\\'") + "'")
+                        connection.send("submenu.SetColorKeyText -yellow '" + messages.timeSelect.replace("'", "\\'") + "'")
                         connection.send("submenu.SetColorKeyText -blue '" + messages.epgInfo.replace("'", "\\'") + "'")
 
                         connection.send("time=submenu.AddNew OsdItem -unselectable '--- " + messages.whatsOnAt.replace("'", "\\'")  + " " + DateTimeUtil.toTime(System.currentTimeMillis() / 1000 + timeOffset, "HH:mm") + "'", 200)
+
+                        val timeList = Configuration.instance.epgTimeSelect.stream.collect(Collectors.joining(" "))
+                        connection.send("timesel=submenu.AddNew EditListItem Zeit " + messages.timeNow + " " + timeList)
 
                         channels = favList.get(menuId).channel
 
@@ -168,7 +172,30 @@ class OsdserverFavourite {
                         }
 
                         case "keyYellow": {
-                            timeOffset = 0
+                            var resp = connection.send("timesel.GetValue -name -quoted")
+                            if (resp.code != 500) {
+                                resp = connection.readResponse
+                            }
+
+                            // calculate offset
+                            if (resp.message == messages.timeNow) {
+                                timeOffset = 0
+                            } else {
+                                val split = resp.message.split(":")
+
+                                var now = LocalDateTime.now
+                                var time = LocalDateTime.now
+                                time = time.withHour(Integer.valueOf(split.get(0)))
+                                time = time.withMinute(Integer.valueOf(split.get(1)))
+
+                                if (time.isBefore(now)) {
+                                    // add one day
+                                    time = time.plusDays(1)
+                                }
+
+                                timeOffset = time.toEpochSecond(DateTimeUtil.currentZoneOffset) - now.toEpochSecond(DateTimeUtil.currentZoneOffset)
+                            }
+
                             fillWithTimeOffset
                             connection.send("submenu.Show", 200)
                         }
@@ -188,7 +215,6 @@ class OsdserverFavourite {
                         }
                     }
                 }
-
             } else if (response.code == 301 || response.code == 200) {
                 // do nothing
             } else if (response.code == 412) {
@@ -221,7 +247,11 @@ class OsdserverFavourite {
             epg.add(epgEntry)
 
             connection.send("subfav" + i + ".settext '" + item + "'", 200)
-            connection.send("time.setText '--- " + messages.whatsOnAt.replace("'", "\\'") + " " + DateTimeUtil.toTime(System.currentTimeMillis() / 1000 + timeOffset, messages.formatTime.replace("'", "\\'")) + "'", 200)
+
+            val stringTime = DateTimeUtil.toTime(System.currentTimeMillis() / 1000 + timeOffset, messages.formatTime.replace("'", "\\'"))
+            val stringDate = DateTimeUtil.toDateName(System.currentTimeMillis() / 1000 + timeOffset, messages.formatDate.replace("'", "\\'"))
+
+            connection.send("time.setText '--- " + messages.whatsOnAt.replace("'", "\\'") + " " + stringTime + " (" + stringDate + ")'", 200)
         }
     }
 
