@@ -1,20 +1,25 @@
 package vdr.jonglisto.osdserver
 
+import java.time.LocalDateTime
 import java.util.ArrayList
 import java.util.List
 import java.util.Locale
+import java.util.Random
 import java.util.stream.Collectors
 import org.apache.commons.lang3.text.WordUtils
 import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
+import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs.Action
+import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs.Action.VdrAction
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.osdserver.i18n.Messages
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.DateTimeUtil
-import java.time.LocalDateTime
 
 class OsdserverFavourite {
 
+    var static rand = new Random()
     val OsdserverConnection connection
     val Messages messages
     val VDR vdr
@@ -53,13 +58,14 @@ class OsdserverFavourite {
 
         osdPart = "menu"
 
+        var int submenuId
+
         while (true) {
             val response = sleepEvent(osdPart)
 
             if (response.code == 300) {
                 val r = response.message.split(" ")
                 var int menuId
-                var int submenuId
 
                 if (r.get(0).startsWith("fav")) {
                     if (r.get(1) == "keyOk") {
@@ -114,7 +120,7 @@ class OsdserverFavourite {
 
                             connection.send("epgmenu = New Menu 'Epg'", 200)
                             connection.send("epgmenu.setColumns 15", 200)
-                            connection.send("epgmenu.EnableEvent close", 200)
+                            connection.send("epgmenu.EnableEvent close keyRed keyBlue", 200)
 
                             val entry = epg.get(submenuId)
 
@@ -135,6 +141,9 @@ class OsdserverFavourite {
                             desc.forEach[s | {
                                connection.send("epgmenu.AddNew OsdItem  '" + s.replace("'", "\\'") + "'", 200)
                             }]
+
+                            connection.send("epgmenu.SetColorKeyText -red '" + messages.epgSetAlarn.replace("'", "\\'") + "'")
+                            connection.send("epgmenu.SetColorKeyText -blue '"+ messages.epgSwitchChannel.replace("'", "\\'") + "'")
 
                             connection.send("_focus.addsubmenu epgmenu", 200)
                             connection.send("epgmenu.Show", 200)
@@ -212,6 +221,38 @@ class OsdserverFavourite {
                                 // menu really closed -> return
                                 return
                             }
+                        }
+
+                        case "keyRed": {
+                            val entry = epg.get(submenuId)
+
+                            val minusMinutes = Integer.valueOf("2")
+                            val dateTime = DateTimeUtil.toDateTime(entry.startTime)
+                            val timeFormat = String.format("0 %d %d %d %d ? %d", dateTime.minute - minusMinutes, dateTime.hour, dateTime.dayOfMonth, dateTime.monthValue, dateTime.year)
+
+                            val job = new Jobs
+                            job.id = rand.nextInt.toString
+                            job.active = true
+                            job.user = vdr.name
+                            job.time = timeFormat
+
+                            val vdrAction = new VdrAction
+                            vdrAction.vdr = vdr.name
+                            vdrAction.type = "osdserverMessage"
+                            vdrAction.parameter = "2010;" + entry.channelId + ";" + entry.startTime + ";" + messages.localeLanguage
+
+                            val action = new Action
+                            action.vdrAction = vdrAction
+                            job.action = action
+
+                            Configuration.getInstance.addJob(job)
+                        }
+
+                        case "keyBlue": {
+                            // Switch to channel
+                            val ch = SvdrpClient.getInstance().getChannel(channels.get(submenuId))
+                            SvdrpClient.getInstance().switchChannel(vdr, ch.id)
+                            return
                         }
                     }
                 }
