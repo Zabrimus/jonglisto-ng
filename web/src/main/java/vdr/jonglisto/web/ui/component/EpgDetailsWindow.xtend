@@ -244,7 +244,7 @@ class EpgDetailsWindow extends Window {
                 if (seriesActor) {
                     for (s : scraper.series.actor) {
                         if (s.width > 0 && s.path.startsWith(config.scraperFrom)) {
-                            actorImages.addComponent(createImage(s.path, "actor"))
+                            actorImages.addComponent(createActorImage(s.path, "actor", s.role, s.name))
                         }
                     }
                 }
@@ -252,7 +252,7 @@ class EpgDetailsWindow extends Window {
                 if (movieActor) {
                     for (s : scraper.movie.actor) {
                         if (s.width > 0) {
-                            actorImages.addComponent(createImage(s.path, "actor"))
+                            actorImages.addComponent(createActorImage(s.path, "actor", s.role, s.name))
                         }
                     }
                 }
@@ -438,6 +438,19 @@ class EpgDetailsWindow extends Window {
             image.styleName = style
 
             return image
+        } else {
+            return null
+        }
+    }
+
+    private def createActorImage(String scraperPath, String style, String role, String name) {
+        if (scraperPath !== null) {
+            val newPath = scraperPath.changeScraperPath
+            val resource = new FileResource(new File(newPath));
+            val image = new Image(null, resource);
+            image.styleName = style
+
+            return new ActorImage(image, role, name)
         } else {
             return null
         }

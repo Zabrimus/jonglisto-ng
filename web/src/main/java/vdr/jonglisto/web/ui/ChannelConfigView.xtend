@@ -3,6 +3,7 @@ package vdr.jonglisto.web.ui
 import com.vaadin.cdi.CDIView
 import com.vaadin.data.TreeData
 import com.vaadin.data.provider.TreeDataProvider
+import com.vaadin.icons.VaadinIcons
 import com.vaadin.server.FileDownloader
 import com.vaadin.server.StreamResource
 import com.vaadin.server.StreamResource.StreamSource
@@ -10,10 +11,13 @@ import com.vaadin.shared.ui.dnd.DropEffect
 import com.vaadin.shared.ui.dnd.EffectAllowed
 import com.vaadin.shared.ui.grid.DropMode
 import com.vaadin.ui.Button
+import com.vaadin.ui.CssLayout
 import com.vaadin.ui.Grid.SelectionMode
 import com.vaadin.ui.HorizontalLayout
 import com.vaadin.ui.Label
 import com.vaadin.ui.Layout
+import com.vaadin.ui.Notification
+import com.vaadin.ui.Notification.Type
 import com.vaadin.ui.Panel
 import com.vaadin.ui.TextField
 import com.vaadin.ui.TreeGrid
@@ -23,6 +27,8 @@ import com.vaadin.ui.components.grid.TreeGridDragSource
 import com.vaadin.ui.components.grid.TreeGridDropTarget
 import com.vaadin.ui.dnd.DragSourceExtension
 import com.vaadin.ui.dnd.DropTargetExtension
+import com.vaadin.ui.renderers.ComponentRenderer
+import com.vaadin.ui.themes.ValoTheme
 import java.io.BufferedWriter
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -45,11 +51,6 @@ import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.icons.VaadinIcons
-import com.vaadin.ui.themes.ValoTheme
-import com.vaadin.ui.Notification
-import com.vaadin.ui.Notification.Type
-import com.vaadin.ui.renderers.ComponentRenderer
 
 @Log
 @CDIView(MainUI.CHANNEL_CONFIG_VIEW)
@@ -292,21 +293,41 @@ class ChannelConfigView extends BaseView {
 
     private def createAction(BaseDataWithName name) {
         if (name instanceof Channel) {
-            val button = new Button()
-            button.icon = VaadinIcons.PLAY
-            button.description = messages.epgSwitchChannel
-            button.width = "22px"
-            button.styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+            val layout = new CssLayout();
 
-            button.addClickListener(s | {
-                try {
-                    svdrp.switchChannel(selectedVdr, name.id)
-                } catch (Exception e) {
-                    Notification.show(messages.epgErrorSwitchFailed, Type.ERROR_MESSAGE)
-                }
+            if (name.id !== null) {
+                val playButton = new Button()
+                playButton.icon = VaadinIcons.PLAY
+                playButton.description = messages.epgSwitchChannel
+                playButton.width = "22px"
+                playButton.styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+
+                playButton.addClickListener(s | {
+                    try {
+                        svdrp.switchChannel(selectedVdr, name.id)
+                    } catch (Exception e) {
+                        log.log(Level.INFO, "Switch channel failed", e)
+                        Notification.show(messages.epgErrorSwitchFailed, Type.ERROR_MESSAGE)
+                    }
+                })
+
+                layout.addComponent(playButton)
+            }
+
+            val deleteButton = new Button()
+            deleteButton.icon = VaadinIcons.TRASH
+            deleteButton.description = messages.deleteChannel
+            deleteButton.width = "22px"
+            deleteButton.styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+
+            deleteButton.addClickListener(s | {
+                treeGrid.treeData.removeItem(name)
+                treeGrid.dataProvider.refreshAll
             })
 
-            return button
+            layout.addComponent(deleteButton)
+
+            return layout
         } else {
             return null;
         }
@@ -400,6 +421,7 @@ class ChannelConfigView extends BaseView {
     }
 
     private def getChannelDownloadButton(Layout layout, String caption, String filename) {
+        log.fine("create channel.conf download button")
         return getDownloadButton(layout, caption, filename, [createChannelsConf])
     }
 
@@ -412,53 +434,63 @@ class ChannelConfigView extends BaseView {
     }
 
     private def getDownloadButton(Layout layout, String caption, String filename, () => String sb) {
-        val downloadButton = new Button(caption);
+        try {
+            val downloadButton = new Button(caption);
 
-        val source = new StreamSource() {
-            override getStream() {
-                val arrayOutputStream = new ByteArrayOutputStream();
-                val bufferedWriter = new BufferedWriter(new OutputStreamWriter(arrayOutputStream));
+            val source = new StreamSource() {
+                override getStream() {
+                    val arrayOutputStream = new ByteArrayOutputStream();
+                    val bufferedWriter = new BufferedWriter(new OutputStreamWriter(arrayOutputStream));
 
-                bufferedWriter.append(sb.apply)
-                bufferedWriter.flush
+                    bufferedWriter.append(sb.apply)
+                    bufferedWriter.flush
 
-                return new ByteArrayInputStream(arrayOutputStream.toByteArray());
+                    return new ByteArrayInputStream(arrayOutputStream.toByteArray());
+                }
             }
+
+            val resource = new StreamResource(source, filename);
+            resource.setMIMEType("text/plain");
+
+            val fileDownloader = new FileDownloader(resource);
+            fileDownloader.setOverrideContentType(false);
+            fileDownloader.extend(downloadButton);
+
+            return downloadButton;
+        } catch (Exception e) {
+            log.log(Level.INFO, "Error in getDownloadButton:", e)
         }
-
-        val resource = new StreamResource(source, filename);
-        resource.setMIMEType("text/plain");
-
-        val fileDownloader = new FileDownloader(resource);
-        fileDownloader.setOverrideContentType(false);
-        fileDownloader.extend(downloadButton);
-
-        return downloadButton;
     }
 
     private def createChannelsConf() {
-        val channelsConf = new StringBuilder()
+        log.fine("Starting creation of channels.conf")
 
-        // 1. save the group root element
-        treeGrid.treeData.rootItems.forEach[ ch |
-            if (ch instanceof Channel) {
-                if (ch.name == Channel.ROOT_GROUP && ch.id === null) {
-                    channelsConf.appendChildren(treeGrid.treeData.getChildren(ch))
+        try {
+            val channelsConf = new StringBuilder()
+
+            // 1. save the group root element
+            treeGrid.treeData.rootItems.forEach[ ch |
+                if (ch instanceof Channel) {
+                    if (ch.name == Channel.ROOT_GROUP && ch.id === null) {
+                        channelsConf.appendChildren(treeGrid.treeData.getChildren(ch))
+                    }
                 }
-            }
-        ]
+            ]
 
-        // 2. save all other channels
-        treeGrid.treeData.rootItems.forEach[ ch |
-            if (ch instanceof Channel) {
-                if (ch.name != Channel.ROOT_GROUP) {
-                    channelsConf.appendChannel(ch)
-                    channelsConf.appendChildren(treeGrid.treeData.getChildren(ch))
+            // 2. save all other channels
+            treeGrid.treeData.rootItems.forEach[ ch |
+                if (ch instanceof Channel) {
+                    if (ch.name != Channel.ROOT_GROUP) {
+                        channelsConf.appendChannel(ch)
+                        channelsConf.appendChildren(treeGrid.treeData.getChildren(ch))
+                    }
                 }
-            }
-        ]
+            ]
 
-        return channelsConf.toString
+            return channelsConf.toString
+        } catch (Exception e) {
+            log.log(Level.INFO, "Creation of channels.conf failed:", e)
+        }
     }
 
     private def createInternalMappingConf() {

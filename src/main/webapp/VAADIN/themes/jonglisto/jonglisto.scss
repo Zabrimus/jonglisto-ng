@@ -126,12 +126,19 @@ $v-focus-style: none;
     }
 
     .v-image-actor {
-       width: 23%;
-       margin: 10px;
+       width: 100%;
+       // margin: 10px;
     }
 
     .v-image-seasonposter {
        width: 98%;
        margin: 10px;
+    }
+
+    .v-slot-actor {
+    }
+
+    .actorcomp {
+        padding: 20px;
     }
 }

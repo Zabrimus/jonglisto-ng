@@ -419,6 +419,8 @@ class SvdrpClient {
             throw new ConnectionException(message)
         }
 
+        log.fine("Command: " + command)
+
         val resp = connection.send(command)
         if (resp.code != desiredCode && desiredCode != -1) {
             throw new ExecutionFailedException("Code: " + resp.code)
