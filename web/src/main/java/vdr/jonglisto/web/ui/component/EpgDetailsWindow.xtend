@@ -56,7 +56,6 @@ class EpgDetailsWindow extends Window {
         this.parentGrid = parent
 
         val scraper = svdrp.getScraperData(epg)
-        println("Scraper data: " + scraper)
 
         caption = createCaption(epg)
 
@@ -103,19 +102,19 @@ class EpgDetailsWindow extends Window {
 
                 val builder = new StringBuilder
                 if (series.name !== null) {
-                    builder.append("Name: ").append(series.name).append("|")
+                    builder.append(messages.epgName + ": ").append(series.name).append("|")
                 }
 
                 if (series.firstAired !== null) {
-                    builder.append("FirstAired: ").append(series.firstAired).append("|")
+                    builder.append(messages.epgFirstAired + ": ").append(series.firstAired).append("|")
                 }
 
                 if (series.rating !== null) {
-                    builder.append("Rating: ").append(series.rating).append("|")
+                    builder.append(messages.epgRating + ": ").append(series.rating).append("|")
                 }
 
                 if (series.status !== null) {
-                    builder.append("Status: ").append(series.status).append("|")
+                    builder.append(messages.epgStatus + ": ").append(series.status).append("|")
                 }
 
                 builder.append("|")
@@ -140,53 +139,53 @@ class EpgDetailsWindow extends Window {
 
                 val builder = new StringBuilder
                 if (movie.title !== null) {
-                    builder.append("Title: ").append(movie.title)
+                    builder.append(messages.epgTitleCaption + ": ").append(movie.title)
                     if (movie.originalTitle !== null) {
-                        builder.append(" [Original: ").append(movie.originalTitle).append("]")
+                        builder.append(" [" + messages.epgOriginal + ": ").append(movie.originalTitle).append("]")
                     }
                     builder.append("|")
                 }
 
                 if (movie.tagline !== null) {
-                    builder.append("Tagline: ").append(movie.tagline).append("|")
+                    builder.append(messages.epgTagline + ": ").append(movie.tagline).append("|")
                 }
 
                 if (movie.releaseDate !== null) {
-                    builder.append("Date: ").append(movie.releaseDate).append("|")
+                    builder.append(messages.epgDateCaption + ": ").append(movie.releaseDate).append("|")
                 }
 
                 if (movie.genre !== null) {
-                    builder.append("Genre: ").append(movie.genre).append("|")
+                    builder.append(messages.epgGenreCaption + ": ").append(movie.genre).append("|")
                 }
 
                 if (movie.runtime !== null) {
-                    builder.append("Runtime: ").append(movie.runtime).append("|")
+                    builder.append(messages.epgRuntime + ": ").append(movie.runtime).append("|")
                 }
 
                 if (movie.budget !== null) {
-                    builder.append("Budget: ").append(movie.budget)
+                    builder.append(messages.epgBudget + ": ").append(movie.budget)
                     if (movie.revenue !== null) {
-                        builder.append(" , Revenue: ").append(movie.revenue)
+                        builder.append(" , " + messages.epgRevenue + ": ").append(movie.revenue)
                     }
 
                     builder.append("|")
                 }
 
                 if (movie.popularity !== null) {
-                    builder.append("Popu: ").append(movie.popularity)
+                    builder.append(messages.epgPopularity + ": ").append(movie.popularity)
                     if (movie.voteAverage !== null) {
-                        builder.append(" , Vote: ").append(movie.voteAverage)
+                        builder.append(" , " + messages.epgVote + ": ").append(movie.voteAverage)
                     }
 
                     builder.append("|")
                 }
 
                 if (movie.adult !== null) {
-                    builder.append("Adult: ").append(movie.adult).append("|")
+                    builder.append(messages.epgAdult + ": ").append(movie.adult).append("|")
                 }
 
                 if (movie.homepage !== null) {
-                    builder.append("Homepage: ").append(movie.homepage).append("|")
+                    builder.append(messages.epgHomepage + ": ").append(movie.homepage).append("|")
                 }
 
                 builder.append("|")
@@ -296,26 +295,26 @@ class EpgDetailsWindow extends Window {
         val series = seriesImages
 
         val tabsheet = tabsheet[
-            addTab(tab1, "Standard")
+            addTab(tab1, messages.epgTabStandard)
 
             if (extendedEpg !== null) {
-                addTab(extendedEpg, "Extended")
+                addTab(extendedEpg, messages.epgTabExtended)
             }
 
             if (poster !== null) {
-                addTab(poster, "Poster")
+                addTab(poster, messages.epgTabPoster)
             }
 
             if (actor !== null) {
-                addTab(actor, "Actors")
+                addTab(actor, messages.epgTabActor)
             }
 
             if (fanart!== null) {
-                addTab(fanart, "Fanart")
+                addTab(fanart, messages.epgTabFanart)
             }
 
             if (series !== null) {
-                addTab(series, "Series")
+                addTab(series, messages.epgTabSeries)
             }
 
             addStyleName(ValoTheme.TABSHEET_FRAMED);
