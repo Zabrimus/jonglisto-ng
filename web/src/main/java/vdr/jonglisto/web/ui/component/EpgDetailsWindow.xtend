@@ -68,6 +68,13 @@ class EpgDetailsWindow extends Window {
 
         // VDR EPG
         val tab1 = verticalLayout [
+            if (scraper?.series !== null) {
+                val series = scraper.series
+                if (series.banner !== null && series.banner.size > 0) {
+                    addComponent(createImage(series.banner.get(0).value, "banner"))
+                }
+            }
+
             val headerLabel = label(it, epg.shortText)
             val header = horizontalLayout(it) [
                 it.addComponent(createChannel(epg))
@@ -120,7 +127,7 @@ class EpgDetailsWindow extends Window {
                 addDescription(builder.toString, false)
 
                 if (series.episode !== null && series.episode.width > 0) {
-                    label(it, "Episode: " + series.episode.value + ", " + series.episode.width + "," + series.episode.height)
+                    addComponent(createImage(series.episode.value, "poster"))
                 }
             ]
         }
