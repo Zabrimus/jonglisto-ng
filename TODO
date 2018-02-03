@@ -1,22 +1,22 @@
 TODOs in no specific order:
 
 technisch:
+- upgrade to vaadin 8.3
 
 fachlich:
 - epgsearch view: save and use templates
 - wake on lan
 - channel config view: save and load configuration
-- epg images
+
+- get list of deleted recordings (in vdr-plugin-jonglisto)
+- undelete recording (in vdr-plugin-jongslisto)
 
 TODOs which are not yet reasoned:
 
-- implement SVDRP-only VDR plugin to get more information / do something useful
-    e.g. - get list of deleted recordings / undelete recordings
 - implement svdrp server to show jonglisto OSD entries:
     e.g. - epg suggestions (together with an epg search mechanism)
 - automatically change epg-data (that search timers are able to filter) -> But how to prevent epgd to change the epg entry?
 - channel configuration view: is it possible to update the channel list in live/running vdr?
-
 
 finished TODOs:
 
@@ -37,3 +37,4 @@ finished TODOs:
 - epg overview: implement alarm
 - channel favourite list can be shown in VDR using vdr plugin osdserver
 - possibility to select the desired locale as URL parameter
+- epg images
