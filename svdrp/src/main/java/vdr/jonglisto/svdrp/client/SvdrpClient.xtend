@@ -372,11 +372,19 @@ class SvdrpClient {
         }
     }
 
-    def getScraperData(Epg epg) {
+    def getScraperData(VDR vdr, Epg epg, long recordingId) {
         val epgVdr = Configuration.instance.epgVdr
         if (isPluginAvailable(epgVdr.name, "jonglisto")) {
             try {
-                val response = epgVdr.command("PLUG jonglisto EINF " + epg.channelId + " " + epg.eventId, 900)
+                var Response response
+                val usedVdr = vdr ?: epgVdr
+
+                if (recordingId === -1) {
+                    response = usedVdr.command("PLUG jonglisto EINF " + epg.channelId + " " + epg.eventId, 900)
+                } else {
+                    response = usedVdr.command("PLUG jonglisto RINF " + recordingId, 900)
+                }
+
                 val xml = response.lines.get(0)
 
                 return Configuration.instance.unmarshaller.unmarshal(new StringReader(xml)) as Scraper

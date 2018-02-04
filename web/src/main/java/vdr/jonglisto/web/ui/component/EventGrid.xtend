@@ -262,11 +262,11 @@ class EventGrid {
     }
 
     private def showEpgDetails(Epg epg) {
-        UI.current.addWindow(epgDetails.showWindow(this, currentVdr, epg, false))
+        UI.current.addWindow(epgDetails.showWindow(this, currentVdr, epg, false, -1))
     }
 
     private def editEpgDetails(Epg epg) {
-        UI.current.addWindow(epgDetails.showWindow(this, currentVdr, epg, true))
+        UI.current.addWindow(epgDetails.showWindow(this, currentVdr, epg, true, -1))
     }
 
     private def createChannel(Epg ev) {

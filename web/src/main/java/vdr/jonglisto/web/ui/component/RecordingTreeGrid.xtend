@@ -526,7 +526,8 @@ class RecordingTreeGrid {
             if (rec.epg === null) {
                 svdrp.getRecordingEpg(currentVdr, rec)
             }
-            UI.current.addWindow(epgDetails.showWindow(null, currentVdr, rec.epg, false))
+
+            UI.current.addWindow(epgDetails.showWindow(null, currentVdr, rec.epg, false, rec.id))
         }
     }
 

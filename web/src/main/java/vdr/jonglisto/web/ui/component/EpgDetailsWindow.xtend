@@ -2,16 +2,19 @@ package vdr.jonglisto.web.ui.component
 
 import com.vaadin.cdi.ViewScoped
 import com.vaadin.icons.VaadinIcons
+import com.vaadin.server.FileResource
 import com.vaadin.shared.ui.ContentMode
 import com.vaadin.ui.Alignment
 import com.vaadin.ui.Button
 import com.vaadin.ui.ComponentContainer
 import com.vaadin.ui.CssLayout
+import com.vaadin.ui.Image
 import com.vaadin.ui.Label
 import com.vaadin.ui.TextArea
 import com.vaadin.ui.VerticalLayout
 import com.vaadin.ui.Window
 import com.vaadin.ui.themes.ValoTheme
+import java.io.File
 import javax.inject.Inject
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
@@ -23,9 +26,6 @@ import vdr.jonglisto.web.util.HtmlSanitizer
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.server.FileResource
-import java.io.File
-import com.vaadin.ui.Image
 
 @Log
 @ViewScoped
@@ -51,11 +51,11 @@ class EpgDetailsWindow extends Window {
         super()
     }
 
-    def showWindow(EventGrid parent, VDR vdr, Epg epg, boolean editView) {
+    def showWindow(EventGrid parent, VDR vdr, Epg epg, boolean editView, long recordingId) {
         this.currentVdr = vdr
         this.parentGrid = parent
 
-        val scraper = svdrp.getScraperData(epg)
+        val scraper = svdrp.getScraperData(if(recordingId !== -1) vdr else null, epg, recordingId)
 
         caption = createCaption(epg)
 
@@ -70,7 +70,11 @@ class EpgDetailsWindow extends Window {
             if (scraper?.series !== null) {
                 val series = scraper.series
                 if (series.banner !== null && series.banner.size > 0) {
-                    addComponent(createImage(series.banner.get(0).value, "banner"))
+                    val image = createImage(series.banner.get(0).value, "banner")
+
+                    if (image !== null) {
+                        addComponent(image)
+                    }
                 }
             }
 
@@ -97,7 +101,11 @@ class EpgDetailsWindow extends Window {
                 val series = scraper.series
 
                 if (series.banner !== null && series.banner.size > 0) {
-                    addComponent(createImage(series.banner.get(0).value, "banner"))
+                    val image = createImage(series.banner.get(0).value, "banner")
+
+                    if (image !== null) {
+                        addComponent(image)
+                    }
                 }
 
                 val builder = new StringBuilder
@@ -126,7 +134,11 @@ class EpgDetailsWindow extends Window {
                 addDescription(builder.toString, false)
 
                 if (series.episode !== null && series.episode.width > 0) {
-                    addComponent(createImage(series.episode.value, "poster"))
+                    val image = createImage(series.episode.value, "poster")
+
+                    if (image !== null) {
+                        addComponent(image)
+                    }
                 }
             ]
         }
@@ -204,7 +216,11 @@ class EpgDetailsWindow extends Window {
                 if (seriesPoster) {
                     for (s : scraper.series.poster) {
                         if (s.width > 0) {
-                            posterImages.addComponent(createImage(s.value, "poster"))
+                            val image = createImage(s.value, "poster")
+
+                            if (image !== null) {
+                                posterImages.addComponent(image)
+                            }
                         }
                     }
                 }
@@ -212,7 +228,11 @@ class EpgDetailsWindow extends Window {
                 if (moviePoster) {
                     for (s : scraper.movie.poster) {
                         if (s.width > 0) {
-                            posterImages.addComponent(createImage(s.value, "poster"))
+                            val image = createImage(s.value, "poster")
+
+                            if (image !== null) {
+                                posterImages.addComponent(image)
+                            }
                         }
                     }
                 }
@@ -227,7 +247,11 @@ class EpgDetailsWindow extends Window {
                 if (seriesFanart) {
                     for (s : scraper.series.fanart) {
                         if (s.width > 0) {
-                            fanartImages.addComponent(createImage(s.value, "fanart"))
+                            val image = createImage(s.value, "fanart")
+
+                            if (image !== null) {
+                                fanartImages.addComponent(image)
+                            }
                         }
                     }
                 }
@@ -235,7 +259,11 @@ class EpgDetailsWindow extends Window {
                 if (movieFanart) {
                     for (s : scraper.movie.fanart) {
                         if (s.width > 0) {
-                            fanartImages.addComponent(createImage(s.value, "fanart"))
+                            val image = createImage(s.value, "fanart")
+
+                            if (image !== null) {
+                                fanartImages.addComponent(image)
+                            }
                         }
                     }
                 }
@@ -250,7 +278,11 @@ class EpgDetailsWindow extends Window {
                 if (seriesActor) {
                     for (s : scraper.series.actor) {
                         if (s.width > 0 && s.path.startsWith(config.scraperFrom)) {
-                            actorImages.addComponent(createActorImage(s.path, "actor", s.role, s.name))
+                            val actorImage = createActorImage(s.path, "actor", s.role, s.name)
+
+                            if (actorImage !== null) {
+                                actorImages.addComponent(actorImage)
+                            }
                         }
                     }
                 }
@@ -258,7 +290,11 @@ class EpgDetailsWindow extends Window {
                 if (movieActor) {
                     for (s : scraper.movie.actor) {
                         if (s.width > 0) {
-                            actorImages.addComponent(createActorImage(s.path, "actor", s.role, s.name))
+                            val actorImage = createActorImage(s.path, "actor", s.role, s.name)
+
+                            if (actorImage !== null) {
+                                actorImages.addComponent(actorImage)
+                            }
                         }
                     }
                 }
@@ -272,7 +308,11 @@ class EpgDetailsWindow extends Window {
 
                 for (s : scraper.series.banner) {
                     if (s.width > 0) {
-                        seriesImages.addComponent(createImage(s.value, "banner"))
+                        val image = createImage(s.value, "banner")
+
+                        if (image !== null) {
+                            seriesImages.addComponent(image)
+                        }
                     }
                 }
             }
@@ -283,7 +323,11 @@ class EpgDetailsWindow extends Window {
                 }
 
                 if (scraper.series.seasonPoster.width > 0) {
-                    seriesImages.addComponent(createImage(scraper.series.seasonPoster.value, "seasonposter"))
+                    val image = createImage(scraper.series.seasonPoster.value, "seasonposter")
+
+                    if (image !== null) {
+                        seriesImages.addComponent(image)
+                    }
                 }
             }
         }
@@ -423,15 +467,24 @@ class EpgDetailsWindow extends Window {
     }
 
     private def createChannel(Epg ev) {
-        val name = svdrp.getChannel(ev.channelId).name
-        val image = channelLogo.getImage(name)
+        val channel = svdrp.getChannel(ev.channelId)
 
-        if (image !== null) {
-            image.data = name
-            return image
+        // channel can be null, if the channel id do not exists anymore
+        if (channel !== null) {
+            val name = channel.name
+            val image = channelLogo.getImage(name)
+
+            if (image !== null) {
+                image.data = name
+                return image
+            } else {
+                val label = new Label(name)
+                label.data = name
+                return label
+            }
         } else {
-            val label = new Label(name)
-            label.data = name
+            val label = new Label("")
+            label.data = "<unknown>"
             return label
         }
     }
@@ -439,11 +492,17 @@ class EpgDetailsWindow extends Window {
     private def createImage(String scraperPath, String style) {
         if (scraperPath !== null) {
             val newPath = scraperPath.changeScraperPath
-            val resource = new FileResource(new File(newPath));
-            val image = new Image(null, resource);
-            image.styleName = style
+            val file = new File(newPath)
 
-            return image
+            if (file.exists) {
+                val resource = new FileResource(new File(newPath));
+                val image = new Image(null, resource);
+                image.styleName = style
+
+                return image
+            } else {
+                return null;
+            }
         } else {
             return null
         }
@@ -452,11 +511,17 @@ class EpgDetailsWindow extends Window {
     private def createActorImage(String scraperPath, String style, String role, String name) {
         if (scraperPath !== null) {
             val newPath = scraperPath.changeScraperPath
-            val resource = new FileResource(new File(newPath));
-            val image = new Image(null, resource);
-            image.styleName = style
+            val file = new File(newPath)
 
-            return new ActorImage(image, role, name)
+            if (file.exists) {
+                val resource = new FileResource(new File(newPath));
+                val image = new Image(null, resource);
+                image.styleName = style
+
+                return new ActorImage(image, role, name)
+            } else {
+                return null;
+            }
         } else {
             return null
         }
