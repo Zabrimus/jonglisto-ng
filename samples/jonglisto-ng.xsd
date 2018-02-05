@@ -117,7 +117,7 @@
             <xs:complexType>
                 <xs:sequence>
                     <xs:element type="xs:boolean" name="images"/>
-                    <xs:element name="imagePath">
+                    <xs:element name="imagePath" maxOccurs="unbounded" minOccurs="0">
                         <xs:complexType>
                             <xs:sequence>
                                 <xs:element type="xs:string" name="replace"/>

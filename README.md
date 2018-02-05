@@ -147,6 +147,7 @@ Optional scraper information, extended EPG information and images. Needs vdr-plu
     <!-- If jonglisto-ng and vdr with vdr-plugin-jonglisto are running on the same machine, then the imagePath substitution is       -->
     <!-- is not necessary, but if e.g. the image directory is shared via NFS or Samba, then the path information of                  -->
     <!-- of vdr-plugin-jonglisto and the machine which runs jonglisto-ng will probably differ. A path replacement is then necessary. -->
+    <!-- It's possible to specify multiple entries. In this case all entries will be used to find the desired image file             -->
     <!-- e.g. vdr-jonglisto-ng returns this path:                                                                                    -->
     <!--      /home/vdr/vdr-2.3.8/videodir/plugins/scraper2vdr/series/71470/fanart3.jpg                                              -->
     <!-- which shall be mapped to another path for jonglisto-ng                                                                      -->
@@ -157,6 +158,11 @@ Optional scraper information, extended EPG information and images. Needs vdr-plu
         <imagePath>
             <replace><![CDATA[/home/vdr/vdr-2.3.8/videodir/plugins/]]></replace>
             <to><![CDATA[/nfs/vdr/configuration/plugins/]]></to>
+        </imagePath>
+
+        <imagePath>
+            <replace><![CDATA[/home/vdr2/vdr-2.3.8/videodir/plugins/]]></replace>
+            <to><![CDATA[/nfs/vdr2/configuration/plugins/]]></to>
         </imagePath>
     </scraper>
 ```

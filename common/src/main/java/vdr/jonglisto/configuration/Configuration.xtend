@@ -11,8 +11,10 @@ import java.util.Optional
 import java.util.regex.Pattern
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
+import javax.xml.bind.Unmarshaller
 import org.knowm.sundial.SundialJobScheduler
 import vdr.jonglisto.configuration.jaxb.config.Jonglisto
+import vdr.jonglisto.configuration.jaxb.config.Jonglisto.Scraper.ImagePath
 import vdr.jonglisto.configuration.jaxb.config.ObjectFactory
 import vdr.jonglisto.configuration.jaxb.favourite.Favourites
 import vdr.jonglisto.configuration.jaxb.jcron.Jcron
@@ -27,7 +29,6 @@ import vdr.jonglisto.util.Utils
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
-import javax.xml.bind.Unmarshaller
 
 @Log
 class Configuration {
@@ -73,8 +74,8 @@ class Configuration {
     private static String customDirectory
 
     private static boolean showScraperImage
-    private static String scraperFrom
-    private static String scraperTo
+
+    private static List<ImagePath> scraperPath
 
     private static Configuration instance = new Configuration
 
@@ -122,8 +123,7 @@ class Configuration {
         showScraperImage = (config.scraper !== null) && config.scraper.images
 
         if (config.scraper !== null && config.scraper.imagePath !== null) {
-            scraperFrom = config.scraper.imagePath.replace ?: "/"
-            scraperTo = config.scraper.imagePath.to ?: "/"
+            scraperPath = config.scraper.imagePath
         }
 
         SundialJobScheduler.startScheduler
@@ -294,12 +294,8 @@ class Configuration {
         return showScraperImage
     }
 
-    public def getScraperFrom() {
-        return scraperFrom
-    }
-
-    public def getScraperTo() {
-        return scraperTo
+    public def getScraperPath() {
+        return scraperPath
     }
 
     public def getMarshaller() {

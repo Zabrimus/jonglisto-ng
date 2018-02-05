@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.01.27 um 11:50:46 AM CET 
+// Generiert: 2018.02.05 um 04:58:48 PM CET 
 //
 
 
@@ -99,7 +99,7 @@ import javax.xml.bind.annotation.XmlValue;
  *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *                 &lt;sequence&gt;
  *                   &lt;element name="images" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
- *                   &lt;element name="imagePath"&gt;
+ *                   &lt;element name="imagePath" maxOccurs="unbounded" minOccurs="0"&gt;
  *                     &lt;complexType&gt;
  *                       &lt;complexContent&gt;
  *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
@@ -2201,7 +2201,7 @@ public class Jonglisto {
      *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
      *       &lt;sequence&gt;
      *         &lt;element name="images" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
-     *         &lt;element name="imagePath"&gt;
+     *         &lt;element name="imagePath" maxOccurs="unbounded" minOccurs="0"&gt;
      *           &lt;complexType&gt;
      *             &lt;complexContent&gt;
      *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
@@ -2229,8 +2229,7 @@ public class Jonglisto {
     public static class Scraper {
 
         protected boolean images;
-        @XmlElement(required = true)
-        protected Jonglisto.Scraper.ImagePath imagePath;
+        protected List<Jonglisto.Scraper.ImagePath> imagePath;
 
         /**
          * Ruft den Wert der images-Eigenschaft ab.
@@ -2249,27 +2248,32 @@ public class Jonglisto {
         }
 
         /**
-         * Ruft den Wert der imagePath-Eigenschaft ab.
+         * Gets the value of the imagePath property.
          * 
-         * @return
-         *     possible object is
-         *     {@link Jonglisto.Scraper.ImagePath }
-         *     
-         */
-        public Jonglisto.Scraper.ImagePath getImagePath() {
-            return imagePath;
-        }
-
-        /**
-         * Legt den Wert der imagePath-Eigenschaft fest.
+         * <p>
+         * This accessor method returns a reference to the live list,
+         * not a snapshot. Therefore any modification you make to the
+         * returned list will be present inside the JAXB object.
+         * This is why there is not a <CODE>set</CODE> method for the imagePath property.
          * 
-         * @param value
-         *     allowed object is
-         *     {@link Jonglisto.Scraper.ImagePath }
-         *     
+         * <p>
+         * For example, to add a new item, do as follows:
+         * <pre>
+         *    getImagePath().add(newItem);
+         * </pre>
+         * 
+         * 
+         * <p>
+         * Objects of the following type(s) are allowed in the list
+         * {@link Jonglisto.Scraper.ImagePath }
+         * 
+         * 
          */
-        public void setImagePath(Jonglisto.Scraper.ImagePath value) {
-            this.imagePath = value;
+        public List<Jonglisto.Scraper.ImagePath> getImagePath() {
+            if (imagePath == null) {
+                imagePath = new ArrayList<Jonglisto.Scraper.ImagePath>();
+            }
+            return this.imagePath;
         }
 
 

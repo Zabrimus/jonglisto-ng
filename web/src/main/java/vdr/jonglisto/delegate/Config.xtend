@@ -129,12 +129,7 @@ class Config implements Serializable {
         Configuration.getInstance().isShowScraperImages()
     }
 
-    public def getScraperFrom() {
-        Configuration.getInstance().scraperFrom
+    public def getScraperPath() {
+        Configuration.getInstance().scraperPath
     }
-
-    public def getScraperTo() {
-        Configuration.getInstance().scraperTo
-    }
-
 }

@@ -277,7 +277,7 @@ class EpgDetailsWindow extends Window {
 
                 if (seriesActor) {
                     for (s : scraper.series.actor) {
-                        if (s.width > 0 && s.path.startsWith(config.scraperFrom)) {
+                        if (s.width > 0) {
                             val actorImage = createActorImage(s.path, "actor", s.role, s.name)
 
                             if (actorImage !== null) {
@@ -501,9 +501,11 @@ class EpgDetailsWindow extends Window {
 
                 return image
             } else {
+                log.info("Cannot open file: " + newPath + ", original path: " + scraperPath)
                 return null;
             }
         } else {
+            log.info("Scraper path is empty")
             return null
         }
     }
@@ -520,14 +522,23 @@ class EpgDetailsWindow extends Window {
 
                 return new ActorImage(image, role, name)
             } else {
+                log.info("Cannot open file: " + newPath + ", original path: " + scraperPath)
+
                 return null;
             }
         } else {
+            log.info("Scraper path is empty")
             return null
         }
     }
 
     private def changeScraperPath(String input) {
-        return config.scraperTo + input.substring(config.scraperFrom.length)
+        for (s : config.scraperPath) {
+            if (input.startsWith(s.replace)) {
+                return s.to + input.substring(s.replace.length)
+            }
+        }
+
+        return input
     }
 }
