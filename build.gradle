@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'war'
     id 'eclipse-wtp'
-    id "org.xtext.xtend" version '1.0.19'
+    id "org.xtext.xtend" version '1.0.21'
 }
 
 apply plugin: 'war'
