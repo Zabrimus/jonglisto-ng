@@ -350,20 +350,21 @@ jonglisto-ng provides functionality to show an OSD on VDR directly using vdr plu
 * Shows the channel favourite list in VDR OSD
 ### trigger channel favourite list
 To enable this, there exists multiple possible solutions. At first jonglisto-ng must be triggered to show the OSD menu.
-This can be done by starting a HTTP request to e.g. http://<server>:8080/osdserver?port=2010&command=favourite.
+This can be done by starting a HTTP request to e.g. http://<server>:8080/osdserver?port=2010&command=favourite&locale=de.
 Either configure commands.conf of VDR with e.g.
 ```
-favourites: curl -s  "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite" -o /dev/null
-favourites: wget "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite" -o /dev/null
+favourites: curl -s  "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite&locale=de" -o /dev/null
+favourites: wget "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite&locale=de" -o /dev/null
 ```
 or define an entry in /etc/lirc/irexec.lircrc using an existing key of your remote control
 ```
 begin
     prog = irexec
     button = KEY_F23
-    config = curl -s  "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite" -o /dev/null
+    config = curl -s  "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite&locale=de" -o /dev/null
 end
 ```
+or use vdr-plugin-jonglisto. This plugin has a menu entry, which triggers jonglisto-ng to show the favourite lists.
 
 The following URL parameters exists:
 ```
