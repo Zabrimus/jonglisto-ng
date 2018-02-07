@@ -1,7 +1,6 @@
 TODOs in no specific order:
 
 technisch:
-- upgrade to vaadin 8.3
 
 fachlich:
 - epgsearch view: save and use templates
@@ -38,3 +37,4 @@ finished TODOs:
 - channel favourite list can be shown in VDR using vdr plugin osdserver
 - possibility to select the desired locale as URL parameter
 - epg images
+- upgrade to vaadin 8.3

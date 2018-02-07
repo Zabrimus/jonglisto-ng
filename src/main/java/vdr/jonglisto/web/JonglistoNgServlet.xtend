@@ -14,7 +14,7 @@ import vdr.jonglisto.xtend.annotation.Log
 @WebServlet(urlPatterns = #["/*", "/VAADIN/"],
             name = "VaadinServlet",
             asyncSupported = true,
-            initParams = #[@WebInitParam(name = "closeIdleSessions", value = "true") ]
+            initParams = #[@WebInitParam(name = "closeIdleSessions", value = "false") ]
             )
 @Log
 class JonglistoNgServlet extends VaadinCDIServlet {
@@ -23,6 +23,7 @@ class JonglistoNgServlet extends VaadinCDIServlet {
     private Config config
 
     private val scheduledExecutorService = Executors.newScheduledThreadPool(2);
+
 
     override protected def servletInitialized() throws ServletException {
         log.info("Found configured VDRs:")
@@ -42,7 +43,6 @@ class JonglistoNgServlet extends VaadinCDIServlet {
 
     override def destroy() {
         scheduledExecutorService.shutdown()
-
         SvdrpClient.getInstance.doShutdown
 
         super.destroy();
