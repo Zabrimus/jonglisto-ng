@@ -21,6 +21,8 @@ At the end of this page you can find some screenshots of the currently existing 
 * show channel favourite list (channels and epg, setting timers and alarm) in VDR OSD (needs plugin osdserver)
 * use URL parameter locale as the locale to use (see chapter i18n)
 * show EPG scraper information: images, extended information. (needs plugin jonglisto)
+* show deleted recordings (needs plugin jonglisto)
+* undelete recording (needs plugin jonglisto)
 
 ### minimal requirement
 * one VDR instance without any plugin. jonglisto-ng uses mainly only SVDRP commands.

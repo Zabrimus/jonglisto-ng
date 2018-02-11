@@ -179,6 +179,11 @@ class SvdrpClient {
         return readRecordings(vdr)
     }
 
+    def getDeletedRecordings(VDR vdr) {
+        // do not cache recordings, because they are volatile
+        return readDeletedRecordings(vdr)
+    }
+
     def Recording getRecordingEpg(VDR vdr, Recording rec) {
         val response = vdr.command("LSTR " + rec.id, 215)
 
@@ -202,6 +207,12 @@ class SvdrpClient {
 
     def void deleteRecording(VDR vdr, Recording recording) {
         vdr.command("DELR " + recording.id, 250)
+    }
+
+    def void undeleteRecording(VDR vdr, Recording recording) {
+        if (isPluginAvailable(vdr.name, "jonglisto")) {
+            vdr.command("PLUG jonglisto UNDR " + recording.id, 900)
+        }
     }
 
     def void switchChannel(VDR vdr, String channelId) {
@@ -415,6 +426,14 @@ class SvdrpClient {
 
     private def List<Recording> readRecordings(VDR vdr) {
         return vdr.command("LSTR", 250, [ Parser.parseRecording(it.lines) ], [ Collections.emptyList ])
+    }
+
+    private def List<Recording> readDeletedRecordings(VDR vdr) {
+        if (isPluginAvailable(vdr.name, "jonglisto")) {
+            return vdr.command("PLUG jonglisto LSDR", 900, [ Parser.parseRecording(it.lines) ], [ Collections.emptyList ])
+        } else {
+            return Collections.emptyList
+        }
     }
 
     private def List<Channel> readChannels(VDR vdr) {

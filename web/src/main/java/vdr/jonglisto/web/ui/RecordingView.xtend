@@ -13,6 +13,18 @@ import vdr.jonglisto.web.ui.component.RecordingTreeGrid
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import com.vaadin.ui.TabSheet
+import com.vaadin.ui.themes.ValoTheme
+import vdr.jonglisto.model.Recording
+import com.vaadin.ui.Grid
+import vdr.jonglisto.web.util.HtmlSanitizer
+import vdr.jonglisto.util.DateTimeUtil
+import com.vaadin.ui.Button
+import java.util.logging.Level
+import com.vaadin.ui.Notification
+import com.vaadin.ui.Notification.Type
+import com.vaadin.ui.renderers.HtmlRenderer
+import com.vaadin.ui.renderers.ComponentRenderer
 
 @Log
 @CDIView(MainUI.RECORDING_VIEW)
@@ -20,6 +32,8 @@ class RecordingView extends BaseView {
 
     @Inject
     private RecordingTreeGrid recordingTreeGrid
+
+    private Grid<Recording> deleteGrid
 
     var Label sizeLabel
     var Layout layout
@@ -34,50 +48,112 @@ class RecordingView extends BaseView {
     }
 
     protected override createMainComponents() {
-        layout = horizontalLayout[
-            width = "100%"
-            button(messages.recordingRefresh) [
-                setSizeUndefined
-                icon = VaadinIcons.REFRESH
-                addClickListener(s | {
-                    changeVdr(selectedVdr)
-                })
+        val tabsheet = new TabSheet
+        tabsheet.setSizeFull
+        tabsheet.addStyleName(ValoTheme.TABSHEET_FRAMED);
+        tabsheet.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
+
+        val recLayout = verticalLayout[
+            layout = horizontalLayout2[
+                width = "100%"
+                button(messages.recordingRefresh) [
+                    setSizeUndefined
+                    icon = VaadinIcons.REFRESH
+                    addClickListener(s | {
+                        changeVdr(selectedVdr)
+                    })
+                ]
+
+                val b1 = button(messages.recordingAddFolder) [
+                    setSizeUndefined
+                    icon = VaadinIcons.FOLDER_ADD
+                    addClickListener(s | {
+                        recordingTreeGrid.addFolder
+                    })
+                ]
+
+                val b2 = button(messages.recordingAddRootFolder) [
+                    setSizeUndefined
+                    icon = VaadinIcons.FOLDER_ADD
+                    addClickListener(s | {
+                        recordingTreeGrid.addRootFolder
+                    })
+                ]
+
+                val b3 = button(messages.recordingDeleteSelected) [
+                    setSizeUndefined
+                    icon = VaadinIcons.TRASH
+                    addClickListener(s | {
+                        recordingTreeGrid.deleteSelectedRecordings
+                    })
+                ]
+
+                sizeLabel = label("0") [ ]
+
+                setComponentAlignment(b1, Alignment.MIDDLE_LEFT)
+                setComponentAlignment(b2, Alignment.MIDDLE_LEFT)
+                setComponentAlignment(b3, Alignment.MIDDLE_LEFT)
+                setComponentAlignment(sizeLabel, Alignment.MIDDLE_RIGHT)
+                setExpandRatio(sizeLabel, 4.0f)
             ]
 
-            val b1 = button(messages.recordingAddFolder) [
-                setSizeUndefined
-                icon = VaadinIcons.FOLDER_ADD
-                addClickListener(s | {
-                    recordingTreeGrid.addFolder
-                })
-            ]
+            addComponent(layout)
 
-            val b2 = button(messages.recordingAddRootFolder) [
-                setSizeUndefined
-                icon = VaadinIcons.FOLDER_ADD
-                addClickListener(s | {
-                    recordingTreeGrid.addRootFolder
-                })
-            ]
+            recordingTreeGrid.setParent(this).setCurrentVdr(selectedVdr).createTreeGrid(svdrp.getRecordings(selectedVdr))
+            val grid = recordingTreeGrid.treeGrid
+            grid.setSizeFull
 
-            val b3 = button(messages.recordingDeleteSelected) [
-                setSizeUndefined
-                icon = VaadinIcons.TRASH
-                addClickListener(s | {
-                    recordingTreeGrid.deleteSelectedRecordings
-                })
-            ]
-
-            sizeLabel = label("0") [ ]
-
-            setComponentAlignment(b1, Alignment.MIDDLE_LEFT)
-            setComponentAlignment(b2, Alignment.MIDDLE_LEFT)
-            setComponentAlignment(b3, Alignment.MIDDLE_LEFT)
-            setComponentAlignment(sizeLabel, Alignment.MIDDLE_RIGHT)
-            setExpandRatio(sizeLabel, 4.0f)
+            addComponentsAndExpand(grid)
+            updateSizeLabel(selectedVdr)
         ]
 
-        prepareTreeGrid
+        val delRecLayout = verticalLayout[
+            layout = horizontalLayout2[
+                // width = "100%"
+                button(messages.recordingRefresh) [
+                    setSizeUndefined
+                    icon = VaadinIcons.REFRESH
+                    addClickListener(s | {
+                        changeVdr(selectedVdr)
+                    })
+                ]
+            ]
+
+            addComponent(layout)
+
+            deleteGrid = new Grid<Recording>
+            deleteGrid.addColumn([s | s.path]) //
+                .setCaption(messages.captionRecName) //
+                .setId("NAME") //
+                .setSortable(true)
+
+            deleteGrid.addColumn([s | createStart(s)]) //
+                .setRenderer(new HtmlRenderer) //
+                .setCaption(messages.captionRecStart) //
+                .setId("START") //
+                .sortable = false
+
+            deleteGrid.addColumn([s | createDuration(s)]) //
+                .setCaption(messages.captionRecDuration) //
+                .setId("DURATION") //
+                .sortable = false
+
+            deleteGrid.addColumn([s | createActionButtons(s)]) //
+                .setRenderer(new ComponentRenderer)
+                .setCaption(messages.captionRecAction) //
+                .setId("ACTION") //
+                .sortable = false
+
+            deleteGrid.setSizeFull
+
+            addComponentsAndExpand(deleteGrid)
+        ]
+
+
+        tabsheet.addTab(recLayout, messages.recordingCaptionRec)
+        tabsheet.addTab(delRecLayout, messages.recordingCaptionDelrec)
+
+        addComponentsAndExpand(tabsheet)
     }
 
     override protected def void changeVdr(VDR vdr) {
@@ -88,17 +164,11 @@ class RecordingView extends BaseView {
             recordingTreeGrid.setCurrentVdr(selectedVdr).createTreeGrid(svdrp.getRecordings(selectedVdr))
         }
 
+        if (deleteGrid !== null) {
+            deleteGrid.items = svdrp.getDeletedRecordings(vdr)
+        }
+
         updateSizeLabel(vdr)
-    }
-
-    private def prepareTreeGrid() {
-        recordingTreeGrid.setParent(this).setCurrentVdr(selectedVdr).createTreeGrid(svdrp.getRecordings(selectedVdr))
-        val grid = recordingTreeGrid.treeGrid
-        grid.setSizeFull
-
-        addComponentsAndExpand(grid)
-
-        updateSizeLabel(selectedVdr)
     }
 
     private def void updateSizeLabel(VDR vdr) {
@@ -110,4 +180,44 @@ class RecordingView extends BaseView {
             sizeLabel = newSizeLabel
         }
     }
+
+        private def createDuration(Recording rec) {
+        val minutes = rec.length / 60
+        return String.format("%02d:%02d", minutes / 60, minutes % 60)
+    }
+
+    private def createStart(Recording rec) {
+        if (rec.start == 0) {
+            return HtmlSanitizer.clean(messages.recFolderInfo(rec.childCount, rec.newCount))
+        }
+
+        var result = DateTimeUtil.toDate(rec.start, messages.formatDate) + " " + DateTimeUtil.toTime(rec.start, messages.formatTime)
+
+        if (!rec.seen) {
+            result = result + " " + VaadinIcons.STAR_O.html
+        }
+
+        return result
+    }
+
+    private def createActionButtons(Recording recording) {
+        val undeleteButton = new Button()
+        undeleteButton.icon = VaadinIcons.RECYCLE
+        undeleteButton.description = messages.recordingUndelete
+        undeleteButton.width = "22px"
+        undeleteButton.styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+
+        undeleteButton.addClickListener(s | {
+            try {
+                svdrp.undeleteRecording(selectedVdr, recording)
+                deleteGrid.items = svdrp.getDeletedRecordings(selectedVdr)
+            } catch (Exception e) {
+                log.log(Level.INFO, "Undeletion failed", e)
+                Notification.show(messages.recordingErrorUndelete, Type.ERROR_MESSAGE)
+            }
+        })
+
+        return undeleteButton
+    }
+
 }

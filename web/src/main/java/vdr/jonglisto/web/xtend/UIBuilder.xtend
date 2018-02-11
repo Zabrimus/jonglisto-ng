@@ -92,6 +92,12 @@ class UIBuilder {
         return that
     }
 
+    static def horizontalLayout2((HorizontalLayout)=>void initializer) {
+        val that = new HorizontalLayout
+        that.init(initializer)
+        return that
+    }
+
     static def horizontalLayout(Panel it, (HorizontalLayout)=>void initializer) {
         val that = new HorizontalLayout
         it.content = that

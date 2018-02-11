@@ -7,9 +7,6 @@ fachlich:
 - wake on lan
 - channel config view: save and load configuration
 
-- get list of deleted recordings (in vdr-plugin-jonglisto)
-- undelete recording (in vdr-plugin-jongslisto)
-
 TODOs which are not yet reasoned:
 
 - implement svdrp server to show jonglisto OSD entries:
@@ -38,3 +35,5 @@ finished TODOs:
 - possibility to select the desired locale as URL parameter
 - epg images
 - upgrade to vaadin 8.3
+- get list of deleted recordings (in vdr-plugin-jonglisto)
+- undelete recording (in vdr-plugin-jongslisto)

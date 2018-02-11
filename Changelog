@@ -18,6 +18,8 @@ New:
 - scraper images and informations can be displayed (needs vdr-plugin-jonglisto)
 - channel switch in channel configuration (it's easier to sort channels, if the channel can be switched on VDR)
 - replaced TwinColSelect in favourite configuration with an own component. TwinColSelect has too many disadvantages.
+- show deleted recordings (needs vdr-plugin-jonglisto)
+- undelete recording (needs vdr-plugin-jonglisto)
 
 0.0.3:
 Bugfixes:

@@ -42,6 +42,10 @@ class Svdrp implements Serializable {
         SvdrpClient.getInstance.getRecordings(vdr)
     }
 
+    def getDeletedRecordings(VDR vdr) {
+        SvdrpClient.getInstance.getDeletedRecordings(vdr)
+    }
+
     def Recording getRecordingEpg(VDR vdr, Recording rec) {
         SvdrpClient.getInstance.getRecordingEpg(vdr, rec)
     }
@@ -56,6 +60,10 @@ class Svdrp implements Serializable {
 
     def void deleteRecording(VDR vdr, Recording recording) {
         SvdrpClient.getInstance.deleteRecording(vdr, recording)
+    }
+
+    def void undeleteRecording(VDR vdr, Recording recording) {
+        SvdrpClient.getInstance.undeleteRecording(vdr, recording)
     }
 
     def void switchChannel(VDR vdr, String channelId) {
