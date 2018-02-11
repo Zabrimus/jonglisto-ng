@@ -1,4 +1,4 @@
-0.0.4-snapshot:
+0.1.0:
 Bugfixes:
 - accidentally use only german locale, now other (english currently exists) languages are working.
 - create channels.conf
