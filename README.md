@@ -18,7 +18,7 @@ At the end of this page you can find some screenshots of the currently existing 
 * organize epgd channelmap.conf via drag and drop, if epgd database is configured
 * easily execute SVDRP commands on one VDR instance
 * create cronjob like jobs (shell command or svdrp commands are possible). jonglisto-ng uses quartz (http://www.quartz-scheduler.org) like triggers. Configuration and samples can be found at http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html.
-* show channel favourite list (channels and epg) in VDR OSD (needs plugin osdserver)
+* show channel favourite list (channels and epg, setting timers and alarm) in VDR OSD (needs plugin osdserver)
 * use URL parameter locale as the locale to use (see chapter i18n)
 * show EPG scraper information: images, extended information. (needs plugin jonglisto)
 
@@ -76,7 +76,7 @@ A hint before: TomEE Embedded 7.0.4 will not work. Unfortunately the packaged li
 * copy jonglisto-ng.'version'.war to apache-tomee-webprofile-7.0.4/webapps
 * start TomEE with ``apache-tomee-webprofile-7.0.4/bin/catalina.sh start`` or ``apache-tomee-webprofile-7.0.4/bin/catalina.sh run``
 * stop with ``apache-tomee-webprofile-7.0.4/bin/catalina.sh stop``
-The application will be accessible with http://server:8080/jonglisto-ng-'version' (e.g.http://server:8080/jonglisto-ng-0.0.3)
+The application will be accessible with http://server:8080/jonglisto-ng-'version' (e.g.http://server:8080/jonglisto-ng-0.0.4)
 
 If you want another context, e.g. http://server:8080/japp, then rename the war file in directory webapps to the desired name, e.g. japp.war.
 To access jonglisto-ng with http://server:8080/ then rename the war file to ROOT.war.
@@ -364,7 +364,6 @@ begin
     config = curl -s  "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite&locale=de" -o /dev/null
 end
 ```
-or use vdr-plugin-jonglisto. This plugin has a menu entry, which triggers jonglisto-ng to show the favourite lists.
 
 The following URL parameters exists:
 ```
@@ -376,6 +375,8 @@ user=root   -> The jonglisto-ng user (not used at this moment)
 command=XXX -> What exactly shall be shown in VDR OSD?
 command=favourite
 ```
+
+or use vdr-plugin-jonglisto. This plugin has a menu entry, which triggers jonglisto-ng to show the favourite lists.
 
 # i18N
 Currently the german and english localization files exists. Feel free to create new language files or fix existing ones.
@@ -441,6 +442,12 @@ http://<server>:8080/jonglisto-ng?locale=en
 ## channel config
 ![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-channelconfig.png)
 
+## VDR OSD / Jonglisto-ng channel favourites
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-favourites.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-osdserver-fav1.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-osdserver-fav2.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-osdserver-fav3.png)
+![TIMER1](https://github.com/Zabrimus/page/blob/master/jng-osdserver-fav4.png)
 
 
 

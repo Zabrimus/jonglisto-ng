@@ -336,6 +336,22 @@ class SvdrpClient {
         vdr.command("DELT " + timer.id, 250)
     }
 
+    def recordViaOsdserver(VDR vdr, String channelId, Epg epg) {
+        if (isPluginAvailable(vdr.name, "jonglisto")) {
+            vdr.command("PLUG jonglisto NERT " + epg.channelId + " " + epg.startTime, 900)
+        } else {
+            val timer = new Timer();
+            timer.channelId = epg.channelId
+            timer.lifetime = 50
+            timer.priority = 50
+            timer.startEpoch = epg.startTime - 10 * 60
+            timer.duration = epg.duration + 20 * 60
+            timer.enabled = true
+
+            updateTimer(vdr, timer)
+        }
+    }
+
     def playRecording(VDR vdr, Recording recording) {
         vdr.command("PLAY " + recording.id, 250)
     }

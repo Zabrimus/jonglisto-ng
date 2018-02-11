@@ -76,7 +76,13 @@ class OsdserverFavourite {
                         menuId = Integer.valueOf(r.get(0).substring(3))
 
                         connection.send("submenu=New Menu '" + messages.titleFavourite.replace("'", "\\'") + ": " + favList.get(menuId).name + "'", 200)
-                        connection.send("submenu.SetColumns 12 6 6 20", 200)
+
+                        if (messages.localeLanguage == "de") {
+                            connection.send("submenu.SetColumns 12 6 6 20", 200)
+                        } else {
+                            connection.send("submenu.SetColumns 12 9 9 20", 200)
+                        }
+
                         connection.send("submenu.EnableEvent keyRed keyGreen keyYellow close", 200)
 
                         connection.send("submenu.SetColorKeyText -red '" + messages.timeMinus30.replace("'", "\\'") + "'")
@@ -120,7 +126,7 @@ class OsdserverFavourite {
 
                             connection.send("epgmenu = New Menu 'Epg'", 200)
                             connection.send("epgmenu.setColumns 15", 200)
-                            connection.send("epgmenu.EnableEvent close keyRed keyBlue", 200)
+                            connection.send("epgmenu.EnableEvent close keyRed keyGreen keyBlue", 200)
 
                             val entry = epg.get(submenuId)
 
@@ -142,7 +148,8 @@ class OsdserverFavourite {
                                connection.send("epgmenu.AddNew OsdItem  '" + s.replace("'", "\\'") + "'", 200)
                             }]
 
-                            connection.send("epgmenu.SetColorKeyText -red '" + messages.epgSetAlarn.replace("'", "\\'") + "'")
+                            connection.send("epgmenu.SetColorKeyText -red '" + messages.epgRecord.replace("'", "\\'") + "'")
+                            connection.send("epgmenu.SetColorKeyText -green '" + messages.epgSetAlarn.replace("'", "\\'") + "'")
                             connection.send("epgmenu.SetColorKeyText -blue '"+ messages.epgSwitchChannel.replace("'", "\\'") + "'")
 
                             connection.send("_focus.addsubmenu epgmenu", 200)
@@ -224,6 +231,14 @@ class OsdserverFavourite {
                         }
 
                         case "keyRed": {
+                            // record
+                            val entry = epg.get(submenuId)
+                            val ch = SvdrpClient.getInstance().getChannel(channels.get(submenuId))
+                            SvdrpClient.getInstance().recordViaOsdserver(vdr, ch.id, entry)
+                            return
+                        }
+
+                        case "keyGreen": {
                             val entry = epg.get(submenuId)
 
                             val minusMinutes = Integer.valueOf("2")

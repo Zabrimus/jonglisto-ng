@@ -12,13 +12,15 @@ import vdr.jonglisto.web.ui.component.JobComponent
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
+import vdr.jonglisto.web.ui.component.ExtFavouriteComponent
 
 @Log
 @CDIView(MainUI.CONFIG_VIEW)
 class ConfigView extends BaseView {
 
     @Inject
-    private FavouriteComponent favourites
+    // private FavouriteComponent favourites
+    private ExtFavouriteComponent favourites
 
     @Inject
     private JobComponent jobs
@@ -26,6 +28,7 @@ class ConfigView extends BaseView {
     @PostConstruct
     def void init() {
         super.init(BUTTON.CONFIG)
+        favourites.changeVdr(selectedVdr)
     }
 
     protected override createMainComponents() {
@@ -52,6 +55,8 @@ class ConfigView extends BaseView {
     }
 
     override protected def void changeVdr(VDR vdr) {
-        // not used
+        if (favourites !== null) {
+            favourites.changeVdr(vdr);
+        }
     }
 }
