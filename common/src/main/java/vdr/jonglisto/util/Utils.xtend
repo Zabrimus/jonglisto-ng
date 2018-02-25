@@ -11,6 +11,7 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 
 import static extension org.apache.commons.lang3.StringUtils.*
+import java.util.concurrent.ThreadLocalRandom
 
 class Utils {
 
@@ -41,6 +42,10 @@ class Utils {
 
     private static val CronParser QUARTZ_CRON_PARSER = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ));
 
+    def static nextRand() {
+        return ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
+    }
+
     def static getNextScheduleTime(String cronAsString, String dateFormat, String timeFormat) {
         val cron = QUARTZ_CRON_PARSER.parse(cronAsString)
         val nextTime = nextExecutionInMillis(System.currentTimeMillis(), cron) / 1000;
@@ -50,6 +55,11 @@ class Utils {
         } else {
             return DateTimeUtil.toDate(nextTime, dateFormat) + " " + DateTimeUtil.toTime(nextTime, timeFormat)
         }
+    }
+
+    def static getNextScheduleTime(String cronAsString) {
+        val cron = QUARTZ_CRON_PARSER.parse(cronAsString)
+        return nextExecutionInMillis(System.currentTimeMillis(), cron) / 1000;
     }
 
     public def static long nextExecutionInMillis(long currentTimeInMillis, String timeFormat) {

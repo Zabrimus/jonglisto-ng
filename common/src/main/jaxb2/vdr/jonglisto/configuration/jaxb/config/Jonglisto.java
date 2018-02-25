@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.02.05 um 04:58:48 PM CET 
+// Generiert: 2018.02.25 um 01:05:06 PM CET 
 //
 
 
@@ -51,6 +51,7 @@ import javax.xml.bind.annotation.XmlValue;
  *                           &lt;attribute name="displayName" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *                           &lt;attribute name="host" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *                           &lt;attribute name="port" type="{http://www.w3.org/2001/XMLSchema}short" /&gt;
+ *                           &lt;attribute name="mac" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *                         &lt;/extension&gt;
  *                       &lt;/simpleContent&gt;
  *                     &lt;/complexType&gt;
@@ -93,6 +94,7 @@ import javax.xml.bind.annotation.XmlValue;
  *             &lt;/simpleContent&gt;
  *           &lt;/complexType&gt;
  *         &lt;/element&gt;
+ *         &lt;element name="svdrpPort" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
  *         &lt;element name="scraper" minOccurs="0"&gt;
  *           &lt;complexType&gt;
  *             &lt;complexContent&gt;
@@ -256,6 +258,7 @@ import javax.xml.bind.annotation.XmlValue;
     "epg",
     "channel",
     "epg2Vdr",
+    "svdrpPort",
     "scraper",
     "epgTimeList",
     "svdrpCommandList",
@@ -274,6 +277,7 @@ public class Jonglisto {
     protected Jonglisto.Channel channel;
     @XmlElement(name = "epg2vdr", required = true)
     protected Jonglisto.Epg2Vdr epg2Vdr;
+    protected Integer svdrpPort;
     protected Jonglisto.Scraper scraper;
     @XmlElement(required = true)
     protected Jonglisto.EpgTimeList epgTimeList;
@@ -400,6 +404,30 @@ public class Jonglisto {
      */
     public void setEpg2Vdr(Jonglisto.Epg2Vdr value) {
         this.epg2Vdr = value;
+    }
+
+    /**
+     * Ruft den Wert der svdrpPort-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getSvdrpPort() {
+        return svdrpPort;
+    }
+
+    /**
+     * Legt den Wert der svdrpPort-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setSvdrpPort(Integer value) {
+        this.svdrpPort = value;
     }
 
     /**
@@ -623,6 +651,7 @@ public class Jonglisto {
      *                 &lt;attribute name="displayName" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
      *                 &lt;attribute name="host" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
      *                 &lt;attribute name="port" type="{http://www.w3.org/2001/XMLSchema}short" /&gt;
+     *                 &lt;attribute name="mac" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
      *               &lt;/extension&gt;
      *             &lt;/simpleContent&gt;
      *           &lt;/complexType&gt;
@@ -686,6 +715,7 @@ public class Jonglisto {
          *       &lt;attribute name="displayName" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
          *       &lt;attribute name="host" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
          *       &lt;attribute name="port" type="{http://www.w3.org/2001/XMLSchema}short" /&gt;
+         *       &lt;attribute name="mac" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
          *     &lt;/extension&gt;
          *   &lt;/simpleContent&gt;
          * &lt;/complexType&gt;
@@ -709,6 +739,8 @@ public class Jonglisto {
             protected String host;
             @XmlAttribute(name = "port")
             protected Short port;
+            @XmlAttribute(name = "mac")
+            protected String mac;
 
             /**
              * Ruft den Wert der value-Eigenschaft ab.
@@ -828,6 +860,30 @@ public class Jonglisto {
              */
             public void setPort(Short value) {
                 this.port = value;
+            }
+
+            /**
+             * Ruft den Wert der mac-Eigenschaft ab.
+             * 
+             * @return
+             *     possible object is
+             *     {@link String }
+             *     
+             */
+            public String getMac() {
+                return mac;
+            }
+
+            /**
+             * Legt den Wert der mac-Eigenschaft fest.
+             * 
+             * @param value
+             *     allowed object is
+             *     {@link String }
+             *     
+             */
+            public void setMac(String value) {
+                this.mac = value;
             }
 
         }

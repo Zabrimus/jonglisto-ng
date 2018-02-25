@@ -118,6 +118,13 @@ class JobComponent extends Composite {
                         openEditJobWindow(new Jobs)
                     })
                 ]
+
+                button(it, messages.configJobsRefresh) [
+                    addClickListener(s | {
+                        refreshJobs
+                    })
+                ]
+
             ]
 
             addComponentsAndExpand(grid)

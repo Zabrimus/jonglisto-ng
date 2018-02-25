@@ -126,6 +126,20 @@ class SvdrpClient {
         }
     }
 
+    def getVdrVersion(VDR vdr) {
+        var Connection connection
+
+        try {
+            connection = connections.get(vdr)
+        } catch (Exception e) {
+            val message = "Connection to " + vdr + " refused."
+            log.info(message)
+            throw new ConnectionException(message)
+        }
+
+        return connection.version
+    }
+
     def getPlugins(VDR vdr) {
         try {
             val result = new ArrayList<VdrPlugin>

@@ -15,23 +15,26 @@ class VDR extends BaseData {
     var String name
     var String uuid
     var String instance
+    var String mac
 
     var String hostAddress
 
-    new(String name, String host, Integer port, String instanceName) {
+    new(String name, String host, Integer port, String instanceName, String mac) {
         this.name = name
         this.host = host
         this.port = port
         this.instance = instanceName
+        this.mac = mac
     }
 
-    new(String name, String host, Integer port, int readTimeout, int connectTimeout, String instanceName) {
+    new(String name, String host, Integer port, int readTimeout, String mac, int connectTimeout, String instanceName) {
         this.name = name
         this.host = host
         this.port = port
         this.readTimeout = readTimeout
         this.connectTimeout = connectTimeout
         this.instance = instanceName
+        this.mac = mac
     }
 
     def getIp() {

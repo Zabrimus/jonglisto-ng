@@ -8,7 +8,6 @@ import com.vaadin.ui.NativeSelect
 import com.vaadin.ui.TextField
 import com.vaadin.ui.Window
 import java.util.ArrayList
-import java.util.Random
 import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
@@ -39,12 +38,10 @@ class JobEditWindow extends Window {
     private NativeSelect<String> vdr
     private TextField script
     private TextField parameter
-    private TextField osdserverPort
     private NativeSelect<String> vdrType
     private Label next
 
     private Jobs editJob
-    private Random rand = new Random()
 
     new() {
         super()
@@ -173,7 +170,7 @@ class JobEditWindow extends Window {
                                 case "switchChannel": selectedItem = messages.configJobsVdrSwitchChannel
                                 case "osdMessage": selectedItem = messages.configJobsVdrOsdMessage
                                 case "svdrp": selectedItem = messages.configJobsVdrSvdrpCommand
-                                case "osdserverMessage": selectedItem = messages.configJobsVdrOsdMessage2
+                                case "pluginMessage": selectedItem = messages.configJobsVdrOsdMessage2
                             }
                         } else {
                             // default
@@ -207,12 +204,6 @@ class JobEditWindow extends Window {
                         }
                     ]
 
-                    osdserverPort = textField(it, messages.configJobsOsdserverPort) [
-                        value = "2010"
-                        width = "100%"
-                        visible = false
-                    ]
-
                     if (job.id === null) {
                         vdr.visible = true
                         script.visible = false
@@ -233,7 +224,7 @@ class JobEditWindow extends Window {
                             }
 
                             if (newJob) {
-                                editJob.id = rand.nextInt.toString
+                                editJob.id = Utils.nextRand.toString
                             }
 
                             editJob.active = active.value
@@ -264,7 +255,7 @@ class JobEditWindow extends Window {
                                         }
 
                                         case messages.configJobsVdrOsdMessage2: {
-                                            vdrAction.type = "osdserverMessage"
+                                            vdrAction.type = "pluginMessage"
                                         }
 
                                         case messages.configJobsVdrSvdrpCommand: {

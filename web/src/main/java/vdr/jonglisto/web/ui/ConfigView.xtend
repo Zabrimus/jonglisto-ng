@@ -7,7 +7,6 @@ import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
-import vdr.jonglisto.web.ui.component.FavouriteComponent
 import vdr.jonglisto.web.ui.component.JobComponent
 import vdr.jonglisto.xtend.annotation.Log
 
@@ -19,7 +18,6 @@ import vdr.jonglisto.web.ui.component.ExtFavouriteComponent
 class ConfigView extends BaseView {
 
     @Inject
-    // private FavouriteComponent favourites
     private ExtFavouriteComponent favourites
 
     @Inject

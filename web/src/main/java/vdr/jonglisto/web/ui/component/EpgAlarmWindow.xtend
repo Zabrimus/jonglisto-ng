@@ -5,7 +5,6 @@ import com.vaadin.ui.Button
 import com.vaadin.ui.NativeSelect
 import com.vaadin.ui.TextField
 import com.vaadin.ui.Window
-import java.util.Random
 import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
@@ -19,6 +18,7 @@ import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
+import vdr.jonglisto.util.Utils
 
 @Log
 @ViewScoped
@@ -35,11 +35,9 @@ class EpgAlarmWindow extends Window {
 
     private TextField parameter
     private TextField minutes
-    private TextField osdserverPort
     private NativeSelect<String> vdrType
 
     private Jobs editJob
-    private Random rand = new Random()
 
     new() {
         super()
@@ -70,29 +68,21 @@ class EpgAlarmWindow extends Window {
                                 case messages.configJobsVdrSwitchChannel: {
                                     parameter.visible = false
                                     parameter.value = epg.channelId
-
-                                    osdserverPort.visible = false
                                 }
 
                                 case messages.configJobsVdrOsdMessage: {
                                     parameter.visible = true
                                     parameter.value = messages.epgAlarmOsd(epg.title + " - " + epg.shortText, svdrp.getChannel(epg.channelId).name)
-
-                                    osdserverPort.visible = false
                                 }
 
                                 case messages.configJobsVdrOsdMessage2: {
-                                    parameter.visible = false
-                                    parameter.value = "2010;" + epg.channelId + ";" + epg.startTime + ";" + messages.localeLanguage
-
-                                    osdserverPort.visible = true
+                                    parameter.visible = true
+                                    parameter.value = ""
                                 }
 
                                 case messages.configJobsVdrSvdrpCommand: {
                                     parameter.visible = true
                                     parameter.value = ""
-
-                                    osdserverPort.visible = false
                                 }
                             }
                         })
@@ -100,12 +90,6 @@ class EpgAlarmWindow extends Window {
 
                     parameter = textField(it, messages.configJobsParameter) [
                         value = epg.channelId
-                        width = "100%"
-                        visible = false
-                    ]
-
-                    osdserverPort = textField(it, messages.configJobsOsdserverPort) [
-                        value = "2010"
                         width = "100%"
                         visible = false
                     ]
@@ -127,7 +111,7 @@ class EpgAlarmWindow extends Window {
                             val dateTime = DateTimeUtil.toDateTime(epg.startTime)
                             val timeFormat = String.format("0 %d %d %d %d ? %d", dateTime.minute - minusMinutes, dateTime.hour, dateTime.dayOfMonth, dateTime.monthValue, dateTime.year)
 
-                            editJob.id = rand.nextInt.toString
+                            editJob.id = Utils.nextRand.toString
                             editJob.active = true
                             editJob.user = SecurityUtils.subject.principal as String
                             editJob.time = timeFormat
@@ -147,8 +131,8 @@ class EpgAlarmWindow extends Window {
                                 }
 
                                 case messages.configJobsVdrOsdMessage2: {
-                                    vdrAction.type = "osdserverMessage"
-                                    vdrAction.parameter = osdserverPort.value + ";" + epg.channelId + ";" + epg.startTime + ";" + messages.localeLanguage
+                                    vdrAction.type = "pluginMessage"
+                                    vdrAction.parameter = "plug jonglisto " + epg.channelId + " " + epg.title
                                 }
 
                                 case messages.configJobsVdrSvdrpCommand: {

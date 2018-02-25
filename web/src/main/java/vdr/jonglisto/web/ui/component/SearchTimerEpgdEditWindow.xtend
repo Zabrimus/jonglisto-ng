@@ -536,7 +536,7 @@ class SearchTimerEpgdEditWindow extends Window {
     private def createVdrNames() {
         val resultVdr = new ArrayList<VDR>
 
-        resultVdr.add(new VDR("Auto", null, null, null))
+        resultVdr.add(new VDR("Auto", null, null, null, null))
 
         vdrService.configuredVdr.stream.forEach[ v |
             val vdr = config.findVdr(v.ip, v.port)

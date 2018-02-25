@@ -25,6 +25,9 @@
                                 <xs:enumeration value="switchChannel" />
                                 <xs:enumeration value="osdMessage" />
                                 <xs:enumeration value="svdrp" />
+                                <xs:enumeration value="pluginMessage" />
+
+                                <!--  Deprecated and will be removed later -->
                                 <xs:enumeration value="osdserverMessage" />
                               </xs:restriction>
                             </xs:simpleType>

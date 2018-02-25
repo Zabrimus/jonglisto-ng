@@ -24,6 +24,7 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
+import vdr.jonglisto.util.NetworkUtils
 
 @Log
 class VdrStatus {
@@ -85,10 +86,26 @@ class VdrStatus {
             addClickListener(s | refreshStatus)
         ]
 
+        var Button wolButton = null
+        if (vdr.mac !== null) {
+            wolButton = new Button() => [
+                icon = VaadinIcons.FLIGHT_TAKEOFF
+                description = "Wake on lan"
+                width = "22px"
+                styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+                addClickListener(s | NetworkUtils.sendWol(vdr))
+            ]
+        }
+
+        val tmpWol = wolButton
         panel = new CPanel(vdr.name) => [
             width = "320px"
             addComponent(layout)
             addHeaderComponent(refreshButton)
+
+            if (tmpWol !== null) {
+                addHeaderComponent(tmpWol)
+            }
         ]
 
         return this

@@ -26,7 +26,7 @@ class VDRDiskStat extends BaseData {
         return toHuman(sizeTotal - sizeUsed)
     }
 
-    def toStringFreePerc() {
+    def toStringUsedPerc() {
         return (sizeTotal - sizeUsed) * 100 / sizeTotal
     }
 

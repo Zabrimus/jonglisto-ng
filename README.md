@@ -18,11 +18,12 @@ At the end of this page you can find some screenshots of the currently existing 
 * organize epgd channelmap.conf via drag and drop, if epgd database is configured
 * easily execute SVDRP commands on one VDR instance
 * create cronjob like jobs (shell command or svdrp commands are possible). jonglisto-ng uses quartz (http://www.quartz-scheduler.org) like triggers. Configuration and samples can be found at http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html.
-* show channel favourite list (channels and epg, setting timers and alarm) in VDR OSD (needs plugin osdserver)
+* implements a SVDRP server used by vdr-plugin-jonglisto
 * use URL parameter locale as the locale to use (see chapter i18n)
 * show EPG scraper information: images, extended information. (needs plugin jonglisto)
 * show deleted recordings (needs plugin jonglisto)
 * undelete recording (needs plugin jonglisto)
+* send wake-on-lan to configured VDR
 
 ### minimal requirement
 * one VDR instance without any plugin. jonglisto-ng uses mainly only SVDRP commands.
@@ -31,8 +32,7 @@ At the end of this page you can find some screenshots of the currently existing 
 * VDR plugin svdrposd to use the OSD view in jonglisto-ng (http://www.vdr-wiki.de/wiki/index.php/Svdrposd-plugin, http://vdr.schmirler.de/)
 * VDR plugin epgsearch (http://www.vdr-wiki.de/wiki/index.php/Epgsearch-plugin)
 * VDR epgd database (https://projects.vdr-developer.org/projects/vdr-epg-daemon/wiki)
-* VDR plugin osdserver (http://www.udo-richter.de/vdr/osdserver.html)
-* VDR plugin jonglisto (https://github.com/Zabrimus/vdr-plugin-jonglisto)
+* VDR plugin jonglisto (https://github.com/Zabrimus/vdr-plugin-jonglisto, use the latest version)
 
 # Howto Build jonglisto-ng
 The build itself creates only a web-archive (war) file, which has to be deployed in a server. Tested servers are
@@ -120,8 +120,9 @@ Existing VDR instances
         <!-- displayName: name, which will be shown in the GUI as selection -->
         <!-- host:        hostname or IP address of the VDR instance        -->
         <!-- port:        SVDRP port of the VDR instance                    -->
-        <instance name="vdr1"       displayName="VDR 1"      host="vdr1"       port="6419" />
-        <instance name="vdr2"       displayName="VDR 2"      host="vdr2"       port="6419" />
+        <!-- mac:         Network MAC address, needed for WOL               -->
+        <instance name="vdr1"       displayName="VDR 1"      host="vdr1"       port="6419" mac="00-80-40-41-42-43"/>
+        <instance name="vdr2"       displayName="VDR 2"      host="vdr2"       port="6419" mac="00-80-40-41-42-44"/>
         <instance name="vdr3"       displayName="VDR 3"      host="vdr3"       port="6419" />
         <instance name="epgcollect" displayName="epgcollect" host="epgcollect" port="6419" />
 </configuredVdr>
@@ -346,46 +347,11 @@ The possible icons can be found at https://vaadin.com/elements/vaadin-icons/html
 </remote>
 ```
 
-## osdserver configuration
-jonglisto-ng provides functionality to show an OSD on VDR directly using vdr plugin osdserver. The following functionality exists
-* Show an OSD entry as additional possibility for EPG alarms
-* Shows the channel favourite list in VDR OSD
-### trigger channel favourite list
-To enable this, there exists multiple possible solutions. At first jonglisto-ng must be triggered to show the OSD menu.
-This can be done by starting a HTTP request to e.g. http://<server>:8080/osdserver?port=2010&command=favourite&locale=de.
-Either configure commands.conf of VDR with e.g.
-```
-favourites: curl -s  "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite&locale=de" -o /dev/null
-favourites: wget "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite&locale=de" -o /dev/null
-```
-or define an entry in /etc/lirc/irexec.lircrc using an existing key of your remote control
-```
-begin
-    prog = irexec
-    button = KEY_F23
-    config = curl -s  "http://<server>:8080/jonglisto-ng/osdserver?port=2010&command=favourite&locale=de" -o /dev/null
-end
-```
-
-The following URL parameters exists:
-```
-port=2010   -> The configured port of osdserver (default is 2010)
-svdrp=6419  -> The configured SVDRP port of VDR (default is 6419)
-locale=de   -> The language which shall be used in the OSD (default is the system locale).
-locale=en
-user=root   -> The jonglisto-ng user (not used at this moment)
-command=XXX -> What exactly shall be shown in VDR OSD?
-command=favourite
-```
-
-or use vdr-plugin-jonglisto. This plugin has a menu entry, which triggers jonglisto-ng to show the favourite lists.
-
 # i18N
 Currently the german and english localization files exists. Feel free to create new language files or fix existing ones.
 They can be found in directories
 ```
 web/src/main/java/vdr/jonglisto/web/i18n
-osdserver/src/main/java/vdr/jonglisto/osdserver/i18n
 ```
 See Messages_en.properties and Messages_de.properties in both directories.
 

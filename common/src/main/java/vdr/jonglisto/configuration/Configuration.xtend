@@ -77,6 +77,8 @@ class Configuration {
 
     private static List<ImagePath> scraperPath
 
+    private static int svdrpServerPort;
+
     private static Configuration instance = new Configuration
 
     private static Unmarshaller unmarshaller
@@ -126,10 +128,16 @@ class Configuration {
             scraperPath = config.scraper.imagePath
         }
 
+        svdrpServerPort = config.svdrpPort ?: 0;
+
         SundialJobScheduler.startScheduler
         registerSchedules
 
         loadEpgProvider
+    }
+
+    public def getSvdrpServerPort() {
+        return svdrpServerPort;
     }
 
     public def getCustomDirectory() {
@@ -361,14 +369,14 @@ class Configuration {
 
             val port = if (v.port == 0) null else Integer.valueOf(v.port)
 
-            vdrs.put(v.displayName, new VDR(v.displayName, v.host, port, v.name))
+            vdrs.put(v.displayName, new VDR(v.displayName, v.host, port, v.name, v.mac))
 
             if (v.name == cfg.epg.ref) {
-                vdrs.put(EPG_VDR, new VDR(EPG_VDR, v.host, port, v.name))
+                vdrs.put(EPG_VDR, new VDR(EPG_VDR, v.host, port, v.name, v.mac))
             }
 
             if (v.name == cfg.channel.ref) {
-                vdrs.put(CHANNEL_VDR, new VDR(CHANNEL_VDR, v.host, port, v.name))
+                vdrs.put(CHANNEL_VDR, new VDR(CHANNEL_VDR, v.host, port, v.name, v.mac))
             }
         })
     }
@@ -476,7 +484,7 @@ class Configuration {
                 }
 
                 case "svdrp",
-                case "osdserverMessage": {
+                case "pluginMessage": {
                     paramMap.put("COMMAND", job.action.vdrAction.parameter)
                 }
             }
@@ -488,12 +496,9 @@ class Configuration {
                 switch(job.action.vdrAction.type) {
                     case "switchChannel",
                     case "osdMessage",
-                    case "svdrp": {
+                    case "svdrp",
+                    case "pluginMessage": {
                         SundialJobScheduler.addJob(jobName, "vdr.jonglisto.svdrp.client.jobs.SvdrpCommandJob", paramMap, false);
-                    }
-
-                    case "osdserverMessage": {
-                        SundialJobScheduler.addJob(jobName, "vdr.jonglisto.osdserver.jobs.OsdServerMessageJob", paramMap, false);
                     }
                 }
 

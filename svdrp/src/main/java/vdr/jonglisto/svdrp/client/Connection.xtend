@@ -19,6 +19,7 @@ class Connection {
 
     private String host
     private int port
+    private String version
 
     private int readTimeout
     private int connectTimeout
@@ -79,7 +80,13 @@ class Connection {
             input = new BufferedReader(new InputStreamReader(socket.getInputStream(), encoding), 8192);
         }
 
+        version = matcher.group(1)
+
         return matcher.group(1)
+    }
+
+    def String getVersion() {
+        return version;
     }
 
     def Response close() {

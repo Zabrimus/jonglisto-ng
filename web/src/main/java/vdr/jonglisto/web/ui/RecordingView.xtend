@@ -174,7 +174,7 @@ class RecordingView extends BaseView {
     private def void updateSizeLabel(VDR vdr) {
         if (layout !== null && vdr !== null) {
             val stat = svdrp.getStat(vdr)
-            val newSizeLabel = new Label("Total: " + stat.toStringTotal + ", Free: " + stat.toStringFree + " (" + stat.toStringFreePerc + "%)")
+            val newSizeLabel = new Label("Total: " + stat.toStringTotal + ", Free: " + stat.toStringFree + " (" + stat.toStringUsedPerc + "%)")
 
             layout.replaceComponent(sizeLabel, newSizeLabel)
             sizeLabel = newSizeLabel
