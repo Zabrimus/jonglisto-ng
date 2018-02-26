@@ -9,7 +9,6 @@ fachlich:
 TODOs which are not yet reasoned:
 
 - automatically change epg-data (that search timers are able to filter) -> But how to prevent epgd to change the epg entry?
-- channel configuration view: is it possible to update the channel list in live/running vdr?
 
 finished TODOs:
 
@@ -35,4 +34,5 @@ finished TODOs:
 - get list of deleted recordings (in vdr-plugin-jonglisto)
 - undelete recording (in vdr-plugin-jongslisto)
 - wake on lan
-- implement svdrp server
+- implement svdrp server (currently used by vdr-plugin-jonglisto)
+- channel configuration view: update channel list live/running vdr (needs vdr-plugin-jonglisto)

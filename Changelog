@@ -21,6 +21,7 @@ New:
         VDRD <name> (show details of the VDR with name <name>)
         VDRP <name> (pings the VDR with name <name>)
         VDRW <name> (sends Wake on lan to VDR with name <name>, if MAC is configured)
+- update channel list in live/running VDR (in channel configuration)
 
 0.1.0:
 Bugfixes:

@@ -438,6 +438,31 @@ class SvdrpClient {
         }
     }
 
+    def writeChannelsConf(VDR vdr, List<Channel> channels) {
+        val parameterList = new ArrayList<String>
+
+        // prepare command line
+        channels.forEach[s | {
+            var raw = s.raw
+
+            if (s.id !== null) {
+                if (s.name.contains(":")) {
+                    val oldc = s.name
+                    val newc = s.name.replace(":", "|")
+                    raw = raw.replace(oldc, newc)
+                }
+            } else {
+                raw = ":" + s.name
+            }
+
+            parameterList.add(raw)
+        }]
+
+        val parameter = parameterList.stream().collect(Collectors.joining("~"))
+
+        vdr.command("PLUG jonglisto repc " + parameter, 900)
+    }
+
     private def List<Recording> readRecordings(VDR vdr) {
         return vdr.command("LSTR", 250, [ Parser.parseRecording(it.lines) ], [ Collections.emptyList ])
     }
@@ -480,7 +505,7 @@ class SvdrpClient {
 
         val resp = connection.send(command)
         if (resp.code != desiredCode && desiredCode != -1) {
-            throw new ExecutionFailedException("Code: " + resp.code)
+            throw new ExecutionFailedException("Code: " + resp.code + ": " + resp.lines.stream.collect(Collectors.joining("\n")))
         }
 
         return resp
