@@ -2,8 +2,10 @@ package vdr.jonglisto.delegate
 
 import java.io.Serializable
 import java.util.HashMap
+import java.util.List
 import java.util.Optional
 import javax.enterprise.context.ApplicationScoped
+import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.Recording
@@ -132,5 +134,9 @@ class Svdrp implements Serializable {
 
     def getScraperData(VDR vdr, Epg epg, long recordingId) {
         SvdrpClient.instance.getScraperData(vdr, epg, recordingId);
+    }
+
+    def writeChannelsConf(VDR vdr, List<Channel> channels) {
+        SvdrpClient.instance.writeChannelsConf(vdr, channels);
     }
 }

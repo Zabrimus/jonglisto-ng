@@ -24,6 +24,7 @@ At the end of this page you can find some screenshots of the currently existing 
 * show deleted recordings (needs plugin jonglisto)
 * undelete recording (needs plugin jonglisto)
 * send wake-on-lan to configured VDR
+* update channel list on running VDR
 
 ### minimal requirement
 * one VDR instance without any plugin. jonglisto-ng uses mainly only SVDRP commands.

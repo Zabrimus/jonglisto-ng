@@ -12,6 +12,7 @@ import com.vaadin.shared.ui.dnd.EffectAllowed
 import com.vaadin.shared.ui.grid.DropMode
 import com.vaadin.ui.Button
 import com.vaadin.ui.CssLayout
+import com.vaadin.ui.ComboBox
 import com.vaadin.ui.Grid.SelectionMode
 import com.vaadin.ui.HorizontalLayout
 import com.vaadin.ui.Label
@@ -51,6 +52,10 @@ import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
+import de.steinwedel.messagebox.MessageBox
+import de.steinwedel.messagebox.ButtonOption
+import org.apache.shiro.SecurityUtils
+import vdr.jonglisto.svdrp.client.Response
 
 @Log
 @CDIView(MainUI.CHANNEL_CONFIG_VIEW)
@@ -75,6 +80,34 @@ class ChannelConfigView extends BaseView {
     protected override createMainComponents() {
         horizontalLayout(this) [
             addComponent(getChannelDownloadButton(messages.createChannelsConf, "channels.conf"))
+
+            button(it, messages.channelConfigWriteChannelsToVdr) [
+                addClickListener[
+                    val comboBox = new ComboBox();
+                    comboBox.items = config.getVdrNames(SecurityUtils.subject)
+                    comboBox.emptySelectionAllowed = false
+                    comboBox.selectedItem = selectedVdr.name
+
+                    MessageBox.createQuestion()
+                        .withCaption(messages.channelConfigReallyUpdate)
+                        .withMessage(comboBox)
+                        .withOkButton([
+                                val l = createChannelList
+                                if (l !== null) {
+                                    var Response resp
+                                    try {
+                                        val v = config.getVdr(comboBox.selectedItem.get)
+                                        resp = svdrp.writeChannelsConf(v, l)
+                                    } catch (Exception e) {
+                                        log.log(Level.WARNING, "Writing channels to VDR failed.", e)
+                                        Notification.show(messages.error, Type.ERROR_MESSAGE)
+                                    }
+                                }
+                            ], ButtonOption.caption("OK"))
+                        .withCancelButton()
+                        .open()
+                ]
+            ]
 
             button(it, messages.deleteChannel) [
                 addClickListener[
@@ -491,6 +524,39 @@ class ChannelConfigView extends BaseView {
         } catch (Exception e) {
             log.log(Level.INFO, "Creation of channels.conf failed:", e)
         }
+    }
+
+    private def createChannelList() {
+        log.fine("Starting creation of channel list")
+
+        try {
+            val result = new ArrayList<Channel>
+
+            // 1. save the group root element
+            treeGrid.treeData.rootItems.forEach[ ch |
+                if (ch instanceof Channel) {
+                    if (ch.name == Channel.ROOT_GROUP && ch.id === null) {
+                        treeGrid.treeData.getChildren(ch).forEach[it | if (it instanceof Channel) result.add(it)]
+                    }
+                }
+            ]
+
+            // 2. save all other channels
+            treeGrid.treeData.rootItems.forEach[ ch |
+                if (ch instanceof Channel) {
+                    if (ch.name != Channel.ROOT_GROUP) {
+                        result.add(ch)
+                        treeGrid.treeData.getChildren(ch).forEach[it | if (it instanceof Channel) result.add(it)]
+                    }
+                }
+            ]
+
+            return result;
+        } catch (Exception e) {
+            log.log(Level.INFO, "Creation of channel list failed:", e)
+        }
+
+        return null;
     }
 
     private def createInternalMappingConf() {
