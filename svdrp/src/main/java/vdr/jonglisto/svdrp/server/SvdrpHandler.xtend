@@ -82,7 +82,7 @@ class SvdrpHandler implements Runnable {
 
                                 switch (cmd) {
                                     case "PING": { cmdPING(output) }
-                                    case "FAVL": { cmdFAVL(output) }
+                                    case "FAVL": { cmdFAVL(output, option) }
                                     case "FAVC": { cmdFAVC(output, option) }
                                     case "EPGT": { cmdEPGT(output) }
                                     case "ALRM": { cmdALRM(output, option) }
@@ -144,11 +144,25 @@ class SvdrpHandler implements Runnable {
         output.flush();
     }
 
-    private def cmdFAVL(BufferedWriter output) {
+    private def cmdFAVL(BufferedWriter output, String option) {
+        var Optional<VDR> vdr
+
+        try {
+            vdr = Configuration.getInstance.findVdr(client.inetAddress.hostAddress, Integer.valueOf(option))
+        } catch (Exception e) {
+            e.printStackTrace
+
+            output.write("950 FAVL cannot identify VDR " + client.inetAddress.hostAddress + ":" + option + "\n")
+            output.flush
+            return
+        }
+
+        val filterCriteria = vdr.get.name
         var List<String> result
         if (Configuration.instance.favourites?.favourite?.size > 0) {
             result = Configuration.instance.favourites.favourite //
                         .stream() //
+                        .filter(s | s.systems.contains(filterCriteria))
                         .map(s | s.name) //
                         .collect(Collectors.toList())
         } else {

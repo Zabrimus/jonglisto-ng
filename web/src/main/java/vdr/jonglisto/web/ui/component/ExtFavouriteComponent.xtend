@@ -29,6 +29,10 @@ import com.vaadin.ui.Notification
 import com.vaadin.ui.Notification.Type
 import com.vaadin.ui.renderers.ComponentRenderer
 import vdr.jonglisto.model.VDR
+import java.util.List
+import com.vaadin.ui.CheckBox
+import java.util.Map
+import java.util.HashMap
 
 @Log
 class ExtFavouriteComponent extends CustomComponent {
@@ -51,6 +55,7 @@ class ExtFavouriteComponent extends CustomComponent {
     private Grid<Channel> leftGrid;
     private Grid<Channel> rightGrid;
 
+    private Map<String, CheckBox> systemCheckboxes = new HashMap<String, CheckBox>
 
     def showAll() {
         currentUser = null
@@ -123,6 +128,8 @@ class ExtFavouriteComponent extends CustomComponent {
                             rightGrid.columns.forEach[c | c.sortable = false]
 
                             updateLeftGrid()
+
+                            updateCheckboxes(s.selectedItem.get)
                         } else {
                             leftGrid.visible = false
                             rightGrid.visible = false
@@ -155,6 +162,26 @@ class ExtFavouriteComponent extends CustomComponent {
                 button(it, messages.configFavouriteSave) [
                     addClickListener(s | {
                         try {
+                            // update systems
+                            val fav = config.favourites.favourite.stream() //
+                                .filter(f | f.name == favourites.selectedItem.get) //
+                                .findFirst //
+                                .get //
+                                .systems //
+
+                            val favSet = fav.toSet
+
+                            systemCheckboxes.keySet.forEach[sb | {
+                                if (systemCheckboxes.get(sb).value) {
+                                    favSet.add(sb)
+                                } else {
+                                    favSet.remove(sb)
+                                }
+                            }]
+
+                            fav.clear
+                            fav.addAll(favSet)
+
                             config.saveFavourites()
                         } catch (Exception e) {
                             log.log(Level.WARNING, "save of favourites failed", e)
@@ -166,6 +193,17 @@ class ExtFavouriteComponent extends CustomComponent {
                         }
                     })
                 ]
+            ]
+
+            horizontalLayout(it) [
+                label(it, "Sichtbar für VDR:")
+
+                config.getVdrNames(SecurityUtils.subject).forEach[s | {
+                    val c = checkbox(it, s) [
+                    ]
+
+                    systemCheckboxes.put(s, c)
+                }]
             ]
 
             val h = new HorizontalLayout()
@@ -265,6 +303,25 @@ class ExtFavouriteComponent extends CustomComponent {
         })
 
         return playButton
+    }
+
+    private def updateCheckboxes(String name) {
+        systemCheckboxes.values.forEach[s | s.value = false]
+
+        val fav = config.favourites.favourite.stream() //
+                    .filter(f | f.name == name) //
+                    .findFirst
+
+        if (fav.isPresent) {
+            if ((fav.get.systems !== null) && (fav.get.systems.size > 0)) {
+                fav.get.systems.forEach[s | {
+                    val c = systemCheckboxes.get(s)
+                    if (c !== null) {
+                        c.value = true
+                    }
+                }]
+            }
+        }
     }
 
 }

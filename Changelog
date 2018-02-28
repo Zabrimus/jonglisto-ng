@@ -1,17 +1,19 @@
 0.2.0-snapshot:
 Bugfixes:
+- delete multiple recordings could destroy the internal tree data structure
 
 New:
 - dropped support for osdserver
 - optional dependency vdr-plugin-jonglisto (version 0.1.0)
 - additional attribute in VDR configuration (mac), used for WOL (wake on lan)
 - wake on lan implemented
-- svdrp server implemented (used by vdr-plugin-jonglisto)
+- svdrp server implemented (used by vdr-plugin-jonglisto). Most commands tries to determine the calling VDR, which must be
+     configured in jonglisto-ng. If the VDR cannot be found, the command fails.
      jonglisto-ng understands the following commands
         PING (same as VDR)
         QUIT (same as VDR)
-        FAVC (returns the configured channel favourites)
-        FAVL <name> (returns the configured channel ids in favourite list <name>)
+        FAVL <svdrpPort> (returns the configured channel favourites for the calling VDR)
+        FAVC <name> (returns the configured channel ids in favourite list <name>)
         EPGT (returns the configured epg time list)
         ALRM <svdrpPort> <time> <channelid> <title> (sets an alarm timer at <time>, on <channelid> with title <title>, VDR listens on <svdrpPort>)
         ALRL <svdrpPort> (returns all Alarms for the VDR listen on <svdrpPort>)
@@ -21,7 +23,8 @@ New:
         VDRD <name> (show details of the VDR with name <name>)
         VDRP <name> (pings the VDR with name <name>)
         VDRW <name> (sends Wake on lan to VDR with name <name>, if MAC is configured)
-- update channel list in live/running VDR (in channel configuration)
+- update channel list in live/running VDR (in channel configuration, needs vdr-plugin-jonglisto)
+- visibility of favourites in VDR OSD can be configured for each VDR
 
 0.1.0:
 Bugfixes:
