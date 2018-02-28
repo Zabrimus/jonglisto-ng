@@ -416,11 +416,12 @@ class RecordingTreeGrid {
             .withCaption(messages.confirmDeletionCaption)
             .withMessage(builder.toString)
             .withYesButton([
-                    toDeleteRecordings.stream.forEach(s | { deleteRecording(s) })
+                    toDeleteRecordings.stream.forEach(s | { svdrp.deleteRecording(currentVdr, s) })
+
                     treeGrid.dataProvider.refreshAll
 
                     // bad hack: After deletion of recordings the internal tree structure can be wrong :(
-                    // I have not foung the cause for this problem. So reload to ensure the correct tree hierarchy.
+                    // I have not found the cause for this problem. So reload to ensure the correct tree hierarchy.
                     parentView.reloadRecordings
                 ], ButtonOption.caption(messages.confirmDeletionYes))
             .withNoButton()
@@ -456,7 +457,7 @@ class RecordingTreeGrid {
         treeGrid.treeData.removeItem(rec)
 
         // bad hack: After deletion of recordings the internal tree structure can be wrong :(
-        // I have not foung the cause for this problem. So reload to ensure the correct tree hierarchy.
+        // I have not found the cause for this problem. So reload to ensure the correct tree hierarchy.
         parentView.reloadRecordings()
     }
 
