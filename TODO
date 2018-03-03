@@ -1,10 +1,16 @@
 TODOs in no specific order:
 
 technisch:
+- disable login if configured
 
 fachlich:
 - epgsearch view: save and use templates
 - channel config view: save and load configuration
+- rename recording directories
+- configurable epg search view (more powerful shortcut to the existing epg search)
+- mark epg entries if a timer exists (in any VDR)
+- mark epg entries if an alarm exists
+- timer view which also shows remote timers (DefaultSvdrpHost, needs vdr-plugin-jonglisto)
 
 TODOs which are not yet reasoned:
 

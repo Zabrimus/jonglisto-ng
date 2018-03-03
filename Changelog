@@ -1,6 +1,7 @@
 0.2.0-snapshot:
 Bugfixes:
 - delete multiple recordings could destroy the internal tree data structure
+- more useful notification if VDR is not running or cannot be reached
 
 New:
 - dropped support for osdserver
