@@ -13,12 +13,17 @@ import vdr.jonglisto.configuration.jaxb.remote.Remote
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.ui.OsdView
+import com.vaadin.ui.Notification
+import vdr.jonglisto.web.i18n.Messages
 
 @ViewScoped
 class RemoteComponent extends Composite {
 
     @Inject
     private Svdrp svdrp
+
+    @Inject
+    private Messages messages
 
     var Remote remote
     var VDR currentVdr
@@ -124,8 +129,12 @@ class RemoteComponent extends Composite {
     }
 
     private def hitk(String key) {
-        svdrp.hitk(currentVdr, key);
-        Thread.sleep(250)
-        parent.updateOsd
+        try {
+            svdrp.hitk(currentVdr, key);
+            Thread.sleep(250)
+            parent.updateOsd
+        } catch (Exception e) {
+            Notification.show(messages.errorVdrNotRunning)
+        }
     }
 }

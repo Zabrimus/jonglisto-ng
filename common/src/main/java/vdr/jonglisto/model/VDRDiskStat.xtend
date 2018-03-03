@@ -27,10 +27,18 @@ class VDRDiskStat extends BaseData {
     }
 
     def toStringUsedPerc() {
+        if (sizeTotal == 0) {
+            return 0
+        }
+
         return (sizeTotal - sizeUsed) * 100 / sizeTotal
     }
 
     private def toHuman(long mb) {
+        if (mb == 0) {
+            return String.format("0 Byte");
+        }
+
         val exp = (Math.log(mb * 1024 * 1024) / Math.log(1024)) as int
         val pre = "kMGTPE".charAt(exp-1)
         return String.format("%.1f %sB", mb * 1024 * 1024 / Math.pow(1024, exp), pre);

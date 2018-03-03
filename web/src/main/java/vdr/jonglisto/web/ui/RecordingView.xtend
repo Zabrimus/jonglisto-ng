@@ -25,6 +25,7 @@ import com.vaadin.ui.Notification
 import com.vaadin.ui.Notification.Type
 import com.vaadin.ui.renderers.HtmlRenderer
 import com.vaadin.ui.renderers.ComponentRenderer
+import vdr.jonglisto.model.VDRDiskStat
 
 @Log
 @CDIView(MainUI.RECORDING_VIEW)
@@ -173,7 +174,14 @@ class RecordingView extends BaseView {
 
     private def void updateSizeLabel(VDR vdr) {
         if (layout !== null && vdr !== null) {
-            val stat = svdrp.getStat(vdr)
+            var VDRDiskStat stat
+            try {
+                stat = svdrp.getStat(vdr)
+            } catch (Exception e) {
+                // VDR is not running
+                stat = new VDRDiskStat(0, 0)
+            }
+
             val newSizeLabel = new Label("Total: " + stat.toStringTotal + ", Free: " + stat.toStringFree + " (" + stat.toStringUsedPerc + "%)")
 
             layout.replaceComponent(sizeLabel, newSizeLabel)

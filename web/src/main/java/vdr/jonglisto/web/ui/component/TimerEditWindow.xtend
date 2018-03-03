@@ -26,6 +26,7 @@ import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
+import com.vaadin.ui.Notification
 
 @Log
 @ViewScoped
@@ -337,19 +338,24 @@ class TimerEditWindow extends Window {
         timer.setWeekday(DayOfWeek.SATURDAY, saturday.value)
         timer.setWeekday(DayOfWeek.SUNDAY, sunday.value)
 
-        if (currentVdr.name == selectVdr.selectedItem.get) {
-            // VDR has not been changed: Simple
-            svdrp.updateTimer(currentVdr, timer)
-        } else {
-            // Another VDR has been selected
-            if (timer.id > 0) {
-                // move existing timer: delete and add
-                svdrp.deleteTimer(currentVdr, timer)
-                svdrp.updateTimer(config.getVdr(selectVdr.selectedItem.get), timer)
+        try {
+            if (currentVdr.name == selectVdr.selectedItem.get) {
+                // VDR has not been changed: Simple
+                svdrp.updateTimer(currentVdr, timer)
             } else {
-                // new timer: simple
-                svdrp.updateTimer(config.getVdr(selectVdr.selectedItem.get), timer)
+                // Another VDR has been selected
+                if (timer.id > 0) {
+                    // move existing timer: delete and add
+                    svdrp.deleteTimer(currentVdr, timer)
+                    svdrp.updateTimer(config.getVdr(selectVdr.selectedItem.get), timer)
+                } else {
+                    // new timer: simple
+                    svdrp.updateTimer(config.getVdr(selectVdr.selectedItem.get), timer)
+                }
             }
+        } catch (Exception e) {
+            // VDR is not running
+            Notification.show(messages.errorVdrNotRunning)
         }
 
         return true

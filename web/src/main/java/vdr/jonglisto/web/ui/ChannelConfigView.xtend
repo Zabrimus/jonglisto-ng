@@ -99,7 +99,7 @@ class ChannelConfigView extends BaseView {
                                         val v = config.getVdr(comboBox.selectedItem.get)
                                         resp = svdrp.writeChannelsConf(v, l)
                                     } catch (Exception e) {
-                                        log.log(Level.WARNING, "Writing channels to VDR failed.", e)
+                                        log.log(Level.WARNING, "Writing channels to VDR failed.")
                                         Notification.show(messages.error, Type.ERROR_MESSAGE)
                                     }
                                 }
