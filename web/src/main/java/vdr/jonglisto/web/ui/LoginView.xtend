@@ -99,7 +99,11 @@ class LoginView extends VerticalLayout implements View {
     }
 
     override enter(ViewChangeEvent event) {
-        // do nothing
+        // if user is already authenticated then navigate to main view
+        val currentUser = SecurityUtils.subject
+        if (currentUser.isAuthenticated) {
+            event.navigator.navigateTo(MainUI.MAIN_VIEW)
+        }
     }
 
 }

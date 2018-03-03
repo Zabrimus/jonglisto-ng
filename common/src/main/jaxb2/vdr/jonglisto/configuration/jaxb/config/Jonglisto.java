@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.02.25 um 01:05:06 PM CET 
+// Generiert: 2018.03.03 um 10:02:09 AM CET 
 //
 
 
@@ -95,6 +95,15 @@ import javax.xml.bind.annotation.XmlValue;
  *           &lt;/complexType&gt;
  *         &lt;/element&gt;
  *         &lt;element name="svdrpPort" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="disableLogin"&gt;
+ *           &lt;complexType&gt;
+ *             &lt;simpleContent&gt;
+ *               &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema&gt;string"&gt;
+ *                 &lt;attribute name="urlUserParam" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *               &lt;/extension&gt;
+ *             &lt;/simpleContent&gt;
+ *           &lt;/complexType&gt;
+ *         &lt;/element&gt;
  *         &lt;element name="scraper" minOccurs="0"&gt;
  *           &lt;complexType&gt;
  *             &lt;complexContent&gt;
@@ -259,6 +268,7 @@ import javax.xml.bind.annotation.XmlValue;
     "channel",
     "epg2Vdr",
     "svdrpPort",
+    "disableLogin",
     "scraper",
     "epgTimeList",
     "svdrpCommandList",
@@ -278,6 +288,8 @@ public class Jonglisto {
     @XmlElement(name = "epg2vdr", required = true)
     protected Jonglisto.Epg2Vdr epg2Vdr;
     protected Integer svdrpPort;
+    @XmlElement(required = true)
+    protected Jonglisto.DisableLogin disableLogin;
     protected Jonglisto.Scraper scraper;
     @XmlElement(required = true)
     protected Jonglisto.EpgTimeList epgTimeList;
@@ -428,6 +440,30 @@ public class Jonglisto {
      */
     public void setSvdrpPort(Integer value) {
         this.svdrpPort = value;
+    }
+
+    /**
+     * Ruft den Wert der disableLogin-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Jonglisto.DisableLogin }
+     *     
+     */
+    public Jonglisto.DisableLogin getDisableLogin() {
+        return disableLogin;
+    }
+
+    /**
+     * Legt den Wert der disableLogin-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Jonglisto.DisableLogin }
+     *     
+     */
+    public void setDisableLogin(Jonglisto.DisableLogin value) {
+        this.disableLogin = value;
     }
 
     /**
@@ -965,6 +1001,85 @@ public class Jonglisto {
          */
         public void setDir(String value) {
             this.dir = value;
+        }
+
+    }
+
+
+    /**
+     * <p>Java-Klasse für anonymous complex type.
+     * 
+     * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+     * 
+     * <pre>
+     * &lt;complexType&gt;
+     *   &lt;simpleContent&gt;
+     *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema&gt;string"&gt;
+     *       &lt;attribute name="urlUserParam" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+     *     &lt;/extension&gt;
+     *   &lt;/simpleContent&gt;
+     * &lt;/complexType&gt;
+     * </pre>
+     * 
+     * 
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+        "value"
+    })
+    public static class DisableLogin {
+
+        @XmlValue
+        protected String value;
+        @XmlAttribute(name = "urlUserParam")
+        protected String urlUserParam;
+
+        /**
+         * Ruft den Wert der value-Eigenschaft ab.
+         * 
+         * @return
+         *     possible object is
+         *     {@link String }
+         *     
+         */
+        public String getValue() {
+            return value;
+        }
+
+        /**
+         * Legt den Wert der value-Eigenschaft fest.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *     
+         */
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Ruft den Wert der urlUserParam-Eigenschaft ab.
+         * 
+         * @return
+         *     possible object is
+         *     {@link String }
+         *     
+         */
+        public String getUrlUserParam() {
+            return urlUserParam;
+        }
+
+        /**
+         * Legt den Wert der urlUserParam-Eigenschaft fest.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *     
+         */
+        public void setUrlUserParam(String value) {
+            this.urlUserParam = value;
         }
 
     }

@@ -145,6 +145,20 @@ Optional configuration of the VDR epg daemon database
     <epg2vdr host="epgd" port="3306" username="epg2vdr" password="epg" />
 ```
 
+Optional the SVDRP server port which shall be created by jonglisto-ng
+```xml
+    <svdrpPort>6420</svdrpPort>
+```
+
+Optional: disable login and use user in URL parameter. But use this with caution!
+```xml
+    <!-- Additionally security.ini has to be configured                                    -->
+    <!--      [main]                                                                       -->
+    <!--      passwordMatcher = vdr.jonglisto.shiro.JonglistoPasswordMatcher               -->
+    <!--      iniRealm.credentialsMatcher = $passwordMatcher                               -->
+    <disableLogin urlUserParam="USER" />
+```
+
 Optional scraper information, extended EPG information and images. Needs vdr-plugin-jonglisto on same VDR as the epg VDR
 ```xml
     <!-- images: can be true or false to show scraper images in EPG details view                                                     -->

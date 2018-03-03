@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.02.25 um 01:05:06 PM CET 
+// Generiert: 2018.03.03 um 10:02:09 AM CET 
 //
 
 
@@ -114,6 +114,14 @@ public class ObjectFactory {
      */
     public Jonglisto.Epg2Vdr createJonglistoEpg2Vdr() {
         return new Jonglisto.Epg2Vdr();
+    }
+
+    /**
+     * Create an instance of {@link Jonglisto.DisableLogin }
+     * 
+     */
+    public Jonglisto.DisableLogin createJonglistoDisableLogin() {
+        return new Jonglisto.DisableLogin();
     }
 
     /**

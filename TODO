@@ -1,9 +1,9 @@
 TODOs in no specific order:
 
 technisch:
-- disable login if configured
 
 fachlich:
+
 - epgsearch view: save and use templates
 - channel config view: save and load configuration
 - rename recording directories
@@ -11,6 +11,7 @@ fachlich:
 - mark epg entries if a timer exists (in any VDR)
 - mark epg entries if an alarm exists
 - timer view which also shows remote timers (DefaultSvdrpHost, needs vdr-plugin-jonglisto)
+
 
 TODOs which are not yet reasoned:
 
@@ -42,3 +43,4 @@ finished TODOs:
 - wake on lan
 - implement svdrp server (currently used by vdr-plugin-jonglisto)
 - channel configuration view: update channel list live/running vdr (needs vdr-plugin-jonglisto)
+- disable login if configured and add an url parameter for the desired user

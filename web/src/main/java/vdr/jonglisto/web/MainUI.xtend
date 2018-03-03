@@ -13,6 +13,9 @@ import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.web.ui.ErrorView
 import vdr.jonglisto.xtend.annotation.Log
+import vdr.jonglisto.configuration.Configuration
+import org.apache.shiro.authc.UsernamePasswordToken
+import com.vaadin.server.VaadinService
 
 @Theme("jonglisto")
 @Title("VDR Jonglisto")
@@ -50,6 +53,24 @@ class MainUI extends UI implements ViewChangeListener {
         if (currentUser.authenticated && event.viewName == "") {
             event.navigator.navigateTo(MainUI.MAIN_VIEW)
             return false
+        }
+
+        if (!currentUser.authenticated && Configuration.instance.loginUserUrlParam !== null && Configuration.instance.loginUserUrlParam.length > 0) {
+            val urlUser = VaadinService.currentRequest.getParameter(Configuration.instance.loginUserUrlParam)
+
+            if (urlUser !== null && urlUser.length > 0) {
+                val token = new UsernamePasswordToken(urlUser, "<doesn't matter>");
+
+                try {
+                    currentUser.login(token);
+                    event.navigator.navigateTo(MainUI.MAIN_VIEW)
+                    // navigator.navigateTo(MainUI.MAIN_VIEW)
+                    return true
+                } catch (Exception e) {
+                    e.printStackTrace
+                    // ignore any exception. Login failures will be handled later
+                }
+            }
         }
 
         if (!currentUser.authenticated && !(event.viewName == "")) {

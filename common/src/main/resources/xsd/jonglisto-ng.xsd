@@ -43,11 +43,16 @@
                 <xs:complexType>
                   <xs:simpleContent>
                     <xs:extension base="xs:string">
-                      <xs:attribute type="xs:string"  name="name"        use="optional" />
-                      <xs:attribute type="xs:string"  name="displayName" use="optional" />
-                      <xs:attribute type="xs:string"  name="host"        use="optional" />
-                      <xs:attribute type="xs:short"   name="port"        use="optional" />
-                      <xs:attribute type="xs:string"  name="mac"         use="optional" />
+                      <xs:attribute type="xs:string"
+                        name="name" use="optional" />
+                      <xs:attribute type="xs:string"
+                        name="displayName" use="optional" />
+                      <xs:attribute type="xs:string"
+                        name="host" use="optional" />
+                      <xs:attribute type="xs:short"
+                        name="port" use="optional" />
+                      <xs:attribute type="xs:string"
+                        name="mac" use="optional" />
                     </xs:extension>
                   </xs:simpleContent>
                 </xs:complexType>
@@ -110,7 +115,18 @@
             </xs:simpleContent>
           </xs:complexType>
         </xs:element>
-        <xs:element name="svdrpPort" type="xs:int" maxOccurs="1" minOccurs="0"></xs:element>
+        <xs:element name="svdrpPort" type="xs:int" maxOccurs="1"
+          minOccurs="0">
+        </xs:element>
+        <xs:element name="disableLogin">
+            <xs:complexType>
+                <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                        <xs:attribute type="xs:string" name="urlUserParam" />
+                    </xs:extension>
+                </xs:simpleContent>
+            </xs:complexType>
+        </xs:element>
         <xs:element name="scraper" maxOccurs="1" minOccurs="0">
           <xs:complexType>
             <xs:sequence>

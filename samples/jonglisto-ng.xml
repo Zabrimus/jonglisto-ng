@@ -33,6 +33,16 @@
     <!-- optional the SVDRP server port which shall be created by jonglisto-ng -->
     <svdrpPort>6420</svdrpPort>
 
+    <!-- optional: disable login and use user in URL parameter. But use this with caution! -->
+    <!-- The desired user must also configured - as usual - in security.ini                -->
+    <!-- Additionally security.ini has to be configured                                    -->
+    <!--      [main]                                                                       -->
+    <!--      passwordMatcher = vdr.jonglisto.shiro.JonglistoPasswordMatcher               -->
+    <!--      iniRealm.credentialsMatcher = $passwordMatcher                               -->
+    <!--
+    <disableLogin urlUserParam="USER" />
+    -->
+
     <!-- images: can be true or false to show scraper images in EPG details view                                                     -->
     <!-- If jonglisto-ng and vdr with vdr-plugin-jonglisto are running on the same machine, then the imagePath substitution is       -->
     <!-- is not necessary, but if e.g. the image directory is shared via NFS or Samba, then the path information of                  -->

@@ -26,6 +26,7 @@ New:
         VDRW <name> (sends Wake on lan to VDR with name <name>, if MAC is configured)
 - update channel list in live/running VDR (in channel configuration, needs vdr-plugin-jonglisto)
 - visibility of favourites in VDR OSD can be configured for each VDR
+- possibility to bypass login and use the Username defined as URL parameter (needs configuration in security.ini and jonglisto-ng.xml)
 
 0.1.0:
 Bugfixes:

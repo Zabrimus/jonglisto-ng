@@ -29,6 +29,7 @@ import vdr.jonglisto.util.Utils
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
+import java.security.URIParameter
 
 @Log
 class Configuration {
@@ -81,6 +82,8 @@ class Configuration {
 
     private static Configuration instance = new Configuration
 
+    private static String loginUserUrlParameter
+
     private static Unmarshaller unmarshaller
     private static Marshaller marshaller
 
@@ -122,6 +125,12 @@ class Configuration {
             jcronConfig = new Jcron
         }
 
+        if (config.disableLogin !== null && config.disableLogin.urlUserParam !== null && config.disableLogin.urlUserParam.length > 0) {
+            loginUserUrlParameter = config.disableLogin.urlUserParam
+        } else {
+            loginUserUrlParameter = null
+        }
+
         showScraperImage = (config.scraper !== null) && config.scraper.images
 
         if (config.scraper !== null && config.scraper.imagePath !== null) {
@@ -151,6 +160,10 @@ class Configuration {
     public def void saveFavourites() {
         val out = new File(customDirectory + File.separator + "favourites.xml")
         marshaller.marshal(favouriteConfig, out)
+    }
+
+    public def getLoginUserUrlParam() {
+        return loginUserUrlParameter
     }
 
     public def getJcron() {
