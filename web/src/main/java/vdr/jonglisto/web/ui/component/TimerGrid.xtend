@@ -26,6 +26,8 @@ import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import vdr.jonglisto.delegate.Config
+import vdr.jonglisto.db.SearchTimerService
 
 @Log
 @ViewScoped
@@ -33,6 +35,9 @@ class TimerGrid {
 
     @Inject
     private Svdrp svdrp
+
+    @Inject
+    private Config config
 
     @Inject
     private Messages messages
@@ -46,6 +51,8 @@ class TimerGrid {
     @Inject
     private ChannelLogo channelLogo
 
+    val service = new SearchTimerService
+
     val COL_CHANNEL = "channel"
     val COL_ACTIVE = "active"
     val COL_DATE = "date"
@@ -54,6 +61,7 @@ class TimerGrid {
     val COL_DURATION = "duration"
     val COL_TITLE = "title"
     val COL_ACTION = "action"
+    val COL_ST = "searchtimer"
 
     var Grid<Timer> grid
 
@@ -102,38 +110,44 @@ class TimerGrid {
             .setExpandRatio(0) //
             .setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
             .setMinimumWidthFromContent(true)
-            .setStyleGenerator(s | "timerdate");
+            .setStyleGenerator(s | "timerdate")
 
         grid.addColumn(ev|createStart(ev)) //
             .setCaption(messages.timerStartCaption) //
             .setId(COL_START) //
             .setExpandRatio(0) //
-            //.setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
             .setMinimumWidthFromContent(true)
-            .setStyleGenerator(s | "timertime");
+            .setStyleGenerator(s | "timertime")
 
         grid.addColumn(ev|createEnd(ev)) //
             .setCaption(messages.timerEndCaption) //
             .setId(COL_END) //
             .setExpandRatio(0) //
-            //.setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
             .setMinimumWidthFromContent(true)
-            .setStyleGenerator(s | "timertime");
+            .setStyleGenerator(s | "timertime")
 
         grid.addColumn(ev|createDuration(ev)) //
             .setCaption(messages.timerDurationCaption) //
             .setId(COL_DURATION) //
             .setExpandRatio(0) //
-            //.setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
             .setMinimumWidthFromContent(true)
-            .setStyleGenerator(s | "timertime");
+            .setStyleGenerator(s | "timertime")
 
         grid.addColumn(ev|createTitle(ev)) //
             .setCaption(messages.timerTitleCaption) //
             .setId(COL_TITLE) //
             .setExpandRatio(10) //
             .setMinimumWidthFromContent(false)
-            //.setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
+
+        val stcol = grid.addColumn(ev | createSearchTimer(ev)) //
+             .setId(COL_ST)
+             .setRenderer(new ComponentRenderer)
+             .setExpandRatio(0)
+             .setMinimumWidthFromContent(true)
+             .setStyleGenerator(ev | "wlb")
+             .setSortable(false)
+
+        grid.defaultHeaderRow.getCell(stcol).styleName = "wlb_header"
 
         grid.addColumn(ev| createActionButtons(ev)) //
             .setRenderer(new ComponentRenderer) //
@@ -141,8 +155,8 @@ class TimerGrid {
             .setId(COL_ACTION) //
             .setExpandRatio(0) //
             .setMinimumWidth(100) //
-            //.setComparator([ev1, ev2 | ev1.startTime.compareTo(ev2.startTime)])
             .setMinimumWidthFromContent(true)
+
 
         grid.addItemClickListener[event | clickListener(event)]
 
@@ -324,6 +338,68 @@ class TimerGrid {
                     description = messages.timerRecording
                     width = "22px"
                     styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+                ]
+            }
+        ]
+
+        return css;
+    }
+
+    private def createSearchTimer(Timer timer) {
+        val css = cssLayout[
+            switch (timer.searchType) {
+                case Timer.SearchType.EPG2TIMER: {
+                    button(it, service.getSearchTimerName(timer.searchName)) [
+                        styleName = ValoTheme.BUTTON_FRIENDLY + " " + ValoTheme.BUTTON_TINY
+                        addClickListener(s | {
+                            // do nothing
+                        })
+                    ]
+                }
+
+                case Timer.SearchType.EPGD: {
+                    if (config.isDatabaseConfigured) {
+                        button(it, service.getSearchTimerName(timer.searchName)) [
+                            styleName = ValoTheme.BUTTON_FRIENDLY + " " + ValoTheme.BUTTON_TINY
+                            addClickListener(s | {
+                                // TODO: Open epgd config
+                            })
+                        ]
+                    } else {
+                        button(it, "EPGD:" + timer.searchName) [
+                            styleName = ValoTheme.BUTTON_FRIENDLY + " " + ValoTheme.BUTTON_TINY
+                            addClickListener(s | {
+                                // do nothing
+                            })
+                        ]
+                    }
+                }
+
+                case Timer.SearchType.EPGSEARCH: {
+                    button(it, timer.searchName) [
+                        styleName = ValoTheme.BUTTON_FRIENDLY + " " + ValoTheme.BUTTON_TINY
+                        addClickListener(s | {
+                            // TODO: Open epgsearch config
+                        })
+                    ]
+                }
+            }
+
+            if (timer.remote) {
+                button(it, "Remote") [
+                    styleName = ValoTheme.BUTTON_PRIMARY + " " + ValoTheme.BUTTON_TINY
+                    addClickListener(s | {
+                        // do nothing
+                    })
+                ]
+            }
+
+            if (timer.isRemoteTimer) {
+                button(it, "RemoteTimer:" + timer.searchName) [
+                    styleName = ValoTheme.BUTTON_FRIENDLY + " " + ValoTheme.BUTTON_TINY
+                    addClickListener(s | {
+                        // do nothing
+                    })
                 ]
             }
         ]

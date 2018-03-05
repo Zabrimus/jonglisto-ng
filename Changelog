@@ -27,6 +27,10 @@ New:
 - update channel list in live/running VDR (in channel configuration, needs vdr-plugin-jonglisto)
 - visibility of favourites in VDR OSD can be configured for each VDR
 - possibility to bypass login and use the Username defined as URL parameter (needs configuration in security.ini and jonglisto-ng.xml)
+- timer view shows also remote timers (needs vdr-plugin-jonglisto)
+- timer view shows if a timer is created by epgsearch, epgd or epg2timer, also shows if this is a timer from plugin RemoteTimers
+- update/delete remote timers (needs vdr-plugin-jonglisto)
+- create remote timer (if SVDRPDefaultHost is configured in VDR, needs vdr-plugin-jonglisto)
 
 0.1.0:
 Bugfixes:

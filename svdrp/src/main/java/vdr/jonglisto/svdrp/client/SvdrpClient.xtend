@@ -224,7 +224,7 @@ class SvdrpClient {
     }
 
     def void undeleteRecording(VDR vdr, Recording recording) {
-        if (isPluginAvailable(vdr.name, "jonglisto")) {
+        if (isPluginAvailable(vdr, "jonglisto")) {
             vdr.command("PLUG jonglisto UNDR " + recording.id, 900)
         }
     }
@@ -234,7 +234,11 @@ class SvdrpClient {
     }
 
     def void updateTimer(VDR vdr, Timer timer) {
-        vdr.command("UPDT " + timer.toVdrString, 250)
+        if (isPluginAvailable(vdr, "jonglisto")) {
+            vdr.command("PLUG jonglisto UPDT " + timer.toVdrString, 250)
+        } else {
+            vdr.command("UPDT " + timer.toVdrString, 250)
+        }
     }
 
     def getStat(VDR vdr) {
@@ -340,7 +344,10 @@ class SvdrpClient {
 
     def isPluginAvailable(String vdrName, String pluginName) {
         val vdr = Configuration.getInstance().getVdr(vdrName)
+        return isPluginAvailable(vdr, pluginName)
+    }
 
+    def isPluginAvailable(VDR vdr, String pluginName) {
         if (vdr === null) {
             return false
         }
@@ -358,11 +365,20 @@ class SvdrpClient {
     }
 
     def void deleteTimer(VDR vdr, Timer timer) {
-        vdr.command("DELT " + timer.id, 250)
+        if (isPluginAvailable(vdr, "jonglisto")) {
+            vdr.command("PLUG jonglisto DELT " + timer.id, 250)
+
+            // give VDR some time to poll timers
+            if (timer.isRemote) {
+                Thread.sleep(2000);
+            }
+        } else {
+            vdr.command("DELT " + timer.id, 250)
+        }
     }
 
     def recordViaOsdserver(VDR vdr, String channelId, Epg epg) {
-        if (isPluginAvailable(vdr.name, "jonglisto")) {
+        if (isPluginAvailable(vdr, "jonglisto")) {
             vdr.command("PLUG jonglisto NERT " + epg.channelId + " " + epg.startTime, 900)
         } else {
             val timer = new Timer();
@@ -415,7 +431,7 @@ class SvdrpClient {
 
     def getScraperData(VDR vdr, Epg epg, long recordingId) {
         val epgVdr = Configuration.instance.epgVdr
-        if (isPluginAvailable(epgVdr.name, "jonglisto")) {
+        if (isPluginAvailable(epgVdr, "jonglisto")) {
             try {
                 var Response response
                 val usedVdr = vdr ?: epgVdr
@@ -468,7 +484,7 @@ class SvdrpClient {
     }
 
     private def List<Recording> readDeletedRecordings(VDR vdr) {
-        if (isPluginAvailable(vdr.name, "jonglisto")) {
+        if (isPluginAvailable(vdr, "jonglisto")) {
             return vdr.command("PLUG jonglisto LSDR", 900, [ Parser.parseRecording(it.lines) ], [ Collections.emptyList ])
         } else {
             return Collections.emptyList
@@ -487,7 +503,36 @@ class SvdrpClient {
     }
 
     private def List<Timer> readTimer(VDR vdr) {
-        return vdr.command("LSTT id", 250, [ Parser.parseTimer(it.lines) ], [ Collections.emptyList ])
+        var List<Timer> result
+
+        if (isPluginAvailable(vdr, "jonglisto")) {
+            result = vdr.command("PLUG jonglisto LSTT", 250, [ Parser.parseTimer(it.lines) ], [ Collections.emptyList ])
+
+            result.forEach[s | {
+                s.updateSearchTimerInfo
+            }]
+
+            // extract and delete remote flag
+            return result.stream().map(s | {
+                if (s.aux.contains("<remote>0</remote>")) {
+                    s.remote = false
+                    s.aux = s.aux.replace("<remote>0</remote>", "")
+                } else if (s.aux.contains("<remote>1</remote>")) {
+                    s.remote = true
+                    s.aux = s.aux.replace("<remote>1</remote>", "")
+                }
+
+                s
+            }).collect(Collectors.toList())
+        } else {
+            result = vdr.command("LSTT id", 250, [ Parser.parseTimer(it.lines) ], [ Collections.emptyList ])
+
+            result.forEach[s | {
+                s.updateSearchTimerInfo
+            }]
+
+            return result
+        }
     }
 
     private def command(VDR vdr, String command, int desiredCode) {
@@ -505,7 +550,10 @@ class SvdrpClient {
 
         val resp = connection.send(command)
         if (resp.code != desiredCode && desiredCode != -1) {
-            throw new ExecutionFailedException("Code: " + resp.code + ": " + resp.lines.stream.collect(Collectors.joining("\n")))
+            val errorMessage = "Code: " + resp.code + ": " + resp.lines.stream.collect(Collectors.joining("\n"))
+            log.info("Command failed:" + command + "\n" + errorMessage)
+
+            throw new ExecutionFailedException(errorMessage)
         }
 
         return resp

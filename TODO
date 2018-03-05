@@ -10,7 +10,6 @@ fachlich:
 - configurable epg search view (more powerful shortcut to the existing epg search)
 - mark epg entries if a timer exists (in any VDR)
 - mark epg entries if an alarm exists
-- timer view which also shows remote timers (DefaultSvdrpHost, needs vdr-plugin-jonglisto)
 
 
 TODOs which are not yet reasoned:
@@ -44,3 +43,4 @@ finished TODOs:
 - implement svdrp server (currently used by vdr-plugin-jonglisto)
 - channel configuration view: update channel list live/running vdr (needs vdr-plugin-jonglisto)
 - disable login if configured and add an url parameter for the desired user
+- timer view which also shows remote timers (needs vdr-plugin-jonglisto)

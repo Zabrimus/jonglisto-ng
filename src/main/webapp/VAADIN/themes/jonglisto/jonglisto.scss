@@ -127,7 +127,6 @@ $v-focus-style: none;
 
     .v-image-actor {
        width: 100%;
-       // margin: 10px;
     }
 
     .v-image-seasonposter {
@@ -140,5 +139,13 @@ $v-focus-style: none;
 
     .actorcomp {
         padding: 20px;
+    }
+
+    .v-grid-cell.wlb {
+        border-left: 0px;
+    }
+
+    .v-grid-cell.wlb_header {
+        border-left: 0px;
     }
 }

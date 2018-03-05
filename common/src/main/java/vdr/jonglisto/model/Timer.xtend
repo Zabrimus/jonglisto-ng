@@ -11,11 +11,21 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.EqualsHashCode
 import org.eclipse.xtend.lib.annotations.ToString
 import vdr.jonglisto.util.DateTimeUtil
+import java.util.regex.Pattern
 
 @Accessors
 @EqualsHashCode
 @ToString
 class Timer extends BaseData implements Serializable {
+    public enum SearchType {
+        EPGSEARCH, EPGD, EPG2TIMER
+    }
+
+    static val epgsearchPattern = Pattern.compile(".*?<epgsearch>.*?<searchtimer>(.*?)</searchtimer>.*?");
+    static val epgdPattern = Pattern.compile(".*?<epgd>.*?<autotimerid>(.*?)</autotimerid>.*?");
+    static val epg2timerPattern = Pattern.compile(".*?<epg2timer>(.*?)</epg2timer>.*?");
+    static val remoteTimersPattern = Pattern.compile(".*?<remotetimers>(.*?)</remotetimers>.*?");
+
     static val dateParseFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     static val timeParseFormatter = DateTimeFormatter.ofPattern("HH:mm")
     static val currentZoneOffset = DateTimeUtil.currentZoneOffset
@@ -35,6 +45,15 @@ class Timer extends BaseData implements Serializable {
     private var String path
     private var String aux
     private var int flags
+
+    private boolean isRemote
+    private boolean isRemoteTimer
+    private boolean isEpgdTimer
+    private boolean isEpgsearchTimer
+    private boolean isEpg2TimerTimer
+    private SearchType searchType;
+    private String searchName
+    private String remoteTimerId;
 
     private var long startEpoch
     private var long endEpoch
@@ -251,6 +270,39 @@ class Timer extends BaseData implements Serializable {
     def setEndEpoch(long epoch) {
         val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch), ZoneId.systemDefault())
         setEndAsString(dateTime.format(timeParseFormatter))
+    }
+
+    def setRemote(boolean rem) {
+        isRemote = rem
+    }
+
+    def updateSearchTimerInfo() {
+        // is this an epgsearch timer?
+        val epgsearchMatcher = epgsearchPattern.matcher(aux)
+        if (epgsearchMatcher.matches()) {
+            searchType = SearchType.EPGSEARCH
+            searchName = epgsearchMatcher.group(1)
+        }
+
+        // is this an epg2timer timer?
+        val epg2timerMatcher = epg2timerPattern.matcher(aux)
+        if (epg2timerMatcher.matches()) {
+            searchType = SearchType.EPG2TIMER
+            searchName = epgsearchMatcher.group(1)
+        }
+
+        // is this an epgd timer?
+        val epgdMatcher = epgdPattern.matcher(aux)
+        if (epgdMatcher.matches()) {
+            searchType = SearchType.EPGD
+            searchName = epgdMatcher.group(1);
+        }
+
+        // is this a remote timer?
+        val remoteMatcher = remoteTimersPattern.matcher(aux)
+        if (remoteMatcher.matches()) {
+            remoteTimerId = remoteMatcher.group(1)
+        }
     }
 
     def toVdrString() {
