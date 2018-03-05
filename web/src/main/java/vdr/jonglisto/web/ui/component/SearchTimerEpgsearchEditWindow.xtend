@@ -57,7 +57,7 @@ class SearchTimerEpgsearchEditWindow extends Window {
 
     var VDR vdr
 
-    val binder = new Binder<EpgsearchSearchTimer>
+    var Binder<EpgsearchSearchTimer> binder
     var EpgsearchSearchTimer currentTimer
 
     var CheckBox matchCase
@@ -146,6 +146,8 @@ class SearchTimerEpgsearchEditWindow extends Window {
     }
 
     def showWindow(VDR vdr, EpgsearchSearchTimer timer) {
+        binder = new Binder<EpgsearchSearchTimer>
+
         this.vdr = vdr
         closable = true
         modal = true
