@@ -51,6 +51,13 @@ class TimerGrid {
     @Inject
     private ChannelLogo channelLogo
 
+    @Inject
+    private SearchTimerEpgdEditWindow editWindow
+
+    @Inject
+    private SearchTimerEpgsearchEditWindow editWindow2
+
+
     val service = new SearchTimerService
 
     val COL_CHANNEL = "channel"
@@ -359,10 +366,21 @@ class TimerGrid {
 
                 case Timer.SearchType.EPGD: {
                     if (config.isDatabaseConfigured) {
-                        button(it, service.getSearchTimerName(timer.searchName)) [
+                        button(it, service.getSearchTimerName(timer.searchId)) [
                             styleName = ValoTheme.BUTTON_FRIENDLY + " " + ValoTheme.BUTTON_TINY
                             addClickListener(s | {
-                                // TODO: Open epgd config
+                                if (config.isDatabaseConfigured) {
+                                    val st = service.searchTimers.findFirst(ti | ti.id == Long.valueOf(timer.searchId))
+
+                                    if (st !== null) {
+                                        val w = editWindow.showWindow(st)
+                                        UI.addWindow(w)
+                                    } else {
+                                        // do nothing
+                                    }
+                                } else {
+                                    // do nothing
+                                }
                             })
                         ]
                     } else {
@@ -379,7 +397,14 @@ class TimerGrid {
                     button(it, timer.searchName) [
                         styleName = ValoTheme.BUTTON_FRIENDLY + " " + ValoTheme.BUTTON_TINY
                         addClickListener(s | {
-                            // TODO: Open epgsearch config
+                            val st = svdrp.searchEpgsearchSearchtimer(timer.searchId, timer.searchName)
+
+                            if (st !== null) {
+                                val w = editWindow2.showWindow(st.key, st.value)
+                                UI.addWindow(w)
+                            } else {
+                                // do nothing
+                            }
                         })
                     ]
                 }

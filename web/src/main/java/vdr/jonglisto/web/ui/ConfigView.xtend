@@ -12,6 +12,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 import vdr.jonglisto.web.ui.component.ExtFavouriteComponent
+import vdr.jonglisto.web.ui.component.ToolsComponent
 
 @Log
 @CDIView(MainUI.CONFIG_VIEW)
@@ -22,6 +23,9 @@ class ConfigView extends BaseView {
 
     @Inject
     private JobComponent jobs
+
+    @Inject
+    private ToolsComponent tools
 
     @PostConstruct
     def void init() {
@@ -43,6 +47,10 @@ class ConfigView extends BaseView {
                 addTab(jobs.showAll(), messages.configJobs)
             } else if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:user")) {
                 addTab(jobs.showUser(), messages.configJobs)
+            }
+
+            if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":tools:all")) {
+                addTab(tools.showAll(), messages.configTools)
             }
 
             addStyleName(ValoTheme.TABSHEET_FRAMED);

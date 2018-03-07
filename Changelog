@@ -2,6 +2,7 @@
 Bugfixes:
 - delete multiple recordings could destroy the internal tree data structure
 - more useful notification if VDR is not running or cannot be reached
+- strange validation errors while creating new epgsearch timers
 
 New:
 - dropped support for osdserver
@@ -31,6 +32,8 @@ New:
 - timer view shows if a timer is created by epgsearch, epgd or epg2timer, also shows if this is a timer from plugin RemoteTimers
 - update/delete remote timers (needs vdr-plugin-jonglisto)
 - create remote timer (if SVDRPDefaultHost is configured in VDR, needs vdr-plugin-jonglisto)
+- tools under configuration implemented (it's unsure, if someone else could or will use it, mainly used for development)
+  copy epg and channel data from one VDR to another one
 
 0.1.0:
 Bugfixes:

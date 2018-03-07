@@ -21,7 +21,7 @@ class Timer extends BaseData implements Serializable {
         EPGSEARCH, EPGD, EPG2TIMER
     }
 
-    static val epgsearchPattern = Pattern.compile(".*?<epgsearch>.*?<searchtimer>(.*?)</searchtimer>.*?");
+    static val epgsearchPattern = Pattern.compile(".*?<epgsearch>.*?<searchtimer>(.*?)</searchtimer>.*?<s-id>(.*?)</s-id>.*?");
     static val epgdPattern = Pattern.compile(".*?<epgd>.*?<autotimerid>(.*?)</autotimerid>.*?");
     static val epg2timerPattern = Pattern.compile(".*?<epg2timer>(.*?)</epg2timer>.*?");
     static val remoteTimersPattern = Pattern.compile(".*?<remotetimers>(.*?)</remotetimers>.*?");
@@ -52,8 +52,9 @@ class Timer extends BaseData implements Serializable {
     private boolean isEpgsearchTimer
     private boolean isEpg2TimerTimer
     private SearchType searchType;
+    private String searchId
     private String searchName
-    private String remoteTimerId;
+    private String remoteTimerId
 
     private var long startEpoch
     private var long endEpoch
@@ -282,6 +283,7 @@ class Timer extends BaseData implements Serializable {
         if (epgsearchMatcher.matches()) {
             searchType = SearchType.EPGSEARCH
             searchName = epgsearchMatcher.group(1)
+            searchId = epgsearchMatcher.group(2)
         }
 
         // is this an epg2timer timer?
@@ -295,7 +297,7 @@ class Timer extends BaseData implements Serializable {
         val epgdMatcher = epgdPattern.matcher(aux)
         if (epgdMatcher.matches()) {
             searchType = SearchType.EPGD
-            searchName = epgdMatcher.group(1);
+            searchId = epgdMatcher.group(1);
         }
 
         // is this a remote timer?

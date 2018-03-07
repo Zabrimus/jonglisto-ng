@@ -259,6 +259,26 @@ class SvdrpClient {
         }
     }
 
+    def Pair<VDR, EpgsearchSearchTimer> searchEpgsearchSearchtimer(String id, String timerName) {
+        val vdrList = Configuration.instance.vdrNames
+
+        for (var i = 0; i < vdrList.size; i++) {
+            val v = Configuration.instance.getVdr(vdrList.get(i))
+
+            try {
+                val res = getEpgsearchSearchTimerList(v).findFirst[f | f.getLongField(Field.id) == Long.valueOf(id) && (f.getField(Field.pattern) == timerName)]
+
+                if (res !== null) {
+                    return new Pair(v, res)
+                }
+            } catch (Exception t) {
+                // ignore this one
+            }
+        }
+
+        return null;
+    }
+
     def getEpgsearchSearchBlacklist(VDR vdr) {
         try {
             val timer = new ArrayList<EpgsearchSearchTimer>
@@ -477,6 +497,83 @@ class SvdrpClient {
         val parameter = parameterList.stream().collect(Collectors.joining("~"))
 
         vdr.command("PLUG jonglisto repc " + parameter, 900)
+    }
+
+    def void copyEpg(String source, String dest) {
+        val sourceVdr = Configuration.getInstance().getVdr(source)
+        val destVdr = Configuration.getInstance().getVdr(dest)
+
+        log.info("epg copy: start reading source EPG")
+
+        // Read EPG
+        var Response sourceResponse
+        try {
+            sourceResponse = sourceVdr.command("LSTE", 215)
+            sourceResponse.lines.remove(sourceResponse.lines.size() - 1);
+        } catch(Exception e) {
+            throw new RuntimeException("Connection to " + source + " refused.")
+        }
+
+        log.info("epg copy: reading source EPG finished: " + sourceResponse.lines.size)
+
+        var Connection connection
+
+        try {
+            connection = connections.get(destVdr)
+        } catch (Exception e) {
+            throw new RuntimeException("Connection to " + dest + " refused.")
+        }
+
+        log.info("epg copy: send PUTE");
+
+        // Write Epg
+        var destResponse = connection.send("PUTE")
+
+        if (destResponse.code != 354) {
+            throw new RuntimeException("VDR " + dest + " do not accept PUTE command: " + destResponse.lines.get(0))
+        }
+
+        log.info("epg copy: start sending epg data to dest");
+
+        destResponse = connection.sendBatchRawEpg(sourceResponse.lines)
+
+        log.info("epg copy: finished sending epg data to dest");
+
+        if (destResponse.code != 250) {
+            throw new RuntimeException("Saving EPG date failed: " + destResponse.lines.get(0))
+        }
+    }
+
+    def void copyChannels(String source, String dest) {
+        val sourceVdr = Configuration.getInstance().getVdr(source)
+        val destVdr = Configuration.getInstance().getVdr(dest)
+
+        if (!isPluginAvailable(destVdr, "jonglisto")) {
+            throw new RuntimeException("vdr-plugin-jonglisto is required in destination VDR")
+        }
+
+        log.info("channel copy: start reading source channels")
+        var Response sourceResponse
+        try {
+            sourceResponse = sourceVdr.command("LSTC :groups", 250)
+        } catch(Exception e) {
+            throw new RuntimeException("Connection to " + source + " refused.")
+        }
+
+        log.info("channel copy: start sending channel data to dest");
+
+        var Response destResponse
+        try {
+            val parameter = sourceResponse.lines.stream() //
+                .map(s | s.substring(s.indexOf(" ")+1)) //
+                .collect(Collectors.joining("~"))
+
+            destResponse = destVdr.command("PLUG jonglisto repc " + parameter, 900)
+
+            log.info("channel copy: finished sending channel data to dest");
+        } catch (Exception e) {
+            throw new RuntimeException("Saving channel date failed: " + destResponse.lines.get(0))
+        }
     }
 
     private def List<Recording> readRecordings(VDR vdr) {

@@ -25,6 +25,7 @@ At the end of this page you can find some screenshots of the currently existing 
 * undelete recording (needs plugin jonglisto)
 * send wake-on-lan to configured VDR
 * update channel list on running VDR
+* under tools exists the possibility to copy epg or channel data between different VDRs, mainly used for development
 
 ### minimal requirement
 * one VDR instance without any plugin. jonglisto-ng uses mainly only SVDRP commands.

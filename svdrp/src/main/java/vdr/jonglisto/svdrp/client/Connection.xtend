@@ -139,6 +139,31 @@ class Connection {
         return readResponse
     }
 
+    def Response sendBatchRawEpg(List<String> command) {
+        try {
+            for (var i = 0; i < command.size; i++) {
+                output.write(command.get(i))
+                output.newLine
+
+                if (i % 2000 == 0) {
+                    output.flush
+                }
+            }
+
+            output.write(".")
+            output.newLine
+
+            output.flush
+        } catch (SocketException e) {
+            // connection is broken -> invalidate
+            SvdrpClient.getInstance().invalidateConnection(this)
+            throw new ConnectionException(e.getMessage)
+        }
+
+        return readResponse
+    }
+
+
     private def Response readResponse() {
         var reading = true
         var String line

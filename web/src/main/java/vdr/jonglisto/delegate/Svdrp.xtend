@@ -84,6 +84,10 @@ class Svdrp implements Serializable {
         SvdrpClient.getInstance.getEpgsearchSearchTimerList(vdr)
     }
 
+    def Pair<VDR, EpgsearchSearchTimer> searchEpgsearchSearchtimer(String id, String timerName) {
+        SvdrpClient.getInstance.searchEpgsearchSearchtimer(id, timerName)
+    }
+
     def getEpgsearchSearchBlacklist(VDR vdr) {
         SvdrpClient.getInstance.getEpgsearchSearchBlacklist(vdr)
     }
@@ -137,6 +141,15 @@ class Svdrp implements Serializable {
     }
 
     def writeChannelsConf(VDR vdr, List<Channel> channels) {
-        SvdrpClient.instance.writeChannelsConf(vdr, channels);
+        SvdrpClient.instance.writeChannelsConf(vdr, channels)
     }
+
+    def void copyEpg(String source, String dest) {
+        SvdrpClient.instance.copyEpg(source, dest);
+    }
+
+    def void copyChannels(String source, String dest) {
+        SvdrpClient.instance.copyChannels(source, dest)
+    }
+
 }
