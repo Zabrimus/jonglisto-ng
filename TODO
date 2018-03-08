@@ -1,12 +1,16 @@
 TODOs in no specific order:
 
 technisch:
+- rename or move a bunch of recordings is very inefficient in VDR via MOVR,
+  because after every recording the command UPDR (update recording list) is
+  triggered for all connected VDR.
+  Perhaps a new implementation in vdr-plugin-jonglisto is necessary as
+  alternative (if plugin exists).
 
 fachlich:
 
 - epgsearch view: save and use templates
 - channel config view: save and load configuration
-- rename recording directories
 - configurable epg search view (more powerful shortcut to the existing epg search)
 - mark epg entries if a timer exists (in any VDR)
 - mark epg entries if an alarm exists
@@ -45,3 +49,4 @@ finished TODOs:
 - disable login if configured and add an url parameter for the desired user
 - timer view which also shows remote timers (needs vdr-plugin-jonglisto)
 - jump from timer view directly to the search timers which created the timers
+- rename recording directories

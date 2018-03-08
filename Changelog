@@ -34,6 +34,7 @@ New:
 - create remote timer (if SVDRPDefaultHost is configured in VDR, needs vdr-plugin-jonglisto)
 - tools under configuration implemented (it's unsure, if someone else could or will use it, mainly used for development)
   copy epg and channel data from one VDR to another one
+- rename recording directory implemented
 
 0.1.0:
 Bugfixes:

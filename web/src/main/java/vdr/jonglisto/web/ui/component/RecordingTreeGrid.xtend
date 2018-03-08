@@ -111,6 +111,7 @@ class RecordingTreeGrid {
 
         treeGrid.addItemClickListener[event | event.showEpgDetails]
 
+        /*
         treeGrid.editor.addOpenListener(new EditorOpenListener<Recording>() {
             override onEditorOpen(EditorOpenEvent<Recording> event) {
                 // allow editing only on recordings, not folders
@@ -119,6 +120,7 @@ class RecordingTreeGrid {
                 }
             }
         })
+        */
 
         treeGrid.editor.enabled = true
         treeGrid.selectionMode = SelectionMode.MULTI
@@ -204,15 +206,20 @@ class RecordingTreeGrid {
         val completePath = getCompleteRecName(rec, fixedName)
 
         try {
-            val response = svdrp.renameRecording(currentVdr, rec.id, completePath)
+            if (rec.id == 0) {
+                println("RENAME FOLDER: " + completePath);
+                rec.folder = fixedName
+                moveRecording(rec);
+            } else {
+                val response = svdrp.renameRecording(currentVdr, rec.id, completePath)
+                val result = HtmlSanitizer.clean(response.lines.stream.collect(Collectors.joining("\n")).replaceAll("\"", ""))
+                rec.folder = fixedName
+                Notification.show(result)
+            }
 
-            rec.folder = fixedName
             treeGrid.dataProvider.refreshItem(rec)
-
-            val result = HtmlSanitizer.clean(response.lines.stream.collect(Collectors.joining("\n")).replaceAll("\"", ""))
-            Notification.show(result)
         } catch (Exception e) {
-            // rename failed
+            //rename failed
             log.info("Rename failed: " + e.message)
             Notification.show(messages.recordingRenameFailed + e.message, Type.ERROR_MESSAGE)
         }
