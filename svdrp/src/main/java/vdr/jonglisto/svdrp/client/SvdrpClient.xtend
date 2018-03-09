@@ -232,6 +232,15 @@ class SvdrpClient {
         vdr.command("DELR " + recording.id, 250)
     }
 
+    def void batchDeleteRecordings(VDR vdr, List<Recording> recordings) {
+        if (isPluginAvailable(vdr, "jonglisto")) {
+            val cmd = recordings.stream.map(s | s.id.toString).collect(Collectors.joining(" "));
+            vdr.command("PLUG jonglisto DELR " + cmd, 900)
+        } else {
+            recordings.stream.forEach(s | { deleteRecording(vdr, s) })
+        }
+    }
+
     def void undeleteRecording(VDR vdr, Recording recording) {
         if (isPluginAvailable(vdr, "jonglisto")) {
             vdr.command("PLUG jonglisto UNDR " + recording.id, 900)

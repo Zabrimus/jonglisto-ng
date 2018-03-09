@@ -64,6 +64,10 @@ class Svdrp implements Serializable {
         SvdrpClient.getInstance.deleteRecording(vdr, recording)
     }
 
+    def void batchDeleteRecordings(VDR vdr, List<Recording> recordings) {
+        SvdrpClient.getInstance.batchDeleteRecordings(vdr, recordings)
+    }
+
     def void undeleteRecording(VDR vdr, Recording recording) {
         SvdrpClient.getInstance.undeleteRecording(vdr, recording)
     }
