@@ -1,11 +1,6 @@
 TODOs in no specific order:
 
 technisch:
-- rename or move a bunch of recordings is very inefficient in VDR via MOVR,
-  because after every recording the command UPDR (update recording list) is
-  triggered for all connected VDR.
-  Perhaps a new implementation in vdr-plugin-jonglisto is necessary as
-  alternative (if plugin exists).
 
 fachlich:
 
@@ -19,6 +14,7 @@ fachlich:
 TODOs which are not yet reasoned:
 
 - automatically change epg-data (that search timers are able to filter) -> But how to prevent epgd to change the epg entry?
+- is it possible to read/configure xmltv data and fill VDR EPG? (replacement of vdr-plugin-xmltv).
 
 finished TODOs:
 
@@ -50,3 +46,8 @@ finished TODOs:
 - timer view which also shows remote timers (needs vdr-plugin-jonglisto)
 - jump from timer view directly to the search timers which created the timers
 - rename recording directories
+- rename or move a bunch of recordings is very inefficient in VDR via MOVR,
+  because after every recording the command UPDR (update recording list) is
+  triggered for all connected VDR.
+  Perhaps a new implementation in vdr-plugin-jonglisto is necessary as
+  alternative (if plugin exists).

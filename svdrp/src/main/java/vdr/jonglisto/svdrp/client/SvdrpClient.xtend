@@ -31,6 +31,7 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension org.apache.commons.lang3.StringUtils.*
 import java.io.StringReader
 import vdr.jonglisto.configuration.jaxb.scraper.Scraper
+import java.io.StringWriter
 
 @Log
 class SvdrpClient {
@@ -214,9 +215,17 @@ class SvdrpClient {
     }
 
     def void batchRenameRecording(VDR vdr, HashMap<Long, String> map) {
-        map.keySet.stream.forEach(recId | {
-            vdr.command("MOVR " + recId + " " + map.get(recId), 250)
-        })
+        if (isPluginAvailable(vdr, "jonglisto")) {
+            val writer = new StringWriter();
+            map.keySet().stream.sorted.forEach(recId | {
+                writer.append("/").append(recId.toString()).append(" ").append(map.get(recId));
+            })
+            vdr.command("PLUG jonglisto MOVR " + writer.toString(), 900)
+        } else {
+            map.keySet.stream.forEach(recId | {
+                vdr.command("MOVR " + recId + " " + map.get(recId), 250)
+            })
+        }
     }
 
     def void deleteRecording(VDR vdr, Recording recording) {
