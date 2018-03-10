@@ -1,4 +1,4 @@
-0.2.0-snapshot:
+0.2.0:
 Bugfixes:
 - delete multiple recordings could destroy the internal tree data structure
 - more useful notification if VDR is not running or cannot be reached

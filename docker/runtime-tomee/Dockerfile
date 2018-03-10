@@ -18,7 +18,7 @@ RUN set -x \
     && mkdir /etc/jonglisto \
     && mkdir /var/jonglisto-ng \
 
-    && curl -fSL https://github.com/Zabrimus/jonglisto-ng/releases/download/v0.1.0/jonglisto-ng-0.1.0.tar.gz -o /tmp/jonglisto-ng.tar.gz \
+    && curl -fSL https://github.com/Zabrimus/jonglisto-ng/releases/download/v0.2.0/jonglisto-ng-0.2.0.tar.gz -o /tmp/jonglisto-ng.tar.gz \
     && cd /tmp \
     && tar -zxf jonglisto-ng.tar.gz \
     && mv jonglisto-ng*war /usr/local/tomee/webapps/jonglisto-ng.war \
