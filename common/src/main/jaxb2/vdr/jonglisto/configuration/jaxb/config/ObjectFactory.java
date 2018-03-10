@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.03.03 um 10:02:09 AM CET 
+// Generiert: 2018.03.10 um 03:12:05 PM CET 
 //
 
 
@@ -74,6 +74,14 @@ public class ObjectFactory {
      */
     public Jonglisto.Scraper createJonglistoScraper() {
         return new Jonglisto.Scraper();
+    }
+
+    /**
+     * Create an instance of {@link Jonglisto.JonglistoPlugin }
+     * 
+     */
+    public Jonglisto.JonglistoPlugin createJonglistoJonglistoPlugin() {
+        return new Jonglisto.JonglistoPlugin();
     }
 
     /**
@@ -194,6 +202,14 @@ public class ObjectFactory {
      */
     public Jonglisto.Scraper.ImagePath createJonglistoScraperImagePath() {
         return new Jonglisto.Scraper.ImagePath();
+    }
+
+    /**
+     * Create an instance of {@link Jonglisto.JonglistoPlugin.Allow }
+     * 
+     */
+    public Jonglisto.JonglistoPlugin.Allow createJonglistoJonglistoPluginAllow() {
+        return new Jonglisto.JonglistoPlugin.Allow();
     }
 
     /**

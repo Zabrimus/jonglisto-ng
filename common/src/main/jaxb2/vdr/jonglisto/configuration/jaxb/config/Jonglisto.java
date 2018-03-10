@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.03.03 um 10:02:09 AM CET 
+// Generiert: 2018.03.10 um 03:12:05 PM CET 
 //
 
 
@@ -54,6 +54,28 @@ import javax.xml.bind.annotation.XmlValue;
  *                           &lt;attribute name="mac" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *                         &lt;/extension&gt;
  *                       &lt;/simpleContent&gt;
+ *                     &lt;/complexType&gt;
+ *                   &lt;/element&gt;
+ *                 &lt;/sequence&gt;
+ *               &lt;/restriction&gt;
+ *             &lt;/complexContent&gt;
+ *           &lt;/complexType&gt;
+ *         &lt;/element&gt;
+ *         &lt;element name="jonglisto-plugin" minOccurs="0"&gt;
+ *           &lt;complexType&gt;
+ *             &lt;complexContent&gt;
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                 &lt;sequence&gt;
+ *                   &lt;element name="allow" maxOccurs="unbounded" minOccurs="0"&gt;
+ *                     &lt;complexType&gt;
+ *                       &lt;complexContent&gt;
+ *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                           &lt;sequence&gt;
+ *                             &lt;element name="command" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/&gt;
+ *                           &lt;/sequence&gt;
+ *                           &lt;attribute name="vdr" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *                         &lt;/restriction&gt;
+ *                       &lt;/complexContent&gt;
  *                     &lt;/complexType&gt;
  *                   &lt;/element&gt;
  *                 &lt;/sequence&gt;
@@ -264,6 +286,7 @@ import javax.xml.bind.annotation.XmlValue;
 @XmlType(name = "", propOrder = {
     "directory",
     "configuredVdr",
+    "jonglistoPlugin",
     "epg",
     "channel",
     "epg2Vdr",
@@ -281,6 +304,8 @@ public class Jonglisto {
     protected Jonglisto.Directory directory;
     @XmlElement(required = true)
     protected Jonglisto.ConfiguredVdr configuredVdr;
+    @XmlElement(name = "jonglisto-plugin")
+    protected Jonglisto.JonglistoPlugin jonglistoPlugin;
     @XmlElement(required = true)
     protected Jonglisto.Epg epg;
     @XmlElement(required = true)
@@ -344,6 +369,30 @@ public class Jonglisto {
      */
     public void setConfiguredVdr(Jonglisto.ConfiguredVdr value) {
         this.configuredVdr = value;
+    }
+
+    /**
+     * Ruft den Wert der jonglistoPlugin-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Jonglisto.JonglistoPlugin }
+     *     
+     */
+    public Jonglisto.JonglistoPlugin getJonglistoPlugin() {
+        return jonglistoPlugin;
+    }
+
+    /**
+     * Legt den Wert der jonglistoPlugin-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Jonglisto.JonglistoPlugin }
+     *     
+     */
+    public void setJonglistoPlugin(Jonglisto.JonglistoPlugin value) {
+        this.jonglistoPlugin = value;
     }
 
     /**
@@ -2356,6 +2405,162 @@ public class Jonglisto {
                 value = new ArrayList<String>();
             }
             return this.value;
+        }
+
+    }
+
+
+    /**
+     * <p>Java-Klasse für anonymous complex type.
+     * 
+     * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+     * 
+     * <pre>
+     * &lt;complexType&gt;
+     *   &lt;complexContent&gt;
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *       &lt;sequence&gt;
+     *         &lt;element name="allow" maxOccurs="unbounded" minOccurs="0"&gt;
+     *           &lt;complexType&gt;
+     *             &lt;complexContent&gt;
+     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *                 &lt;sequence&gt;
+     *                   &lt;element name="command" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/&gt;
+     *                 &lt;/sequence&gt;
+     *                 &lt;attribute name="vdr" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+     *               &lt;/restriction&gt;
+     *             &lt;/complexContent&gt;
+     *           &lt;/complexType&gt;
+     *         &lt;/element&gt;
+     *       &lt;/sequence&gt;
+     *     &lt;/restriction&gt;
+     *   &lt;/complexContent&gt;
+     * &lt;/complexType&gt;
+     * </pre>
+     * 
+     * 
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+        "allow"
+    })
+    public static class JonglistoPlugin {
+
+        protected List<Jonglisto.JonglistoPlugin.Allow> allow;
+
+        /**
+         * Gets the value of the allow property.
+         * 
+         * <p>
+         * This accessor method returns a reference to the live list,
+         * not a snapshot. Therefore any modification you make to the
+         * returned list will be present inside the JAXB object.
+         * This is why there is not a <CODE>set</CODE> method for the allow property.
+         * 
+         * <p>
+         * For example, to add a new item, do as follows:
+         * <pre>
+         *    getAllow().add(newItem);
+         * </pre>
+         * 
+         * 
+         * <p>
+         * Objects of the following type(s) are allowed in the list
+         * {@link Jonglisto.JonglistoPlugin.Allow }
+         * 
+         * 
+         */
+        public List<Jonglisto.JonglistoPlugin.Allow> getAllow() {
+            if (allow == null) {
+                allow = new ArrayList<Jonglisto.JonglistoPlugin.Allow>();
+            }
+            return this.allow;
+        }
+
+
+        /**
+         * <p>Java-Klasse für anonymous complex type.
+         * 
+         * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+         * 
+         * <pre>
+         * &lt;complexType&gt;
+         *   &lt;complexContent&gt;
+         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+         *       &lt;sequence&gt;
+         *         &lt;element name="command" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/&gt;
+         *       &lt;/sequence&gt;
+         *       &lt;attribute name="vdr" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+         *     &lt;/restriction&gt;
+         *   &lt;/complexContent&gt;
+         * &lt;/complexType&gt;
+         * </pre>
+         * 
+         * 
+         */
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+            "command"
+        })
+        public static class Allow {
+
+            protected List<String> command;
+            @XmlAttribute(name = "vdr")
+            protected String vdr;
+
+            /**
+             * Gets the value of the command property.
+             * 
+             * <p>
+             * This accessor method returns a reference to the live list,
+             * not a snapshot. Therefore any modification you make to the
+             * returned list will be present inside the JAXB object.
+             * This is why there is not a <CODE>set</CODE> method for the command property.
+             * 
+             * <p>
+             * For example, to add a new item, do as follows:
+             * <pre>
+             *    getCommand().add(newItem);
+             * </pre>
+             * 
+             * 
+             * <p>
+             * Objects of the following type(s) are allowed in the list
+             * {@link String }
+             * 
+             * 
+             */
+            public List<String> getCommand() {
+                if (command == null) {
+                    command = new ArrayList<String>();
+                }
+                return this.command;
+            }
+
+            /**
+             * Ruft den Wert der vdr-Eigenschaft ab.
+             * 
+             * @return
+             *     possible object is
+             *     {@link String }
+             *     
+             */
+            public String getVdr() {
+                return vdr;
+            }
+
+            /**
+             * Legt den Wert der vdr-Eigenschaft fest.
+             * 
+             * @param value
+             *     allowed object is
+             *     {@link String }
+             *     
+             */
+            public void setVdr(String value) {
+                this.vdr = value;
+            }
+
         }
 
     }

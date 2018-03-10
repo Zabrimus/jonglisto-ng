@@ -17,8 +17,31 @@
         <instance name="vdr2"       displayName="VDR 2"      host="vdr2"       port="6419"   mac="00-80-41-ae-fd-8e"/>
         <instance name="vdr3"       displayName="VDR 3"      host="vdr3"       port="6419" />
         <instance name="epgcollect" displayName="epgcollect" host="epgcollect" port="6419" />
-
     </configuredVdr>
+
+    <!-- optional configuration, which SVDRP command of vdr-plugin-jonglisto jonglisto-ng are    -->
+    <!-- allowed to use in the specified VDR. Some commands falls back to the VDR implementation -->
+    <!-- other commands will raise a notification in the GUI.                                    -->
+    <!-- the pseudo commands 'all' and 'none' allows any command or no command at all.           -->
+    <jonglisto-plugin>
+        <allow vdr="vdr1">
+            <command>all</command>
+        </allow>
+
+        <allow vdr="vdr2">
+            <command>none</command>
+        </allow>
+
+        <allow vdr="vdr3">
+            <command>NEWT</command>
+            <command>NERT</command>
+            <command>DELT</command>
+            <command>SWIT</command>
+        </allow>
+
+        <!-- configuration for epgcollect do not exists. Use the default: all, if the     -->
+        <!-- plugin exists on epgcollect                                                  -->
+    </jonglisto-plugin>
 
     <!-- configuration of the VDR instance which are responsible for EPG and channel data -->
     <!-- ref:  reference to a configured VDR instance, see configuredVdr.instance.name    -->

@@ -60,6 +60,23 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="jonglisto-plugin" maxOccurs="1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>optional configuration, which SVDRP command of vdr-plugin-jonglisto jonglisto-ng are     allowed to use in the specified VDR. Some commands falls back to the VDR implementation  other commands will raise a notification in the GUI.                                     the pseudo commands 'all' and 'none' allows any command or no command at all.            configuration for epgcollect do not exists. Use the default: all, if the      plugin exists on epgcollect</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="allow" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="command" maxOccurs="unbounded" minOccurs="0"/>
+                  </xs:sequence>
+                  <xs:attribute type="xs:string" name="vdr" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
         <xs:element name="epg">
           <xs:annotation>
             <xs:documentation>

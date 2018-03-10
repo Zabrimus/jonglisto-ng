@@ -29,7 +29,8 @@ import vdr.jonglisto.util.Utils
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
-import java.security.URIParameter
+import java.util.Set
+import java.util.HashSet
 
 @Log
 class Configuration {
@@ -84,6 +85,8 @@ class Configuration {
 
     private static String loginUserUrlParameter
 
+    private static Map<String, Set<String>> allowedCommands
+
     private static Unmarshaller unmarshaller
     private static Marshaller marshaller
 
@@ -109,6 +112,7 @@ class Configuration {
         registerEpgTimeSelect(config)
         registerEpgInformation(config)
         registerDbInformation(config)
+        registerAllowedCommands(config)
 
         defaultSvdrp = config.svdrpCommandList?.command
         customDirectory = config.directory?.dir
@@ -331,6 +335,25 @@ class Configuration {
         return instance
     }
 
+    public def boolean isPluginCommandAllowed(String name, String command) {
+        // Map<String, Set<String>> allowedCommands
+
+        if (allowedCommands.containsKey(name)) {
+            if (allowedCommands.get(name).contains("none")) {
+                // no command is allowed
+                return false
+            } else if (allowedCommands.get(name).contains("all")) {
+                // every  command is allowed
+                return true
+            } else {
+                return allowedCommands.get(name).contains(command);
+            }
+        } else {
+            // no configuration found -> everything is allowed
+            return true
+        }
+    }
+
     private def loadProviderReplacement() {
         val result = new ArrayList<Pair<String, String>>
         val replace = ClasspathFileReader.readStringList("/providerids_replacements.txt")
@@ -462,6 +485,23 @@ class Configuration {
     private def registerSchedules() {
         // start all jobs after server restart
         jcron.jobs.forEach[s | addJobScheduler(s)]
+    }
+
+    private def void registerAllowedCommands(Jonglisto cfg) {
+        allowedCommands = new HashMap<String, Set<String>>
+
+        if (cfg.jonglistoPlugin !== null) {
+            cfg.jonglistoPlugin.allow.forEach[s | {
+                val allowed = new HashSet<String>
+                if (s.command !== null && s.command.size > 0) {
+                    allowed.addAll(s.command)
+                } else {
+                    allowed.add("all")
+                }
+
+                allowedCommands.put(s.vdr, allowed)
+            }]
+        }
     }
 
     private def compilePattern(String str) {

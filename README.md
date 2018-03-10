@@ -130,6 +130,34 @@ Existing VDR instances
 </configuredVdr>
 ```
 
+Optional configuration, which tells jonglisto-ng which SVDRP in vdr-plugin-jonglisto is allowed to use for
+every VDR. This configuration is of course only necessary if the plugin is installed.
+```xml
+    <!-- optional configuration, which SVDRP command of vdr-plugin-jonglisto jonglisto-ng are    -->
+    <!-- allowed to use in the specified VDR. Some commands falls back to the VDR implementation -->
+    <!-- other commands will raise a notification in the GUI.                                    -->
+    <!-- the pseudo commands 'all' and 'none' allows any command or no command at all.           -->
+    <jonglisto-plugin>
+        <allow vdr="vdr1">
+            <command>all</command>
+        </allow>
+
+        <allow vdr="vdr2">
+            <command>none</command>
+        </allow>
+
+        <allow vdr="vdr3">
+            <command>NEWT</command>
+            <command>NERT</command>
+            <command>DELT</command>
+            <command>SWIT</command>
+        </allow>
+
+        <!-- configuration for epgcollect do not exists. Use the default: all, if the     -->
+        <!-- plugin exists on epgcollect                                                  -->
+    </jonglisto-plugin>
+```
+
 Which VDR instance shall be used to get epg and channel data
 ```xml
     <!-- configuration of the VDR instance which are responsible for EPG and channel data -->

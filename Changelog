@@ -36,6 +36,8 @@ New:
   copy epg and channel data from one VDR to another one
 - rename recording directory implemented
 - move multiple recordings or rename recording directory is much faster if vdr-plugin-jonglisto is used
+- possibility to configure which VDR are allowed to use which jonglisto SVDRP command (see configuration element jonglisto-plugin)
+
 
 0.1.0:
 Bugfixes:

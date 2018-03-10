@@ -215,7 +215,7 @@ class SvdrpClient {
     }
 
     def void batchRenameRecording(VDR vdr, HashMap<Long, String> map) {
-        if (isPluginAvailable(vdr, "jonglisto")) {
+        if (isJonglistoPluginCommandAllowed(vdr, "MOVR")) {
             val writer = new StringWriter();
             map.keySet().stream.sorted.forEach(recId | {
                 writer.append("/").append(recId.toString()).append(" ").append(map.get(recId));
@@ -233,7 +233,7 @@ class SvdrpClient {
     }
 
     def void batchDeleteRecordings(VDR vdr, List<Recording> recordings) {
-        if (isPluginAvailable(vdr, "jonglisto")) {
+        if (isJonglistoPluginCommandAllowed(vdr, "DELR")) {
             val cmd = recordings.stream.map(s | s.id.toString).collect(Collectors.joining(" "));
             vdr.command("PLUG jonglisto DELR " + cmd, 900)
         } else {
@@ -242,7 +242,7 @@ class SvdrpClient {
     }
 
     def void undeleteRecording(VDR vdr, Recording recording) {
-        if (isPluginAvailable(vdr, "jonglisto")) {
+        if (isJonglistoPluginCommandAllowed(vdr, "UNDR")) {
             vdr.command("PLUG jonglisto UNDR " + recording.id, 900)
         }
     }
@@ -252,7 +252,7 @@ class SvdrpClient {
     }
 
     def void updateTimer(VDR vdr, Timer timer) {
-        if (isPluginAvailable(vdr, "jonglisto")) {
+        if (isJonglistoPluginCommandAllowed(vdr, "UPDT")) {
             vdr.command("PLUG jonglisto UPDT " + timer.toVdrString, 250)
         } else {
             vdr.command("UPDT " + timer.toVdrString, 250)
@@ -385,6 +385,14 @@ class SvdrpClient {
         return isPluginAvailable(vdr, pluginName)
     }
 
+    def isJonglistoPluginCommandAllowed(VDR vdr, String command) {
+        if (!isPluginAvailable(vdr, "jonglisto")) {
+            return false
+        } else {
+            return Configuration.instance.isPluginCommandAllowed(vdr.instance, command)
+        }
+    }
+
     def isPluginAvailable(VDR vdr, String pluginName) {
         if (vdr === null) {
             return false
@@ -403,7 +411,7 @@ class SvdrpClient {
     }
 
     def void deleteTimer(VDR vdr, Timer timer) {
-        if (isPluginAvailable(vdr, "jonglisto")) {
+        if (isJonglistoPluginCommandAllowed(vdr, "DELT")) {
             vdr.command("PLUG jonglisto DELT " + timer.id, 250)
 
             // give VDR some time to poll timers
@@ -416,7 +424,7 @@ class SvdrpClient {
     }
 
     def recordViaOsdserver(VDR vdr, String channelId, Epg epg) {
-        if (isPluginAvailable(vdr, "jonglisto")) {
+        if (isJonglistoPluginCommandAllowed(vdr, "NERT")) {
             vdr.command("PLUG jonglisto NERT " + epg.channelId + " " + epg.startTime, 900)
         } else {
             val timer = new Timer();
@@ -469,15 +477,23 @@ class SvdrpClient {
 
     def getScraperData(VDR vdr, Epg epg, long recordingId) {
         val epgVdr = Configuration.instance.epgVdr
-        if (isPluginAvailable(epgVdr, "jonglisto")) {
+        if (isJonglistoPluginCommandAllowed(vdr, "EINF") || isJonglistoPluginCommandAllowed(vdr, "RINF")) {
             try {
                 var Response response
                 val usedVdr = vdr ?: epgVdr
 
                 if (recordingId === -1) {
-                    response = usedVdr.command("PLUG jonglisto EINF " + epg.channelId + " " + epg.eventId, 900)
+                    if (isJonglistoPluginCommandAllowed(vdr, "EINF")) {
+                        response = usedVdr.command("PLUG jonglisto EINF " + epg.channelId + " " + epg.eventId, 900)
+                    } else {
+                        return null
+                    }
                 } else {
-                    response = usedVdr.command("PLUG jonglisto RINF " + recordingId, 900)
+                    if (isJonglistoPluginCommandAllowed(vdr, "RINF")) {
+                        response = usedVdr.command("PLUG jonglisto RINF " + recordingId, 900)
+                    } else {
+                        return null;
+                    }
                 }
 
                 val xml = response.lines.get(0)
@@ -493,28 +509,30 @@ class SvdrpClient {
     }
 
     def writeChannelsConf(VDR vdr, List<Channel> channels) {
-        val parameterList = new ArrayList<String>
+        if (isJonglistoPluginCommandAllowed(vdr, "REPC")) {
+            val parameterList = new ArrayList<String>
 
-        // prepare command line
-        channels.forEach[s | {
-            var raw = s.raw
+            // prepare command line
+            channels.forEach[s | {
+                var raw = s.raw
 
-            if (s.id !== null) {
-                if (s.name.contains(":")) {
-                    val oldc = s.name
-                    val newc = s.name.replace(":", "|")
-                    raw = raw.replace(oldc, newc)
+                if (s.id !== null) {
+                    if (s.name.contains(":")) {
+                        val oldc = s.name
+                        val newc = s.name.replace(":", "|")
+                        raw = raw.replace(oldc, newc)
+                    }
+                } else {
+                    raw = ":" + s.name
                 }
-            } else {
-                raw = ":" + s.name
-            }
 
-            parameterList.add(raw)
-        }]
+                parameterList.add(raw)
+            }]
 
-        val parameter = parameterList.stream().collect(Collectors.joining("~"))
+            val parameter = parameterList.stream().collect(Collectors.joining("~"))
 
-        vdr.command("PLUG jonglisto repc " + parameter, 900)
+            vdr.command("PLUG jonglisto repc " + parameter, 900)
+        }
     }
 
     def void copyEpg(String source, String dest) {
@@ -566,7 +584,7 @@ class SvdrpClient {
         val sourceVdr = Configuration.getInstance().getVdr(source)
         val destVdr = Configuration.getInstance().getVdr(dest)
 
-        if (!isPluginAvailable(destVdr, "jonglisto")) {
+        if (!isJonglistoPluginCommandAllowed(destVdr, "REPC")) {
             throw new RuntimeException("vdr-plugin-jonglisto is required in destination VDR")
         }
 
@@ -599,7 +617,7 @@ class SvdrpClient {
     }
 
     private def List<Recording> readDeletedRecordings(VDR vdr) {
-        if (isPluginAvailable(vdr, "jonglisto")) {
+        if (isJonglistoPluginCommandAllowed(vdr, "LSDR")) {
             return vdr.command("PLUG jonglisto LSDR", 900, [ Parser.parseRecording(it.lines) ], [ Collections.emptyList ])
         } else {
             return Collections.emptyList
@@ -620,7 +638,7 @@ class SvdrpClient {
     private def List<Timer> readTimer(VDR vdr) {
         var List<Timer> result
 
-        if (isPluginAvailable(vdr, "jonglisto")) {
+        if (isJonglistoPluginCommandAllowed(vdr, "LSTT")) {
             result = vdr.command("PLUG jonglisto LSTT", 250, [ Parser.parseTimer(it.lines) ], [ Collections.emptyList ])
 
             result.forEach[s | {

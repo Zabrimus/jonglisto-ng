@@ -1,6 +1,8 @@
 TODOs in no specific order:
 
 technisch:
+- delete a bunch of recordings is still slow (same cause as described below for moving/renaming recordings with MOVR)
+  My first try to solve this in vdr-plugin-jonglisto goes down with flying colours.
 
 fachlich:
 
