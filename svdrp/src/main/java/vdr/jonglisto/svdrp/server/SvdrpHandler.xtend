@@ -64,7 +64,7 @@ class SvdrpHandler implements Runnable {
                             val commandLine = command.toString().trim()
                             command = new StringWriter
 
-                            log.info("> Received command: " + commandLine)
+                            log.fine("> Received command: " + commandLine)
 
                             if (commandLine.length === 0) {
                                 // do nothing
@@ -117,7 +117,7 @@ class SvdrpHandler implements Runnable {
                 }
             }
         } finally {
-            log.info("FINALLY")
+            log.fine("FINALLY")
 
             if (input !== null) {
                 input.close
