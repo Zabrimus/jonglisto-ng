@@ -477,19 +477,20 @@ class SvdrpClient {
 
     def getScraperData(VDR vdr, Epg epg, long recordingId) {
         val epgVdr = Configuration.instance.epgVdr
-        if (isJonglistoPluginCommandAllowed(vdr, "EINF") || isJonglistoPluginCommandAllowed(vdr, "RINF")) {
+        val usedVdr = vdr ?: epgVdr
+
+        if (isJonglistoPluginCommandAllowed(usedVdr, "EINF") || isJonglistoPluginCommandAllowed(usedVdr, "RINF")) {
             try {
                 var Response response
-                val usedVdr = vdr ?: epgVdr
 
                 if (recordingId === -1) {
-                    if (isJonglistoPluginCommandAllowed(vdr, "EINF")) {
+                    if (isJonglistoPluginCommandAllowed(usedVdr, "EINF")) {
                         response = usedVdr.command("PLUG jonglisto EINF " + epg.channelId + " " + epg.eventId, 900)
                     } else {
                         return null
                     }
                 } else {
-                    if (isJonglistoPluginCommandAllowed(vdr, "RINF")) {
+                    if (isJonglistoPluginCommandAllowed(usedVdr, "RINF")) {
                         response = usedVdr.command("PLUG jonglisto RINF " + recordingId, 900)
                     } else {
                         return null;
