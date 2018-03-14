@@ -20,14 +20,25 @@ class ChannelLogo {
 
     var static Set<String> logoFiles
     var static Map<String, String> logoFileMapping = new HashMap<String, String>
+    var boolean logoPathExists
 
     new() {
-        // read all existing channel logos
-        val webInfPath = VaadinServlet.getCurrent().getServletContext().getRealPath("/VAADIN/themes/jonglisto/channellogo");
-        logoFiles = Files.list(Paths.get(webInfPath)).map(s | s.getFileName.toString).collect(Collectors.toSet())
+        try {
+            // read all existing channel logos
+            val webInfPath = VaadinServlet.getCurrent().getServletContext().getRealPath("/VAADIN/themes/jonglisto/channellogo");
+            logoFiles = Files.list(Paths.get(webInfPath)).map(s | s.getFileName.toString).collect(Collectors.toSet())
+            logoPathExists = true
+        } catch (Exception e) {
+            logoPathExists = false
+        }
     }
 
     def getImage(String channelName) {
+        if (!logoPathExists) {
+            // there exists no logo at all. directly return
+            return null;
+        }
+
         // check if mapping already exists
         var fn = logoFileMapping.get(channelName)
         if (fn !== null) {

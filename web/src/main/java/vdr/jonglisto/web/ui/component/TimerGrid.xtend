@@ -28,6 +28,7 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.db.SearchTimerService
+import com.vaadin.ui.Image
 
 @Log
 @ViewScoped
@@ -253,7 +254,13 @@ class TimerGrid {
 
     private def createChannel(Timer ev) {
         val name = svdrp.getChannel(ev.channelId).name
-        val image = channelLogo.getImage(name)
+        var Image image
+
+        try {
+            image = channelLogo.getImage(name)
+        } catch (Exception e) {
+            image = null;
+        }
 
         if (image !== null) {
             image.data = name
