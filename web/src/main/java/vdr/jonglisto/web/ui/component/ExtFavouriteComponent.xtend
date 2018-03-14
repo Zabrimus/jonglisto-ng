@@ -1,16 +1,24 @@
 package vdr.jonglisto.web.ui.component
 
 import com.vaadin.data.provider.ListDataProvider
+import com.vaadin.icons.VaadinIcons
+import com.vaadin.ui.Button
+import com.vaadin.ui.CheckBox
 import com.vaadin.ui.CustomComponent
 import com.vaadin.ui.Grid
 import com.vaadin.ui.HorizontalLayout
 import com.vaadin.ui.NativeSelect
+import com.vaadin.ui.Notification
+import com.vaadin.ui.Notification.Type
 import com.vaadin.ui.TextField
 import com.vaadin.ui.components.grid.GridRowDragger
+import com.vaadin.ui.renderers.ComponentRenderer
+import com.vaadin.ui.themes.ValoTheme
 import de.steinwedel.messagebox.ButtonOption
 import de.steinwedel.messagebox.MessageBox
 import java.util.ArrayList
-import java.util.logging.Level
+import java.util.HashMap
+import java.util.Map
 import java.util.stream.Collectors
 import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
@@ -18,21 +26,11 @@ import vdr.jonglisto.configuration.jaxb.favourite.Favourites.Favourite
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Channel
+import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.ui.Button
-import com.vaadin.icons.VaadinIcons
-import com.vaadin.ui.themes.ValoTheme
-import com.vaadin.ui.Notification
-import com.vaadin.ui.Notification.Type
-import com.vaadin.ui.renderers.ComponentRenderer
-import vdr.jonglisto.model.VDR
-import java.util.List
-import com.vaadin.ui.CheckBox
-import java.util.Map
-import java.util.HashMap
 
 @Log
 class ExtFavouriteComponent extends CustomComponent {
@@ -184,7 +182,7 @@ class ExtFavouriteComponent extends CustomComponent {
 
                             config.saveFavourites()
                         } catch (Exception e) {
-                            log.log(Level.WARNING, "save of favourites failed", e)
+                            log.info("save of favourites failed", e)
 
                             MessageBox.createWarning()
                             .withCaption(messages.configFavouriteSave)
@@ -297,7 +295,7 @@ class ExtFavouriteComponent extends CustomComponent {
             try {
                 svdrp.switchChannel(currentVdr, ch.id)
             } catch (Exception e) {
-                log.log(Level.INFO, "Switch channel failed", e)
+                log.info("Switch channel failed", e)
                 Notification.show(messages.epgErrorSwitchFailed, Type.ERROR_MESSAGE)
             }
         })

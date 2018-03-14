@@ -5,6 +5,8 @@ import com.google.common.cache.CacheLoader
 import com.google.common.cache.LoadingCache
 import com.google.common.cache.RemovalListener
 import com.google.common.cache.RemovalNotification
+import java.io.StringReader
+import java.io.StringWriter
 import java.util.ArrayList
 import java.util.Collections
 import java.util.HashMap
@@ -12,9 +14,9 @@ import java.util.List
 import java.util.Map
 import java.util.Optional
 import java.util.concurrent.TimeUnit
-import java.util.logging.Level
 import java.util.stream.Collectors
 import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.configuration.jaxb.scraper.Scraper
 import vdr.jonglisto.model.BaseData
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.Epg
@@ -29,9 +31,6 @@ import vdr.jonglisto.model.VdrPlugin
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
-import java.io.StringReader
-import vdr.jonglisto.configuration.jaxb.scraper.Scraper
-import java.io.StringWriter
 
 @Log
 class SvdrpClient {
@@ -43,7 +42,7 @@ class SvdrpClient {
     static val Map<String, Channel> channelMap = new HashMap<String, Channel>()
 
     private new() {
-        log.fine("Init SvdrpClient...")
+        log.debug("Init SvdrpClient...")
 
         // init caches
         connections = CacheBuilder.newBuilder() //
@@ -318,7 +317,7 @@ class SvdrpClient {
 
             return result
         } catch (Exception e) {
-            log.log(Level.FINE, "Exception", e);
+            log.debug("Exception", e);
 
             // no categories defined or host down
             return Collections.emptyList
@@ -334,7 +333,7 @@ class SvdrpClient {
 
             return result
         } catch (Exception e) {
-            log.log(Level.FINE, "Exception", e);
+            log.debug("Exception", e);
 
             // no channel groups defined or host down
             return Collections.emptyList
@@ -501,7 +500,7 @@ class SvdrpClient {
 
                 return Configuration.instance.unmarshaller.unmarshal(new StringReader(xml)) as Scraper
             } catch (Exception e) {
-                log.log(Level.FINE, "Get Scraper data failed.", e)
+                log.debug("Get Scraper data failed.", e)
 
                 // no epg data found
                 return null;
@@ -680,7 +679,7 @@ class SvdrpClient {
             throw new ConnectionException(message)
         }
 
-        log.fine("Command: " + command)
+        log.debug("Command: " + command)
 
         val resp = connection.send(command)
         if (resp.code != desiredCode && desiredCode != -1) {

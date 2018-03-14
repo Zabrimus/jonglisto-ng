@@ -3,29 +3,28 @@ package vdr.jonglisto.web.ui
 import com.vaadin.cdi.CDIView
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Alignment
+import com.vaadin.ui.Button
+import com.vaadin.ui.Grid
 import com.vaadin.ui.Label
 import com.vaadin.ui.Layout
+import com.vaadin.ui.Notification
+import com.vaadin.ui.Notification.Type
+import com.vaadin.ui.TabSheet
+import com.vaadin.ui.renderers.ComponentRenderer
+import com.vaadin.ui.renderers.HtmlRenderer
+import com.vaadin.ui.themes.ValoTheme
 import javax.annotation.PostConstruct
 import javax.inject.Inject
+import vdr.jonglisto.model.Recording
 import vdr.jonglisto.model.VDR
+import vdr.jonglisto.model.VDRDiskStat
+import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.RecordingTreeGrid
+import vdr.jonglisto.web.util.HtmlSanitizer
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.ui.TabSheet
-import com.vaadin.ui.themes.ValoTheme
-import vdr.jonglisto.model.Recording
-import com.vaadin.ui.Grid
-import vdr.jonglisto.web.util.HtmlSanitizer
-import vdr.jonglisto.util.DateTimeUtil
-import com.vaadin.ui.Button
-import java.util.logging.Level
-import com.vaadin.ui.Notification
-import com.vaadin.ui.Notification.Type
-import com.vaadin.ui.renderers.HtmlRenderer
-import com.vaadin.ui.renderers.ComponentRenderer
-import vdr.jonglisto.model.VDRDiskStat
 
 @Log
 @CDIView(MainUI.RECORDING_VIEW)
@@ -220,7 +219,7 @@ class RecordingView extends BaseView {
                 svdrp.undeleteRecording(selectedVdr, recording)
                 deleteGrid.items = svdrp.getDeletedRecordings(selectedVdr)
             } catch (Exception e) {
-                log.log(Level.INFO, "Undeletion failed", e)
+                log.info("Undeletion failed", e)
                 Notification.show(messages.recordingErrorUndelete, Type.ERROR_MESSAGE)
             }
         })

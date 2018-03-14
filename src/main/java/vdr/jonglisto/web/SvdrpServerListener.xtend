@@ -23,7 +23,7 @@ class SvdrpServerListener implements ServletContextListener {
     }
 
     override void contextDestroyed(ServletContextEvent servletContextEvent) {
-        log.severe("Stop svdrp server...")
+        log.info("Stop svdrp server...")
 
         if (svdrpServer !== null) {
             svdrpServer.stopServer

@@ -11,8 +11,8 @@ import com.vaadin.shared.ui.dnd.DropEffect
 import com.vaadin.shared.ui.dnd.EffectAllowed
 import com.vaadin.shared.ui.grid.DropMode
 import com.vaadin.ui.Button
-import com.vaadin.ui.CssLayout
 import com.vaadin.ui.ComboBox
+import com.vaadin.ui.CssLayout
 import com.vaadin.ui.Grid.SelectionMode
 import com.vaadin.ui.HorizontalLayout
 import com.vaadin.ui.Label
@@ -30,6 +30,8 @@ import com.vaadin.ui.dnd.DragSourceExtension
 import com.vaadin.ui.dnd.DropTargetExtension
 import com.vaadin.ui.renderers.ComponentRenderer
 import com.vaadin.ui.themes.ValoTheme
+import de.steinwedel.messagebox.ButtonOption
+import de.steinwedel.messagebox.MessageBox
 import java.io.BufferedWriter
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -39,23 +41,20 @@ import java.util.ArrayList
 import java.util.Collection
 import java.util.HashSet
 import java.util.List
-import java.util.logging.Level
 import java.util.stream.Collectors
 import javax.annotation.PostConstruct
+import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.model.BaseDataWithName
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.EpgProvider
 import vdr.jonglisto.model.EpgProvider.Provider
 import vdr.jonglisto.model.VDR
+import vdr.jonglisto.svdrp.client.Response
 import vdr.jonglisto.util.Utils
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import de.steinwedel.messagebox.MessageBox
-import de.steinwedel.messagebox.ButtonOption
-import org.apache.shiro.SecurityUtils
-import vdr.jonglisto.svdrp.client.Response
 
 @Log
 @CDIView(MainUI.CHANNEL_CONFIG_VIEW)
@@ -99,7 +98,7 @@ class ChannelConfigView extends BaseView {
                                         val v = config.getVdr(comboBox.selectedItem.get)
                                         resp = svdrp.writeChannelsConf(v, l)
                                     } catch (Exception e) {
-                                        log.log(Level.WARNING, "Writing channels to VDR failed.")
+                                        log.warn("Writing channels to VDR failed.")
                                         Notification.show(messages.error, Type.ERROR_MESSAGE)
                                     }
                                 }
@@ -241,7 +240,7 @@ class ChannelConfigView extends BaseView {
                                 val addEpg = new EpgProvider(p.provider, p.epgid, p.name, p.normalizedName)
                                 treeData.addItem(target, addEpg)
                             } catch (Exception e) {
-                                log.log(Level.INFO, "Ignoring error: ", e);
+                                log.info("Ignoring error: ", e);
                             }
                         }
                     }
@@ -339,7 +338,7 @@ class ChannelConfigView extends BaseView {
                     try {
                         svdrp.switchChannel(selectedVdr, name.id)
                     } catch (Exception e) {
-                        log.log(Level.INFO, "Switch channel failed", e)
+                        log.info("Switch channel failed", e)
                         Notification.show(messages.epgErrorSwitchFailed, Type.ERROR_MESSAGE)
                     }
                 })
@@ -454,7 +453,7 @@ class ChannelConfigView extends BaseView {
     }
 
     private def getChannelDownloadButton(Layout layout, String caption, String filename) {
-        log.fine("create channel.conf download button")
+        log.debug("create channel.conf download button")
         return getDownloadButton(layout, caption, filename, [createChannelsConf])
     }
 
@@ -491,12 +490,12 @@ class ChannelConfigView extends BaseView {
 
             return downloadButton;
         } catch (Exception e) {
-            log.log(Level.INFO, "Error in getDownloadButton:", e)
+            log.info("Error in getDownloadButton:", e)
         }
     }
 
     private def createChannelsConf() {
-        log.fine("Starting creation of channels.conf")
+        log.debug("Starting creation of channels.conf")
 
         try {
             val channelsConf = new StringBuilder()
@@ -522,12 +521,12 @@ class ChannelConfigView extends BaseView {
 
             return channelsConf.toString
         } catch (Exception e) {
-            log.log(Level.INFO, "Creation of channels.conf failed:", e)
+            log.info("Creation of channels.conf failed:", e)
         }
     }
 
     private def createChannelList() {
-        log.fine("Starting creation of channel list")
+        log.debug("Starting creation of channel list")
 
         try {
             val result = new ArrayList<Channel>
@@ -553,7 +552,7 @@ class ChannelConfigView extends BaseView {
 
             return result;
         } catch (Exception e) {
-            log.log(Level.INFO, "Creation of channel list failed:", e)
+            log.info("Creation of channel list failed:", e)
         }
 
         return null;
@@ -670,7 +669,7 @@ class ChannelConfigView extends BaseView {
                         } catch (Exception e) {
                             // it's possible that the mapping already exists
                             // => ignore this exception
-                            log.fine("Ignoring error in epgProviderAutoMapping: " + e.localizedMessage)
+                            log.debug("Ignoring error in epgProviderAutoMapping: " + e.localizedMessage)
                         }
                     ]
                 }

@@ -30,6 +30,10 @@ class JonglistoNgServlet extends VaadinCDIServlet {
         val names = config.getVdrNames(null)
         names.forEach[log.info("   " + it)]
 
+        // print logger configuration
+        // val lc = LoggerFactory.getILoggerFactory() as LoggerContext;
+        // StatusPrinter.print(lc);
+
         // init scheduling
 
         // One minute event

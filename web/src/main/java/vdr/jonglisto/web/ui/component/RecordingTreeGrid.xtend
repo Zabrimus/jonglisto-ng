@@ -14,8 +14,6 @@ import com.vaadin.ui.Notification.Type
 import com.vaadin.ui.TextField
 import com.vaadin.ui.TreeGrid
 import com.vaadin.ui.UI
-import com.vaadin.ui.components.grid.EditorOpenEvent
-import com.vaadin.ui.components.grid.EditorOpenListener
 import com.vaadin.ui.components.grid.TreeGridDragSource
 import com.vaadin.ui.components.grid.TreeGridDropTarget
 import com.vaadin.ui.renderers.ComponentRenderer
@@ -502,7 +500,7 @@ class RecordingTreeGrid {
             rec.folder = name
 
             // simple recording
-            log.fine("Move: " + rec.id + " to " + rec.getCompleteRecName(name))
+            log.debug("Move: " + rec.id + " to " + rec.getCompleteRecName(name))
             result.put(rec.id, rec.getCompleteRecName(name))
         } else if (treeGrid.treeData.getChildren(rec).size > 0) {
             // it's a folder with children

@@ -6,7 +6,6 @@ import java.net.SocketTimeoutException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import vdr.jonglisto.xtend.annotation.Log
-import java.util.logging.Level
 
 @Log
 class SvdrpServer implements Runnable {
@@ -41,7 +40,7 @@ class SvdrpServer implements Runnable {
                 }
             }
         } catch (IOException e) {
-            log.log(Level.SEVERE, "Failed to start svdrp server", e)
+            log.error("Failed to start svdrp server", e)
         } finally {
             if (executor !== null) {
                 executor.shutdown()

@@ -13,7 +13,7 @@ class SvdrpCommandJob extends Job {
         val String vdrName = getJobContext().get("VDR_NAME")
         val String command = getJobContext().get("COMMAND")
 
-        log.fine("Run job: " + vdrName + " -> " + command)
+        log.debug("Run job: " + vdrName + " -> " + command)
 
         val vdr = Configuration.instance.getVdr(vdrName)
         SvdrpClient.instance.processCommand(vdr, command)

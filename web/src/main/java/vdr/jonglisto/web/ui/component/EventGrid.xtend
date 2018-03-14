@@ -200,7 +200,7 @@ class EventGrid {
             if (grid.parent instanceof EpgView) {
                 (grid.parent as EpgView).switchToChannelView(event.item)
             } else {
-                log.severe("Parent component is not of type EpgView.")
+                log.error("Parent component is not of type EpgView.")
             }
         } else {
             event.item.showEpgDetails
@@ -245,7 +245,7 @@ class EventGrid {
         if (grid.parent instanceof EpgView) {
             (grid.parent as EpgView).searchRetransmissions(epg)
         } else {
-            log.severe("Parent component is not of type EpgView.")
+            log.error("Parent component is not of type EpgView.")
         }
     }
 
@@ -411,7 +411,7 @@ class EventGrid {
 
     private def initFilter() {
         if (grid === null) {
-            log.severe("Internal Error: Grid is not yet initialized in initFilter")
+            log.error("Internal Error: Grid is not yet initialized in initFilter")
             return
         }
 
@@ -436,7 +436,7 @@ class EventGrid {
 
     private def initChannelFilter(HeaderRow filterRow) {
         if (grid === null) {
-            log.severe("Internal Error: Grid is not yet initialized in initChannelFilter")
+            log.error("Internal Error: Grid is not yet initialized in initChannelFilter")
             return
         }
 
@@ -450,7 +450,7 @@ class EventGrid {
 
     private def initTitleFilter(HeaderRow filterRow) {
         if (grid === null) {
-            log.severe("Internal Error: Grid is not yet initialized in initTitleFilter")
+            log.error("Internal Error: Grid is not yet initialized in initTitleFilter")
             return
         }
 
@@ -464,7 +464,7 @@ class EventGrid {
 
     private def initGenreFilter(HeaderRow filterRow) {
         if (grid === null) {
-            log.severe("Internal Error: Grid is not yet initialized in initGenreFilter")
+            log.error("Internal Error: Grid is not yet initialized in initGenreFilter")
             return
         }
 
@@ -481,7 +481,7 @@ class EventGrid {
 
     private def fillGenreFilter() {
         if (grid === null) {
-            log.severe("Internal Error: Grid is not yet initialized in fillGenreFilter")
+            log.error("Internal Error: Grid is not yet initialized in fillGenreFilter")
             return
         }
 
@@ -494,7 +494,7 @@ class EventGrid {
 
     private def initCategoryFilter(HeaderRow filterRow) {
         if (grid === null) {
-            log.severe("Internal Error: Grid is not yet initialized in initCategoryFilter")
+            log.error("Internal Error: Grid is not yet initialized in initCategoryFilter")
             return
         }
 
@@ -511,7 +511,7 @@ class EventGrid {
 
     private def fillCategoryFilter() {
         if (grid === null) {
-            log.severe("Internal Error: Grid is not yet initialized in fillCategoryFilter")
+            log.error("Internal Error: Grid is not yet initialized in fillCategoryFilter")
             return
         }
 
@@ -524,7 +524,7 @@ class EventGrid {
 
     private def updateFilter() {
         if (grid === null) {
-            log.severe("Internal Error: Grid is yot yet initialized in updateFilter")
+            log.error("Internal Error: Grid is yot yet initialized in updateFilter")
             return
         }
 
