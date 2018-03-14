@@ -472,7 +472,13 @@ class EpgDetailsWindow extends Window {
         // channel can be null, if the channel id do not exists anymore
         if (channel !== null) {
             val name = channel.name
-            val image = channelLogo.getImage(name)
+            var Image image
+
+            try {
+                image = channelLogo.getImage(name)
+            } catch (Exception e) {
+                image = null
+            }
 
             if (image !== null) {
                 image.data = name

@@ -271,7 +271,13 @@ class EventGrid {
 
     private def createChannel(Epg ev) {
         val name = svdrp.getChannel(ev.channelId).name
-        val image = channelLogo.getImage(name)
+        var Image image
+
+        try {
+            image = channelLogo.getImage(name)
+        } catch (Exception e) {
+            image = null
+        }
 
         if (image !== null) {
             image.data = name
