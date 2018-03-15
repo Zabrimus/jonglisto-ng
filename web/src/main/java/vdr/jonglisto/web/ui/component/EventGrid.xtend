@@ -33,6 +33,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import com.vaadin.ui.Image
 
 @Log
 class EventGrid {
