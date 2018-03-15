@@ -58,7 +58,7 @@ class ConfigView extends BaseView {
             }
 
             if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":log")) {
-                addTab(logging, "Logging")
+                addTab(logging.showAll(), "Logging")
             }
 
             addStyleName(ValoTheme.TABSHEET_FRAMED);

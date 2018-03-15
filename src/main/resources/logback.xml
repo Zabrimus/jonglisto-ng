@@ -1,48 +1,86 @@
-<configuration debug="true">
+<configuration debug="false">
 
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <!-- encoders are  by default assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </encoder>
-  </appender>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-  <logger name="jonglisto" level="info" additivity="false">
-        <appender-ref ref="STDOUT" />
-  </logger>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/log/jonglisto-ng.log</file>
 
-  <logger name="jonglisto.configuration" level="info" additivity="false">
-        <appender-ref ref="STDOUT" />
-  </logger>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>/var/log/jonglisto-ng.%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>3</maxIndex>
+            <!--
+            <totalSizeCap>30MB</totalSizeCap>
+            -->
+        </rollingPolicy>
 
-  <logger name="jonglisto.delegate.svdrp" level="info" additivity="false">
-        <appender-ref ref="STDOUT" />
-  </logger>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
 
-  <logger name="jonglisto.delegate.config" level="info" additivity="false">
-        <appender-ref ref="STDOUT" />
-  </logger>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-  <logger name="jonglisto.servlet" level="info" additivity="false">
-        <appender-ref ref="STDOUT" />
-  </logger>
+    <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
+        <syslogHost>127.0.0.1</syslogHost>
+        <!--
+            KERN, USER, MAIL, DAEMON, AUTH, SYSLOG, LPR, NEWS, UUCP, CRON,
+            AUTHPRIV, FTP, NTP, AUDIT, ALERT, CLOCK,
+            LOCAL0, LOCAL1, LOCAL2, LOCAL3, LOCAL4, LOCAL5, LOCAL6, LOCAL7
+        -->
+        <facility>SYSLOG</facility>
 
-  <logger name="jonglisto.svdrp.client" level="info" additivity="false">
-        <appender-ref ref="STDOUT" />
-  </logger>
+        <suffixPattern>[%thread] %-5level %logger{36} - %msg</suffixPattern>
+    </appender>
 
-  <logger name="jonglisto.svdrp.server" level="info" additivity="false">
-        <appender-ref ref="STDOUT" />
-  </logger>
+    <!-- dummy logger, which only exists to hold all appenders, otherwise it's not possible to access a non-used appender -->
+    <logger name="AppenderHolder" level="error" additivity="true">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="SYSLOG" />
+    </logger>
 
-  <logger name="jonglisto.web" level="info" additivity="false">
-        <appender-ref ref="STDOUT" />
-  </logger>
+    <logger name="jonglisto" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
 
+    <logger name="jonglisto.configuration" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
 
-  <root level="info">
-    <appender-ref ref="STDOUT" />
-  </root>
+    <logger name="jonglisto.delegate.svdrp" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="jonglisto.delegate.config" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="jonglisto.servlet" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="jonglisto.svdrp.client" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="jonglisto.svdrp.server" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="jonglisto.web" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="FILE" />
+    </root>
 
 </configuration>
 
