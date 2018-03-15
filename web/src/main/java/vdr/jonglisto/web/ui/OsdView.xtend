@@ -13,7 +13,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log
+@Log("jonglisto.web")
 @CDIView(MainUI.OSD_VIEW)
 class OsdView extends BaseView {
 

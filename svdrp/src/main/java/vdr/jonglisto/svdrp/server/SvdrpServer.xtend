@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import vdr.jonglisto.xtend.annotation.Log
 
-@Log
+@Log("jonglisto.svdrp.server")
 class SvdrpServer implements Runnable {
 
     private int port

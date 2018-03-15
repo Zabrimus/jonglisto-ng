@@ -21,7 +21,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log
+@Log("jonglisto.web")
 abstract class BaseView extends VerticalLayout implements View {
     protected enum BUTTON {
         HOME, TIMER, EPG, EPGD, EPGSEARCH, RECORDING, CHANNELCONFIG, OSD, CONFIG, LOGOUT

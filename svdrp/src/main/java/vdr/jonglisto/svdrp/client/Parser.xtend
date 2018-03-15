@@ -28,7 +28,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
 
-@Log
+@Log("jonglisto.svdrp.client")
 class Parser {
     static val namePattern = Pattern.compile("(\\d+) (.*?) (.*?)(;(.*?))*:(\\d+):(.*?)$")
     static val recordingPattern = Pattern.compile("(\\d+) (\\d{2}.\\d{2}.\\d{2} \\d{2}:\\d{2}) (\\d+:\\d+)(\\*?) (.*)$")

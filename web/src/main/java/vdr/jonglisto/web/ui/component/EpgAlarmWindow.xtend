@@ -20,7 +20,7 @@ import vdr.jonglisto.xtend.annotation.Log
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 import vdr.jonglisto.util.Utils
 
-@Log
+@Log("jonglisto.web")
 @ViewScoped
 class EpgAlarmWindow extends Window {
 

@@ -11,7 +11,7 @@ import java.util.List
 import java.util.regex.Pattern
 import vdr.jonglisto.xtend.annotation.Log
 
-@Log
+@Log("jonglisto.svdrp.client")
 class Connection {
     private static Pattern greetingPattern = Pattern.compile(".*?(\\d+\\.\\d+\\.\\d+);.*?;(.*?)$")
 

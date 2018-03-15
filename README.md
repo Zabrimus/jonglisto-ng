@@ -337,6 +337,7 @@ The following permissions are currently available:
 * view:config:jobs:user
 * view:config:jobs:shell
 * view:config:jobs:svdrp
+* view:config:log
 
 view: Menu entries (views) in the main menu
 vdr: access granted to the selected VDR

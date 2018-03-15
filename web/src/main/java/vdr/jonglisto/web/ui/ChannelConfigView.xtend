@@ -56,7 +56,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log
+@Log("jonglisto.web")
 @CDIView(MainUI.CHANNEL_CONFIG_VIEW)
 class ChannelConfigView extends BaseView {
 

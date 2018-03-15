@@ -24,7 +24,7 @@ import java.util.ArrayList
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.NetworkUtils
 
-@Log
+@Log("jonglisto.svdrp.server")
 class SvdrpHandler implements Runnable {
 
     static val alrmPattern = Pattern.compile("^(\\d+) +(\\d+) +(.*?) +(.*?)$")

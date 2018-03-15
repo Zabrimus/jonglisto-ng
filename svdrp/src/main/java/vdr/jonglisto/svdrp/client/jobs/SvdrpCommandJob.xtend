@@ -5,7 +5,7 @@ import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.xtend.annotation.Log
 
-@Log
+@Log("jonglisto.svdrp.client")
 class SvdrpCommandJob extends Job {
 
     override doRun() {

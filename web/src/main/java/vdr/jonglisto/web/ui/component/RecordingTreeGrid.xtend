@@ -38,7 +38,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log
+@Log("jonglisto.web")
 @ViewScoped
 class RecordingTreeGrid {
     private static val COLUMN_NAME = "NAME"

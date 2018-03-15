@@ -34,7 +34,7 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 import java.util.ArrayList
 
-@Log
+@Log("jonglisto.web")
 @CDIView(MainUI.EPG_VIEW)
 class EpgView extends BaseView {
 

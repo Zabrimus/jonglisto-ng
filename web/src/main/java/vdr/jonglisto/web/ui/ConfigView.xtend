@@ -7,14 +7,15 @@ import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
+import vdr.jonglisto.web.ui.component.ExtFavouriteComponent
 import vdr.jonglisto.web.ui.component.JobComponent
+import vdr.jonglisto.web.ui.component.LoggingComponent
+import vdr.jonglisto.web.ui.component.ToolsComponent
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import vdr.jonglisto.web.ui.component.ExtFavouriteComponent
-import vdr.jonglisto.web.ui.component.ToolsComponent
 
-@Log
+@Log("jonglisto.web")
 @CDIView(MainUI.CONFIG_VIEW)
 class ConfigView extends BaseView {
 
@@ -26,6 +27,9 @@ class ConfigView extends BaseView {
 
     @Inject
     private ToolsComponent tools
+
+    @Inject
+    private LoggingComponent logging
 
     @PostConstruct
     def void init() {
@@ -51,6 +55,10 @@ class ConfigView extends BaseView {
 
             if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":tools:all")) {
                 addTab(tools.showAll(), messages.configTools)
+            }
+
+            if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":log")) {
+                addTab(logging, "Logging")
             }
 
             addStyleName(ValoTheme.TABSHEET_FRAMED);

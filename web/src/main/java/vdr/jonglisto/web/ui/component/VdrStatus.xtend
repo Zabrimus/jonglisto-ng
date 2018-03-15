@@ -26,7 +26,7 @@ import vdr.jonglisto.xtend.annotation.Log
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 import vdr.jonglisto.util.NetworkUtils
 
-@Log
+@Log("jonglisto.web")
 class VdrStatus {
 
     private Svdrp svdrp = new Svdrp()
@@ -60,7 +60,6 @@ class VdrStatus {
             addComponent(new Label("Disk Free:"))
             addComponent(new Label("0"))
             addComponent(new Label(""))
-            // addComponent(new ChannelLogoSource("zoom").image)
         ]
 
         val layout = new VerticalLayout => [

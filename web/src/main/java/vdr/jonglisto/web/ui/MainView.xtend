@@ -10,7 +10,7 @@ import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.VdrStatus
 import vdr.jonglisto.xtend.annotation.Log
 
-@Log
+@Log("jonglisto.web")
 @CDIView(MainUI.MAIN_VIEW)
 class MainView extends BaseView {
 

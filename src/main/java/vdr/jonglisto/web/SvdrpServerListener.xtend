@@ -7,7 +7,7 @@ import vdr.jonglisto.svdrp.server.SvdrpServer
 import vdr.jonglisto.xtend.annotation.Log
 import vdr.jonglisto.configuration.Configuration
 
-@Log
+@Log("jonglisto.servlet")
 @WebListener
 class SvdrpServerListener implements ServletContextListener {
 

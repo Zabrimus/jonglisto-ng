@@ -32,7 +32,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
 
-@Log
+@Log("jonglisto.svdrp.client")
 class SvdrpClient {
     private static var SvdrpClient instance
 

@@ -32,7 +32,7 @@ import static extension org.apache.commons.lang3.StringUtils.*
 import java.util.Set
 import java.util.HashSet
 
-@Log
+@Log("jonglisto.configuration")
 class Configuration {
     private static String configurationFile = "/etc/jonglisto/jonglisto-ng.xml"
     private static String remoteFile = "/etc/jonglisto/remote.xml"
@@ -319,7 +319,7 @@ class Configuration {
         return showScraperImage
     }
 
-    public def getScraperPath() {
+    public def List<ImagePath> getScraperPath() {
         return scraperPath
     }
 

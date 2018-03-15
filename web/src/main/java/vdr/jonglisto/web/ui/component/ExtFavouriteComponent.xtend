@@ -32,7 +32,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log
+@Log("jonglisto.web")
 class ExtFavouriteComponent extends CustomComponent {
 
     @Inject
