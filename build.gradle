@@ -15,6 +15,17 @@ targetCompatibility = "1.8"
 
 apply from: "gradle/dependencies.gradle"
 
+def getGitVersion = { ->
+    def versionStdOut = new ByteArrayOutputStream()
+
+    exec {
+        commandLine "git", "describe", "--tags"
+        standardOutput = versionStdOut
+    }
+
+    return versionStdOut.toString().trim()
+}
+
 configurations.all {
    exclude group:"com.vaadin", module: "vaadin-client"
    exclude group:"com.vaadin", module: "vaadin-client-compiler"
@@ -186,6 +197,18 @@ task copySamples(type: Exec) {
   args "-c", "cp samples/* build/libs"
 }
 
+task createVersionFile {
+   def jongversion = getGitVersion()
+   new File("$projectDir/src/main/resources/META-INF/version.txt").text = jongversion + "\n"
+}
+
+compileJava.dependsOn(createVersionFile)
+
+war.doLast {
+    delete "$projectDir/src/main/resources/META-INF/version.txt"
+}
+
 task wrapper(type: Wrapper) {
   gradleVersion = '4.2.1'
 }
+

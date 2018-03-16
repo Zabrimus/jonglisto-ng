@@ -9,10 +9,16 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.VdrStatus
 import vdr.jonglisto.xtend.annotation.Log
+import com.vaadin.ui.Label
+import vdr.jonglisto.web.util.JonglistoVersion
+import javax.inject.Inject
 
 @Log
 @CDIView(MainUI.MAIN_VIEW)
 class MainView extends BaseView {
+
+    @Inject
+    private JonglistoVersion jv
 
     @PostConstruct
     def void init() {
@@ -32,6 +38,7 @@ class MainView extends BaseView {
         ]
 
         addComponentsAndExpand(css)
+        addComponent(new Label("Version: " + jv.version))
     }
 
     override protected def void changeVdr(VDR vdr) {
