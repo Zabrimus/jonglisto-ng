@@ -7,6 +7,7 @@ New:
 - changed internel logger to be more flexible
 - log configuration at runtime (including log files), Configuration/Log
 - new permission view:config:log (use with care, this permission allows to change the whole application logging)
+- upgrade to Vaadin 8.3.2
 
 0.2.0:
 Bugfixes:
