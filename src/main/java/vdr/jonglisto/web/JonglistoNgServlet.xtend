@@ -26,16 +26,13 @@ class JonglistoNgServlet extends VaadinCDIServlet {
 
     private val scheduledExecutorService = Executors.newScheduledThreadPool(2);
 
-
     override protected def servletInitialized() throws ServletException {
+        // load logger configuration
+        LogUtil.loadConfig
+
         log.info("Found configured VDRs:")
         val names = config.getVdrNames(null)
         names.forEach[log.info("   " + it)]
-
-        // print all available logger
-        // LogUtil.allLoggers.stream().forEach(s | {
-        //     log.error(s.name + ": " + s.level + "," + LogUtil.getAllAppender(s));
-        // })
 
         // init scheduling
 

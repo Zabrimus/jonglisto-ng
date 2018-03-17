@@ -94,7 +94,7 @@ class LoggingComponent extends Composite {
                 syslogSelect = nativeSelect(it) [
                     caption = "Syslog"
                     items = #["KERN", "USER", "MAIL", "DAEMON", "AUTH", "SYSLOG", "LPR", "NEWS", "UUCP", "CRON", "AUTHPRIV", "FTP", "NTP", "AUDIT", "ALERT", "CLOCK", "LOCAL0", "LOCAL1", "LOCAL2", "LOCAL3", "LOCAL4", "LOCAL5", "LOCAL6", "LOCAL7"]
-                    selectedItem = "SYSLOG"
+                    selectedItem = LogUtil.syslogFacility
                 ]
             ]
 
@@ -162,7 +162,14 @@ class LoggingComponent extends Composite {
         }
 
         // change file name of FILE appender
-        LogUtil.logDirectory = logfileField.getValue()
+        if (logfileField.getValue().trim().length > 0) {
+            LogUtil.logDirectory = logfileField.getValue().trim()
+        }
+
+        // change syslog facility of SYSLOG appender
+        if (syslogSelect.getSelectedItem().isPresent) {
+            LogUtil.syslogFacility = syslogSelect.getSelectedItem().get()
+        }
 
         // change configuration
         (grid.dataProvider as ListDataProvider<Logger>).items.forEach(s | {
@@ -173,15 +180,16 @@ class LoggingComponent extends Composite {
                 if (level.get == "OFF") {
                     // delete logger
                     LogUtil.disableLogger(s)
-                    return
+                } else {
+                    LogUtil.setAppender(s, LogUtil.getAppender(appender.get))
+                    LogUtil.setLevel(s, LogUtil.getLevel(level.get))
                 }
-
-                LogUtil.setAppender(s, LogUtil.getAppender(appender.get))
-                LogUtil.setLevel(s, LogUtil.getLevel(level.get))
             } else {
                 // delete logger
                 LogUtil.disableLogger(s)
             }
         })
+
+        LogUtil.saveConfig
     }
 }
