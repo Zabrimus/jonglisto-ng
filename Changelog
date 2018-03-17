@@ -1,3 +1,14 @@
+0.2.1-snapshot:
+Bugfixes:
+- exception if the channel logo path does not exists at all
+- get scraper information
+
+New:
+- changed internel logger to be more flexible
+- log configuration at runtime (including log files), Configuration/Log
+- new permission view:config:log (use with care, this permission allows to change the whole application logging)
+- upgrade to Vaadin 8.3.2
+
 0.2.0:
 Bugfixes:
 - delete multiple recordings could destroy the internal tree data structure
@@ -78,12 +89,12 @@ New:
 - build image is available at dockerhub: docker pull zabrimus/jonglisto-ng. This results in much faster subsequent builds.
 - runtime image which contains Apache TomEE and jonglisto-ng 0.0.3 is available at dockerhub: docker pull zabrimus/jonglisto-ng-runtime (see documenation in the main page)
 - epg alarm button implemented (osd message, channel switch, custom SVDRP command)
-- new permission view:configuration:favourite:all
-- new permission view:configuration:favourite:user
-- new permission view:configuration:jobs:all
-- new permission view:configuration:jobs:user
-- new permission view:configuration:jobs:shell <-- not yet used
-- new permission view:configuration:jobs:svdrp
+- new permission view:config:favourite:all
+- new permission view:config:favourite:user
+- new permission view:config:jobs:all
+- new permission view:config:jobs:user
+- new permission view:config:jobs:shell <-- not yet used
+- new permission view:config:jobs:svdrp
 
 0.0.2:
 some small bugfixes

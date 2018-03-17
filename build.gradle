@@ -82,7 +82,7 @@ allprojects {
         compile libs.beanutils
         compile libs.collections
         compile libs.tomjdbc
-        compile libs.slf4jjdk
+        compile libs.logback
     }
 
     /*

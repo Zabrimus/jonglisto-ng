@@ -25,7 +25,7 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Theme("valo")
-@Log
+@Log("jonglisto.web")
 @CDIView("")
 class LoginView extends VerticalLayout implements View {
 

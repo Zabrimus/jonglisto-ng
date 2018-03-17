@@ -7,7 +7,7 @@ import vdr.jonglisto.svdrp.server.SvdrpServer
 import vdr.jonglisto.xtend.annotation.Log
 import vdr.jonglisto.configuration.Configuration
 
-@Log
+@Log("jonglisto.servlet")
 @WebListener
 class SvdrpServerListener implements ServletContextListener {
 
@@ -23,7 +23,7 @@ class SvdrpServerListener implements ServletContextListener {
     }
 
     override void contextDestroyed(ServletContextEvent servletContextEvent) {
-        log.severe("Stop svdrp server...")
+        log.info("Stop svdrp server...")
 
         if (svdrpServer !== null) {
             svdrpServer.stopServer

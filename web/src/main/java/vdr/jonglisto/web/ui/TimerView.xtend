@@ -17,7 +17,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log
+@Log("jonglisto.web")
 @CDIView(MainUI.TIMER_VIEW)
 class TimerView extends BaseView {
 

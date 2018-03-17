@@ -13,7 +13,7 @@ import com.vaadin.ui.Label
 import vdr.jonglisto.web.util.JonglistoVersion
 import javax.inject.Inject
 
-@Log
+@Log("jonglisto.web")
 @CDIView(MainUI.MAIN_VIEW)
 class MainView extends BaseView {
 

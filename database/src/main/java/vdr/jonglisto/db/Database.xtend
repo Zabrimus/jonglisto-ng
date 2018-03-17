@@ -6,7 +6,7 @@ import org.sql2o.Sql2o
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.xtend.annotation.Log
 
-@Log
+@Log("jonglisto.database")
 class Database {
     private static var Sql2o sql2o
     private static var boolean isConfigured = true

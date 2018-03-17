@@ -14,7 +14,7 @@ import com.vaadin.ui.Button
 import com.vaadin.ui.Alignment
 import com.vaadin.ui.Notification
 
-@Log
+@Log("jonglisto.web")
 class ToolsComponent extends Composite {
 
     @Inject

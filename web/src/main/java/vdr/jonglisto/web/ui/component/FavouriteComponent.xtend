@@ -6,7 +6,6 @@ import com.vaadin.ui.TextField
 import com.vaadin.ui.TwinColSelect
 import de.steinwedel.messagebox.ButtonOption
 import de.steinwedel.messagebox.MessageBox
-import java.util.logging.Level
 import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.configuration.jaxb.favourite.Favourites.Favourite
@@ -18,7 +17,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log
+@Log("jonglisto.web")
 class FavouriteComponent extends Composite {
 
     @Inject
@@ -95,7 +94,7 @@ class FavouriteComponent extends Composite {
                         try {
                             config.saveFavourites()
                         } catch (Exception e) {
-                            log.log(Level.WARNING, "save of favourites failed", e)
+                            log.info("save of favourites failed", e)
 
                             MessageBox.createWarning()
                             .withCaption(messages.configFavouriteSave)

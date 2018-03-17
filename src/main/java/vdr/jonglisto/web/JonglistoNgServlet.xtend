@@ -10,13 +10,15 @@ import javax.servlet.annotation.WebServlet
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.xtend.annotation.Log
+import vdr.jonglisto.logging.LogUtil
 
 @WebServlet(urlPatterns = #["/*", "/VAADIN/"],
             name = "VaadinServlet",
             asyncSupported = true,
             initParams = #[@WebInitParam(name = "closeIdleSessions", value = "false") ]
             )
-@Log
+
+@Log("jonglisto.servlet")
 class JonglistoNgServlet extends VaadinCDIServlet {
 
     @Inject
@@ -29,6 +31,11 @@ class JonglistoNgServlet extends VaadinCDIServlet {
         log.info("Found configured VDRs:")
         val names = config.getVdrNames(null)
         names.forEach[log.info("   " + it)]
+
+        // print all available logger
+        // LogUtil.allLoggers.stream().forEach(s | {
+        //     log.error(s.name + ": " + s.level + "," + LogUtil.getAllAppender(s));
+        // })
 
         // init scheduling
 

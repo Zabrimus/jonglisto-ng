@@ -1,0 +1,91 @@
+<configuration debug="false">
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/tmp/jonglisto-ng.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>/tmp/jonglisto-ng.%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>3</maxIndex>
+            <!--
+            <totalSizeCap>30MB</totalSizeCap>
+            -->
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--  syslog only works, if syslog networking is enabled -->
+    <!--
+    # provides UDP syslog reception
+    module(load="imudp")
+    input(type="imudp" port="514")
+
+    # provides TCP syslog reception
+    module(load="imtcp")
+    input(type="imtcp" port="514")
+     -->
+    <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
+        <syslogHost>127.0.0.1</syslogHost>
+        <facility>SYSLOG</facility>
+
+        <suffixPattern>[%thread] %-5level %logger{36} - %msg</suffixPattern>
+    </appender>
+
+    <!-- dummy logger, which only exists to hold all appenders, otherwise it's not possible to access a non-used appender -->
+    <logger name="AppenderHolder" level="error" additivity="true">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="SYSLOG" />
+    </logger>
+
+    <logger name="jonglisto" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <logger name="jonglisto.configuration" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <logger name="jonglisto.delegate.svdrp" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <logger name="jonglisto.delegate.config" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <logger name="jonglisto.servlet" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <logger name="jonglisto.svdrp.client" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <logger name="jonglisto.svdrp.server" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <logger name="jonglisto.web" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+</configuration>
+

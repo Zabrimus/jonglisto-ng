@@ -20,7 +20,7 @@ import com.vaadin.server.VaadinService
 @Theme("jonglisto")
 @Title("VDR Jonglisto")
 @PreserveOnRefresh
-@Log
+@Log("jonglisto.web")
 @CDIUI("")
 class MainUI extends UI implements ViewChangeListener {
 

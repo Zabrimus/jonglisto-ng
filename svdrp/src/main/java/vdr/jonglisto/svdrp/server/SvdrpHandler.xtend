@@ -24,7 +24,7 @@ import java.util.ArrayList
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.util.NetworkUtils
 
-@Log
+@Log("jonglisto.svdrp.server")
 class SvdrpHandler implements Runnable {
 
     static val alrmPattern = Pattern.compile("^(\\d+) +(\\d+) +(.*?) +(.*?)$")
@@ -64,7 +64,7 @@ class SvdrpHandler implements Runnable {
                             val commandLine = command.toString().trim()
                             command = new StringWriter
 
-                            log.fine("> Received command: " + commandLine)
+                            log.debug("> Received command: " + commandLine)
 
                             if (commandLine.length === 0) {
                                 // do nothing
@@ -117,7 +117,7 @@ class SvdrpHandler implements Runnable {
                 }
             }
         } finally {
-            log.fine("FINALLY")
+            log.debug("FINALLY")
 
             if (input !== null) {
                 input.close

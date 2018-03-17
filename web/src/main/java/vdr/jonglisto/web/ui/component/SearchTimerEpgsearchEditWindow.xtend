@@ -45,7 +45,7 @@ import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 // Is this the content descriptor inside the DVB stream?
 // See 6.2.9 Content descriptor in http://www.etsi.org/deliver/etsi_en/300400_300499/300468/01.15.01_60/en_300468v011501p.pdf
 
-@Log
+@Log("jonglisto.web")
 @ViewScoped
 class SearchTimerEpgsearchEditWindow extends Window {
 

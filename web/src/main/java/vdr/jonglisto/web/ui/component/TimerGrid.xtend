@@ -16,8 +16,9 @@ import com.vaadin.ui.renderers.ComponentRenderer
 import com.vaadin.ui.themes.ValoTheme
 import java.util.Collections
 import java.util.List
-import java.util.logging.Level
 import javax.inject.Inject
+import vdr.jonglisto.db.SearchTimerService
+import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Timer
 import vdr.jonglisto.model.VDR
@@ -30,7 +31,7 @@ import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.db.SearchTimerService
 import com.vaadin.ui.Image
 
-@Log
+@Log("jonglisto.web")
 @ViewScoped
 class TimerGrid {
 
@@ -184,7 +185,7 @@ class TimerGrid {
                 svdrp.deleteTimer(currentVdr, s)
             } catch (Exception e) {
                 // this can happen, if a repeating timer is selected more than once
-                log.log(Level.FINE, "Error in deleteSelectedTimer", e)
+                log.info("Error in deleteSelectedTimer", e)
             }
         })
 

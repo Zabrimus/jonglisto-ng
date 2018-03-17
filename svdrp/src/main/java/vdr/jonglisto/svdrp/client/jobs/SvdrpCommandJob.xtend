@@ -5,7 +5,7 @@ import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.xtend.annotation.Log
 
-@Log
+@Log("jonglisto.svdrp.client")
 class SvdrpCommandJob extends Job {
 
     override doRun() {
@@ -13,7 +13,7 @@ class SvdrpCommandJob extends Job {
         val String vdrName = getJobContext().get("VDR_NAME")
         val String command = getJobContext().get("COMMAND")
 
-        log.fine("Run job: " + vdrName + " -> " + command)
+        log.debug("Run job: " + vdrName + " -> " + command)
 
         val vdr = Configuration.instance.getVdr(vdrName)
         SvdrpClient.instance.processCommand(vdr, command)

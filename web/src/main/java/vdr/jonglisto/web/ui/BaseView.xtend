@@ -21,7 +21,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log
+@Log("jonglisto.web")
 abstract class BaseView extends VerticalLayout implements View {
     protected enum BUTTON {
         HOME, TIMER, EPG, EPGD, EPGSEARCH, RECORDING, CHANNELCONFIG, OSD, CONFIG, LOGOUT
@@ -174,7 +174,7 @@ abstract class BaseView extends VerticalLayout implements View {
     }
 
     def selectVdr(SingleSelectionEvent<String> event) {
-        log.fine("Got Event: " + event +  " --> " + event.selectedItem.get)
+        log.debug("Got Event: " + event +  " --> " + event.selectedItem.get)
 
         VaadinSession.current.setAttribute("SELECTED_VDR", event.selectedItem.get)
         changeVdr(config.getVdr(event.selectedItem.get))

@@ -28,7 +28,7 @@ import vdr.jonglisto.xtend.annotation.Log
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 import com.vaadin.ui.Notification
 
-@Log
+@Log("jonglisto.web")
 @ViewScoped
 class TimerEditWindow extends Window {
 
