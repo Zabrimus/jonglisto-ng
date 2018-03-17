@@ -43,11 +43,10 @@ class LogUtil {
     }
 
     public static def loadConfig() {
-        log.info("Read logging configuration from " + Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg")
-
-        val reader = new FileReader(new File(Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg"))
-
         try {
+            log.info("Read logging configuration from " + Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg")
+
+            val reader = new FileReader(new File(Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg"))
             val prop = new Properties
             prop.load(reader)
 
