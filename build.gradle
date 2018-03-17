@@ -16,14 +16,29 @@ targetCompatibility = "1.8"
 apply from: "gradle/dependencies.gradle"
 
 def getGitVersion = { ->
+    def result
+    def vers = ""
     def versionStdOut = new ByteArrayOutputStream()
 
-    exec {
-        commandLine "git", "describe", "--tags"
+    // check if git is available
+    result = exec {
+        ignoreExitValue = true
+        commandLine "bash", "-c", "git describe --tags"
         standardOutput = versionStdOut
     }
 
-    return versionStdOut.toString().trim()
+    if (result.getExitValue() == 0) {
+        exec {
+            ignoreExitValue = true
+            commandLine "git",  "describe", "--tags"
+            standardOutput = versionStdOut
+            vers = versionStdOut.toString().trim()
+        }
+    } else {
+        vers = "<git not found>"
+    }
+
+    return vers
 }
 
 configurations.all {
