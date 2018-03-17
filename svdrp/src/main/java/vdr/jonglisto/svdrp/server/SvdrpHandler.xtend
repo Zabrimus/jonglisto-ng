@@ -110,6 +110,9 @@ class SvdrpHandler implements Runnable {
                             }
                         }
                     }
+
+                    // socket seems to be closed
+                    return
                 } catch (IOException e) {
                     println("Socket Error: " + e);
                     e.printStackTrace;
