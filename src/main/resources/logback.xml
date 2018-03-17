@@ -7,10 +7,10 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/var/log/jonglisto-ng.log</file>
+        <file>/tmp/jonglisto-ng.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>/var/log/jonglisto-ng.%i.log</fileNamePattern>
+            <fileNamePattern>/tmp/jonglisto-ng.%i.log</fileNamePattern>
             <minIndex>1</minIndex>
             <maxIndex>3</maxIndex>
             <!--
@@ -27,13 +27,18 @@
         </encoder>
     </appender>
 
+    <!--  syslog only works, if syslog networking is enabled -->
+    <!--
+    # provides UDP syslog reception
+    module(load="imudp")
+    input(type="imudp" port="514")
+
+    # provides TCP syslog reception
+    module(load="imtcp")
+    input(type="imtcp" port="514")
+     -->
     <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
         <syslogHost>127.0.0.1</syslogHost>
-        <!--
-            KERN, USER, MAIL, DAEMON, AUTH, SYSLOG, LPR, NEWS, UUCP, CRON,
-            AUTHPRIV, FTP, NTP, AUDIT, ALERT, CLOCK,
-            LOCAL0, LOCAL1, LOCAL2, LOCAL3, LOCAL4, LOCAL5, LOCAL6, LOCAL7
-        -->
         <facility>SYSLOG</facility>
 
         <suffixPattern>[%thread] %-5level %logger{36} - %msg</suffixPattern>
@@ -47,39 +52,39 @@
     </logger>
 
     <logger name="jonglisto" level="info" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="jonglisto.configuration" level="info" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="jonglisto.delegate.svdrp" level="info" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="jonglisto.delegate.config" level="info" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="jonglisto.servlet" level="info" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="jonglisto.svdrp.client" level="info" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="jonglisto.svdrp.server" level="info" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="jonglisto.web" level="info" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <root level="info">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </root>
 
 </configuration>
