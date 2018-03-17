@@ -1,4 +1,4 @@
-0.2.2-snapshot:
+0.2.2:
 Bugfixes:
 - svdrp server: closed client socket can result in a timeout on client side in subsequent connections and requests
 
