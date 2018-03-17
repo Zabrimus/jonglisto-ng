@@ -4,7 +4,7 @@ Bugfixes:
 - get scraper information
 
 New:
-- changed internel logger to be more flexible
+- changed internal logger to be more flexible
 - log configuration at runtime (including log files), Configuration/Log
   But be aware: Syslog appender only works if syslog networking is enabled!
 - new permission view:config:log (use with care, this permission allows to change the whole application logging)
