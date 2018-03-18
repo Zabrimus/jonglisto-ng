@@ -171,7 +171,7 @@ Which VDR instance shall be used to get epg and channel data
 Optional configuration of the VDR epg daemon database
 ```xml
     <!-- optional configuration of the epg2vdr database, used for e.g. search timers -->
-    <epg2vdr host="epgd" port="3306" username="epg2vdr" password="epg" />
+    <epg2vdr host="epgd" port="3306" username="epg2vdr" password="epg" database="epg2vdr" />
 ```
 
 Optional the SVDRP server port which shall be created by jonglisto-ng
