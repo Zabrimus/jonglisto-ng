@@ -191,6 +191,35 @@ class SearchTimerEpgdEditWindow extends Window {
 
             casesensitiv = checkbox(it, messages.searchtimerCasesensitiv) [
             ]
+
+            horizontalLayout(it)[
+                repeatCheckBox = checkbox(it, messages.searchtimerAvoidRepeating) [
+                    addValueChangeListener(s | {
+                        repeatTitle.enabled = s.value
+                        repeatShortText.enabled = s.value
+                        repeatDescription.enabled = s.value
+
+                        if (!s.value) {
+                            repeatTitle.value = false
+                            repeatShortText.value = false
+                            repeatDescription.value = false
+                        }
+                    })
+                    value = false
+                ]
+
+                repeatTitle = checkbox(it, messages.searchtimerTitle) [
+                    enabled = false
+                ]
+
+                repeatShortText = checkbox(it, messages.searchtimerShorttext) [
+                    enabled = false
+                ]
+
+                repeatDescription = checkbox(it, messages.searchtimerDescription) [
+                    enabled = false
+                ]
+            ]
         ]
 
         val tab2 = verticalLayout[
@@ -220,36 +249,6 @@ class SearchTimerEpgdEditWindow extends Window {
 
             year = textField(it, messages.searchtimerYear) [
                 placeholder = messages.searchtimerYear
-            ]
-
-
-            horizontalLayout(it)[
-                repeatCheckBox = checkbox(it, messages.searchtimerAvoidRepeating) [
-                    addValueChangeListener(s | {
-                        repeatTitle.enabled = s.value
-                        repeatShortText.enabled = s.value
-                        repeatDescription.enabled = s.value
-
-                        if (!s.value) {
-                            repeatTitle.value = false
-                            repeatShortText.value = false
-                            repeatDescription.value = false
-                        }
-                    })
-                    value = false
-                ]
-
-                repeatTitle = checkbox(it, messages.searchtimerTitle) [
-                    enabled = false
-                ]
-
-                repeatShortText = checkbox(it, messages.searchtimerShorttext) [
-                    enabled = false
-                ]
-
-                repeatDescription = checkbox(it, messages.searchtimerDescription) [
-                    enabled = false
-                ]
             ]
         ]
 
