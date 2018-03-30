@@ -8,7 +8,7 @@ plugins {
 apply plugin: 'war'
 
 group 'jonglisto-ng'
-version '0.2.2'
+version '0.2.3-snapshot'
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
@@ -126,7 +126,7 @@ project(':common') {
         compile(libs.cronutils) {
             exclude group:'org.threeten', module:'threetenbp'
         }
-
+        compile libs.jregex
         compile project(':annotation')
     }
 }

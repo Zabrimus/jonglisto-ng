@@ -31,6 +31,9 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension org.apache.commons.lang3.StringUtils.*
 import java.util.Set
 import java.util.HashSet
+import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch
+import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.SimplePattern
+import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.ComplexPattern
 
 @Log("jonglisto.configuration")
 class Configuration {
@@ -87,6 +90,8 @@ class Configuration {
 
     private static Map<String, Set<String>> allowedCommands
 
+    private static Extepgsearch extEpgSearch
+
     private static Unmarshaller unmarshaller
     private static Marshaller marshaller
 
@@ -96,8 +101,9 @@ class Configuration {
         var favouriteObjectFactory = new vdr.jonglisto.configuration.jaxb.favourite.ObjectFactory
         var jcronObjectFactory = new vdr.jonglisto.configuration.jaxb.jcron.ObjectFactory
         var scraperObjectFactory = new vdr.jonglisto.configuration.jaxb.scraper.ObjectFactory
+        var epgseachObjectFactory = new vdr.jonglisto.configuration.jaxb.extepgsearch.ObjectFactory
 
-        val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class, jcronObjectFactory.class, scraperObjectFactory.class);
+        val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class, jcronObjectFactory.class, scraperObjectFactory.class, epgseachObjectFactory.class);
 
         unmarshaller = jc.createUnmarshaller()
         marshaller = jc.createMarshaller()
@@ -134,6 +140,8 @@ class Configuration {
         } else {
             loginUserUrlParameter = null
         }
+
+        loadExtEpgSearch
 
         showScraperImage = (config.scraper !== null) && config.scraper.images
 
@@ -177,6 +185,56 @@ class Configuration {
     public def saveJcron() {
         val out = new File(customDirectory + File.separator + "jcron.xml")
         marshaller.marshal(jcronConfig, out)
+    }
+
+    public def void loadExtEpgSearch() {
+        try {
+            extEpgSearch = unmarshaller.unmarshal(new File(customDirectory + File.separator + "extepgsearch.xml")) as Extepgsearch
+        } catch (Exception e) {
+            extEpgSearch = new Extepgsearch
+        }
+    }
+
+    public def getExtEpgSearch() {
+        // Add default values, if current list is empty
+        if (extEpgSearch.simplePattern.size === 0 && extEpgSearch.complexPattern.size === 0) {
+            val simpleList = extEpgSearch.simplePattern
+
+            simpleList.add(new SimplePattern => [
+                name = "Staffel 1"
+                pattern = "\\|Staffel:\\s*1(?=\\|)"
+
+            ])
+
+            simpleList.add(new SimplePattern => [
+                name = "Folge 1"
+                pattern = "\\|Staffelfolge:\\s*1(?=\\|)"
+            ])
+
+            simpleList.add(new SimplePattern => [
+                name = "whitespace"
+                pattern = "(?[\\s]+[\\|])"
+            ])
+
+            val complexList = extEpgSearch.complexPattern
+
+            complexList.add(new ComplexPattern => [
+                name = "Serienstart"
+                pattern = "((#Staffel 1)(.*?)(#Folge 1))|((#Folge 1)(.*?)(#Staffel 1))"
+            ])
+
+            complexList.add(new ComplexPattern => [
+                name = "Staffelstart"
+                pattern = "(#Folge 1)"
+            ])
+        }
+
+        return extEpgSearch
+    }
+
+    public def saveExtEpgSearch() {
+        val out = new File(customDirectory + File.separator + "extepgsearch.xml")
+        marshaller.marshal(extEpgSearch, out)
     }
 
     public def isDatabaseConfigured() {

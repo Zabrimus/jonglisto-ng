@@ -1,3 +1,12 @@
+0.2.3-snapshot:
+Bugfixes.
+
+New:
+- moved retransmission setting epgd searchtimer to first tab
+- new epg search functionality based on regular expressions
+- new permission view:config:epgsearch
+
+
 0.2.2:
 Bugfixes:
 - svdrp server: closed client socket can result in a timeout on client side in subsequent connections and requests

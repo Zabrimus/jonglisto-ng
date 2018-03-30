@@ -57,5 +57,15 @@ jaxb2 {
       encoding = 'UTF-8'
     }
   }
+
+  xjc {
+    'extepgsearch-classes' {
+      generatedSourcesDir = 'src/main/jaxb2/'
+      basePackage = 'vdr.jonglisto.configuration.jaxb.extepgsearch'
+      schema = 'src/main/resources/xsd/extepgsearch.xsd'
+      encoding = 'UTF-8'
+    }
+  }
+
 }
 */

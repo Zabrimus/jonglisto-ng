@@ -12,6 +12,8 @@ ext {
         guava             : '24.0-jre',     // Google guava
         deltaspike        : '1.8.0',        // Apache Deltaspike
 
+        jregex            : '1.2_01',       // jregex, http://jregex.sourceforge.net/
+
         logback           : '1.2.3',        // Lockback Logger
 
         sundial           : '2.1.3',        // Sundial Scheduler
@@ -35,6 +37,8 @@ ext {
         vaadinBuildHelper    : "com.vaadin:vaadin-buildhelpers:7.4.0.beta1",
         vaadincdi            : "com.vaadin:vaadin-cdi:$versions.vaadincdi",
         deltaspike           : "org.apache.deltaspike.core:deltaspike-core-impl:$versions.deltaspike",
+
+        jregex               : "net.sourceforge.jregex:jregex:$versions.jregex",
 
         logback              : "ch.qos.logback:logback-classic:$versions.logback",
 

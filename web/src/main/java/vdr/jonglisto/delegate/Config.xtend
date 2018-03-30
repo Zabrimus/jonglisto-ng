@@ -45,6 +45,21 @@ class Config implements Serializable {
     }
 
     @TraceLog
+    public def void loadExtEpgSearch() {
+        Configuration.getInstance().loadExtEpgSearch
+    }
+
+    @TraceLog
+    public def getExtEpgSearch() {
+        return Configuration.getInstance().extEpgSearch
+    }
+
+    @TraceLog
+    public def void saveExtEpgSearch() {
+        Configuration.getInstance().saveExtEpgSearch()
+    }
+
+    @TraceLog
     public def getRemoteConfig() {
         return Configuration.getInstance().getRemoteConfig()
     }

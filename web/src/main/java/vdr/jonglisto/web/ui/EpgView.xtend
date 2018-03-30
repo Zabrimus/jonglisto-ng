@@ -33,6 +33,7 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 import java.util.ArrayList
+import vdr.jonglisto.search.EpgSearch
 
 @Log("jonglisto.web")
 @CDIView(MainUI.EPG_VIEW)
@@ -44,6 +45,8 @@ class EpgView extends BaseView {
 
     @Inject
     private EventGrid eventGrid
+
+    private EpgSearch epgSearch = EpgSearch.getInstance()
 
     var EPGTYPE epgType
     var DateField epgDateCriteria
@@ -64,6 +67,8 @@ class EpgView extends BaseView {
     var NativeSelect<String> tvRadioSelect
     var NativeSelect<String> ftaEncSelect
     var NativeSelect<String> favouriteSelect
+
+    var NativeSelect<String> regexPattern
 
     @PostConstruct
     def void init() {
@@ -101,6 +106,8 @@ class EpgView extends BaseView {
                             searchDescription.visible = false
                             searchButton.visible = false
 
+                            regexPattern.visible = false
+
                             epgType = EPGTYPE.TIME
                         }
 
@@ -115,6 +122,8 @@ class EpgView extends BaseView {
                             searchShortText.visible = false
                             searchDescription.visible = false
                             searchButton.visible = false
+
+                            regexPattern.visible = false
 
                             epgType = EPGTYPE.CHANNEL
 
@@ -133,6 +142,8 @@ class EpgView extends BaseView {
                             searchShortText.visible = true
                             searchDescription.visible = true
                             searchButton.visible = true
+
+                            regexPattern.visible = true
 
                             epgType = EPGTYPE.SEARCH
                         }
@@ -159,7 +170,11 @@ class EpgView extends BaseView {
                             }
 
                             case messages.epgTypeSearch: {
-                                listSearchResult
+                                if (regexPattern.selectedItem.isPresent) {
+                                    listRegexEvents
+                                } else {
+                                    listSearchResult
+                                }
                             }
                         }
                     })
@@ -201,6 +216,29 @@ class EpgView extends BaseView {
 
             cssLayout(it) [
                 styleName = "epg-search"
+
+                regexPattern = nativeSelect [
+                    emptySelectionAllowed = true
+                    items = epgSearch.allCompletePattern.keySet.sort
+
+                    addSelectionListener(it | {
+                        if (it.selectedItem.isPresent) {
+                            searchRegex.visible = false
+                            searchTitle.visible = false
+                            searchShortText.visible = false
+                            searchDescription.visible = false
+                            searchButton.visible = false
+
+                            listRegexEvents
+                        } else {
+                            searchRegex.visible = true
+                            searchTitle.visible = true
+                            searchShortText.visible = true
+                            searchDescription.visible = true
+                            searchButton.visible = true
+                        }
+                    })
+                ]
 
                 searchRegex = checkbox(messages.epgSearchRegex) [
                 ]
@@ -244,7 +282,11 @@ class EpgView extends BaseView {
                             }
 
                             case messages.epgTypeSearch: {
-                                listSearchResult
+                                if (regexPattern.selectedItem.isPresent) {
+                                    listRegexEvents
+                                } else {
+                                    listSearchResult
+                                }
                             }
                         }
                     })
@@ -266,7 +308,11 @@ class EpgView extends BaseView {
                             }
 
                             case messages.epgTypeSearch: {
-                                listSearchResult
+                                if (regexPattern.selectedItem.isPresent) {
+                                    listRegexEvents
+                                } else {
+                                    listSearchResult
+                                }
                             }
                         }
                     })
@@ -308,6 +354,10 @@ class EpgView extends BaseView {
 
     private def listChannel() {
         eventGrid.items = channelEvents
+    }
+
+    private def listRegexEvents() {
+        eventGrid.items = getRegexEvents()
     }
 
     private def listSearchResult() {
@@ -436,6 +486,16 @@ class EpgView extends BaseView {
                 .filter(it | description.stringMatcher(it.description)) //
                 .limit(100)
                 .collect(Collectors.toList)
+        }
+    }
+
+    private def getRegexEvents() {
+        if (regexPattern.selectedItem.isPresent) {
+            val patternName = regexPattern.selectedItem.get
+            val filteredChannels = filterChannel
+            return epgSearch.filterCompletePattern(patternName, svdrp.epg.stream.filter(it | filteredChannels.contains(it.channelId)).collect(Collectors.toList))
+        } else {
+            return getTimeEvents()
         }
     }
 

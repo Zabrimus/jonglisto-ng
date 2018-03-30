@@ -14,6 +14,7 @@ import vdr.jonglisto.web.ui.component.ToolsComponent
 import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
+import vdr.jonglisto.web.ui.component.ExtEpgsearchComponent
 
 @Log("jonglisto.web")
 @CDIView(MainUI.CONFIG_VIEW)
@@ -21,6 +22,9 @@ class ConfigView extends BaseView {
 
     @Inject
     private ExtFavouriteComponent favourites
+
+    @Inject
+    private ExtEpgsearchComponent epgsearch
 
     @Inject
     private JobComponent jobs
@@ -45,6 +49,10 @@ class ConfigView extends BaseView {
                 addTab(favourites.showAll(), messages.configFavouriteChannel)
             } else if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":favourite:user")) {
                 addTab(favourites.showUser(), messages.configFavouriteChannel)
+            }
+
+            if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":epgsearch")) {
+                addTab(epgsearch.showAll(), messages.configEpgsearch)
             }
 
             if (currentUser.isPermitted("view:" + MainUI.CONFIG_VIEW + ":jobs:all")) {
