@@ -160,6 +160,11 @@ class Svdrp implements Serializable {
     }
 
     @TraceLog
+    def isPluginAvailable(VDR vdr, String pluginName) {
+        SvdrpClient.getInstance.isPluginAvailable(vdr, pluginName)
+    }
+
+    @TraceLog
     def void deleteTimer(VDR vdr, Timer timer) {
         SvdrpClient.getInstance.deleteTimer(vdr, timer)
     }

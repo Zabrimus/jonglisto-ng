@@ -7,6 +7,7 @@ import com.vaadin.ui.ComboBox
 import com.vaadin.ui.Grid
 import com.vaadin.ui.Grid.ItemClick
 import com.vaadin.ui.Grid.SelectionMode
+import com.vaadin.ui.Image
 import com.vaadin.ui.Notification
 import com.vaadin.ui.Notification.Type
 import com.vaadin.ui.TextField
@@ -15,6 +16,8 @@ import com.vaadin.ui.components.grid.HeaderRow
 import com.vaadin.ui.renderers.ComponentRenderer
 import com.vaadin.ui.renderers.HtmlRenderer
 import com.vaadin.ui.themes.ValoTheme
+import de.steinwedel.messagebox.ButtonOption
+import de.steinwedel.messagebox.MessageBox
 import java.util.Collections
 import java.util.HashSet
 import java.util.List
@@ -23,6 +26,7 @@ import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.EpgCustomColumn
+import vdr.jonglisto.model.EpgdSearchTimer
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.i18n.Messages
@@ -33,7 +37,8 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.ui.Image
+import vdr.jonglisto.model.EpgsearchSearchTimer
+import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 
 @Log("jonglisto.web")
 class EventGrid {
@@ -59,6 +64,11 @@ class EventGrid {
     @Inject
     private ChannelLogo channelLogo
 
+    @Inject
+    private SearchTimerEpgdEditWindow epgdWindow
+
+    @Inject
+    private SearchTimerEpgsearchEditWindow epgsearchWindow
 
     val COL_CHANNEL = "channel"
     val COL_DATE = "date"
@@ -194,6 +204,7 @@ class EventGrid {
 
         grid.selectionMode = SelectionMode.NONE
         grid.rowHeight = 55
+        grid.recalculateColumnWidths
     }
 
     def handleItemClick(ItemClick<Epg> event) {
@@ -268,6 +279,81 @@ class EventGrid {
 
     private def editEpgDetails(Epg epg) {
         UI.current.addWindow(epgDetails.showWindow(this, currentVdr, epg, true, -1))
+    }
+
+    private def actionCreateSearchTimer(Epg epg) {
+        var epgsearchAvailable = svdrp.isPluginAvailable(currentVdr, "epgsearch")
+        var epgdAvailable = config.isDatabaseConfigured
+
+        if (!epgsearchAvailable && !epgdAvailable) {
+            Notification.show(messages.epgSearchTimerNotPossible)
+            return
+        }
+
+        if (epgsearchAvailable && epgdAvailable) {
+            // we need a choice, which one is desired
+            val mb = MessageBox.create();
+            mb.asModal(true)
+                .withCaption(messages.epgSelectSearchTimer)
+                .withMessage(messages.epgWhichSearchTimer)
+                .withCustomButton([ createEpgdTimer(epg) ], ButtonOption.caption("epgd"))
+                .withCustomButton([ createEpgsearchTimer(epg)], ButtonOption.caption("epgsearch"))
+                .open();
+            return
+        }
+
+        if (epgsearchAvailable) {
+            println("Open epgsearch")
+            createEpgsearchTimer(epg)
+            return
+        }
+
+        if (epgdAvailable) {
+            println("Open epgd")
+            createEpgdTimer(epg)
+            return
+        }
+    }
+
+    private def createEpgdTimer(Epg epg) {
+        val timer = new EpgdSearchTimer => [
+            type = 'R'
+            name = epg.title
+            active = 1
+            repeatfields = 3
+            searchfields = 1
+            namingmode = 1
+            searchmode = 4
+            expression = epg.title
+            directory = epg.title
+            channelIds = epg.channelId
+            chexclude = '0'
+        ]
+
+        UI.current.addWindow(epgdWindow.showWindow(timer))
+    }
+
+    private def createEpgsearchTimer(Epg epg) {
+        val timer = new EpgsearchSearchTimer => [
+            setField(Field.pattern, epg.title)
+            setField(Field.use_channel, "1")
+            setField(Field.channels, epg.channelId + "|" + epg.channelId)
+            setField(Field.mode, "0")
+            setField(Field.use_title, "1")
+            setField(Field.use_subtitle, "1")
+            setField(Field.has_action, "1")
+            setField(Field.directory, epg.title)
+            setField(Field.prio, "50")
+            setField(Field.lft, "50")
+            setField(Field.bstart, "5")
+            setField(Field.bstop, "10")
+            setField(Field.action, "0")
+            setField(Field.avoid_repeats, "1")
+            setField(Field.comp_title, "1")
+            setField(Field.comp_subtitle, "2")
+        ]
+
+        UI.current.addWindow(epgsearchWindow.showWindow(currentVdr, timer))
     }
 
     private def createChannel(Epg ev) {
@@ -362,6 +448,8 @@ class EventGrid {
 
     private def createActionButtons(Epg epg) {
         val layout = cssLayout[
+            styleName = "epgaction"
+
             button("") [
                 icon = VaadinIcons.PLAY
                 description = messages.epgSwitchChannel
@@ -411,6 +499,17 @@ class EventGrid {
                     actionAlarm(epg)
                 })
             ]
+
+            button("") [
+                icon = VaadinIcons.RETWEET
+                description = messages.epgCreateSearchTimer
+                width = "22px"
+                styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+                addClickListener(s | {
+                    actionCreateSearchTimer(epg)
+                })
+            ]
+
         ]
 
         return layout
