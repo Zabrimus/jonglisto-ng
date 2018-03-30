@@ -1,9 +1,10 @@
 0.2.3-snapshot:
-Bugfixes.
+Bugfixes:
+- implement forgotten functionality in epgd search timers (toggle active/inactiva and delete)
 
 New:
 - moved retransmission setting epgd searchtimer to first tab
-- new epg search functionality based on regular expressions
+- new epg search functionality based on regular expressions (configurable in Configuration/Extended EPG search)
 - new permission view:config:epgsearch
 
 

@@ -64,7 +64,7 @@ class SearchTimerEpgdGrid {
         grid = new Grid
         grid.items = searchTimer
 
-        grid.addColumn(ev | createActive(ev.active)) //
+        grid.addColumn(ev | createActive(ev)) //
             .setRenderer(new ComponentRenderer) //
             .setCaption(messages.searchtimerActive) //
             .setId(COL_ACTIVE) //
@@ -129,6 +129,7 @@ class SearchTimerEpgdGrid {
 
     def refreshSearchTimer() {
         grid.items = service.searchTimers
+        grid.recalculateColumnWidths
     }
 
     def newTimer() {
@@ -165,10 +166,10 @@ class SearchTimerEpgdGrid {
         return button
     }
 
-    private def createActive(int active) {
+    private def createActive(EpgdSearchTimer timer) {
         var Button button
 
-        if (active == 1) {
+        if (timer.active == 1) {
             button = new Button("", VaadinIcons.CHECK)
             button.description = messages.searchtimerActive
         } else {
@@ -178,6 +179,8 @@ class SearchTimerEpgdGrid {
 
         button.width = "22px"
         button.styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
+
+        button.addClickListener(s | { service.toogleActive(timer); refreshSearchTimer })
 
         return button
     }
@@ -219,7 +222,8 @@ class SearchTimerEpgdGrid {
                 width = "22px"
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + ValoTheme.BUTTON_BORDERLESS
                 addClickListener(s | {
-                    Notification.show("Not yet implemented: Delete search timer")
+                    service.deleteSearchTimer(timer)
+                    refreshSearchTimer
                 })
             ]
 

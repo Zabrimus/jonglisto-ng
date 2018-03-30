@@ -42,6 +42,36 @@ class SearchTimerService {
         ]
     }
 
+    public def void toogleActive(EpgdSearchTimer timer) {
+        using(Database.get.beginTransaction) [
+            if (timer.id > 0) {
+                val value = if (timer.active == 1) 0 else 1
+                val sql = "update searchtimers set active = :active where id = :id"
+                val query = createQuery(sql)
+
+                query.addParameter("active", value)
+                query.addParameter("id", timer.id)
+
+                query.executeUpdate();
+                commit();
+            }
+        ]
+    }
+
+    public def void deleteSearchTimer(EpgdSearchTimer timer) {
+        using(Database.get.beginTransaction) [
+            if (timer.id > 0) {
+                val sql = "update searchtimers set state = 'D' where id = :id"
+                val query = createQuery(sql)
+
+                query.addParameter("id", timer.id)
+
+                query.executeUpdate();
+                commit();
+            }
+        ]
+    }
+
     public def save(EpgdSearchTimer timer) {
         using(Database.get.beginTransaction) [
             if (timer.id > 0) {
