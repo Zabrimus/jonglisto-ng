@@ -406,6 +406,32 @@ http://<server>:8080/jonglisto-ng?locale=de
 http://<server>:8080/jonglisto-ng?locale=en
 ```
 
+# Extended EPG search functionality
+In Configuration/Extended EPG search exists the possibility to define regex patterns, which can be used in epg search view.
+To be more readable, the pattern can be splitted. It's possible to define pattern parts (ususal regex) which then can be
+referenced in the real pattern configuration.
+
+E.g. predefined are these pattern parts:
+```
+Name: 'Staffel 1' with pattern '\|Staffel:\s*1(?=\|)'
+Name: 'Folge 1' with pattern '\|Staffelfolge:\s*1(?=\|)'
+Name: 'whitespace' with pattern '(?[\\s]+[\\|])'
+```
+These pattern parts can then be used in the real pattern
+```
+Name: 'Serienstart' with pattern '((#Staffel 1)(.*?)(#Folge 1))|((#Folge 1)(.*?)(#Staffel 1))'
+Name: 'Staffelstart' with pattern '(#Folge 1)'
+```
+The entries (#Staffel 1), (#Folge 1) will be replaced with the pattern parts defined above.
+The final search pattern will then be (much lesser readable):
+```
+Name: 'Serienstart' with pattern '((\|Staffel:\s*1(?=\|))(.*?)(\|Staffelfolge:\s*1(?=\|)))|((\|Staffelfolge:\s*1(?=\|))(.*?)(\|Staffel:\s*1(?=\|)))'
+Name: 'Staffelstart' with pattern '(\|Staffelfolge:\s*1(?=\|))'
+```
+
+The possible regular expression are the one defined with Perl 5.6 and a short description can be found in
+http://jregex.sourceforge.net/syntax.html#combclasses
+
 # Screenhots
 ## Main Page
 ![Main](https://github.com/Zabrimus/page/blob/master/jng-main.png)
