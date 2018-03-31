@@ -7,6 +7,7 @@ New:
 - new epg search functionality based on regular expressions (configurable in Configuration/Extended EPG search)
 - new permission view:config:epgsearch
 - create search timer in epg overview
+- upgrade to Vaadin 8.3.3
 
 0.2.2:
 Bugfixes:
