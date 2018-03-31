@@ -34,6 +34,7 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 import java.util.ArrayList
 import vdr.jonglisto.search.EpgSearch
+import java.time.LocalDateTime
 
 @Log("jonglisto.web")
 @CDIView(MainUI.EPG_VIEW)

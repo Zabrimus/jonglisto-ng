@@ -19,7 +19,8 @@ public class DateTimeUtil {
     }
 
     public static String toTime(String timeFormat) {
-        return toTime(Math.toIntExact(System.currentTimeMillis() / 1000L), timeFormat);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(timeFormat);
+        return LocalDateTime.now().format(timeFormatter);
     }
 
     public static String toDate(long unixTime, String dateFormat) {

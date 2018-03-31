@@ -1,6 +1,7 @@
 0.2.3-snapshot:
 Bugfixes:
 - implement forgotten functionality in epgd search timers (toggle active/inactive and delete)
+- time values was wrong due to Daylight Saving Time
 
 New:
 - moved retransmission setting epgd searchtimer to first tab
