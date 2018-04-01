@@ -9,6 +9,7 @@ New:
 - new permission view:config:epgsearch
 - create search timer in epg overview
 - upgrade to Vaadin 8.3.3
+- render timer timer as SVG (more robust in terms of zoom)
 
 0.2.2:
 Bugfixes:

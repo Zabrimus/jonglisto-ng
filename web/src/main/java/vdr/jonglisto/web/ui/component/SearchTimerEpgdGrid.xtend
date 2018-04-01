@@ -4,7 +4,6 @@ import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Button
 import com.vaadin.ui.Grid
 import com.vaadin.ui.Grid.SelectionMode
-import com.vaadin.ui.Notification
 import com.vaadin.ui.UI
 import com.vaadin.ui.Window.CloseEvent
 import com.vaadin.ui.Window.CloseListener

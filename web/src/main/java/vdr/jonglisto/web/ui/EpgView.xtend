@@ -14,6 +14,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
 import java.util.List
@@ -26,15 +27,13 @@ import org.apache.commons.lang3.StringUtils
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.VDR
+import vdr.jonglisto.search.EpgSearch
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.EventGrid
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import java.util.ArrayList
-import vdr.jonglisto.search.EpgSearch
-import java.time.LocalDateTime
 
 @Log("jonglisto.web")
 @CDIView(MainUI.EPG_VIEW)

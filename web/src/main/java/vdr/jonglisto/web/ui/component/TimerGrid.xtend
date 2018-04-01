@@ -27,8 +27,6 @@ import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import vdr.jonglisto.delegate.Config
-import vdr.jonglisto.db.SearchTimerService
 import com.vaadin.ui.Image
 
 @Log("jonglisto.web")

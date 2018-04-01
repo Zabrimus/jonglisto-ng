@@ -5,13 +5,14 @@ import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.Alignment
 import com.vaadin.ui.DateField
 import com.vaadin.ui.HorizontalLayout
+import com.vaadin.ui.Image
 import java.time.LocalDate
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.util.TimerOverlap
 import vdr.jonglisto.web.MainUI
-import vdr.jonglisto.web.ui.component.TimeLine
+import vdr.jonglisto.web.ui.component.TimeLineSvg
 import vdr.jonglisto.web.ui.component.TimerGrid
 import vdr.jonglisto.xtend.annotation.Log
 
@@ -24,7 +25,8 @@ class TimerView extends BaseView {
     @Inject
     private TimerGrid timerGrid
 
-    var TimeLine timeLine
+    var Image timeLine
+
     var DateField  timeLineDateField
     var HorizontalLayout timeLineLayout
 
@@ -59,8 +61,7 @@ class TimerView extends BaseView {
 
         timeLineLayout = horizontalLayout[
             width = "100%"
-            timeLine = new TimeLine().setSvdrp(svdrp).setComponentWidth(800).setDate(LocalDate.now).setTimer(svdrp.getTimer(selectedVdr))
-            timeLine.createComposite
+            timeLine = new TimeLineSvg().setSvdrp(svdrp).setDate(LocalDate.now).setTimer(svdrp.getTimer(selectedVdr)).createImage
 
             addComponent(timeLine)
             setComponentAlignment(timeLine, Alignment.MIDDLE_CENTER);
@@ -103,8 +104,7 @@ class TimerView extends BaseView {
             }
 
             val oldTimeLine = timeLine
-            timeLine = new TimeLine().setSvdrp(svdrp).setComponentWidth(800).setDate(selDate).setTimer(svdrp.getTimer(selectedVdr))
-            timeLine.createComposite
+            timeLine = new TimeLineSvg().setSvdrp(svdrp).setDate(selDate).setTimer(svdrp.getTimer(selectedVdr)).createImage
 
             timeLineLayout.replaceComponent(oldTimeLine, timeLine)
             timeLineLayout.setComponentAlignment(timeLine, Alignment.MIDDLE_CENTER);
