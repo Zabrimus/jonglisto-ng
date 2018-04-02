@@ -36,7 +36,6 @@ import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.SimplePattern
 import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.ComplexPattern
 import java.util.TimeZone
 import java.time.ZoneId
-import vdr.jonglisto.util.DateTimeUtil
 
 @Log("jonglisto.configuration")
 class Configuration {

@@ -281,7 +281,7 @@ class EventGrid {
         UI.current.addWindow(epgDetails.showWindow(this, currentVdr, epg, true, -1))
     }
 
-    private def actionCreateSearchTimer(Epg epg) {
+    public def void actionCreateSearchTimer(Epg epg) {
         var epgsearchAvailable = svdrp.isPluginAvailable(currentVdr, "epgsearch")
         var epgdAvailable = config.isDatabaseConfigured
 

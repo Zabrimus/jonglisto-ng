@@ -500,7 +500,7 @@ class SvdrpClient {
 
                 return Configuration.instance.unmarshaller.unmarshal(new StringReader(xml)) as Scraper
             } catch (Exception e) {
-                log.debug("Get Scraper data failed.", e)
+                log.trace("Get Scraper data failed.", e)
 
                 // no epg data found
                 return null;

@@ -63,7 +63,7 @@ class EpgDetailsWindow extends Window {
 
         closable = true
         modal = true
-        width = "60%"
+        width = "70%"
 
         // VDR EPG
         val tab1 = verticalLayout [
@@ -417,6 +417,13 @@ class EpgDetailsWindow extends Window {
                             description = messages.epgAlarm
                             styleName = ValoTheme.BUTTON_BORDERLESS
                             it.addClickListener(s | { close; parentGrid.actionAlarm(epg) })
+                        ]
+
+                        button(it, messages.epgCreateSearchTimer) [
+                            icon = VaadinIcons.RETWEET
+                            description = messages.epgCreateSearchTimer
+                            styleName = ValoTheme.BUTTON_BORDERLESS
+                            it.addClickListener(s | { close; parentGrid.actionCreateSearchTimer(epg) })
                         ]
                     }
                 ]
