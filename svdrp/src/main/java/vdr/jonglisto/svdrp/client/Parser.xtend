@@ -232,7 +232,7 @@ class Parser {
         // analyze repeating timer and add them separately
         val repeatingTimer = new ArrayList<Timer>
         result.stream.filter(s | s.repeatingTimer).forEach(timer | {
-            var LocalDate startDate = if (timer.startDate === null) LocalDate.now.minusDays(1)  else timer.startDate.minusDays(1)
+            var LocalDate startDate = if (timer.startDate === null) LocalDate.now(Configuration.instance.defaultZoneId).minusDays(1)  else timer.startDate.minusDays(1)
 
             for (i : 1 ..< 8) {
                 if (timer.isWeekday(DayOfWeek.of(i))) {
@@ -400,7 +400,7 @@ class Parser {
     }
 
     private static def next(LocalDate start, DayOfWeek day) {
-        val today = LocalDate.now
+        val today = LocalDate.now(Configuration.instance.defaultZoneId)
         var resultDate = start.with(TemporalAdjusters.next(day))
 
         while (resultDate.isBefore(today)) {

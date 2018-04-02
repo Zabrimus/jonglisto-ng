@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.03.10 um 03:12:05 PM CET 
+// Generiert: 2018.04.02 um 09:42:33 AM CEST 
 //
 
 
@@ -122,6 +122,14 @@ public class ObjectFactory {
      */
     public Jonglisto.Epg2Vdr createJonglistoEpg2Vdr() {
         return new Jonglisto.Epg2Vdr();
+    }
+
+    /**
+     * Create an instance of {@link Jonglisto.Timezone }
+     * 
+     */
+    public Jonglisto.Timezone createJonglistoTimezone() {
+        return new Jonglisto.Timezone();
     }
 
     /**

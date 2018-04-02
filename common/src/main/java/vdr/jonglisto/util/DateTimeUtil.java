@@ -6,11 +6,13 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
+import vdr.jonglisto.configuration.Configuration;
+
 public class DateTimeUtil {
 
     public static String toTime(long unixTime, String timeFormat) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(timeFormat);
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), ZoneId.systemDefault()).toLocalTime().format(timeFormatter);
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), Configuration.getInstance().getDefaultZoneId()).toLocalTime().format(timeFormatter);
     }
 
     public static String toDurationTime(long unixTime, String timeFormat) {
@@ -20,12 +22,12 @@ public class DateTimeUtil {
 
     public static String toTime(String timeFormat) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(timeFormat);
-        return LocalDateTime.now().format(timeFormatter);
+        return LocalDateTime.now(Configuration.getInstance().getDefaultZoneId()).format(timeFormatter);
     }
 
     public static String toDate(long unixTime, String dateFormat) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), ZoneId.systemDefault()).toLocalDate().format(dateFormatter);
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), Configuration.getInstance().getDefaultZoneId()).toLocalDate().format(dateFormatter);
     }
 
     public static String toDateName(long unixTime, String dateFormat) {
@@ -33,12 +35,12 @@ public class DateTimeUtil {
     }
 
     public static LocalDateTime toDateTime(long unixTime) {
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), ZoneId.systemDefault());
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), Configuration.getInstance().getDefaultZoneId());
     }
 
     public static ZoneOffset getCurrentZoneOffset() {
         Instant instant = Instant.now();
-        ZoneId systemZone = ZoneId.systemDefault();
+        ZoneId systemZone = Configuration.getInstance().getDefaultZoneId();
         return systemZone.getRules().getOffset(instant);
     }
 }

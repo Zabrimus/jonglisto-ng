@@ -131,7 +131,7 @@ class TimerEditWindow extends Window {
                 horizontalLayout(it) [
                     date = dateField(it) [
                         caption = messages.timerDate
-                        value = LocalDate.now()
+                        value = LocalDate.now(config.defaultZoneId)
                     ]
 
                     start = textField(it, messages.timerStart) [

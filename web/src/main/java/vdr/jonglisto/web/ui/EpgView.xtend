@@ -193,7 +193,7 @@ class EpgView extends BaseView {
                 styleName = "epg-time"
 
                 epgDateSelect = epgDateCriteria = dateField [
-                    value = LocalDate.now()
+                    value = LocalDate.now(config.defaultZoneId)
                     addValueChangeListener(it | listTime)
                 ]
 
@@ -341,7 +341,7 @@ class EpgView extends BaseView {
     }
 
     private def listNow() {
-        epgDateCriteria.value = LocalDate.now
+        epgDateCriteria.value = LocalDate.now(config.defaultZoneId)
         epgTimeCriteria.value = DateTimeUtil.toTime(messages.formatTime)
         eventGrid.usedTime = System.currentTimeMillis / 1000L
         listTime
@@ -433,7 +433,7 @@ class EpgView extends BaseView {
         }
 
         val date = epgDateCriteria.value.atTime(time)
-        return date.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() / 1000L
+        return date.atZone(config.defaultZoneId).toInstant().toEpochMilli() / 1000L
     }
 
     private def getChannelEvents() {

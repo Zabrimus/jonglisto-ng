@@ -15,6 +15,7 @@ import org.eclipse.xtend.lib.annotations.EqualsHashCode
 import org.eclipse.xtend.lib.annotations.ToString
 
 import static extension org.apache.commons.lang3.StringUtils.*
+import vdr.jonglisto.configuration.Configuration
 
 @Accessors
 @EqualsHashCode
@@ -150,7 +151,8 @@ class EpgsearchSearchTimer {
         val v = getField(field)
 
         if (v !== null && v.isNotEmpty) {
-            return LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(v)), ZoneId.systemDefault()).toLocalDate()
+            val zoneId = Configuration.instance.defaultZoneId
+            return LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(v)), zoneId).toLocalDate()
         }
 
         return null
@@ -158,7 +160,8 @@ class EpgsearchSearchTimer {
 
     def setDateField(Field field, LocalDate value) {
         if (value !== null) {
-            setField(field, String.valueOf(value.atStartOfDay(ZoneId.systemDefault()).toEpochSecond()))
+            val zoneId = Configuration.instance.defaultZoneId
+            setField(field, String.valueOf(value.atStartOfDay(zoneId).toEpochSecond()))
         }
     }
 

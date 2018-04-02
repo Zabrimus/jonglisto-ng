@@ -175,6 +175,11 @@ class Config implements Serializable {
         Configuration.getInstance().isShowScraperImages()
     }
 
+    @TraceLog
+    public def getDefaultZoneId() {
+        return Configuration.getInstance().getDefaultZoneId()
+    }
+
     // @TraceLog // -- do not work and i don't understand why not
     public def getScraperPath() {
         Configuration.getInstance().scraperPath

@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.03.10 um 03:12:05 PM CET 
+// Generiert: 2018.04.02 um 09:42:33 AM CEST 
 //
 
 
@@ -117,6 +117,15 @@ import javax.xml.bind.annotation.XmlValue;
  *           &lt;/complexType&gt;
  *         &lt;/element&gt;
  *         &lt;element name="svdrpPort" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="timezone"&gt;
+ *           &lt;complexType&gt;
+ *             &lt;simpleContent&gt;
+ *               &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema&gt;string"&gt;
+ *                 &lt;attribute name="tz" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *               &lt;/extension&gt;
+ *             &lt;/simpleContent&gt;
+ *           &lt;/complexType&gt;
+ *         &lt;/element&gt;
  *         &lt;element name="disableLogin"&gt;
  *           &lt;complexType&gt;
  *             &lt;simpleContent&gt;
@@ -291,6 +300,7 @@ import javax.xml.bind.annotation.XmlValue;
     "channel",
     "epg2Vdr",
     "svdrpPort",
+    "timezone",
     "disableLogin",
     "scraper",
     "epgTimeList",
@@ -313,6 +323,8 @@ public class Jonglisto {
     @XmlElement(name = "epg2vdr", required = true)
     protected Jonglisto.Epg2Vdr epg2Vdr;
     protected Integer svdrpPort;
+    @XmlElement(required = true)
+    protected Jonglisto.Timezone timezone;
     @XmlElement(required = true)
     protected Jonglisto.DisableLogin disableLogin;
     protected Jonglisto.Scraper scraper;
@@ -489,6 +501,30 @@ public class Jonglisto {
      */
     public void setSvdrpPort(Integer value) {
         this.svdrpPort = value;
+    }
+
+    /**
+     * Ruft den Wert der timezone-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Jonglisto.Timezone }
+     *     
+     */
+    public Jonglisto.Timezone getTimezone() {
+        return timezone;
+    }
+
+    /**
+     * Legt den Wert der timezone-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Jonglisto.Timezone }
+     *     
+     */
+    public void setTimezone(Jonglisto.Timezone value) {
+        this.timezone = value;
     }
 
     /**
@@ -2792,6 +2828,85 @@ public class Jonglisto {
                 command = new ArrayList<String>();
             }
             return this.command;
+        }
+
+    }
+
+
+    /**
+     * <p>Java-Klasse für anonymous complex type.
+     * 
+     * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
+     * 
+     * <pre>
+     * &lt;complexType&gt;
+     *   &lt;simpleContent&gt;
+     *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema&gt;string"&gt;
+     *       &lt;attribute name="tz" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+     *     &lt;/extension&gt;
+     *   &lt;/simpleContent&gt;
+     * &lt;/complexType&gt;
+     * </pre>
+     * 
+     * 
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+        "value"
+    })
+    public static class Timezone {
+
+        @XmlValue
+        protected String value;
+        @XmlAttribute(name = "tz")
+        protected String tz;
+
+        /**
+         * Ruft den Wert der value-Eigenschaft ab.
+         * 
+         * @return
+         *     possible object is
+         *     {@link String }
+         *     
+         */
+        public String getValue() {
+            return value;
+        }
+
+        /**
+         * Legt den Wert der value-Eigenschaft fest.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *     
+         */
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Ruft den Wert der tz-Eigenschaft ab.
+         * 
+         * @return
+         *     possible object is
+         *     {@link String }
+         *     
+         */
+        public String getTz() {
+            return tz;
+        }
+
+        /**
+         * Legt den Wert der tz-Eigenschaft fest.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *     
+         */
+        public void setTz(String value) {
+            this.tz = value;
         }
 
     }

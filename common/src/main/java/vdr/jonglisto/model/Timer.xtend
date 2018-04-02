@@ -12,6 +12,7 @@ import org.eclipse.xtend.lib.annotations.EqualsHashCode
 import org.eclipse.xtend.lib.annotations.ToString
 import vdr.jonglisto.util.DateTimeUtil
 import java.util.regex.Pattern
+import vdr.jonglisto.configuration.Configuration
 
 @Accessors
 @EqualsHashCode
@@ -190,7 +191,7 @@ class Timer extends BaseData implements Serializable {
 
     def getStartTime() {
         if (startEpoch === 0 && date !== null) {
-            val start = LocalDateTime.from(LocalDate.parse(date, dateParseFormatter).atStartOfDay());
+            val start = LocalDateTime.from(LocalDate.parse(date, dateParseFormatter).atStartOfDay(Configuration.instance.defaultZoneId));
             startEpoch = start.withHour(time.get(0) as int).withMinute(time.get(1) as int).toEpochSecond(currentZoneOffset)
         }
 
@@ -199,7 +200,7 @@ class Timer extends BaseData implements Serializable {
 
     def getEndTime() {
         if (endEpoch === 0 && date !== null) {
-            val end = LocalDateTime.from(LocalDate.parse(date, dateParseFormatter).atStartOfDay());
+            val end = LocalDateTime.from(LocalDate.parse(date, dateParseFormatter).atStartOfDay(Configuration.instance.defaultZoneId));
 
             var dayAdjust = 0
             if ((time.get(0) * 60 + time.get(1)) > (time.get(2) * 60 + time.get(3))) {
@@ -243,19 +244,19 @@ class Timer extends BaseData implements Serializable {
     }
 
     def getStartDate() {
-        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime), ZoneId.systemDefault()).toLocalDate()
+        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime), Configuration.instance.defaultZoneId).toLocalDate()
     }
 
     def getEndDate() {
-        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime + getDuration), ZoneId.systemDefault()).toLocalDate()
+        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime + getDuration), Configuration.instance.defaultZoneId).toLocalDate()
     }
 
     def getStartDateTime() {
-        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime), ZoneId.systemDefault())
+        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime), Configuration.instance.defaultZoneId)
     }
 
     def getEndDateTime() {
-        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime + getDuration), ZoneId.systemDefault())
+        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime + getDuration), Configuration.instance.defaultZoneId)
     }
 
     def setStartDate(LocalDate date) {
@@ -263,13 +264,13 @@ class Timer extends BaseData implements Serializable {
     }
 
     def setStartEpoch(long epoch) {
-        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch), ZoneId.systemDefault())
+        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch), Configuration.instance.defaultZoneId)
         setStartDate(dateTime.toLocalDate())
         setStartAsString(dateTime.format(timeParseFormatter))
     }
 
     def setEndEpoch(long epoch) {
-        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch), ZoneId.systemDefault())
+        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch), Configuration.instance.defaultZoneId)
         setEndAsString(dateTime.format(timeParseFormatter))
     }
 

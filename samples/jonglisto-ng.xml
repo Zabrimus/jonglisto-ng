@@ -56,6 +56,10 @@
     <!-- optional the SVDRP server port which shall be created by jonglisto-ng -->
     <svdrpPort>6420</svdrpPort>
 
+    <!-- optional configuration of the time zone: e.g. Europe/Berlin                       -->
+    <!-- usually the time zone of the system is used, but this could be not desired        -->
+    <timezone tz="Europe/Berlin" />
+
     <!-- optional: disable login and use user in URL parameter. But use this with caution! -->
     <!-- The desired user must also configured - as usual - in security.ini                -->
     <!-- Additionally security.ini has to be configured                                    -->

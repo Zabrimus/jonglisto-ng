@@ -10,6 +10,7 @@ New:
 - create search timer in epg overview
 - upgrade to Vaadin 8.3.3
 - render timer timeline as SVG (more robust in terms of zoom)
+- new configuration parameter 'timezone' to set the time zone used by the application
 
 0.2.2:
 Bugfixes:

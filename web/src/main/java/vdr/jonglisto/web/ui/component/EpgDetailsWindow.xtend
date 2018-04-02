@@ -432,7 +432,7 @@ class EpgDetailsWindow extends Window {
             DateTimeUtil.toDate(epg.startTime, messages.formatDate),
             DateTimeUtil.toTime(epg.startTime, messages.formatTime),
             DateTimeUtil.toTime(epg.startTime + epg.duration, messages.formatTime),
-            DateTimeUtil.toTime(epg.duration, messages.formatTime)
+            DateTimeUtil.toDurationTime(epg.duration, messages.formatTime)
         )
     }
 

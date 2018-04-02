@@ -34,6 +34,9 @@ import java.util.HashSet
 import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch
 import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.SimplePattern
 import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.ComplexPattern
+import java.util.TimeZone
+import java.time.ZoneId
+import vdr.jonglisto.util.DateTimeUtil
 
 @Log("jonglisto.configuration")
 class Configuration {
@@ -95,6 +98,9 @@ class Configuration {
     private static Unmarshaller unmarshaller
     private static Marshaller marshaller
 
+    private static ZoneId defaultZoneId
+    private static String defaultZoneStr
+
     private new() {
         var configObjectFactory = new ObjectFactory
         var remoteObjectFactory = new vdr.jonglisto.configuration.jaxb.remote.ObjectFactory
@@ -122,6 +128,14 @@ class Configuration {
 
         defaultSvdrp = config.svdrpCommandList?.command
         customDirectory = config.directory?.dir
+
+        try {
+            defaultZoneStr = config.timezone.tz
+            defaultZoneId = TimeZone.getTimeZone(config.timezone.tz).toZoneId
+        } catch (Exception e) {
+            defaultZoneId = ZoneId.systemDefault()
+            defaultZoneStr = defaultZoneId.id
+        }
 
         try {
             favouriteConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "favourites.xml")) as Favourites
@@ -155,6 +169,14 @@ class Configuration {
         registerSchedules
 
         loadEpgProvider
+    }
+
+    public def getDefaultZoneId() {
+        return defaultZoneId
+    }
+
+    public def getDefaultZoneStr() {
+        return defaultZoneStr
     }
 
     public def getSvdrpServerPort() {

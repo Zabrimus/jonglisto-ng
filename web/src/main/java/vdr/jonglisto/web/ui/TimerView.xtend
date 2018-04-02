@@ -61,12 +61,13 @@ class TimerView extends BaseView {
 
         timeLineLayout = horizontalLayout[
             width = "100%"
-            timeLine = new TimeLineSvg().setSvdrp(svdrp).setDate(LocalDate.now).setTimer(svdrp.getTimer(selectedVdr)).createImage
+            timeLine = new TimeLineSvg().setSvdrp(svdrp).setDate(LocalDate.now(config.defaultZoneId)).setTimer(svdrp.getTimer(selectedVdr)).createImage
+            timeLine.width = "600px"
 
             addComponent(timeLine)
             setComponentAlignment(timeLine, Alignment.MIDDLE_CENTER);
 
-            timeLineDateField = new DateField(messages.timerDate, LocalDate.now) => [
+            timeLineDateField = new DateField(messages.timerDate, LocalDate.now(config.defaultZoneId)) => [
                 addValueChangeListener(it | refreshTimeLine)
             ]
 
@@ -100,7 +101,7 @@ class TimerView extends BaseView {
         if (timeLineLayout !== null) {
             var selDate = timeLineDateField.value
             if (selDate === null) {
-                selDate = LocalDate.now
+                selDate = LocalDate.now(config.defaultZoneId)
             }
 
             val oldTimeLine = timeLine

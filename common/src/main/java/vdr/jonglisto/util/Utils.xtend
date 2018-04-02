@@ -12,6 +12,7 @@ import org.threeten.bp.ZonedDateTime
 
 import static extension org.apache.commons.lang3.StringUtils.*
 import java.util.concurrent.ThreadLocalRandom
+import vdr.jonglisto.configuration.Configuration
 
 class Utils {
 
@@ -69,7 +70,7 @@ class Utils {
 
     private def static long nextExecutionInMillis(long currentTimeInMillis, Cron cron) {
         val currentInstant = Instant.ofEpochMilli(currentTimeInMillis);
-        return ExecutionTime.forCron(cron).timeToNextExecution(ZonedDateTime.ofInstant(currentInstant, ZoneId.systemDefault()))
+        return ExecutionTime.forCron(cron).timeToNextExecution(ZonedDateTime.ofInstant(currentInstant, ZoneId.of(Configuration.instance.defaultZoneStr)))
                 .transform(s | currentInstant.plus(s).toEpochMilli())
                 .or(-1L);
     }

@@ -8,9 +8,9 @@ import javax.servlet.ServletException
 import javax.servlet.annotation.WebInitParam
 import javax.servlet.annotation.WebServlet
 import vdr.jonglisto.delegate.Config
+import vdr.jonglisto.logging.LogUtil
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.xtend.annotation.Log
-import vdr.jonglisto.logging.LogUtil
 
 @WebServlet(urlPatterns = #["/*", "/VAADIN/"],
             name = "VaadinServlet",
