@@ -20,12 +20,10 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.model.VDRDiskStat
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.MainUI
-import vdr.jonglisto.web.ui.component.RecordingTreeGrid
-import vdr.jonglisto.web.util.HtmlSanitizer
+import vdr.jonglisto.web.ui.component.RecordingComponent
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import vdr.jonglisto.web.ui.component.RecordingComponent
 
 @Log("jonglisto.web")
 @CDIView(MainUI.RECORDING_VIEW)

@@ -1,9 +1,10 @@
 package vdr.jonglisto.delegate
 
 import java.io.Serializable
-import java.util.HashMap
 import java.util.List
+import java.util.Map
 import java.util.Optional
+import java.util.Set
 import javax.enterprise.context.ApplicationScoped
 import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.Epg
@@ -14,8 +15,6 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.xtend.annotation.Log
 import vdr.jonglisto.xtend.annotation.TraceLog
-import java.util.Set
-import java.util.Map
 
 @ApplicationScoped
 @Log("jonglisto.delegate.svdrp")
@@ -72,7 +71,7 @@ class Svdrp implements Serializable {
     }
 
     @TraceLog
-    def renameRecordings(vdr.jonglisto.model.VDR vdr, Map<Long, String> recordings) {
+    def renameRecordings(VDR vdr, Map<Long, String> recordings) {
         SvdrpClient.getInstance.renameRecordings(vdr, recordings)
     }
 
