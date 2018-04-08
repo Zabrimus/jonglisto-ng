@@ -417,20 +417,20 @@ class RecordingTreeGrid {
             toDeleteRecordings.stream.forEach(s | builder.append(getCompleteRecName(s, s.folder)).append("\n"))
         }
 
-        MessageBox.createQuestion()
-            .withCaption(messages.confirmDeletionCaption)
-            .withMessage(builder.toString)
-            .withYesButton([
-                    toDeleteRecordings.stream.forEach(s | { svdrp.deleteRecording(currentVdr, s) })
-
-                    treeGrid.dataProvider.refreshAll
-
-                    // bad hack: After deletion of recordings the internal tree structure can be wrong :(
-                    // I have not found the cause for this problem. So reload to ensure the correct tree hierarchy.
-                    parentView.reloadRecordings
-                ], ButtonOption.caption(messages.confirmDeletionYes))
-            .withNoButton()
-            .open();
+//        MessageBox.createQuestion()
+//            .withCaption(messages.confirmDeletionCaption)
+//            .withMessage(builder.toString)
+//            .withYesButton([
+//                    toDeleteRecordings.stream.forEach(s | { svdrp.deleteRecording(currentVdr, s) })
+//
+//                    treeGrid.dataProvider.refreshAll
+//
+//                    // bad hack: After deletion of recordings the internal tree structure can be wrong :(
+//                    // I have not found the cause for this problem. So reload to ensure the correct tree hierarchy.
+//                    parentView.reloadRecordings
+//                ], ButtonOption.caption(messages.confirmDeletionYes))
+//            .withNoButton()
+//            .open();
     }
 
     private def showlevelUpConfirmDialog(Recording recording) {
@@ -445,26 +445,26 @@ class RecordingTreeGrid {
             .open();
     }
 
-    private def deleteRecording(Recording rec) {
-        svdrp.deleteRecording(currentVdr, rec)
-
-        // update all parent folder
-        val newDec = if (rec.seen) 0 else 1
-        var parent = treeGrid.treeData.getParent(rec)
-        while (parent !== null) {
-            parent.childCount = parent.childCount - 1
-            parent.newCount = parent.newCount - newDec
-
-            parent = treeGrid.treeData.getParent(parent)
-        }
-
-        // delete now the recording in TreeGrid
-        treeGrid.treeData.removeItem(rec)
-
-        // bad hack: After deletion of recordings the internal tree structure can be wrong :(
-        // I have not found the cause for this problem. So reload to ensure the correct tree hierarchy.
-        parentView.reloadRecordings()
-    }
+//    private def deleteRecording(Recording rec) {
+//        svdrp.deleteRecording(currentVdr, rec)
+//
+//        // update all parent folder
+//        val newDec = if (rec.seen) 0 else 1
+//        var parent = treeGrid.treeData.getParent(rec)
+//        while (parent !== null) {
+//            parent.childCount = parent.childCount - 1
+//            parent.newCount = parent.newCount - newDec
+//
+//            parent = treeGrid.treeData.getParent(parent)
+//        }
+//
+//        // delete now the recording in TreeGrid
+//        treeGrid.treeData.removeItem(rec)
+//
+//        // bad hack: After deletion of recordings the internal tree structure can be wrong :(
+//        // I have not found the cause for this problem. So reload to ensure the correct tree hierarchy.
+//        parentView.reloadRecordings()
+//    }
 
     private def moveRecording(Recording rec) {
         // collect all new recordings

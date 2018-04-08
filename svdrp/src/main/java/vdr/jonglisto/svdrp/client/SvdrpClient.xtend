@@ -6,13 +6,13 @@ import com.google.common.cache.LoadingCache
 import com.google.common.cache.RemovalListener
 import com.google.common.cache.RemovalNotification
 import java.io.StringReader
-import java.io.StringWriter
 import java.util.ArrayList
 import java.util.Collections
 import java.util.HashMap
 import java.util.List
 import java.util.Map
 import java.util.Optional
+import java.util.Set
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 import vdr.jonglisto.configuration.Configuration
@@ -31,6 +31,7 @@ import vdr.jonglisto.model.VdrPlugin
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
+import java.io.StringWriter
 
 @Log("jonglisto.svdrp.client")
 class SvdrpClient {
@@ -213,30 +214,26 @@ class SvdrpClient {
         return vdr.command("MOVR " + id + " " + newName, 250)
     }
 
-    def void batchRenameRecording(VDR vdr, HashMap<Long, String> map) {
+    def renameRecordings(VDR vdr, Map<Long, String> recordings) {
         if (isJonglistoPluginCommandAllowed(vdr, "MOVR")) {
             val writer = new StringWriter();
-            map.keySet().stream.sorted.forEach(recId | {
-                writer.append("/").append(recId.toString()).append(" ").append(map.get(recId));
+            recordings.keySet().stream.sorted.forEach(recId | {
+                writer.append("/").append(recId.toString()).append(" ").append(recordings.get(recId));
             })
             vdr.command("PLUG jonglisto MOVR " + writer.toString(), 900)
         } else {
-            map.keySet.stream.forEach(recId | {
-                vdr.command("MOVR " + recId + " " + map.get(recId), 250)
+            recordings.keySet.stream.forEach(recId | {
+                vdr.command("MOVR " + recId + " " + recordings.get(recId), 250)
             })
         }
     }
 
-    def void deleteRecording(VDR vdr, Recording recording) {
-        vdr.command("DELR " + recording.id, 250)
-    }
-
-    def void batchDeleteRecordings(VDR vdr, List<Recording> recordings) {
+    def void deleteRecordings(VDR vdr, Set<Long> recordings) {
         if (isJonglistoPluginCommandAllowed(vdr, "DELR")) {
-            val cmd = recordings.stream.map(s | s.id.toString).collect(Collectors.joining(" "));
+            val cmd = recordings.stream.map(s|String.valueOf(s)).collect(Collectors.joining(" "));
             vdr.command("PLUG jonglisto DELR " + cmd, 900)
         } else {
-            recordings.stream.forEach(s | { deleteRecording(vdr, s) })
+            recordings.stream.forEach(s | vdr.command("DELR " + s, 250) )
         }
     }
 

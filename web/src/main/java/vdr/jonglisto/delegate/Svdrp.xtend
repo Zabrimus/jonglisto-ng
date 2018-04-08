@@ -14,6 +14,8 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.xtend.annotation.Log
 import vdr.jonglisto.xtend.annotation.TraceLog
+import java.util.Set
+import java.util.Map
 
 @ApplicationScoped
 @Log("jonglisto.delegate.svdrp")
@@ -60,28 +62,18 @@ class Svdrp implements Serializable {
     }
 
     @TraceLog
+    def deleteRecordings(VDR vdr, Set<Long> recordings) {
+        SvdrpClient.getInstance.deleteRecordings(vdr, recordings)
+    }
+
+    @TraceLog
     def Recording getRecordingEpg(VDR vdr, Recording rec) {
         SvdrpClient.getInstance.getRecordingEpg(vdr, rec)
     }
 
     @TraceLog
-    def renameRecording(VDR vdr, long id, String newName) {
-        SvdrpClient.getInstance.renameRecording(vdr, id, newName)
-    }
-
-    @TraceLog
-    def void batchRenameRecording(VDR vdr, HashMap<Long, String> map) {
-        SvdrpClient.getInstance.batchRenameRecording(vdr, map)
-    }
-
-    @TraceLog
-    def void deleteRecording(VDR vdr, Recording recording) {
-        SvdrpClient.getInstance.deleteRecording(vdr, recording)
-    }
-
-    @TraceLog
-    def void batchDeleteRecordings(VDR vdr, List<Recording> recordings) {
-        SvdrpClient.getInstance.batchDeleteRecordings(vdr, recordings)
+    def renameRecordings(vdr.jonglisto.model.VDR vdr, Map<Long, String> recordings) {
+        SvdrpClient.getInstance.renameRecordings(vdr, recordings)
     }
 
     @TraceLog
@@ -198,5 +190,4 @@ class Svdrp implements Serializable {
     def void copyChannels(String source, String dest) {
         SvdrpClient.instance.copyChannels(source, dest)
     }
-
 }

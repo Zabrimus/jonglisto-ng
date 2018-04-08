@@ -1,4 +1,4 @@
-0.2.3-snapshot:
+0.2.3:
 Bugfixes:
 - implement forgotten functionality in epgd search timers (toggle active/inactive and delete)
 - time values was wrong due to Daylight Saving Time
@@ -11,6 +11,7 @@ New:
 - upgrade to Vaadin 8.3.3
 - render timer timeline as SVG (more robust in terms of zoom)
 - new configuration parameter 'timezone' to set the time zone used by the application
+- replaced recordings view with a new explorer like view
 
 0.2.2:
 Bugfixes:

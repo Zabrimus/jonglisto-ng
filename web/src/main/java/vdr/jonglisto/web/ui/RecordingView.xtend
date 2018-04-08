@@ -25,13 +25,14 @@ import vdr.jonglisto.web.util.HtmlSanitizer
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import vdr.jonglisto.web.ui.component.RecordingComponent
 
 @Log("jonglisto.web")
 @CDIView(MainUI.RECORDING_VIEW)
 class RecordingView extends BaseView {
 
     @Inject
-    private RecordingTreeGrid recordingTreeGrid
+    private RecordingComponent recordingTreeGrid
 
     private Grid<Recording> deleteGrid
 
@@ -72,26 +73,17 @@ class RecordingView extends BaseView {
                     })
                 ]
 
-                val b2 = button(messages.recordingAddRootFolder) [
-                    setSizeUndefined
-                    icon = VaadinIcons.FOLDER_ADD
-                    addClickListener(s | {
-                        recordingTreeGrid.addRootFolder
-                    })
-                ]
-
                 val b3 = button(messages.recordingDeleteSelected) [
                     setSizeUndefined
                     icon = VaadinIcons.TRASH
                     addClickListener(s | {
-                        recordingTreeGrid.deleteSelectedRecordings
+                        recordingTreeGrid.deleteSelected
                     })
                 ]
 
                 sizeLabel = label("0") [ ]
 
                 setComponentAlignment(b1, Alignment.MIDDLE_LEFT)
-                setComponentAlignment(b2, Alignment.MIDDLE_LEFT)
                 setComponentAlignment(b3, Alignment.MIDDLE_LEFT)
                 setComponentAlignment(sizeLabel, Alignment.MIDDLE_RIGHT)
                 setExpandRatio(sizeLabel, 4.0f)
@@ -99,11 +91,9 @@ class RecordingView extends BaseView {
 
             addComponent(layout)
 
-            recordingTreeGrid.setParent(this).setCurrentVdr(selectedVdr).createTreeGrid(svdrp.getRecordings(selectedVdr))
-            val grid = recordingTreeGrid.treeGrid
-            grid.setSizeFull
+            recordingTreeGrid.setParent(this).setCurrentVdr(selectedVdr).updateRecordingList(svdrp.getRecordings(selectedVdr))
 
-            addComponentsAndExpand(grid)
+            addComponentsAndExpand(recordingTreeGrid.getComponent())
             updateSizeLabel(selectedVdr)
         ]
 
@@ -157,11 +147,11 @@ class RecordingView extends BaseView {
     }
 
     override protected def void changeVdr(VDR vdr) {
-        if (recordingTreeGrid.treeGrid !== null) {
-            recordingTreeGrid.recordings = svdrp.getRecordings(vdr)
+        if (recordingTreeGrid !== null) {
+            recordingTreeGrid.updateRecordingList(svdrp.getRecordings(vdr))
             recordingTreeGrid.currentVdr = vdr
         } else {
-            recordingTreeGrid.setCurrentVdr(selectedVdr).createTreeGrid(svdrp.getRecordings(selectedVdr))
+            recordingTreeGrid.setParent(this).setCurrentVdr(selectedVdr).updateRecordingList(svdrp.getRecordings(selectedVdr))
         }
 
         if (deleteGrid !== null) {
@@ -194,10 +184,6 @@ class RecordingView extends BaseView {
     }
 
     private def createStart(Recording rec) {
-        if (rec.start == 0) {
-            return HtmlSanitizer.clean(messages.recFolderInfo(rec.childCount, rec.newCount))
-        }
-
         var result = DateTimeUtil.toDate(rec.start, messages.formatDate) + " " + DateTimeUtil.toTime(rec.start, messages.formatTime)
 
         if (!rec.seen) {
@@ -219,7 +205,7 @@ class RecordingView extends BaseView {
                 svdrp.undeleteRecording(selectedVdr, recording)
                 deleteGrid.items = svdrp.getDeletedRecordings(selectedVdr)
             } catch (Exception e) {
-                log.info("Undeletion failed", e)
+                log.info("undelete failed", e)
                 Notification.show(messages.recordingErrorUndelete, Type.ERROR_MESSAGE)
             }
         })
