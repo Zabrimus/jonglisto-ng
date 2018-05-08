@@ -2,30 +2,30 @@ package vdr.jonglisto.svdrp.client
 
 import java.io.BufferedReader
 import java.io.BufferedWriter
+import java.io.IOException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.InetSocketAddress
 import java.net.Socket
-import java.net.SocketException
 import java.util.List
 import java.util.regex.Pattern
 import vdr.jonglisto.xtend.annotation.Log
 
 @Log("jonglisto.svdrp.client")
 class Connection {
-    private static Pattern greetingPattern = Pattern.compile(".*?(\\d+\\.\\d+\\.\\d+);.*?;(.*?)$")
+    static Pattern greetingPattern = Pattern.compile(".*?(\\d+\\.\\d+\\.\\d+);.*?;(.*?)$")
 
-    private Socket socket
+    Socket socket
 
-    private String host
-    private int port
-    private String version
+    String host
+    int port
+    String version
 
-    private int readTimeout
-    private int connectTimeout
+    int readTimeout
+    int connectTimeout
 
-    private BufferedWriter output
-    private BufferedReader input
+    BufferedWriter output
+    BufferedReader input
 
     new(String host, int port) {
         this(host, port, 0, 500)
@@ -49,40 +49,46 @@ class Connection {
     }
 
     def String connect() {
-        // connect to VDR
-        socket = new Socket();
-        val sa = new InetSocketAddress(host, port);
-
-        socket.connect(sa, connectTimeout);
-        socket.setSoTimeout(readTimeout);
-
-        output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), 8192);
-        input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"), 8192);
-
-        // read greeting
-        var response = readResponse
-
-        if (response.code != 220) {
-            throw new RuntimeException("Code != 220")
-        }
-
-        val greet = response.lines.get(0)
-        val matcher = greetingPattern.matcher(greet);
-        if (!matcher.matches) {
-            throw new RuntimeException("Greeting error? " + greet)
-        }
-
-        // check encoding
-        val encoding = matcher.group(2).trim
-        if ("UTF-8" != encoding) {
-            // re-init input/output
-            output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), encoding), 8192);
-            input = new BufferedReader(new InputStreamReader(socket.getInputStream(), encoding), 8192);
-        }
-
-        version = matcher.group(1)
-
-        return matcher.group(1)
+        log.debug("connect to " + host + ":" + port)
+        
+        try {
+            // connect to VDR
+            socket = new Socket();
+            val sa = new InetSocketAddress(host, port);
+    
+            socket.connect(sa, connectTimeout);
+            socket.setSoTimeout(readTimeout);
+    
+            output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), 8192);
+            input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"), 8192);
+    
+            // read greeting
+            var response = readResponse
+    
+            if (response.code != 220) {
+                throw new RuntimeException("Code != 220")
+            }
+    
+            val greet = response.lines.get(0)
+            val matcher = greetingPattern.matcher(greet);
+            if (!matcher.matches) {
+                throw new RuntimeException("Greeting error? " + greet)
+            }
+    
+            // check encoding
+            val encoding = matcher.group(2).trim
+            if ("UTF-8" != encoding) {
+                // re-init input/output
+                output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), encoding), 8192);
+                input = new BufferedReader(new InputStreamReader(socket.getInputStream(), encoding), 8192);
+            }
+    
+            version = matcher.group(1)
+    
+            return matcher.group(1)
+        } catch (Exception e) {
+            throw new RuntimeException("connection failed: " + host + ":" + port)
+        } 
     }
 
     def String getVersion() {
@@ -93,15 +99,27 @@ class Connection {
         val response = send("QUIT")
 
         if (input !== null) {
-            input.close
+            try {
+                input.close
+            } catch (IOException exc) {
+                // ignore
+            }
         }
 
         if (output !== null) {
-            output.close
+            try {
+                output.close
+            } catch (IOException exc) {
+                // ignore
+            }
         }
 
         if (socket !== null) {
-            socket.close
+            try {
+                socket.close
+            } catch (IOException exc) {
+                // ignore
+            }
         }
 
         return response
@@ -112,31 +130,30 @@ class Connection {
             output.write(command.replaceAll("\n", "|"))
             output.newLine
             output.flush
-        } catch (SocketException e) {
+            
+            return readResponse
+        } catch (IOException e) {
             // connection is broken -> invalidate
             SvdrpClient.getInstance().invalidateConnection(this)
             throw new ConnectionException(e.getMessage)
         }
-
-        return readResponse
     }
 
     def Response sendBatch(List<String> command) {
         try {
-            command.stream.forEach(s |
-                {
+            for (var i = 0; i < command.size; i++) {
+                val s = command.get(i)
                 output.write(s.replaceAll("\n", "|"))
-                output.newLine
-                })
-
+                output.newLine                
+            }
             output.flush
-        } catch (SocketException e) {
+            
+            return readResponse
+        } catch (IOException e) {
             // connection is broken -> invalidate
             SvdrpClient.getInstance().invalidateConnection(this)
             throw new ConnectionException(e.getMessage)
         }
-
-        return readResponse
     }
 
     def Response sendBatchRawEpg(List<String> command) {
@@ -154,17 +171,16 @@ class Connection {
             output.newLine
 
             output.flush
-        } catch (SocketException e) {
+            
+            return readResponse
+        } catch (IOException e) {
             // connection is broken -> invalidate
             SvdrpClient.getInstance().invalidateConnection(this)
             throw new ConnectionException(e.getMessage)
         }
-
-        return readResponse
     }
 
-
-    private def Response readResponse() {
+    private def Response readResponse() throws IOException {
         var reading = true
         var String line
         val response = new Response

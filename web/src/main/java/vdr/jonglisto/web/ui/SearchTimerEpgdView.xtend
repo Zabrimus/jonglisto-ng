@@ -9,16 +9,16 @@ import vdr.jonglisto.db.Database
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.SearchTimerEpgdGrid
-import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @CDIView(MainUI.SEARCHTIMER_EPGD_VIEW)
+@SuppressWarnings("serial")
 class SearchTimerEpgdView extends BaseView {
 
     @Inject
-    private SearchTimerEpgdGrid epgdGrid
+    SearchTimerEpgdGrid epgdGrid
 
     @PostConstruct
     def void init() {
@@ -57,7 +57,7 @@ class SearchTimerEpgdView extends BaseView {
         }
     }
 
-    override protected def void changeVdr(VDR vdr) {
+    override protected void changeVdr(VDR vdr) {
        // not needed
     }
 

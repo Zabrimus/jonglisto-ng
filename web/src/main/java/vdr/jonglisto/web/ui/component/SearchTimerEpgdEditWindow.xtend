@@ -23,69 +23,68 @@ import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.EpgdSearchTimer
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.i18n.Messages
-import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @ViewScoped
+@SuppressWarnings("serial", "unchecked")
 class SearchTimerEpgdEditWindow extends Window {
+    @Inject
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
+    Config config
 
     @Inject
-    private Config config
-
-    @Inject
-    private Messages messages
+    Messages messages
 
     val service = new SearchTimerService
     val vdrService = new VdrService
 
     var List<VDR> allVdr
 
-    private CheckBox repeatCheckBox
-    private CheckBox repeatTitle
-    private CheckBox repeatShortText
-    private CheckBox repeatDescription
-    private CheckBox beginCheckBox
-    private TextField beginStart
-    private TextField beginEnd
-    private CheckBox beginMo
-    private CheckBox beginTu
-    private CheckBox beginWe
-    private CheckBox beginTh
-    private CheckBox beginFr
-    private CheckBox beginSa
-    private CheckBox beginSu
-    private ComboBox<String> action
-    private TextField name
-    private CheckBox active
-    private CheckBox vps
-    private ComboBox<String> namingMode
-    private TextField directory
-    private TextField template
-    private ComboBox<VDR> vdr
-    private TextField priority
-    private TextField lifetime
-    private TextField expression
-    private ComboBox<String> searchMode
-    private CheckBox casesensitiv
-    private TextField seriesTitle
-    private TextField season
-    private TextField part
-    private TwinColSelect<String> genre
-    private TwinColSelect<String> category
-    private TextField year
-    private RadioButtonGroup<String> channelInclude
-    private TwinColSelect<Channel> channels
-    private NativeSelect<String> format1
-    private NativeSelect<String> format2
-    private NativeSelect<String> format3
-    private CheckBox searchTitle
-    private CheckBox searchShortText
-    private CheckBox searchDescription
+    CheckBox repeatCheckBox
+    CheckBox repeatTitle
+    CheckBox repeatShortText
+    CheckBox repeatDescription
+    CheckBox beginCheckBox
+    TextField beginStart
+    TextField beginEnd
+    CheckBox beginMo
+    CheckBox beginTu
+    CheckBox beginWe
+    CheckBox beginTh
+    CheckBox beginFr
+    CheckBox beginSa
+    CheckBox beginSu
+    ComboBox<String> action
+    TextField name
+    CheckBox active
+    CheckBox vps
+    ComboBox<String> namingMode
+    TextField directory
+    TextField template
+    ComboBox<VDR> vdr
+    TextField priority
+    TextField lifetime
+    TextField expression
+    ComboBox<String> searchMode
+    CheckBox casesensitiv
+    TextField seriesTitle
+    TextField season
+    TextField part
+    TwinColSelect<String> genre
+    TwinColSelect<String> category
+    TextField year
+    RadioButtonGroup<String> channelInclude
+    TwinColSelect<Channel> channels
+    NativeSelect<String> format1
+    NativeSelect<String> format2
+    NativeSelect<String> format3
+    CheckBox searchTitle
+    CheckBox searchShortText
+    CheckBox searchDescription
 
     new() {
         super()

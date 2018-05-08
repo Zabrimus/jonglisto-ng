@@ -19,6 +19,7 @@ import vdr.jonglisto.xtend.annotation.TraceLog
 @ApplicationScoped
 @Log("jonglisto.delegate.svdrp")
 class Svdrp implements Serializable {
+    public final static long serialVersionUID = 1L;
 
     @TraceLog
     def pingHost(VDR vdr) {

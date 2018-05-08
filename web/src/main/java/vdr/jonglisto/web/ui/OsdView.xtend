@@ -9,21 +9,21 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.OsdComponent
 import vdr.jonglisto.web.ui.component.RemoteComponent
-import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @CDIView(MainUI.OSD_VIEW)
+@SuppressWarnings("serial")
 class OsdView extends BaseView {
 
     @Inject
-    private RemoteComponent remote
+    RemoteComponent remote
 
     @Inject
-    private Config config
+    Config config
 
-    private OsdComponent osd
+    OsdComponent osd
     var HorizontalLayout layout
 
     @PostConstruct
@@ -54,7 +54,7 @@ class OsdView extends BaseView {
     protected override createMainComponents() {
     }
 
-    override protected def void changeVdr(VDR vdr) {
+    override protected void changeVdr(VDR vdr) {
         remote.changeVdr(vdr)
 
         if (osd !== null) {

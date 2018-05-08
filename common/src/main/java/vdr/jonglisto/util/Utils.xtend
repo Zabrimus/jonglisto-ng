@@ -13,6 +13,7 @@ import org.threeten.bp.ZonedDateTime
 import static extension org.apache.commons.lang3.StringUtils.*
 import java.util.concurrent.ThreadLocalRandom
 import vdr.jonglisto.configuration.Configuration
+import java.io.IOException
 
 class Utils {
 
@@ -41,7 +42,7 @@ class Utils {
         .toLowerCase();
     }
 
-    private static val CronParser QUARTZ_CRON_PARSER = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ));
+    static val CronParser QUARTZ_CRON_PARSER = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ));
 
     def static nextRand() {
         return ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
@@ -63,7 +64,7 @@ class Utils {
         return nextExecutionInMillis(System.currentTimeMillis(), cron) / 1000;
     }
 
-    public def static long nextExecutionInMillis(long currentTimeInMillis, String timeFormat) {
+    def static long nextExecutionInMillis(long currentTimeInMillis, String timeFormat) {
         val cron = QUARTZ_CRON_PARSER.parse(timeFormat)
         return nextExecutionInMillis(System.currentTimeMillis(), cron) / 1000;
     }
@@ -90,11 +91,15 @@ class Utils {
             procedure.apply(resource)
         } catch (Throwable t) {
             mainThrowable = t
-            throw t
+            throw new RuntimeException(t)
         } finally {
             if (mainThrowable === null) {
                 if (resource !== null) {
-                    resource.close
+                    try {
+                        resource.close
+                    } catch (IOException exc) {
+                        // ignore
+                    }
                 }
             } else {
                 try {

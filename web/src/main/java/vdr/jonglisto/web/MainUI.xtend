@@ -8,20 +8,20 @@ import com.vaadin.cdi.CDIUI
 import com.vaadin.navigator.ViewChangeListener
 import com.vaadin.server.Page
 import com.vaadin.server.VaadinRequest
+import com.vaadin.server.VaadinService
 import com.vaadin.ui.UI
 import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
-import vdr.jonglisto.web.ui.ErrorView
-import vdr.jonglisto.xtend.annotation.Log
-import vdr.jonglisto.configuration.Configuration
 import org.apache.shiro.authc.UsernamePasswordToken
-import com.vaadin.server.VaadinService
+import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.web.ui.ErrorView
 
 @Theme("jonglisto")
 @Title("VDR Jonglisto")
 @PreserveOnRefresh
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @CDIUI("")
+@SuppressWarnings("serial")
 class MainUI extends UI implements ViewChangeListener {
 
     public static val MAIN_VIEW = "main"
@@ -35,7 +35,7 @@ class MainUI extends UI implements ViewChangeListener {
     public static val CONFIG_VIEW = "config"
 
     @Inject
-    private CDINavigator navigator
+    CDINavigator navigator
 
     new() {
     }

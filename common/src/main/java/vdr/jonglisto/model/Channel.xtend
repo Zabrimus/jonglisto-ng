@@ -9,18 +9,18 @@ import org.eclipse.xtend.lib.annotations.ToString
 class Channel extends BaseDataWithName {
     public final static String ROOT_GROUP = "*"
 
-    private int number
-    private String id
-    private String group
-    private boolean radio
-    private boolean encrypted
-    private String source
+    int number
+    String id
+    String group
+    boolean radio
+    boolean encrypted
+    String source
 
-    private String raw
-    private Long frequence
-    private String bouquet
+    String raw
+    Long frequence
+    String bouquet
 
-    private String normalizedName
+    String normalizedName
 
     new() {
     }

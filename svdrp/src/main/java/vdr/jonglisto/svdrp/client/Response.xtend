@@ -10,6 +10,6 @@ import org.eclipse.xtend.lib.annotations.ToString
 @EqualsHashCode
 @ToString
 class Response {    
-	private int code;
-	private List<String> lines = new ArrayList<String>()	
+	int code;
+	List<String> lines = new ArrayList<String>()	
 }

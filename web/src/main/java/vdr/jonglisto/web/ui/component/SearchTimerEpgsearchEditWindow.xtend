@@ -32,7 +32,6 @@ import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.i18n.Messages
-import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
@@ -45,15 +44,15 @@ import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 // Is this the content descriptor inside the DVB stream?
 // See 6.2.9 Content descriptor in http://www.etsi.org/deliver/etsi_en/300400_300499/300468/01.15.01_60/en_300468v011501p.pdf
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @ViewScoped
+@SuppressWarnings("serial", "unchecked")
 class SearchTimerEpgsearchEditWindow extends Window {
+    @Inject
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
-
-    @Inject
-    private Messages messages
+    Messages messages
 
     var VDR vdr
 
@@ -71,10 +70,6 @@ class SearchTimerEpgsearchEditWindow extends Window {
     var HorizontalLayout durationFields
     var HorizontalLayout daysCheckboxes
     var ListSelect<String> blacklistSelect
-    var Tab tabObject1
-    var Tab tabObject2
-    var Tab tabObject3
-    var Tab tabObject4
     var Tab tabObject5
     var Tab tabObject6
     var Tab tabObject7
@@ -570,10 +565,10 @@ class SearchTimerEpgsearchEditWindow extends Window {
         ]
 
         val tabsheet = tabsheet[
-            tabObject1 = addTab(tab1, messages.searchtimerConfiguration)
-            tabObject2 = addTab(tab2, messages.searchtimerExtended)
-            tabObject3 = addTab(tab3, messages.searchtimerChannels)
-            tabObject4 = addTab(tab4, messages.searchtimerStartdate)
+            addTab(tab1, messages.searchtimerConfiguration)
+            addTab(tab2, messages.searchtimerExtended)
+            addTab(tab3, messages.searchtimerChannels)
+            addTab(tab4, messages.searchtimerStartdate)
             tabObject5 = addTab(tab5, messages.searchtimerChannelswitch)
             tabObject6 = addTab(tab6, messages.searchtimerAskchannelswitch)
             tabObject7 = addTab(tab7, messages.searchtimerRecording)
@@ -749,12 +744,12 @@ class SearchTimerEpgsearchEditWindow extends Window {
         } else if (component instanceof ListSelect<?>) {
             binder.forField(component)
                 .bind(new ValueProvider<EpgsearchSearchTimer, Set<?>>() {
-                        override def Set<String> apply(EpgsearchSearchTimer t) {
+                        override Set<String> apply(EpgsearchSearchTimer t) {
                             return t.getSearchCategories(idx)
                         }
                       },
                       new Setter<EpgsearchSearchTimer, Set<?>>() {
-                        override def void accept(EpgsearchSearchTimer t, Set<?> values) {
+                        override void accept(EpgsearchSearchTimer t, Set<?> values) {
                           t.setSearchCategoriesSet(idx, values)
                         }
                       })

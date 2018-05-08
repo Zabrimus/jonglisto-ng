@@ -8,7 +8,6 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
 import com.vaadin.server.VaadinService
 import com.vaadin.server.VaadinSession
 import com.vaadin.ui.Alignment
-import com.vaadin.ui.Button
 import com.vaadin.ui.Label
 import com.vaadin.ui.PasswordField
 import com.vaadin.ui.TextField
@@ -27,17 +26,17 @@ import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 @Theme("valo")
 @Log("jonglisto.web")
 @CDIView("")
+@SuppressWarnings("serial")
 class LoginView extends VerticalLayout implements View {
 
     @Inject
-    private CDINavigator navigator;
+    CDINavigator navigator;
 
     @Inject
-    private Messages messages
+    Messages messages
 
     var TextField username = null
     var PasswordField password = null
-    var Button loginButton = null
     var Label invalidPassword = null
 
     @PostConstruct
@@ -66,7 +65,7 @@ class LoginView extends VerticalLayout implements View {
 
                 password = passwordField(messages.loginPassword)
 
-                loginButton = button(messages.loginLogin) [
+                button(messages.loginLogin) [
                     addClickListener [
                         login
                     ]

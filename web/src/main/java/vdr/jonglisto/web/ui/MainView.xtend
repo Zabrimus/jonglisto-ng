@@ -3,22 +3,22 @@ package vdr.jonglisto.web.ui
 import com.vaadin.cdi.CDIView
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
 import com.vaadin.ui.CssLayout
+import com.vaadin.ui.Label
 import javax.annotation.PostConstruct
+import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.VdrStatus
-import vdr.jonglisto.xtend.annotation.Log
-import com.vaadin.ui.Label
 import vdr.jonglisto.web.util.JonglistoVersion
-import javax.inject.Inject
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @CDIView(MainUI.MAIN_VIEW)
+@SuppressWarnings("serial")
 class MainView extends BaseView {
 
     @Inject
-    private JonglistoVersion jv
+    JonglistoVersion jv
 
     @PostConstruct
     def void init() {
@@ -41,7 +41,7 @@ class MainView extends BaseView {
         addComponent(new Label("Version: " + jv.version))
     }
 
-    override protected def void changeVdr(VDR vdr) {
+    override protected void changeVdr(VDR vdr) {
        // not used in this view
     }
 }

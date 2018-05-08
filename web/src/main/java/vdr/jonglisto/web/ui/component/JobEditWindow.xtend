@@ -18,30 +18,29 @@ import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.util.Utils
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.i18n.Messages
-import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @ViewScoped
+@SuppressWarnings("serial")
 class JobEditWindow extends Window {
+    @Inject
+    Config config
 
     @Inject
-    private Config config
+    Messages messages
 
-    @Inject
-    private Messages messages
+    CheckBox active
+    TextField time
+    NativeSelect<String> type
+    NativeSelect<String> vdr
+    TextField script
+    TextField parameter
+    NativeSelect<String> vdrType
+    Label next
 
-    private CheckBox active
-    private TextField time
-    private NativeSelect<String> type
-    private NativeSelect<String> vdr
-    private TextField script
-    private TextField parameter
-    private NativeSelect<String> vdrType
-    private Label next
-
-    private Jobs editJob
+    Jobs editJob
 
     new() {
         super()

@@ -32,13 +32,14 @@ import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
 import java.io.StringWriter
+import java.util.concurrent.ExecutionException
 
 @Log("jonglisto.svdrp.client")
 class SvdrpClient {
-    private static var SvdrpClient instance
+    static var SvdrpClient instance
 
-    private LoadingCache<VDR, Connection> connections
-    private LoadingCache<String, List<? extends BaseData>> longCache
+    LoadingCache<VDR, Connection> connections
+    LoadingCache<String, List<? extends BaseData>> longCache
 
     static val Map<String, Channel> channelMap = new HashMap<String, Channel>()
 
@@ -56,7 +57,7 @@ class SvdrpClient {
             }
         }) //
         .build(new CacheLoader<VDR, Connection>() {
-            override def Connection load(VDR key) {
+            override Connection load(VDR key) {
                 log.info("Create connection to " + key.host + ":" + key.port)
                 var Connection con = new Connection(key.host, key.port, key.readTimeout, key.connectTimeout)
                 con.connect
@@ -68,7 +69,7 @@ class SvdrpClient {
         .maximumSize(10) //
         .expireAfterWrite(6, TimeUnit.HOURS) //
         .build(new CacheLoader<String, List<? extends BaseData>>() {
-            override def List<? extends BaseData> load(String key) {
+            override List<? extends BaseData> load(String key) {
                 if (key == "EPG") {
                     return readEpg(Configuration.getInstance().epgVdr)
                 } else if (key == "CHANNEL") {
@@ -163,9 +164,14 @@ class SvdrpClient {
             return null
         }
     }
-
+    
+    @SuppressWarnings("unchecked")
     def getChannels() {
-        return longCache.get("CHANNEL") as List<Channel>
+        try {
+            return longCache.get("CHANNEL") as List<Channel>
+        } catch (ExecutionException exc) {
+            throw new RuntimeException("error in getChannels", exc)
+        }
     }
 
     def getChannel(String channelId) {
@@ -180,8 +186,13 @@ class SvdrpClient {
         return result
     }
 
+    @SuppressWarnings("unchecked")
     def getEpg() {
-        return longCache.get("EPG") as List<Epg>
+        try {
+            return longCache.get("EPG") as List<Epg>
+        } catch (ExecutionException exc) {
+            throw new RuntimeException("error in getEpg", exc)
+        }
     }
 
     def getTimer(VDR vdr) {
@@ -412,7 +423,11 @@ class SvdrpClient {
 
             // give VDR some time to poll timers
             if (timer.isRemote) {
-                Thread.sleep(2000);
+                try {
+                    Thread.sleep(2000)
+                } catch (InterruptedException exc) {
+                    // ignore
+                };
             }
         } else {
             vdr.command("DELT " + timer.id, 250)

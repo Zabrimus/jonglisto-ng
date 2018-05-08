@@ -4,15 +4,17 @@ import java.util.HashMap
 import java.util.List
 import java.util.stream.Collectors
 import jregex.Pattern
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.Epg
-import vdr.jonglisto.xtend.annotation.Log
 
-@Log("jonglisto.search")
 class EpgSearch {
 
-    private static Configuration config = Configuration.instance
-    private static EpgSearch instance = new EpgSearch
+    final static Logger log = LoggerFactory.getLogger("jonglisto.search");
+
+    static Configuration config = Configuration.instance
+    static EpgSearch instance = new EpgSearch
 
     val namedPattern = new HashMap<String, String>
     val completePattern = new HashMap<String, String>
@@ -21,11 +23,13 @@ class EpgSearch {
         reloadPattern
     }
 
-    public static def EpgSearch getInstance() {
+    static def EpgSearch getInstance() {
         return instance
     }
 
-    public def void reloadPattern() {
+    def void reloadPattern() {
+        log.debug("reload epgsearch pattern")
+
         namedPattern.clear
         completePattern.clear
 
@@ -36,26 +40,26 @@ class EpgSearch {
         complex.forEach(s | addCompletePattern(s.name, s.pattern))
     }
 
-    public def getAllNamedPattern() {
+    def getAllNamedPattern() {
         return namedPattern
     }
 
-    public def getAllCompletePattern() {
+    def getAllCompletePattern() {
         return completePattern
     }
 
-    public def String getNamedPattern(String name) {
+    def String getNamedPattern(String name) {
         return namedPattern.get(name)
     }
 
-    public def void addNamedPattern(String name, String patternStr) {
+    def void addNamedPattern(String name, String patternStr) {
 
         if (name !== null) {
             namedPattern.put("#" + name, patternStr)
         }
     }
 
-    public def String addCompletePattern(String name, String patternStr) {
+    def String addCompletePattern(String name, String patternStr) {
         if (name !== null) {
         }
 
@@ -98,10 +102,8 @@ class EpgSearch {
         return resultStr
     }
 
-    public def List<Epg> filterNamedPattern(String name, List<Epg> list) {
+    def List<Epg> filterNamedPattern(String name, List<Epg> list) {
         var patStr = namedPattern.get(name)
-
-        println("Named Pattern: " + namedPattern)
 
         if (patStr === null) {
             patStr = namedPattern.get("#" + name)
@@ -114,7 +116,7 @@ class EpgSearch {
         return filterEpg(patStr, list, true, true, true)
     }
 
-    public def List<Epg> filterNamedPattern(String name, List<Epg> list, boolean searchInTitle, boolean searchInShortText, boolean searchInDescription) {
+    def List<Epg> filterNamedPattern(String name, List<Epg> list, boolean searchInTitle, boolean searchInShortText, boolean searchInDescription) {
         var patStr = namedPattern.get(name)
 
         if (patStr === null) {
@@ -128,7 +130,7 @@ class EpgSearch {
         return filterEpg(patStr, list, searchInTitle, searchInShortText, searchInDescription)
     }
 
-    public def List<Epg> filterCompletePattern(String name, List<Epg> list) {
+    def List<Epg> filterCompletePattern(String name, List<Epg> list) {
         var patStr = completePattern.get(name)
 
         if (patStr === null) {
@@ -142,7 +144,7 @@ class EpgSearch {
         return filterEpg(patStr, list, true, true, true)
     }
 
-    public def List<Epg> filterCompletePattern(String name, List<Epg> list, boolean searchInTitle, boolean searchInShortText, boolean searchInDescription) {
+    def List<Epg> filterCompletePattern(String name, List<Epg> list, boolean searchInTitle, boolean searchInShortText, boolean searchInDescription) {
         var patStr = completePattern.get(name)
 
         if (patStr === null) {
@@ -173,18 +175,21 @@ class EpgSearch {
     }
 }
 
+@SuppressWarnings("serial")
 class NameNotFoundException extends RuntimeException {
     new(String message) {
         super("Name not found: " + message)
     }
 }
 
+@SuppressWarnings("serial")
 class InvalidPattern extends RuntimeException {
     new(String message) {
         super("Invalid pattern: " + message)
     }
 }
 
+@SuppressWarnings("serial")
 class PatternNotFound extends RuntimeException {
     new(String message) {
         super("Pattern '" + message + "' not found")

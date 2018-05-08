@@ -33,27 +33,27 @@ import vdr.jonglisto.xtend.annotation.Log
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log("jonglisto.web")
+@SuppressWarnings("serial", "unchecked")
 class ExtFavouriteComponent extends CustomComponent {
+    @Inject
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
+    Config config
 
     @Inject
-    private Config config
+    Messages messages
 
-    @Inject
-    private Messages messages
+    VDR currentVdr
 
-    private VDR currentVdr
+    String currentUser
 
-    private String currentUser
+    NativeSelect<String> favourites
 
-    private NativeSelect<String> favourites
+    Grid<Channel> leftGrid;
+    Grid<Channel> rightGrid;
 
-    private Grid<Channel> leftGrid;
-    private Grid<Channel> rightGrid;
-
-    private Map<String, CheckBox> systemCheckboxes = new HashMap<String, CheckBox>
+    Map<String, CheckBox> systemCheckboxes = new HashMap<String, CheckBox>
 
     def showAll() {
         currentUser = null

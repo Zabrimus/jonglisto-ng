@@ -14,30 +14,29 @@ import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.Epg
 import vdr.jonglisto.util.DateTimeUtil
+import vdr.jonglisto.util.Utils
 import vdr.jonglisto.web.i18n.Messages
-import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import vdr.jonglisto.util.Utils
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @ViewScoped
+@SuppressWarnings("serial")
 class EpgAlarmWindow extends Window {
+    @Inject
+    Config config
 
     @Inject
-    private Config config
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
+    Messages messages
 
-    @Inject
-    private Messages messages
+    TextField parameter
+    TextField minutes
+    NativeSelect<String> vdrType
 
-    private TextField parameter
-    private TextField minutes
-    private NativeSelect<String> vdrType
-
-    private Jobs editJob
+    Jobs editJob
 
     new() {
         super()

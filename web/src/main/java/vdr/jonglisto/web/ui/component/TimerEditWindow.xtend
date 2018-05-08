@@ -7,6 +7,7 @@ import com.vaadin.ui.Alignment
 import com.vaadin.ui.CheckBox
 import com.vaadin.ui.ComboBox
 import com.vaadin.ui.DateField
+import com.vaadin.ui.Notification
 import com.vaadin.ui.TextArea
 import com.vaadin.ui.TextField
 import com.vaadin.ui.Window
@@ -23,26 +24,24 @@ import vdr.jonglisto.model.Epg
 import vdr.jonglisto.model.Timer
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.i18n.Messages
-import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import com.vaadin.ui.Notification
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @ViewScoped
+@SuppressWarnings("serial", "unchecked")
 class TimerEditWindow extends Window {
-
-    private static Pattern timePattern = Pattern.compile("\\d{2}:\\d{2}")
-    private static Pattern twoDigitPattern = Pattern.compile("\\d{1,2}")
-
-    @Inject
-    private Svdrp svdrp
+    static Pattern timePattern = Pattern.compile("\\d{2}:\\d{2}")
+    static Pattern twoDigitPattern = Pattern.compile("\\d{1,2}")
 
     @Inject
-    private Config config
+    Svdrp svdrp
 
     @Inject
-    private Messages messages
+    Config config
+
+    @Inject
+    Messages messages
 
     var VDR currentVdr
 

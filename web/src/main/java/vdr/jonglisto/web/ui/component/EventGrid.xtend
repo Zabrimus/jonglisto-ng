@@ -41,34 +41,34 @@ import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 
 @Log("jonglisto.web")
+@SuppressWarnings("unchecked")
 class EventGrid {
+    @Inject
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
+    Config config
 
     @Inject
-    private Config config
+    Messages messages
 
     @Inject
-    private Messages messages
+    EpgDetailsWindow epgDetails
 
     @Inject
-    private EpgDetailsWindow epgDetails
+    TimerEditWindow timerEdit
 
     @Inject
-    private TimerEditWindow timerEdit
+    EpgAlarmWindow alarmEdit
 
     @Inject
-    private EpgAlarmWindow alarmEdit
+    ChannelLogo channelLogo
 
     @Inject
-    private ChannelLogo channelLogo
+    SearchTimerEpgdEditWindow epgdWindow
 
     @Inject
-    private SearchTimerEpgdEditWindow epgdWindow
-
-    @Inject
-    private SearchTimerEpgsearchEditWindow epgsearchWindow
+    SearchTimerEpgsearchEditWindow epgsearchWindow
 
     val COL_CHANNEL = "channel"
     val COL_DATE = "date"
@@ -281,7 +281,7 @@ class EventGrid {
         UI.current.addWindow(epgDetails.showWindow(this, currentVdr, epg, true, -1))
     }
 
-    public def void actionCreateSearchTimer(Epg epg) {
+    def void actionCreateSearchTimer(Epg epg) {
         var epgsearchAvailable = svdrp.isPluginAvailable(currentVdr, "epgsearch")
         var epgdAvailable = config.isDatabaseConfigured
 

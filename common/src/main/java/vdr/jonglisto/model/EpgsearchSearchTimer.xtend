@@ -102,9 +102,9 @@ class EpgsearchSearchTimer {
     }
 
     // epgsearch contains too much different information, therefore a non-optimal datatype is selected
-    private Map<Field, String> cfg = new HashMap<Field, String>
+    Map<Field, String> cfg = new HashMap<Field, String>
 
-    private val searchCategories = new HashMap<String, Set<String>>
+    val searchCategories = new HashMap<String, Set<String>>
 
     def getField(Field field) {
         return cfg.get(field)
@@ -163,7 +163,7 @@ class EpgsearchSearchTimer {
             setField(field, String.valueOf(value.atStartOfDay(zoneId).toEpochSecond()))
         }
     }
-
+    
     def splitCategories() {
         val cats = getField(Field.extepg_infos)
 
@@ -226,6 +226,7 @@ class EpgsearchSearchTimer {
         return value
     }
 
+    @SuppressWarnings("unchecked")
     def createSvdrpLine() {
         return Field.values.stream.map(field | getTransformedField(field)).collect(Collectors.joining(":"))
     }

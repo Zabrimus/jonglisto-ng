@@ -36,179 +36,192 @@ import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.SimplePattern
 import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.ComplexPattern
 import java.util.TimeZone
 import java.time.ZoneId
+import javax.xml.bind.JAXBException
 
 @Log("jonglisto.configuration")
 class Configuration {
-    private static String configurationFile = "/etc/jonglisto/jonglisto-ng.xml"
-    private static String remoteFile = "/etc/jonglisto/remote.xml"
+    static String configurationFile = "/etc/jonglisto/jonglisto-ng.xml"
+    static String remoteFile = "/etc/jonglisto/remote.xml"
 
-    private static String EPG_VDR = "#EPG#"
-    private static String CHANNEL_VDR = "#CHANNEL#"
+    static String EPG_VDR = "#EPG#"
+    static String CHANNEL_VDR = "#CHANNEL#"
 
-    private static Map<String, VDR> vdrs = new HashMap<String, VDR>
-    private static List<String> orderedVdr = new ArrayList<String>
-    private static List<EpgProvider> epgProvider
-    private static List<String> epgTimeSelect
+    static Map<String, VDR> vdrs = new HashMap<String, VDR>
+    static List<String> orderedVdr = new ArrayList<String>
+    static List<EpgProvider> epgProvider
+    static List<String> epgTimeSelect
 
-    private static Pattern epgSeriesSeason
-    private static int epgSeriesSeasonGroup
+    static Pattern epgSeriesSeason
+    static int epgSeriesSeasonGroup
 
-    private static Pattern epgSeriesPart
-    private static int epgSeriesPartGroup
+    static Pattern epgSeriesPart
+    static int epgSeriesPartGroup
 
-    private static Pattern epgSeriesParts
-    private static int epgSeriesPartsGroup
+    static Pattern epgSeriesParts
+    static int epgSeriesPartsGroup
 
-    private static Pattern epgCategory
-    private static int epgCategoryGroup
+    static Pattern epgCategory
+    static int epgCategoryGroup
 
-    private static Pattern epgGenre
-    private static int epgGenreGroup
+    static Pattern epgGenre
+    static int epgGenreGroup
 
-    private static List<String> defaultSvdrp
-    private static List<EpgCustomColumn> epgCustom = new ArrayList<EpgCustomColumn>
+    static List<String> defaultSvdrp
+    static List<EpgCustomColumn> epgCustom = new ArrayList<EpgCustomColumn>
 
-    private static String dbUsername
-    private static String dbPassword
-    private static String dbDatabase
-    private static String dbHost
-    private static int dbPort
+    static String dbUsername
+    static String dbPassword
+    static String dbDatabase
+    static String dbHost
+    static int dbPort
 
-    private static Remote remoteConfig
-    private static Favourites favouriteConfig
-    private static Jcron jcronConfig
+    static Remote remoteConfig
+    static Favourites favouriteConfig
+    static Jcron jcronConfig
 
-    private static String customDirectory
+    static String customDirectory
 
-    private static boolean showScraperImage
+    static boolean showScraperImage
 
-    private static List<ImagePath> scraperPath
+    static List<ImagePath> scraperPath
 
-    private static int svdrpServerPort;
+    static int svdrpServerPort;
 
-    private static Configuration instance = new Configuration
+    static Configuration instance = new Configuration
 
-    private static String loginUserUrlParameter
+    static String loginUserUrlParameter
 
-    private static Map<String, Set<String>> allowedCommands
+    static Map<String, Set<String>> allowedCommands
 
-    private static Extepgsearch extEpgSearch
+    static Extepgsearch extEpgSearch
 
-    private static Unmarshaller unmarshaller
-    private static Marshaller marshaller
+    static Unmarshaller unmarshaller
+    static Marshaller marshaller
 
-    private static ZoneId defaultZoneId
-    private static String defaultZoneStr
+    static ZoneId defaultZoneId
+    static String defaultZoneStr
 
     private new() {
-        var configObjectFactory = new ObjectFactory
-        var remoteObjectFactory = new vdr.jonglisto.configuration.jaxb.remote.ObjectFactory
-        var favouriteObjectFactory = new vdr.jonglisto.configuration.jaxb.favourite.ObjectFactory
-        var jcronObjectFactory = new vdr.jonglisto.configuration.jaxb.jcron.ObjectFactory
-        var scraperObjectFactory = new vdr.jonglisto.configuration.jaxb.scraper.ObjectFactory
-        var epgseachObjectFactory = new vdr.jonglisto.configuration.jaxb.extepgsearch.ObjectFactory
-
-        val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class, jcronObjectFactory.class, scraperObjectFactory.class, epgseachObjectFactory.class);
-
-        unmarshaller = jc.createUnmarshaller()
-        marshaller = jc.createMarshaller()
-
-        val xmlFile = new File(configurationFile)
-        val remoteFile = new File(remoteFile)
-
-        val config = unmarshaller.unmarshal(xmlFile) as Jonglisto
-        remoteConfig = unmarshaller.unmarshal(remoteFile) as Remote
-
-        registerVdrs(config)
-        registerEpgTimeSelect(config)
-        registerEpgInformation(config)
-        registerDbInformation(config)
-        registerAllowedCommands(config)
-
-        defaultSvdrp = config.svdrpCommandList?.command
-        customDirectory = config.directory?.dir
-
         try {
-            defaultZoneStr = config.timezone.tz
-            defaultZoneId = TimeZone.getTimeZone(config.timezone.tz).toZoneId
-        } catch (Exception e) {
-            defaultZoneId = ZoneId.systemDefault()
-            defaultZoneStr = defaultZoneId.id
+            var configObjectFactory = new ObjectFactory
+            var remoteObjectFactory = new vdr.jonglisto.configuration.jaxb.remote.ObjectFactory
+            var favouriteObjectFactory = new vdr.jonglisto.configuration.jaxb.favourite.ObjectFactory
+            var jcronObjectFactory = new vdr.jonglisto.configuration.jaxb.jcron.ObjectFactory
+            var scraperObjectFactory = new vdr.jonglisto.configuration.jaxb.scraper.ObjectFactory
+            var epgseachObjectFactory = new vdr.jonglisto.configuration.jaxb.extepgsearch.ObjectFactory
+    
+            val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class, jcronObjectFactory.class, scraperObjectFactory.class, epgseachObjectFactory.class);
+    
+            unmarshaller = jc.createUnmarshaller()
+            marshaller = jc.createMarshaller()
+    
+            val xmlFile = new File(configurationFile)
+            val remoteFile = new File(remoteFile)
+    
+            val config = unmarshaller.unmarshal(xmlFile) as Jonglisto
+            remoteConfig = unmarshaller.unmarshal(remoteFile) as Remote
+    
+            registerVdrs(config)
+            registerEpgTimeSelect(config)
+            registerEpgInformation(config)
+            registerDbInformation(config)
+            registerAllowedCommands(config)
+    
+            defaultSvdrp = config.svdrpCommandList?.command
+            customDirectory = config.directory?.dir
+    
+            try {
+                defaultZoneStr = config.timezone.tz
+                defaultZoneId = TimeZone.getTimeZone(config.timezone.tz).toZoneId
+            } catch (Exception e) {
+                defaultZoneId = ZoneId.systemDefault()
+                defaultZoneStr = defaultZoneId.id
+            }
+    
+            try {
+                favouriteConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "favourites.xml")) as Favourites
+            } catch (Exception e) {
+                favouriteConfig = new Favourites
+            }
+    
+            try {
+                jcronConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "jcron.xml")) as Jcron
+            } catch (Exception e) {
+                jcronConfig = new Jcron
+            }
+    
+            if (config.disableLogin !== null && config.disableLogin.urlUserParam !== null && config.disableLogin.urlUserParam.length > 0) {
+                loginUserUrlParameter = config.disableLogin.urlUserParam
+            } else {
+                loginUserUrlParameter = null
+            }
+    
+            loadExtEpgSearch
+    
+            showScraperImage = (config.scraper !== null) && config.scraper.images
+    
+            if (config.scraper !== null && config.scraper.imagePath !== null) {
+                scraperPath = config.scraper.imagePath
+            }
+    
+            svdrpServerPort = config.svdrpPort ?: 0;
+    
+            SundialJobScheduler.startScheduler
+            registerSchedules
+    
+            loadEpgProvider        
+        } catch (JAXBException e) {
+            throw new RuntimeException("Error while creating Configuration", e);            
         }
-
-        try {
-            favouriteConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "favourites.xml")) as Favourites
-        } catch (Exception e) {
-            favouriteConfig = new Favourites
-        }
-
-        try {
-            jcronConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "jcron.xml")) as Jcron
-        } catch (Exception e) {
-            jcronConfig = new Jcron
-        }
-
-        if (config.disableLogin !== null && config.disableLogin.urlUserParam !== null && config.disableLogin.urlUserParam.length > 0) {
-            loginUserUrlParameter = config.disableLogin.urlUserParam
-        } else {
-            loginUserUrlParameter = null
-        }
-
-        loadExtEpgSearch
-
-        showScraperImage = (config.scraper !== null) && config.scraper.images
-
-        if (config.scraper !== null && config.scraper.imagePath !== null) {
-            scraperPath = config.scraper.imagePath
-        }
-
-        svdrpServerPort = config.svdrpPort ?: 0;
-
-        SundialJobScheduler.startScheduler
-        registerSchedules
-
-        loadEpgProvider
     }
 
-    public def getDefaultZoneId() {
+    def getDefaultZoneId() {
         return defaultZoneId
     }
 
-    public def getDefaultZoneStr() {
+    def getDefaultZoneStr() {
         return defaultZoneStr
     }
 
-    public def getSvdrpServerPort() {
+    def getSvdrpServerPort() {
         return svdrpServerPort;
     }
 
-    public def getCustomDirectory() {
+    def getCustomDirectory() {
         return customDirectory
     }
 
-    public def getFavourites() {
+    def getFavourites() {
         return favouriteConfig
     }
 
-    public def void saveFavourites() {
-        val out = new File(customDirectory + File.separator + "favourites.xml")
-        marshaller.marshal(favouriteConfig, out)
+    def void saveFavourites() {
+        try {
+            val out = new File(customDirectory + File.separator + "favourites.xml")
+            marshaller.marshal(favouriteConfig, out)
+        } catch (JAXBException e) {
+            throw new RuntimeException("error while saving " + customDirectory + File.separator + "favourites.xml")
+        }
     }
 
-    public def getLoginUserUrlParam() {
+    def getLoginUserUrlParam() {
         return loginUserUrlParameter
     }
 
-    public def getJcron() {
+    def getJcron() {
         return jcronConfig
     }
 
-    public def saveJcron() {
-        val out = new File(customDirectory + File.separator + "jcron.xml")
-        marshaller.marshal(jcronConfig, out)
+    def saveJcron() {
+        try {
+            val out = new File(customDirectory + File.separator + "jcron.xml")
+            marshaller.marshal(jcronConfig, out)
+        } catch (JAXBException e) {
+            throw new RuntimeException("error while saving " + customDirectory + File.separator + "jcron.xml")
+        }
     }
 
-    public def void loadExtEpgSearch() {
+    def void loadExtEpgSearch() {
         try {
             extEpgSearch = unmarshaller.unmarshal(new File(customDirectory + File.separator + "extepgsearch.xml")) as Extepgsearch
         } catch (Exception e) {
@@ -216,7 +229,7 @@ class Configuration {
         }
     }
 
-    public def getExtEpgSearch() {
+    def getExtEpgSearch() {
         // Add default values, if current list is empty
         if (extEpgSearch.simplePattern.size === 0 && extEpgSearch.complexPattern.size === 0) {
             val simpleList = extEpgSearch.simplePattern
@@ -253,12 +266,16 @@ class Configuration {
         return extEpgSearch
     }
 
-    public def saveExtEpgSearch() {
-        val out = new File(customDirectory + File.separator + "extepgsearch.xml")
-        marshaller.marshal(extEpgSearch, out)
+    def saveExtEpgSearch() {
+        try {
+            val out = new File(customDirectory + File.separator + "extepgsearch.xml")
+            marshaller.marshal(extEpgSearch, out)            
+        } catch (JAXBException e) {
+            throw new RuntimeException("eror while saving " + customDirectory + File.separator + "extepgsearch.xml")
+        }
     }
 
-    public def isDatabaseConfigured() {
+    def isDatabaseConfigured() {
         return dbUsername.isNotEmpty && //
                 dbPassword.isNotEmpty && //
                 dbDatabase.isNotEmpty && //
@@ -266,55 +283,55 @@ class Configuration {
                 dbPort > 0
     }
 
-    public def getRemoteConfig() {
+    def getRemoteConfig() {
         return remoteConfig
     }
 
-    public def getEpgSeriesSeason() {
+    def getEpgSeriesSeason() {
         return epgSeriesSeason -> epgSeriesSeasonGroup
     }
 
-    public def getEpgSeriesPart() {
+    def getEpgSeriesPart() {
         return epgSeriesPart -> epgSeriesPartGroup
     }
 
-    public def getEpgSeriesParts() {
+    def getEpgSeriesParts() {
         return epgSeriesParts -> epgSeriesPartsGroup
     }
 
-    public def getEpgCategory() {
+    def getEpgCategory() {
         return epgCategory -> epgCategoryGroup
     }
 
-    public def getEpgGenre() {
+    def getEpgGenre() {
         return epgGenre -> epgGenreGroup
     }
 
-    public def getDefaultSvdrpCommand() {
+    def getDefaultSvdrpCommand() {
         return defaultSvdrp
     }
 
-    public def getEpgCustom() {
+    def getEpgCustom() {
         return epgCustom
     }
 
-    public def getVdr(String name) {
+    def getVdr(String name) {
         return vdrs.get(name)
     }
 
-    public def getEpgVdr() {
+    def getEpgVdr() {
         return vdrs.get(EPG_VDR)
     }
 
-    public def getChannelVdr() {
+    def getChannelVdr() {
         return vdrs.get(CHANNEL_VDR)
     }
 
-    public def getVdrNames() {
+    def getVdrNames() {
         return orderedVdr
     }
 
-    public def findVdr(String ip, int port) {
+    def findVdr(String ip, int port) {
         if (ip.isNotEmpty) {
             return vdrs.values.stream.filter(v | v.ip == ip && v.port == port).findFirst
         } else {
@@ -322,19 +339,19 @@ class Configuration {
         }
     }
 
-    public def getEpgTimeSelect() {
+    def getEpgTimeSelect() {
         return epgTimeSelect
     }
 
-    public def getEpgProvider() {
+    def getEpgProvider() {
         return epgProvider
     }
 
-    public def getDbInformation() {
+    def getDbInformation() {
         return #{'username' -> dbUsername ,'password' -> dbPassword, 'host' -> dbHost, 'port' -> dbPort, 'database' -> dbDatabase}
     }
 
-    public def pingHost(VDR vdr) {
+    def pingHost(VDR vdr) {
         val command = #["ping", "-c", "1", vdr.ip]
 
         try {
@@ -356,7 +373,7 @@ class Configuration {
         return true;
     }
 
-    public def void addJob(Jobs job) {
+    def void addJob(Jobs job) {
         jcron.jobs.add(job)
         saveJcron
 
@@ -365,7 +382,7 @@ class Configuration {
         }
     }
 
-    public def void deleteJob(Jobs job) {
+    def void deleteJob(Jobs job) {
         val old = jcron.jobs.findFirst[j | j.id == job.id]
         jcron.jobs.remove(old)
         saveJcron
@@ -373,7 +390,7 @@ class Configuration {
         removeJobScheduler(job)
     }
 
-    public def void changeJob(Jobs job) {
+    def void changeJob(Jobs job) {
         val old = jcron.jobs.findFirst[j | j.id == job.id]
         jcron.jobs.remove(old)
         jcron.jobs.add(job)
@@ -383,7 +400,7 @@ class Configuration {
         addJobScheduler(job)
     }
 
-    public def void toggleJob(Jobs job) {
+    def void toggleJob(Jobs job) {
         job.active = !job.active
         saveJcron
 
@@ -394,27 +411,27 @@ class Configuration {
         }
     }
 
-    public def isShowScraperImages() {
+    def isShowScraperImages() {
         return showScraperImage
     }
 
-    public def List<ImagePath> getScraperPath() {
+    def List<ImagePath> getScraperPath() {
         return scraperPath
     }
 
-    public def getMarshaller() {
+    def getMarshaller() {
         return marshaller
     }
 
-    public def getUnmarshaller() {
+    def getUnmarshaller() {
         return unmarshaller
     }
 
-    public static def getInstance() {
+    static def getInstance() {
         return instance
     }
 
-    public def boolean isPluginCommandAllowed(String name, String command) {
+    def boolean isPluginCommandAllowed(String name, String command) {
         // Map<String, Set<String>> allowedCommands
 
         if (allowedCommands.containsKey(name)) {

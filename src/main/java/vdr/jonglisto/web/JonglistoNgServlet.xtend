@@ -19,14 +19,14 @@ import vdr.jonglisto.xtend.annotation.Log
             )
 
 @Log("jonglisto.servlet")
+@SuppressWarnings("serial")
 class JonglistoNgServlet extends VaadinCDIServlet {
-
     @Inject
-    private Config config
+    Config config
 
-    private val scheduledExecutorService = Executors.newScheduledThreadPool(2);
+    val scheduledExecutorService = Executors.newScheduledThreadPool(2);
 
-    override protected def servletInitialized() throws ServletException {
+    override protected servletInitialized() throws ServletException {
         // load logger configuration
         LogUtil.loadConfig
 
@@ -45,7 +45,7 @@ class JonglistoNgServlet extends VaadinCDIServlet {
             }, 1, 1, TimeUnit.MINUTES);
     }
 
-    override def destroy() {
+    override destroy() {
         scheduledExecutorService.shutdown()
         SvdrpClient.getInstance.doShutdown
 

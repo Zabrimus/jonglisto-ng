@@ -119,20 +119,28 @@ class SvdrpHandler implements Runnable {
                     return;
                 }
             }
+        } catch(IOException e) {
+            throw new RuntimeException(e)
         } finally {
-            log.debug("FINALLY")
-
             if (input !== null) {
-                input.close
+                try {
+                    input.close
+                } catch (IOException exc) {
+                    // ignore
+                }
             }
 
             if (output !== null) {
-                output.close
+                try {
+                    output.close
+                } catch (IOException exc) {
+                    // ignore
+                }
             }
         }
     }
 
-    def writeResponse(BufferedWriter output, List<String> strings, String code) {
+    def writeResponse(BufferedWriter output, List<String> strings, String code) throws IOException {
         if (strings.size > 0) {
             for (var i = 0; i < strings.size; i++) {
                 output.write(code + (if (i === strings.size - 1) " " else "-") + strings.get(i) + "\n")
@@ -142,12 +150,12 @@ class SvdrpHandler implements Runnable {
         }
     }
 
-    private def cmdPING(BufferedWriter output) {
+    private def cmdPING(BufferedWriter output) throws IOException {
         output.write("250 jonglisto-ng is alive\n");
         output.flush();
     }
 
-    private def cmdFAVL(BufferedWriter output, String option) {
+    private def cmdFAVL(BufferedWriter output, String option) throws IOException {
         var Optional<VDR> vdr
 
         try {
@@ -162,7 +170,9 @@ class SvdrpHandler implements Runnable {
 
         val filterCriteria = vdr.get.name
         var List<String> result
-        if (Configuration.instance.favourites?.favourite?.size > 0) {
+        
+        val fav = Configuration.instance.favourites?.favourite        
+        if (fav !== null && fav.size > 0) {
             result = Configuration.instance.favourites.favourite //
                         .stream() //
                         .filter(s | s.systems.contains(filterCriteria))
@@ -176,13 +186,14 @@ class SvdrpHandler implements Runnable {
         output.flush
     }
 
-    private def cmdFAVC(BufferedWriter output, String commandLine) {
+    private def cmdFAVC(BufferedWriter output, String commandLine) throws IOException {
         try {
             val name = commandLine.toUpperCase;
             var List<String> result
 
-            if (Configuration.instance.favourites?.favourite?.size > 0) {
-                val fav = Configuration.instance.favourites.favourite //
+            val favourites = Configuration.instance.favourites?.favourite
+            if (favourites !== null && favourites.size > 0) {
+                val fav = favourites //
                             .stream() //
                             .filter(s | s.name.toUpperCase == name) //
                             .findFirst
@@ -203,9 +214,11 @@ class SvdrpHandler implements Runnable {
         output.flush;
     }
 
-    private def cmdEPGT(BufferedWriter output) {
+    private def cmdEPGT(BufferedWriter output) throws IOException {
         var List<String> result
-        if (Configuration.instance.epgTimeSelect?.size > 0) {
+        
+        val sel = Configuration.instance.epgTimeSelect        
+        if (sel !== null && sel.size > 0) {
             result = Configuration.instance.epgTimeSelect
         } else {
             result = Collections.emptyList
@@ -215,7 +228,7 @@ class SvdrpHandler implements Runnable {
         output.flush
     }
 
-    private def cmdALRM(BufferedWriter output, String option) {
+    private def cmdALRM(BufferedWriter output, String option) throws IOException {
         try {
             val matcher = alrmPattern.matcher(option)
 
@@ -264,7 +277,7 @@ class SvdrpHandler implements Runnable {
         output.flush();
     }
 
-    private def cmdALRL(BufferedWriter output, String commandLine) {
+    private def cmdALRL(BufferedWriter output, String commandLine) throws IOException {
         try {
             var Optional<VDR> vdr
 
@@ -329,7 +342,7 @@ class SvdrpHandler implements Runnable {
         output.flush
     }
 
-    private def cmdARLC(BufferedWriter output, String option) {
+    private def cmdARLC(BufferedWriter output, String option) throws IOException {
         if (option !== null && option.length > 0) {
             val splitted = option.split(" ");
 
@@ -359,7 +372,7 @@ class SvdrpHandler implements Runnable {
         output.flush();
     }
 
-    private def cmdVDRL(BufferedWriter output) {
+    private def cmdVDRL(BufferedWriter output) throws IOException {
         val result = new ArrayList<String>
 
         Configuration.instance.vdrNames.forEach[s | {
@@ -379,7 +392,7 @@ class SvdrpHandler implements Runnable {
         output.flush();
     }
 
-    private def cmdVDRD(BufferedWriter output, String option) {
+    private def cmdVDRD(BufferedWriter output, String option) throws IOException {
         val result = new ArrayList<String>
 
         val vdr = Configuration.instance.getVdr(option.trim())
@@ -414,7 +427,7 @@ class SvdrpHandler implements Runnable {
         output.flush();
     }
 
-    private def cmdVDRP(BufferedWriter output, String option) {
+    private def cmdVDRP(BufferedWriter output, String option) throws IOException {
         val vdr = Configuration.instance.getVdr(option.trim())
 
         if (vdr !== null) {
@@ -435,7 +448,7 @@ class SvdrpHandler implements Runnable {
         output.flush();
     }
 
-    private def cmdVDRW(BufferedWriter output, String option) {
+    private def cmdVDRW(BufferedWriter output, String option) throws IOException {
         val vdr = Configuration.instance.getVdr(option.trim())
 
         if (vdr !== null) {

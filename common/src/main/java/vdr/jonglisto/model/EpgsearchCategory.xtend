@@ -9,9 +9,9 @@ import org.eclipse.xtend.lib.annotations.ToString
 @EqualsHashCode
 @ToString
 class EpgsearchCategory {
-    private int id
-    private String internalName
-    private String publicName
-    private List<String> values
-    private Integer searchMode
+    int id
+    String internalName
+    String publicName
+    List<String> values
+    Integer searchMode
 }

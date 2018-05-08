@@ -12,23 +12,22 @@ import java.io.File
 import java.util.HashMap
 import java.util.Map
 import vdr.jonglisto.logging.LogUtil
-import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.logging.LogUtil.*
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
+@SuppressWarnings("serial", "unchecked")
 class LoggingComponent extends Composite {
-
 //    @Inject
 //    private Messages messages
 
-    private Grid<Logger> grid
-    private Map<String, NativeSelect<String>> levelSelectBoxes = new HashMap<String, NativeSelect<String>>
-    private Map<String, NativeSelect<String>> appenderSelectBoxes = new HashMap<String, NativeSelect<String>>
+    Grid<Logger> grid
+    Map<String, NativeSelect<String>> levelSelectBoxes = new HashMap<String, NativeSelect<String>>
+    Map<String, NativeSelect<String>> appenderSelectBoxes = new HashMap<String, NativeSelect<String>>
 
-    private TextField logfileField
-    private NativeSelect<String> syslogSelect
+    TextField logfileField
+    NativeSelect<String> syslogSelect
 
     def showAll() {
         createLayout()

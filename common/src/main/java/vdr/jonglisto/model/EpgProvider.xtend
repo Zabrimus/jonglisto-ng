@@ -7,7 +7,7 @@ import org.eclipse.xtend.lib.annotations.ToString
 // @EqualsHashCode
 @ToString
 class EpgProvider extends BaseDataWithName {
-    public enum Provider { TVSP, TVM, EPGDATA }
+    enum Provider { TVSP, TVM, EPGDATA }
     
     val Provider provider
     val String epgid

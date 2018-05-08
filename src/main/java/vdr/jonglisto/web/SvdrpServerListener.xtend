@@ -11,7 +11,7 @@ import vdr.jonglisto.configuration.Configuration
 @WebListener
 class SvdrpServerListener implements ServletContextListener {
 
-    private SvdrpServer svdrpServer
+    SvdrpServer svdrpServer
 
     override void contextInitialized(ServletContextEvent servletContextEvent) {
         // start svdrp server, if port is configured

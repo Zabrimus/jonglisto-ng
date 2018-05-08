@@ -7,33 +7,33 @@ import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
+import vdr.jonglisto.web.ui.component.ExtEpgsearchComponent
 import vdr.jonglisto.web.ui.component.ExtFavouriteComponent
 import vdr.jonglisto.web.ui.component.JobComponent
 import vdr.jonglisto.web.ui.component.LoggingComponent
 import vdr.jonglisto.web.ui.component.ToolsComponent
-import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import vdr.jonglisto.web.ui.component.ExtEpgsearchComponent
 
-@Log("jonglisto.web")
+//@Log("jonglisto.web")
 @CDIView(MainUI.CONFIG_VIEW)
+@SuppressWarnings("serial")
 class ConfigView extends BaseView {
 
     @Inject
-    private ExtFavouriteComponent favourites
+    ExtFavouriteComponent favourites
 
     @Inject
-    private ExtEpgsearchComponent epgsearch
+    ExtEpgsearchComponent epgsearch
 
     @Inject
-    private JobComponent jobs
+    JobComponent jobs
 
     @Inject
-    private ToolsComponent tools
+    ToolsComponent tools
 
     @Inject
-    private LoggingComponent logging
+    LoggingComponent logging
 
     @PostConstruct
     def void init() {
@@ -76,7 +76,7 @@ class ConfigView extends BaseView {
         addComponentsAndExpand(tabsheet)
     }
 
-    override protected def void changeVdr(VDR vdr) {
+    override protected void changeVdr(VDR vdr) {
         if (favourites !== null) {
             favourites.changeVdr(vdr);
         }

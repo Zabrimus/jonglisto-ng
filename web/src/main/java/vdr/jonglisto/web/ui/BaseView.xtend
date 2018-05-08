@@ -22,7 +22,9 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log("jonglisto.web")
+@SuppressWarnings("serial")
 abstract class BaseView extends VerticalLayout implements View {
+
     protected enum BUTTON {
         HOME, TIMER, EPG, EPGD, EPGSEARCH, RECORDING, CHANNELCONFIG, OSD, CONFIG, LOGOUT
     }
@@ -40,11 +42,11 @@ abstract class BaseView extends VerticalLayout implements View {
     protected var Messages messages
 
     var ComboBox<String> selectVdr
-    private Button epgsearchButton
+    Button epgsearchButton
 
-    private BUTTON currentView
+    BUTTON currentView
 
-    public def init(BUTTON selectedButton) {
+    def init(BUTTON selectedButton) {
         // sanitiy check
         val currentUser = SecurityUtils.subject
         if (!currentUser.isAuthenticated) {

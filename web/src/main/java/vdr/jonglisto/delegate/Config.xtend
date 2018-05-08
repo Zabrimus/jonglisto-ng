@@ -13,109 +13,110 @@ import vdr.jonglisto.xtend.annotation.TraceLog
 @ApplicationScoped
 @Log("jonglisto.delegate.config")
 class Config implements Serializable {
+    public final static long serialVersionUID = 1L
 
     @TraceLog
-    public def isDatabaseConfigured() {
+    def isDatabaseConfigured() {
         return Configuration.getInstance().isDatabaseConfigured()
     }
 
     @TraceLog
-    public def getCustomDirectory() {
+    def getCustomDirectory() {
         return Configuration.getInstance().customDirectory
     }
 
     @TraceLog
-    public def getFavourites() {
+    def getFavourites() {
         return Configuration.getInstance().favourites
     }
 
     @TraceLog
-    public def void saveFavourites() {
+    def void saveFavourites() {
         Configuration.getInstance().saveFavourites()
     }
 
     @TraceLog
-    public def getJcron() {
+    def getJcron() {
         return Configuration.getInstance().jcron
     }
 
     @TraceLog
-    public def void saveJcron() {
+    def void saveJcron() {
         Configuration.getInstance().saveJcron()
     }
 
     @TraceLog
-    public def void loadExtEpgSearch() {
+    def void loadExtEpgSearch() {
         Configuration.getInstance().loadExtEpgSearch
     }
 
     @TraceLog
-    public def getExtEpgSearch() {
+    def getExtEpgSearch() {
         return Configuration.getInstance().extEpgSearch
     }
 
     @TraceLog
-    public def void saveExtEpgSearch() {
+    def void saveExtEpgSearch() {
         Configuration.getInstance().saveExtEpgSearch()
     }
 
     @TraceLog
-    public def getRemoteConfig() {
+    def getRemoteConfig() {
         return Configuration.getInstance().getRemoteConfig()
     }
 
     @TraceLog
-    public def getEpgSeriesSeason() {
+    def getEpgSeriesSeason() {
         return Configuration.getInstance().getEpgSeriesSeason
     }
 
     @TraceLog
-    public def getEpgSeriesPart() {
+    def getEpgSeriesPart() {
         return Configuration.getInstance().getEpgSeriesPart
     }
 
     @TraceLog
-    public def getEpgSeriesParts() {
+    def getEpgSeriesParts() {
         return Configuration.getInstance().getEpgSeriesParts
     }
 
     @TraceLog
-    public def getEpgCategory() {
+    def getEpgCategory() {
         return Configuration.getInstance().getEpgCategory
     }
 
     @TraceLog
-    public def getEpgGenre() {
+    def getEpgGenre() {
         return Configuration.getInstance().getEpgGenre
     }
 
     @TraceLog
-    public def getDefaultSvdrpCommand() {
+    def getDefaultSvdrpCommand() {
         return Configuration.getInstance().getDefaultSvdrpCommand
     }
 
     @TraceLog
-    public def getEpgCustom() {
+    def getEpgCustom() {
         return Configuration.getInstance().getEpgCustom
     }
 
     @TraceLog
-    public def getVdr(String name) {
+    def getVdr(String name) {
         return Configuration.getInstance().getVdr(name)
     }
 
     @TraceLog
-    public def getEpgVdr() {
+    def getEpgVdr() {
         return Configuration.getInstance().getEpgVdr
     }
 
     @TraceLog
-    public def getChannelVdr() {
+    def getChannelVdr() {
         return Configuration.getInstance().getChannelVdr
     }
 
     @TraceLog
-    public def getVdrNames(Subject currentUser) {
+    def getVdrNames(Subject currentUser) {
         if (currentUser === null) {
             return Configuration.getInstance().getVdrNames
         } else {
@@ -126,42 +127,42 @@ class Config implements Serializable {
     }
 
     @TraceLog
-    public def findVdr(String ip, int port) {
+    def findVdr(String ip, int port) {
         return Configuration.getInstance().findVdr(ip, port)
     }
 
     @TraceLog
-    public def getEpgTimeSelect() {
+    def getEpgTimeSelect() {
         return Configuration.getInstance().getEpgTimeSelect
     }
 
     @TraceLog
-    public def getEpgProvider() {
+    def getEpgProvider() {
         return Configuration.getInstance().getEpgProvider
     }
 
     @TraceLog
-    public def getDbInformation() {
+    def getDbInformation() {
         return Configuration.getInstance().getDbInformation
     }
 
     @TraceLog
-    public def pingHost(VDR vdr) {
+    def pingHost(VDR vdr) {
         return Configuration.getInstance().pingHost(vdr)
     }
 
     @TraceLog
-    public def void addJob(Jobs job) {
+    def void addJob(Jobs job) {
         Configuration.getInstance().addJob(job)
     }
 
     @TraceLog
-    public def void deleteJob(Jobs job) {
+    def void deleteJob(Jobs job) {
         Configuration.getInstance().deleteJob(job)
     }
 
     @TraceLog
-    public def void changeJob(Jobs job) {
+    def void changeJob(Jobs job) {
         Configuration.getInstance().changeJob(job)
     }
 
@@ -171,17 +172,17 @@ class Config implements Serializable {
     }
 
     @TraceLog
-    public def showScraperImages() {
+    def showScraperImages() {
         Configuration.getInstance().isShowScraperImages()
     }
 
     @TraceLog
-    public def getDefaultZoneId() {
+    def getDefaultZoneId() {
         return Configuration.getInstance().getDefaultZoneId()
     }
 
     // @TraceLog // -- do not work and i don't understand why not
-    public def getScraperPath() {
+    def getScraperPath() {
         Configuration.getInstance().scraperPath
     }
 }

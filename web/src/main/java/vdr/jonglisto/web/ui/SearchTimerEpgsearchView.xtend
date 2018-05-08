@@ -8,16 +8,16 @@ import javax.inject.Inject
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.SearchTimerEpgsearchGrid
-import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @CDIView(MainUI.SEARCHTIMER_EPGSEARCH_VIEW)
+@SuppressWarnings("serial")
 class SearchTimerEpgsearchView extends BaseView {
 
     @Inject
-    private SearchTimerEpgsearchGrid epgsearchGrid
+    SearchTimerEpgsearchGrid epgsearchGrid
 
     @PostConstruct
     def void init() {
@@ -53,7 +53,7 @@ class SearchTimerEpgsearchView extends BaseView {
         layout.addComponent(epgsearchGrid.init(selectedVdr))
     }
 
-    override protected def void changeVdr(VDR vdr) {
+    override protected void changeVdr(VDR vdr) {
         if (epgsearchGrid !== null) {
             epgsearchGrid.setVdr(vdr)
         }

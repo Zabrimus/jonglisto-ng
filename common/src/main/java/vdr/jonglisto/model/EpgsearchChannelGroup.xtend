@@ -9,6 +9,6 @@ import org.eclipse.xtend.lib.annotations.ToString
 @EqualsHashCode
 @ToString
 class EpgsearchChannelGroup {
-    private String name
-    private List<String> channelIds
+    String name
+    List<String> channelIds
 }

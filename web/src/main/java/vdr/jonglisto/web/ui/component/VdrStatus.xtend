@@ -21,17 +21,15 @@ import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.xtend.annotation.Log
-
-import static vdr.jonglisto.web.xtend.UIBuilder.*
 import vdr.jonglisto.util.NetworkUtils
 
-@Log("jonglisto.web")
+import static vdr.jonglisto.web.xtend.UIBuilder.*
+
+// @Log("jonglisto.web")
 class VdrStatus {
+    Svdrp svdrp = new Svdrp()
 
-    private Svdrp svdrp = new Svdrp()
-
-    private Config config = new Config()
+    Config config = new Config()
 
     var CPanel panel
     var GridLayout grid

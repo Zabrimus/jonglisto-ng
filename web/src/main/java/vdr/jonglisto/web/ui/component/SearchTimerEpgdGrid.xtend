@@ -23,19 +23,19 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log("jonglisto.web")
+@SuppressWarnings("serial")
 class SearchTimerEpgdGrid {
+    @Inject
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
+    Config config
 
     @Inject
-    private Config config
+    Messages messages
 
     @Inject
-    private Messages messages
-
-    @Inject
-    private SearchTimerEpgdEditWindow editWindow
+    SearchTimerEpgdEditWindow editWindow
 
     val COL_ACTIVE = "active"
     val COL_NAME = "name"
@@ -56,6 +56,7 @@ class SearchTimerEpgdGrid {
 
     @PostConstruct
     def void init() {
+        log.debug("Create SearchTimerEpgdEditWindow")
         this.searchTimer = service.searchTimers
     }
 

@@ -8,16 +8,16 @@ import org.eclipse.xtend.lib.annotations.ToString
 @Accessors
 @ToString
 class TreeRecording {
-    private var String name
-    private var boolean folder
-    private Recording recording
+    var String name
+    var boolean folder
+    Recording recording
 
     // only useful if folder == true
-    private long length
-    private long childCount
-    private long newCount
+    long length
+    long childCount
+    long newCount
 
-    private var List<TreeRecording> children
+    var List<TreeRecording> children
 
     new(String name) {
         this.name = name
@@ -30,7 +30,7 @@ class TreeRecording {
         this.recording = recording
     }
 
-    public def getChildren() {
+    def getChildren() {
         if (folder && children === null) {
             children = new ArrayList<TreeRecording>
         }

@@ -18,22 +18,22 @@ import vdr.jonglisto.xtend.annotation.Log
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log("jonglisto.web")
+@SuppressWarnings("serial")
 class FavouriteComponent extends Composite {
+    @Inject
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
+    Config config
 
     @Inject
-    private Config config
+    Messages messages
 
-    @Inject
-    private Messages messages
+    String currentUser
 
-    private String currentUser
+    NativeSelect<String> favourites
 
-    private NativeSelect<String> favourites
-
-    private TwinColSelect<Channel> channelSelect
+    TwinColSelect<Channel> channelSelect
 
     def showAll() {
         currentUser = null

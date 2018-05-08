@@ -14,16 +14,16 @@ import vdr.jonglisto.util.TimerOverlap
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.TimeLineSvg
 import vdr.jonglisto.web.ui.component.TimerGrid
-import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @CDIView(MainUI.TIMER_VIEW)
+@SuppressWarnings("serial")
 class TimerView extends BaseView {
 
     @Inject
-    private TimerGrid timerGrid
+    TimerGrid timerGrid
 
     var Image timeLine
 
@@ -79,7 +79,7 @@ class TimerView extends BaseView {
         prepareGrid
     }
 
-    override protected def void changeVdr(VDR vdr) {
+    override protected void changeVdr(VDR vdr) {
         if (timerGrid.grid !== null) {
             val timers = svdrp.getTimer(selectedVdr)
             timerGrid.grid.items = timers

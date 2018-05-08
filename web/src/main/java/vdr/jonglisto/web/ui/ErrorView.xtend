@@ -8,6 +8,7 @@ import vdr.jonglisto.model.VDR
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
 @CDIView
+@SuppressWarnings("serial")
 class ErrorView extends BaseView {
 
     @PostConstruct
@@ -23,7 +24,7 @@ class ErrorView extends BaseView {
         label(this, "Oops. The view you tried to navigate to doesn't exist.")
     }
 
-    override protected def void changeVdr(VDR vdr) {
+    override protected void changeVdr(VDR vdr) {
        // not used in this view
     }
 }

@@ -7,13 +7,13 @@ import org.eclipse.xtend.lib.annotations.ToString
 // @EqualsHashCode
 @ToString
 class Recording extends BaseDataWithName {
-    private var long id
-    private var long start
-    private var int length
-    private var boolean seen
-    private String path
-    private var Epg epg
-    private var String folder
+    var long id
+    var long start
+    var int length
+    var boolean seen
+    String path
+    var Epg epg
+    var String folder
 
     new() {
     }

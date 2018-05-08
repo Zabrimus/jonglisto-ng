@@ -42,6 +42,10 @@ class TimerOverlap {
         return result
     }
 
+    def getDvbDevices() {
+        return dvbDevices
+    }
+
     static def getTransponder(String chid) {
         val m = trans.matcher(chid)
         if (m.matches) {

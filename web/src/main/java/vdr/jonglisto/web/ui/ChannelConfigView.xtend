@@ -49,7 +49,6 @@ import vdr.jonglisto.model.Channel
 import vdr.jonglisto.model.EpgProvider
 import vdr.jonglisto.model.EpgProvider.Provider
 import vdr.jonglisto.model.VDR
-import vdr.jonglisto.svdrp.client.Response
 import vdr.jonglisto.util.Utils
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.xtend.annotation.Log
@@ -57,17 +56,14 @@ import vdr.jonglisto.xtend.annotation.Log
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log("jonglisto.web")
+@SuppressWarnings("serial", "unchecked")
 @CDIView(MainUI.CHANNEL_CONFIG_VIEW)
 class ChannelConfigView extends BaseView {
-
-    private static val COLUMN_NAME = "NAME"
-    private static val COLUMN_METADATA = "METADATA"
-    private static val COLUMN_FREQUENCE = "FREQUENCE"
-    private static val COLUMN_BOUQUET = "BOUQUET"
-    private static val COLUMN_ACTION = "ACTION"
-
-    var Panel tvmPanel
-    var Panel tvspPanel
+    static val COLUMN_NAME = "NAME"
+    static val COLUMN_METADATA = "METADATA"
+    static val COLUMN_FREQUENCE = "FREQUENCE"
+    static val COLUMN_BOUQUET = "BOUQUET"
+    static val COLUMN_ACTION = "ACTION"
 
     var TreeGrid<BaseDataWithName> treeGrid
 
@@ -93,10 +89,9 @@ class ChannelConfigView extends BaseView {
                         .withOkButton([
                                 val l = createChannelList
                                 if (l !== null) {
-                                    var Response resp
                                     try {
                                         val v = config.getVdr(comboBox.selectedItem.get)
-                                        resp = svdrp.writeChannelsConf(v, l)
+                                        svdrp.writeChannelsConf(v, l)
                                     } catch (Exception e) {
                                         log.warn("Writing channels to VDR failed.")
                                         Notification.show(messages.error, Type.ERROR_MESSAGE)
@@ -285,7 +280,7 @@ class ChannelConfigView extends BaseView {
         /*****************************
          * Panel epg provider TVM
         *****************************/
-        tvmPanel = panel(h, "TVM") [
+        panel(h, "TVM") [
             height = "100%"
             width = null
 
@@ -304,7 +299,7 @@ class ChannelConfigView extends BaseView {
         /*****************************
          * Panel epg provider TVSP
         *****************************/
-        tvspPanel = panel(h, "TVSP") [
+        panel(h, "TVSP") [
             height = "100%"
             width = null
 
@@ -679,7 +674,7 @@ class ChannelConfigView extends BaseView {
         treeGrid.dataProvider.refreshAll
     }
 
-    override protected def void changeVdr(VDR vdr) {
+    override protected void changeVdr(VDR vdr) {
        // not used in this view
     }
 }

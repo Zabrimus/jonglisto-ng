@@ -2,8 +2,8 @@
  * Copied from https://github.com/oehme/xtend-contrib
  * Thanks to Stefan Oehme
  * License: https://github.com/oehme/xtend-contrib/blob/master/LICENSE
- *
- *
+ * 
+ * 
  * I need a slightly modified version, because i want a central property file with all messages
  */
 
@@ -27,10 +27,11 @@ import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
 import org.eclipse.xtend.lib.macro.declaration.Visibility
 import org.eclipse.xtend.lib.macro.services.TypeReferenceProvider
+import java.io.IOException
 
 /**
  * Generates a statically typed facade in front of Java ResourceBundles.
- *
+ * 
  * When annotated on a class called 'MyMessages' it will look for a file called 'MyMessages.properties' in the same
  * directory. For each message key it will create
  * <ul>
@@ -47,6 +48,7 @@ annotation ExtractMessages {
 
 class ExtractMessagesProcessor extends AbstractClassProcessor {
 
+    @SuppressWarnings("unchecked")
     override doTransform(MutableClassDeclaration cls, extension TransformationContext context) {
         val bundleField = cls.addField("bundle") [
             type = ResourceBundle.newTypeReference
@@ -104,38 +106,43 @@ class ExtractMessagesProcessor extends AbstractClassProcessor {
             cls.addError('''Property file «propertyFile» does not exist''')
             return
         }
-        val resourceBundle = new PropertyResourceBundle(propertyFile.contentsAsStream)
 
-        Iterators.forEnumeration(resourceBundle.keys).forEach [ key |
-            val pattern = resourceBundle.getString(key)
-            cls.addField(key.toUpperCase)[
-                type = string
-                visibility = Visibility.PUBLIC
-                final = true
-                static = true
-                docComment = pattern
-                primarySourceElement = cls
-                initializer = '''"«key»"'''
-            ]
-            val patternVariables = new MessageFormat(pattern).formats
-            cls.addMethod(key.keyToMethodName) [
-                patternVariables.forEach [ patternVariable, index |
-                    addParameter("arg" + index, patternVariable.argumentType(context))
+        try {
+            val resourceBundle = new PropertyResourceBundle(propertyFile.contentsAsStream)
+
+            Iterators.forEnumeration(resourceBundle.keys).forEach [ key |
+                val pattern = resourceBundle.getString(key)
+                cls.addField(key.toUpperCase) [
+                    type = string
+                    visibility = Visibility.PUBLIC
+                    final = true
+                    static = true
+                    docComment = pattern
+                    primarySourceElement = cls
+                    initializer = '''"«key»"'''
                 ]
-                returnType = string
-                docComment = pattern
-                primarySourceElement = cls
-                body = '''
-                    «IF (patternVariables.length > 0)»
-                    «String» pattern = bundle.getString(«key.toUpperCase»);
-                    «MessageFormat» format = new «MessageFormat»(pattern);
-                    return format.format(new «Object»[]{«parameters.join(", ")[simpleName]»});
-                    «ELSE»
-                    return bundle.getString(«key.toUpperCase»);
-                    «ENDIF»
-                '''
+                val patternVariables = new MessageFormat(pattern).formats
+                cls.addMethod(key.keyToMethodName) [
+                    patternVariables.forEach [ patternVariable, index |
+                        addParameter("arg" + index, patternVariable.argumentType(context))
+                    ]
+                    returnType = string
+                    docComment = pattern
+                    primarySourceElement = cls
+                    body = '''
+                        «IF (patternVariables.length > 0)»
+                            «String» pattern = bundle.getString(«key.toUpperCase»);
+                            «MessageFormat» format = new «MessageFormat»(pattern);
+                            return format.format(new «Object»[]{«parameters.join(", ")[simpleName]»});
+                        «ELSE»
+                            return bundle.getString(«key.toUpperCase»);
+                        «ENDIF»
+                    '''
+                ]
             ]
-        ]
+        } catch (IOException exc) {
+            throw new RuntimeException("Internal error", exc)
+        }
     }
 
     def keyToMethodName(String key) {

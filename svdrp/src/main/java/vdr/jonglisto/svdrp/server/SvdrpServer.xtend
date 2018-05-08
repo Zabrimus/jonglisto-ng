@@ -10,9 +10,9 @@ import vdr.jonglisto.xtend.annotation.Log
 @Log("jonglisto.svdrp.server")
 class SvdrpServer implements Runnable {
 
-    private int port
-    private int executorCount
-    private boolean running
+    int port
+    int executorCount
+    boolean running
 
     var ServerSocket serverSocket
 
@@ -47,7 +47,11 @@ class SvdrpServer implements Runnable {
             }
 
             if (serverSocket !== null) {
-                serverSocket.close
+                try {
+                    serverSocket.close
+                } catch (IOException exc) {
+                    // ignore
+                }
             }
         }
     }

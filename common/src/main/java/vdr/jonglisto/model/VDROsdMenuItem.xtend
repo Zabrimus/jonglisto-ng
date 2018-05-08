@@ -12,6 +12,7 @@ class VDROsdMenuItem {
     var boolean isSelected = false
     var List<String> items
 
+    @SuppressWarnings("unchecked")
     new(String type, String line) {
         isSelected = type == 'S'
         items = line.split("\t").toList

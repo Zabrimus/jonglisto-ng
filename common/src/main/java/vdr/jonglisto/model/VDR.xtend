@@ -49,7 +49,7 @@ class VDR extends BaseData {
         return hostAddress
     }
 
-    override def int hashCode() {
+    override int hashCode() {
         val prime = 31;
         var result = 1;
 
@@ -68,7 +68,7 @@ class VDR extends BaseData {
         return result;
     }
 
-    override def boolean equals(Object obj) {
+    override boolean equals(Object obj) {
         if (this === obj) {
             return true;
         }

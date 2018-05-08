@@ -9,6 +9,7 @@ import com.vaadin.ui.themes.ValoTheme
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
+@SuppressWarnings("serial")
 class CPanel extends Composite {
     var HorizontalLayout header
     var CssLayout panel

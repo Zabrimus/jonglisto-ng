@@ -15,29 +15,29 @@ import static extension org.apache.commons.lang3.StringUtils.*
 @EqualsHashCode
 @ToString
 class Epg extends BaseData {
-    private String channelId
-    private String eventId
-    private long startTime
-    private long duration
-    private String title
-    private String shortText
-    private String description
-    private String parentalRating
-    private Long vps
-    private int priority
-    private int lifetime
-    private String aux
+    String channelId
+    String eventId
+    long startTime
+    long duration
+    String title
+    String shortText
+    String description
+    String parentalRating
+    Long vps
+    int priority
+    int lifetime
+    String aux
 
-    private String genre
-    private String category
-    private Map<String, String> custom = new HashMap<String, String>
+    String genre
+    String category
+    Map<String, String> custom = new HashMap<String, String>
 
-    private String season
-    private String part
-    private String parts
+    String season
+    String part
+    String parts
 
     // saves the raw data without the description, if someone wants to edit the epg data
-    private List<String> rawData = new ArrayList<String>
+    List<String> rawData = new ArrayList<String>
 
     def void addData(String d) {
         rawData.add(d)

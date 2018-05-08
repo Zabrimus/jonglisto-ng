@@ -8,8 +8,8 @@ import vdr.jonglisto.xtend.annotation.Log
 
 @Log("jonglisto.database")
 class Database {
-    private static var Sql2o sql2o
-    private static var boolean isConfigured = true
+    static var Sql2o sql2o
+    static var boolean isConfigured = true
 
     private new() {
     }

@@ -52,20 +52,19 @@ import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log("jonglisto.web")
 @ViewScoped
-public class RecordingComponent {
+@SuppressWarnings("unchecked")
+class RecordingComponent {
+    @Inject
+    Messages messages
 
     @Inject
-    private Messages messages
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
-
-    @Inject
-    private EpgDetailsWindow epgDetails
+    EpgDetailsWindow epgDetails
 
     var TreeGrid<TreeRecording> treeGrid
     var Grid<TreeRecording> grid
-    var RecordingView parentView
     var VDR currentVdr
 
     var TreeRecording selectedParent
@@ -102,7 +101,6 @@ public class RecordingComponent {
     }
 
     def setParent(RecordingView parent) {
-        this.parentView = parent
         return this
     }
 
@@ -111,7 +109,7 @@ public class RecordingComponent {
         return this
     }
 
-    public def updateRecordingList(List<Recording> recordings) {
+    def updateRecordingList(List<Recording> recordings) {
         treeGrid.dataProvider = getTreeDataProvider(RecordingUtil.getTreeRecording(recordings))
         try {
             val rootItem = (treeGrid.getDataProvider() as TreeDataProvider<TreeRecording>).treeData.rootItems.get(0)

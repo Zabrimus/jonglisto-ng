@@ -17,34 +17,34 @@ import com.vaadin.ui.Notification
 import vdr.jonglisto.web.i18n.Messages
 
 @ViewScoped
+@SuppressWarnings("serial")
 class RemoteComponent extends Composite {
+    @Inject
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
-
-    @Inject
-    private Messages messages
+    Messages messages
 
     var Remote remote
     var VDR currentVdr
     var OsdView parent
 
-    public def changeVdr(VDR vdr) {
+    def changeVdr(VDR vdr) {
         this.currentVdr = vdr
         return this
     }
 
-    public def changeRemote(Remote remote) {
+    def changeRemote(Remote remote) {
         this.remote = remote
         return this
     }
 
-    public def setParent(OsdView parent) {
+    def setParent(OsdView parent) {
         this.parent = parent
         return this
     }
 
-    public def void createGrid() {
+    def void createGrid() {
         val height = remote.button.map[s | s.row].max
         val width = remote.button.map[s | s.column].max
 

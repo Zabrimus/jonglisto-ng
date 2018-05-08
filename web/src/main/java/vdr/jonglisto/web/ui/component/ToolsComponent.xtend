@@ -1,30 +1,29 @@
 package vdr.jonglisto.web.ui.component
 
+import com.vaadin.ui.Alignment
+import com.vaadin.ui.Button
 import com.vaadin.ui.Composite
+import com.vaadin.ui.HorizontalLayout
+import com.vaadin.ui.NativeSelect
+import com.vaadin.ui.Notification
+import com.vaadin.ui.Panel
 import com.vaadin.ui.VerticalLayout
 import javax.inject.Inject
 import vdr.jonglisto.delegate.Config
-import vdr.jonglisto.web.i18n.Messages
-import vdr.jonglisto.xtend.annotation.Log
-import com.vaadin.ui.Panel
-import com.vaadin.ui.HorizontalLayout
 import vdr.jonglisto.delegate.Svdrp
-import com.vaadin.ui.NativeSelect
-import com.vaadin.ui.Button
-import com.vaadin.ui.Alignment
-import com.vaadin.ui.Notification
+import vdr.jonglisto.web.i18n.Messages
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
+@SuppressWarnings("serial")
 class ToolsComponent extends Composite {
+    @Inject
+    Config config
 
     @Inject
-    private Config config
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
-
-    @Inject
-    private Messages messages
+    Messages messages
 
     def showAll() {
         createLayout(null)

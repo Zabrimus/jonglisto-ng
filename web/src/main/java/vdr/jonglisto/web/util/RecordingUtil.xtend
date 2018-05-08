@@ -9,7 +9,7 @@ import vdr.jonglisto.svdrp.client.SvdrpClient
 
 class RecordingUtil {
 
-    public static def getTreeRecording(List<Recording> list) {
+    static def getTreeRecording(List<Recording> list) {
         val treeRecording = new TreeRecording("Video")
 
         addRecFolders(treeRecording, null, list)
@@ -82,7 +82,7 @@ class RecordingUtil {
         })
     }
 
-    public static def void main(String[] argv) {
+    static def void main(String[] argv) {
         val Configuration config = Configuration.instance
         val SvdrpClient svdrp = SvdrpClient.instance
         val vdr = config.getVdr("Robert")

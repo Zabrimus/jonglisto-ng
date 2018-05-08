@@ -15,11 +15,13 @@ import vdr.jonglisto.configuration.Configuration
 import java.io.FileWriter
 import java.io.FileReader
 import vdr.jonglisto.xtend.annotation.Log
+import java.io.IOException
+import ch.qos.logback.classic.spi.ILoggingEvent
 
 @Log("jonglisto.logutil")
 class LogUtil {
 
-    public static def saveConfig() {
+    static def saveConfig() {
         val prop = new Properties()
 
         // directory
@@ -38,11 +40,15 @@ class LogUtil {
 
         log.info("Save logging configuration to " + Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg")
 
-        val out = new FileWriter(new File(Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg"))
-        prop.store(out, "custom jonglisto-ng logging configuration")
+        try {
+            val out = new FileWriter(new File(Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg"))
+            prop.store(out, "custom jonglisto-ng logging configuration")
+        } catch (IOException exc) {
+            throw new RuntimeException("unable to save " + Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg", exc)
+        }       
     }
 
-    public static def loadConfig() {
+    static def loadConfig() {
         try {
             log.info("Read logging configuration from " + Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg")
 
@@ -83,21 +89,21 @@ class LogUtil {
         }
     }
 
-    public static def getConfiguredLoggers() {
+    static def getConfiguredLoggers() {
         getAllLoggers.stream().filter(s | s.level !== null && getAppender(s) !== null)
     }
 
-    public static def getAllLoggers() {
+    static def getAllLoggers() {
         val ctx = LoggerFactory.getILoggerFactory() as LoggerContext
         return ctx.loggerList.stream().filter(s | !"AppenderHolder".equals(s.name)).collect(Collectors.toList())
     }
 
-    public static def getAppender(String name) {
+    static def getAppender(String name) {
         val root = LoggerFactory.getLogger("AppenderHolder") as Logger
         return root.getAppender(name)
     }
 
-    public static def getAppender(Logger logger) {
+    static def getAppender(Logger logger) {
         val apps = logger.iteratorForAppenders.toList
         if (apps.size > 0) {
             return apps.get(0);
@@ -106,38 +112,38 @@ class LogUtil {
         }
     }
 
-    public static def getLogLevel(Logger logger) {
+    static def getLogLevel(Logger logger) {
         return if (logger.level !== null) logger.level.levelStr else "OFF"
     }
 
-    public static def getLevel(String level) {
+    static def getLevel(String level) {
         return Level.toLevel(level)
     }
 
-    public static def getLoggerName(Logger logger) {
+    static def getLoggerName(Logger logger) {
         logger.name
     }
 
-    public static def setAppender(Logger logger, Appender appender) {
-        val l = logger.appender
+    static def setAppender(Logger logger, Appender<ILoggingEvent> appender) {
+		val l = logger.appender
 
-        if (l !== null && l.name.equals(appender.name)) {
-            // appender already exists
-            return
-        }
+		if (l !== null && l.name.equals(appender.name)) {
+			// appender already exists
+			return
+		}
 
-        logger.addAppender(appender)
+		logger.addAppender(appender)
 
-        if (l !== null) {
-            logger.detachAppender(l)
-        }
-    }
+		if (l !== null) {
+			logger.detachAppender(l)
+		}
+	}
 
-    public static def setLevel(Logger logger, Level level) {
+    static def setLevel(Logger logger, Level level) {
         logger.level = level
     }
 
-    public static def disableLogger(Logger logger) {
+    static def disableLogger(Logger logger) {
         val l = logger.appender
         logger.level = Level.OFF
 
@@ -146,25 +152,25 @@ class LogUtil {
         }
     }
 
-    public static def getLogDirectory() {
-        val app = getAppender("FILE") as RollingFileAppender
+    static def getLogDirectory() {
+        val app = getAppender("FILE") as RollingFileAppender<ILoggingEvent>
         return new File(app.file).parent
     }
 
-    public static def getSyslogFacility() {
+    static def getSyslogFacility() {
         val app = getAppender("SYSLOG") as SyslogAppender
         return app.facility
     }
 
-    public static def setLogDirectory(String dir) {
-        val app = getAppender("FILE") as RollingFileAppender
+    static def setLogDirectory(String dir) {
+        val app = getAppender("FILE") as RollingFileAppender<ILoggingEvent>
         app.file = dir + "/jonglisto-ng.log"
 
         val policy = app.rollingPolicy as FixedWindowRollingPolicy
         policy.fileNamePattern = dir + "/jonglisto-ng.%i.log"
     }
 
-    public static def setSyslogFacility(String fac) {
+    static def setSyslogFacility(String fac) {
         val app = getAppender("SYSLOG") as SyslogAppender
         app.facility = fac
     }

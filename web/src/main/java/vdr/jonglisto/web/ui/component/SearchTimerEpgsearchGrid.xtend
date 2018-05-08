@@ -19,22 +19,21 @@ import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.i18n.Messages
-import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @ViewScoped
+@SuppressWarnings("serial")
 class SearchTimerEpgsearchGrid {
+    @Inject
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
+    Messages messages
 
     @Inject
-    private Messages messages
-
-    @Inject
-    private SearchTimerEpgsearchEditWindow editWindow
+    SearchTimerEpgsearchEditWindow editWindow
 
     val COL_ACTIVE = "active"
     val COL_TYPE = "type"

@@ -18,23 +18,22 @@ import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.search.EpgSearch
 import vdr.jonglisto.web.i18n.Messages
-import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
+@SuppressWarnings("serial")
 class ExtEpgsearchComponent extends Composite {
+    @Inject
+    Config config
 
     @Inject
-    private Config config
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
+    Messages messages
 
-    @Inject
-    private Messages messages
-
-    private EpgSearch epgSearch = EpgSearch.instance
+    EpgSearch epgSearch = EpgSearch.instance
 
     var Grid<Extepgsearch.SimplePattern> simpleGrid
     var Grid<Extepgsearch.ComplexPattern> complexGrid

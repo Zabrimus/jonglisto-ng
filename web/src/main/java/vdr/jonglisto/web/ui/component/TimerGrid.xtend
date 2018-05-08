@@ -31,32 +31,31 @@ import com.vaadin.ui.Image
 
 @Log("jonglisto.web")
 @ViewScoped
+@SuppressWarnings("serial", "unchecked")
 class TimerGrid {
+    @Inject
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
+    Config config
 
     @Inject
-    private Config config
+    Messages messages
 
     @Inject
-    private Messages messages
+    EpgDetailsWindow epgDetails
 
     @Inject
-    private EpgDetailsWindow epgDetails
+    TimerEditWindow timerEdit
 
     @Inject
-    private TimerEditWindow timerEdit
+    ChannelLogo channelLogo
 
     @Inject
-    private ChannelLogo channelLogo
+    SearchTimerEpgdEditWindow editWindow
 
     @Inject
-    private SearchTimerEpgdEditWindow editWindow
-
-    @Inject
-    private SearchTimerEpgsearchEditWindow editWindow2
-
+    SearchTimerEpgsearchEditWindow editWindow2
 
     val service = new SearchTimerService
 

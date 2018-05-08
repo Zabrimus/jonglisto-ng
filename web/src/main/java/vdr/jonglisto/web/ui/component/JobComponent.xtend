@@ -16,26 +16,25 @@ import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.util.Utils
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.i18n.Messages
-import vdr.jonglisto.xtend.annotation.Log
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
+@SuppressWarnings("serial")
 class JobComponent extends Composite {
+    @Inject
+    Config config
 
     @Inject
-    private Config config
+    Messages messages
 
     @Inject
-    private Messages messages
+    JobEditWindow jobEdit
 
-    @Inject
-    private JobEditWindow jobEdit
+    Grid<Jobs> grid
 
-    private Grid<Jobs> grid
-
-    private Subject currentSubject
-    private String currentUser
+    Subject currentSubject
+    String currentUser
 
     def showAll() {
         currentUser = null

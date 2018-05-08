@@ -326,6 +326,7 @@ class Parser {
         return result
     }
 
+    @SuppressWarnings("unchecked")
     static def parseEpgsearchCategory(String line) {
         val splitted = line.split("\\|")
         val result = new EpgsearchCategory
@@ -345,6 +346,7 @@ class Parser {
         return result
     }
 
+    @SuppressWarnings("unchecked")
     static def parseEpgsearchChannelGroup(String line) {
         val splitted = line.split("\\|").stream.collect(Collectors.toList)
         val result = new EpgsearchChannelGroup
@@ -408,8 +410,5 @@ class Parser {
         }
 
         return #[resultDate, resultDate.with(TemporalAdjusters.next(day))]
-    }
-
-    private static class LoopBreakException extends RuntimeException {
     }
 }

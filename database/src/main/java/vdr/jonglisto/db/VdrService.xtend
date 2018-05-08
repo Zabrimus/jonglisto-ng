@@ -9,7 +9,7 @@ class VdrService {
     new() {
     }
 
-    public def getConfiguredVdr() {
+    def getConfiguredVdr() {
         using(Database.get.open) [
             return createQuery("select name, uuid, ip as host, svdrp as port from vdrs where svdrp is not null") //
                 .throwOnMappingFailure(false) //

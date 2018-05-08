@@ -29,22 +29,21 @@ import static vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log("jonglisto.web")
 @ViewScoped
+@SuppressWarnings("serial")
 class EpgDetailsWindow extends Window {
+    @Inject
+    Svdrp svdrp
 
     @Inject
-    private Svdrp svdrp
+    Config config
 
     @Inject
-    private Config config
+    Messages messages
 
     @Inject
-    private Messages messages
-
-    @Inject
-    private ChannelLogo channelLogo
+    ChannelLogo channelLogo
 
     var TextArea epgArea
-    var VDR currentVdr
     var EventGrid parentGrid
 
     new() {
@@ -52,7 +51,6 @@ class EpgDetailsWindow extends Window {
     }
 
     def showWindow(EventGrid parent, VDR vdr, Epg epg, boolean editView, long recordingId) {
-        this.currentVdr = vdr
         this.parentGrid = parent
 
         val scraper = svdrp.getScraperData(if(recordingId !== -1) vdr else null, epg, recordingId)
@@ -208,8 +206,12 @@ class EpgDetailsWindow extends Window {
 
         if (config.showScraperImages) {
             // Poster
-            val seriesPoster = scraper?.series?.poster?.size > 0
-            val moviePoster = scraper?.movie?.poster?.size > 0
+            val sposters = scraper?.series?.poster                       
+            val seriesPoster = if (sposters !== null) sposters.size > 0 else false
+            
+            val mposters = scraper?.movie?.poster            
+            val moviePoster = if (mposters !== null) mposters.size > 0 else false 
+
             if (seriesPoster || moviePoster) {
                 posterImages = new CssLayout
 
@@ -239,8 +241,12 @@ class EpgDetailsWindow extends Window {
             }
 
             // Fanart
-            val seriesFanart = scraper?.series?.fanart?.size > 0
-            val movieFanart = scraper?.movie?.fanart?.size > 0
+            val sFanart = scraper?.series?.fanart            
+            val seriesFanart = if (sFanart !== null) sFanart.size > 0 else false
+            
+            val mFanart = scraper?.movie?.fanart
+            val movieFanart = if (mFanart !== null) mFanart.size > 0 else false
+            
             if (seriesFanart || movieFanart) {
                 fanartImages = new CssLayout
 
@@ -270,8 +276,12 @@ class EpgDetailsWindow extends Window {
             }
 
             // Actor
-            val seriesActor = scraper?.series?.actor?.size > 0
-            val movieActor = scraper?.movie?.actor?.size > 0
+            val sActor = scraper?.series?.actor           
+            val seriesActor = if (sActor !== null) sActor.size > 0 else false
+            
+            val mActor = scraper?.movie?.actor            
+            val movieActor = if (mActor !== null) mActor.size > 0 else false
+            
             if (seriesActor || movieActor) {
                 actorImages = new CssLayout
 
@@ -301,7 +311,8 @@ class EpgDetailsWindow extends Window {
             }
 
             // Series images
-            if (scraper?.series?.banner?.size > 0) {
+            val sBanner = scraper?.series?.banner
+            if (sBanner !== null  && sBanner.size > 0) {
                 if (seriesImages === null) {
                     seriesImages = new CssLayout
                 }

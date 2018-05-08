@@ -27,12 +27,13 @@ import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log("jonglisto.web")
 @CDIView(MainUI.RECORDING_VIEW)
+@SuppressWarnings("serial")
 class RecordingView extends BaseView {
 
     @Inject
-    private RecordingComponent recordingTreeGrid
+    RecordingComponent recordingTreeGrid
 
-    private Grid<Recording> deleteGrid
+    Grid<Recording> deleteGrid
 
     var Label sizeLabel
     var Layout layout
@@ -42,7 +43,7 @@ class RecordingView extends BaseView {
         super.init(BUTTON.RECORDING)
     }
 
-    public def reloadRecordings() {
+    def reloadRecordings() {
         changeVdr(selectedVdr)
     }
 
@@ -144,7 +145,7 @@ class RecordingView extends BaseView {
         addComponentsAndExpand(tabsheet)
     }
 
-    override protected def void changeVdr(VDR vdr) {
+    override protected void changeVdr(VDR vdr) {
         if (recordingTreeGrid !== null) {
             recordingTreeGrid.updateRecordingList(svdrp.getRecordings(vdr))
             recordingTreeGrid.currentVdr = vdr

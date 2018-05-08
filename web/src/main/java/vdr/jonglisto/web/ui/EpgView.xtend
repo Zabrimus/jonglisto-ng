@@ -30,22 +30,22 @@ import vdr.jonglisto.search.EpgSearch
 import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.EventGrid
-import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
-@Log("jonglisto.web")
+// @Log("jonglisto.web")
 @CDIView(MainUI.EPG_VIEW)
+@SuppressWarnings("serial")
 class EpgView extends BaseView {
 
-    public enum EPGTYPE {
+    enum EPGTYPE {
         TIME, CHANNEL, SEARCH
     }
 
     @Inject
-    private EventGrid eventGrid
+    EventGrid eventGrid
 
-    private EpgSearch epgSearch = EpgSearch.getInstance()
+    EpgSearch epgSearch = EpgSearch.getInstance()
 
     var EPGTYPE epgType
     var DateField epgDateCriteria
@@ -327,14 +327,14 @@ class EpgView extends BaseView {
         addComponentsAndExpand(eventGrid.grid)
     }
 
-    public def searchRetransmissions(Epg epg) {
+    def searchRetransmissions(Epg epg) {
         epgTypeSelect.selectedItem = messages.epgTypeSearch
         searchTitle.value = epg.title
         searchShortText.value = epg.shortText.substring(0, Math.min(20, epg.shortText.length))
         listSearchResult
     }
 
-    public def switchToChannelView(Epg epg) {
+    def switchToChannelView(Epg epg) {
         epgTypeSelect.selectedItem = messages.epgTypeChannel
         epgChannelCriteria.selectedItem = svdrp.getChannel(epg.channelId)
     }
@@ -528,7 +528,7 @@ class EpgView extends BaseView {
         }
     }
 
-    override protected def void changeVdr(VDR vdr) {
+    override protected void changeVdr(VDR vdr) {
        if (eventGrid !== null) {
            eventGrid.vdr = vdr
        }

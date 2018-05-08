@@ -5,6 +5,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.ArrayList
 import java.util.List
+import java.io.IOException
 
 class ClasspathFileReader {
 
@@ -13,15 +14,19 @@ class ClasspathFileReader {
     }
 
     private static def List<String> readFromInputStream(InputStream inputStream) {
-        val result = new ArrayList<String>()
-
-        val br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-        var String line
-
-        while ((line = br.readLine()) !== null) {
-            result.add(line)
+        try {
+            val result = new ArrayList<String>()
+    
+            val br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            var String line
+    
+            while ((line = br.readLine()) !== null) {
+                result.add(line)
+            }
+    
+            return result            
+        } catch (IOException e) {
+            throw new RuntimeException("Error while reading from input stream", e);
         }
-
-        return result
     }
 }

@@ -17,7 +17,6 @@ import static extension org.apache.commons.lang3.StringUtils.*
 
 @ApplicationScoped
 class ChannelLogo {
-
     var static Set<String> logoFiles
     var static Map<String, String> logoFileMapping = new HashMap<String, String>
     var boolean logoPathExists

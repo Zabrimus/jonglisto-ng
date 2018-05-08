@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 
+@SuppressWarnings("serial")
 class SvgStreamSource extends StreamResource {
 
     new(String svgText) {

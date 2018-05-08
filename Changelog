@@ -1,3 +1,9 @@
+0.2.4-snapshot:
+- buxfix epg search configuration. Init Logger failed
+- upgrade to xtend 2.14.0-RC1
+- upgrade to Vaadin 8.4.1
+- code cleanup
+
 0.2.3:
 Bugfixes:
 - implement forgotten functionality in epgd search timers (toggle active/inactive and delete)

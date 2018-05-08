@@ -14,22 +14,20 @@ import vdr.jonglisto.model.VDROsd
 import vdr.jonglisto.web.util.HtmlSanitizer
 
 @ViewScoped
+@SuppressWarnings("serial")
 class OsdComponent extends Composite {
-
-    var VDR currentVdr
     var VDROsd osd
 
-    public def changeVdr(VDR vdr) {
-        this.currentVdr = vdr
+    def changeVdr(VDR vdr) {
         return this
     }
 
-    public def changeOsd(VDROsd osd) {
+    def changeOsd(VDROsd osd) {
         this.osd = osd
         return this
     }
 
-    public def createGrid() {
+    def createGrid() {
         if (osd === null) {
             compositionRoot = new Label("No OSD open")
             return;

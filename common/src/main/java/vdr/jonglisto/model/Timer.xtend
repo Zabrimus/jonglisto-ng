@@ -17,8 +17,12 @@ import vdr.jonglisto.configuration.Configuration
 @EqualsHashCode
 @ToString
 class Timer extends BaseData implements Serializable {
-    public enum SearchType {
-        EPGSEARCH, EPGD, EPG2TIMER
+    public static final long serialVersionUID = 1L
+    
+    enum SearchType {
+        EPGSEARCH,
+        EPGD,
+        EPG2TIMER
     }
 
     static val epgsearchPattern = Pattern.compile(".*?<epgsearch>.*?<searchtimer>(.*?)</searchtimer>.*?<s-id>(.*?)</s-id>.*?");
@@ -30,49 +34,48 @@ class Timer extends BaseData implements Serializable {
     static val timeParseFormatter = DateTimeFormatter.ofPattern("HH:mm")
     static val currentZoneOffset = DateTimeUtil.currentZoneOffset
 
-    private static val ENABLED = 1;
-    private static val INSTANT = (1 << 1);
-    private static val VPS     = (1 << 2);
-    private static val ACTIVE  = (1 << 3);
+    static val ENABLED = 1;
+    static val INSTANT = (1 << 1);
+    static val VPS = (1 << 2);
+    static val ACTIVE = (1 << 3);
 
-    private var int id
-    private var String channelId
-    private var String days
-    private var String date
-    private var byte[] time = newByteArrayOfSize(4)
-    private var int priority
-    private var int lifetime
-    private var String path
-    private var String aux
-    private var int flags
+    var int id
+    var String channelId
+    var String days
+    var String date
+    var byte[] time = newByteArrayOfSize(4)
+    var int priority
+    var int lifetime
+    var String path
+    var String aux
+    var int flags
 
-    private boolean isRemote
-    private boolean isRemoteTimer
-    private boolean isEpgdTimer
-    private boolean isEpgsearchTimer
-    private boolean isEpg2TimerTimer
-    private SearchType searchType;
-    private String searchId
-    private String searchName
-    private String remoteTimerId
+    boolean isRemote
+    boolean isRemoteTimer
+    boolean isEpgdTimer
+    boolean isEpgsearchTimer
+    boolean isEpg2TimerTimer SearchType searchType;
+    String searchId
+    String searchName
+    String remoteTimerId
 
-    private var long startEpoch
-    private var long endEpoch
-    private var long duration
+    var long startEpoch
+    var long endEpoch
+    var long duration
 
     def isWeekday(DayOfWeek day) {
         if (days === null) {
             return true
         }
 
-        switch(day) {
-            case MONDAY:    return days.charAt(0) == 'M'.charAt(0)
-            case TUESDAY:   return days.charAt(1) == 'T'.charAt(0)
+        switch (day) {
+            case MONDAY: return days.charAt(0) == 'M'.charAt(0)
+            case TUESDAY: return days.charAt(1) == 'T'.charAt(0)
             case WEDNESDAY: return days.charAt(2) == 'W'.charAt(0)
-            case THURSDAY:  return days.charAt(3) == 'T'.charAt(0)
-            case FRIDAY:    return days.charAt(4) == 'F'.charAt(0)
-            case SATURDAY:  return days.charAt(5) == 'S'.charAt(0)
-            case SUNDAY:    return days.charAt(6) == 'S'.charAt(0)
+            case THURSDAY: return days.charAt(3) == 'T'.charAt(0)
+            case FRIDAY: return days.charAt(4) == 'F'.charAt(0)
+            case SATURDAY: return days.charAt(5) == 'S'.charAt(0)
+            case SUNDAY: return days.charAt(6) == 'S'.charAt(0)
         }
     }
 
@@ -83,62 +86,56 @@ class Timer extends BaseData implements Serializable {
 
         val sb = new StringBuilder(days);
 
-        switch(day) {
+        switch (day) {
             case MONDAY: {
-                    if (active) {
-                        sb.setCharAt(0, 'M'.charAt(0))
-                    } else {
-                        sb.setCharAt(0, '-'.charAt(0))
-                    }
+                if (active) {
+                    sb.setCharAt(0, 'M'.charAt(0))
+                } else {
+                    sb.setCharAt(0, '-'.charAt(0))
                 }
-
+            }
             case TUESDAY: {
-                    if (active) {
-                        sb.setCharAt(1, 'T'.charAt(0))
-                    } else {
-                        sb.setCharAt(1, '-'.charAt(0))
-                    }
+                if (active) {
+                    sb.setCharAt(1, 'T'.charAt(0))
+                } else {
+                    sb.setCharAt(1, '-'.charAt(0))
                 }
-
+            }
             case WEDNESDAY: {
-                    if (active) {
-                        sb.setCharAt(2, 'W'.charAt(0))
-                    } else {
-                        sb.setCharAt(2, '-'.charAt(0))
-                    }
+                if (active) {
+                    sb.setCharAt(2, 'W'.charAt(0))
+                } else {
+                    sb.setCharAt(2, '-'.charAt(0))
                 }
-
+            }
             case THURSDAY: {
-                    if (active) {
-                        sb.setCharAt(3, 'T'.charAt(0))
-                    } else {
-                        sb.setCharAt(3, '-'.charAt(0))
-                    }
+                if (active) {
+                    sb.setCharAt(3, 'T'.charAt(0))
+                } else {
+                    sb.setCharAt(3, '-'.charAt(0))
                 }
-
+            }
             case FRIDAY: {
-                    if (active) {
-                        sb.setCharAt(4, 'F'.charAt(0))
-                    } else {
-                        sb.setCharAt(4, '-'.charAt(0))
-                    }
+                if (active) {
+                    sb.setCharAt(4, 'F'.charAt(0))
+                } else {
+                    sb.setCharAt(4, '-'.charAt(0))
                 }
-
+            }
             case SATURDAY: {
-                    if (active) {
-                        sb.setCharAt(5, 'S'.charAt(0))
-                    } else {
-                        sb.setCharAt(5, '-'.charAt(0))
-                    }
+                if (active) {
+                    sb.setCharAt(5, 'S'.charAt(0))
+                } else {
+                    sb.setCharAt(5, '-'.charAt(0))
                 }
-
+            }
             case SUNDAY: {
-                    if (active) {
-                        sb.setCharAt(6, 'S'.charAt(0))
-                    } else {
-                        sb.setCharAt(6, '-'.charAt(0))
-                    }
+                if (active) {
+                    sb.setCharAt(6, 'S'.charAt(0))
+                } else {
+                    sb.setCharAt(6, '-'.charAt(0))
                 }
+            }
         }
 
         days = sb.toString
@@ -190,8 +187,10 @@ class Timer extends BaseData implements Serializable {
 
     def getStartTime() {
         if (startEpoch === 0 && date !== null) {
-            val start = LocalDateTime.from(LocalDate.parse(date, dateParseFormatter).atStartOfDay(Configuration.instance.defaultZoneId));
-            startEpoch = start.withHour(time.get(0) as int).withMinute(time.get(1) as int).toEpochSecond(currentZoneOffset)
+            val start = LocalDateTime.from(
+                LocalDate.parse(date, dateParseFormatter).atStartOfDay(Configuration.instance.defaultZoneId));
+            startEpoch = start.withHour(time.get(0) as int).withMinute(time.get(1) as int).toEpochSecond(
+                currentZoneOffset)
         }
 
         return startEpoch
@@ -199,20 +198,22 @@ class Timer extends BaseData implements Serializable {
 
     def getEndTime() {
         if (endEpoch === 0 && date !== null) {
-            val end = LocalDateTime.from(LocalDate.parse(date, dateParseFormatter).atStartOfDay(Configuration.instance.defaultZoneId));
+            val end = LocalDateTime.from(
+                LocalDate.parse(date, dateParseFormatter).atStartOfDay(Configuration.instance.defaultZoneId));
 
             var dayAdjust = 0
             if ((time.get(0) * 60 + time.get(1)) > (time.get(2) * 60 + time.get(3))) {
                 dayAdjust = 1
             }
 
-            endEpoch = end.withHour(time.get(2) as int).withMinute(time.get(3) as int).plusDays(dayAdjust).toEpochSecond(currentZoneOffset)
+            endEpoch = end.withHour(time.get(2) as int).withMinute(time.get(3) as int).plusDays(dayAdjust).
+                toEpochSecond(currentZoneOffset)
         }
 
         return endEpoch
     }
 
-     def getDuration() {
+    def getDuration() {
         if (duration === 0) {
             duration = endTime - startTime
         }
@@ -222,7 +223,8 @@ class Timer extends BaseData implements Serializable {
 
     def getStartAsString() {
         var builder = new StringBuilder
-        return builder.append(String.format("%02d", time.get(0))).append(":").append(String.format("%02d", time.get(1))).toString
+        return builder.append(String.format("%02d", time.get(0))).append(":").append(
+            String.format("%02d", time.get(1))).toString
     }
 
     def setStartAsString(String timeValue) {
@@ -239,7 +241,8 @@ class Timer extends BaseData implements Serializable {
 
     def getEndAsString() {
         var builder = new StringBuilder
-        return builder.append(String.format("%02d", time.get(2))).append(":").append(String.format("%02d", time.get(3))).toString
+        return builder.append(String.format("%02d", time.get(2))).append(":").append(
+            String.format("%02d", time.get(3))).toString
     }
 
     def getStartDate() {
@@ -247,7 +250,8 @@ class Timer extends BaseData implements Serializable {
     }
 
     def getEndDate() {
-        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime + getDuration), Configuration.instance.defaultZoneId).toLocalDate()
+        LocalDateTime.ofInstant(Instant.ofEpochSecond(startTime + getDuration), Configuration.instance.defaultZoneId).
+            toLocalDate()
     }
 
     def getStartDateTime() {
@@ -323,7 +327,9 @@ class Timer extends BaseData implements Serializable {
         }
 
         sb.append(":")
-        sb.append(String.format("%02d%02d:%02d%02d:%d:%d:%s:", time.get(0), time.get(1), time.get(2), time.get(3), priority, lifetime, path))
+        sb.append(
+            String.format("%02d%02d:%02d%02d:%d:%d:%s:", time.get(0), time.get(1), time.get(2), time.get(3), priority,
+                lifetime, path))
         if (aux !== null) {
             sb.append(aux)
         }

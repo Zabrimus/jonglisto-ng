@@ -9,7 +9,7 @@ class SearchTimerService {
     new() {
     }
 
-    public def getSearchTimerName(String id) {
+    def getSearchTimerName(String id) {
         using(Database.get.open) [
             return createQuery("select name from searchtimers where id = :id") //
                 .addParameter("id", Long.valueOf(id))
@@ -18,7 +18,7 @@ class SearchTimerService {
         ]
     }
 
-    public def getSearchTimers() {
+    def getSearchTimers() {
         using(Database.get.open) [
             return createQuery("select st.*, v.name as vdrname, v.ip as ip, v.svdrp as svdrp from searchtimers st left join vdrs v on v.uuid = st.vdruuid where st.state <> 'D'") //
                 .throwOnMappingFailure(false) //
@@ -26,7 +26,7 @@ class SearchTimerService {
         ]
     }
 
-    public def getGenres() {
+    def getGenres() {
         using(Database.get.open) [
             return createQuery(
                     "select distinct sub_genre from eventsviewplain where sub_genre is not null order by sub_genre") //
@@ -34,7 +34,7 @@ class SearchTimerService {
         ]
     }
 
-    public def getCategories() {
+    def getCategories() {
         using(Database.get.open) [
             return createQuery(
                     "select distinct sub_category from eventsviewplain where sub_category is not null order by sub_category") //
@@ -42,7 +42,7 @@ class SearchTimerService {
         ]
     }
 
-    public def void toogleActive(EpgdSearchTimer timer) {
+    def void toogleActive(EpgdSearchTimer timer) {
         using(Database.get.beginTransaction) [
             if (timer.id > 0) {
                 val value = if (timer.active == 1) 0 else 1
@@ -58,7 +58,7 @@ class SearchTimerService {
         ]
     }
 
-    public def void deleteSearchTimer(EpgdSearchTimer timer) {
+    def void deleteSearchTimer(EpgdSearchTimer timer) {
         using(Database.get.beginTransaction) [
             if (timer.id > 0) {
                 val sql = "update searchtimers set state = 'D' where id = :id"
@@ -72,7 +72,7 @@ class SearchTimerService {
         ]
     }
 
-    public def save(EpgdSearchTimer timer) {
+    def save(EpgdSearchTimer timer) {
         using(Database.get.beginTransaction) [
             if (timer.id > 0) {
                 val sql = "update searchtimers " + //

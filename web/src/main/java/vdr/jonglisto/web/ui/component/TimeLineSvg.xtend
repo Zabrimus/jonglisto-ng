@@ -13,7 +13,6 @@ import vdr.jonglisto.web.util.SvgStreamSource
 import static extension vdr.jonglisto.util.TimerOverlap.*
 
 class TimeLineSvg {
-
     val cellWidth = 30
 
     var LocalDate date

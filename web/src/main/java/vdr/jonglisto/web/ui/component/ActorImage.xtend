@@ -8,6 +8,7 @@ import static vdr.jonglisto.web.xtend.UIBuilder.*
 import vdr.jonglisto.web.util.HtmlSanitizer
 import com.vaadin.shared.ui.ContentMode
 
+@SuppressWarnings("serial")
 class ActorImage extends Composite {
     new(Image image, String role, String name) {
 
