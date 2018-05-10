@@ -41,7 +41,7 @@ import vdr.jonglisto.model.EpgsearchSearchTimer
 import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 
 @Log("jonglisto.web")
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked", "serial")
 class EventGrid {
     @Inject
     Svdrp svdrp

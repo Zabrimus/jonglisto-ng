@@ -52,7 +52,7 @@ import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 
 @Log("jonglisto.web")
 @ViewScoped
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked", "serial")
 class RecordingComponent {
     @Inject
     Messages messages

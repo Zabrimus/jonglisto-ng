@@ -32,6 +32,7 @@ import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.EventGrid
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import java.util.Optional
 
 // @Log("jonglisto.web")
 @CDIView(MainUI.EPG_VIEW)
@@ -199,7 +200,7 @@ class EpgView extends BaseView {
                 epgTimeCriteria = comboBox(timeSelectValues) [
                     value = DateTimeUtil.toTime(messages.formatTime)
                     addValueChangeListener(it | listTime)
-                    setNewItemHandler(it | {timeSelectValues.add(it); epgTimeCriteria.selectedItem = it})
+                    setNewItemProvider(it | {timeSelectValues.add(it); epgTimeCriteria.selectedItem = it; return Optional.of(it)})
                 ]
             ]
 

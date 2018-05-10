@@ -24,6 +24,7 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.util.NetworkUtils
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
+import java.util.Optional
 
 // @Log("jonglisto.web")
 class VdrStatus {
@@ -131,11 +132,13 @@ class VdrStatus {
                     selectedItem = null
                     textInputAllowed = true
 
-                    newItemHandler = [ s | {
+                    newItemProvider = [ s | {
                         val list = config.defaultSvdrpCommand
                         list.add(s)
                         box.items = list
                         box.selectedItem = s
+
+                        return Optional.of(s)
                     }]
                 ]
 
