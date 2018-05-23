@@ -30,7 +30,7 @@ import static extension org.apache.commons.lang3.StringUtils.*
 
 @Log("jonglisto.svdrp.client")
 class Parser {
-    static val namePattern = Pattern.compile("(\\d+) (.*?) (.*?)(;(.*?))*:(\\d+):(.*?)$")
+    static val namePattern = Pattern.compile("(\\d+) (.*?)(;(.*?))*:(\\d+):(.*?)$")
     static val recordingPattern = Pattern.compile("(\\d+) (\\d{2}.\\d{2}.\\d{2} \\d{2}:\\d{2}) (\\d+:\\d+)(\\*?) (.*)$")
     static val recordingDateFormatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
     static val pluginPattern = Pattern.compile("^(.*?) (.*?) - (.*?)$")
@@ -66,18 +66,19 @@ class Parser {
                     ch.encrypted = "0" != sp.get(8)
                     ch.source = sp.get(3)
                     ch.number = Integer.valueOf(matcher.group(1))
-                    ch.id = matcher.group(2)
-                    ch.bouquet = matcher.group(5)
-                    ch.frequence = Long.valueOf(matcher.group(6))
+                    ch.id = sp.get(3) + "-" + sp.get(10) + "-" + sp.get(11) + "-" + sp.get(9)
+
+                    ch.bouquet = matcher.group(4)
+                    ch.frequence = Long.valueOf(matcher.group(5))
                     if (ch.frequence == 0) {
                         ch.frequence = null
                     }
 
-                    val idx2 = matcher.group(3).indexOf(",")
+                    val idx2 = matcher.group(2).indexOf(",")
                     if (idx2 == -1) {
-                        ch.name = matcher.group(3).trim
+                        ch.name = matcher.group(2).trim
                     } else {
-                        ch.name = matcher.group(3).substring(0, idx2).trim
+                        ch.name = matcher.group(2).substring(0, idx2).trim
                     }
 
                     ch.normalizedName = Utils.normalizeChannelName(ch.name)

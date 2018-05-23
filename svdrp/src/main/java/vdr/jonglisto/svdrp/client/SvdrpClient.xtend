@@ -121,7 +121,7 @@ class SvdrpClient {
 
     def pingHost(VDR vdr) {
         try {
-            vdr.command("PING", 250)
+            vdr.command("DUMMY", 500)
             return true
         } catch (Exception e) {
             return false
@@ -164,7 +164,7 @@ class SvdrpClient {
             return null
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     def getChannels() {
         try {
@@ -637,7 +637,7 @@ class SvdrpClient {
     }
 
     private def List<Channel> readChannels(VDR vdr) {
-        return Parser.parseChannel(vdr.command("LSTC :ids :groups", 250).lines)
+        return Parser.parseChannel(vdr.command("LSTC :groups", 250).lines)
     }
 
     private def List<Epg> readEpg(VDR vdr) {
