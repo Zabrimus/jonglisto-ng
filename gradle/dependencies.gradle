@@ -6,7 +6,7 @@ ext {
         commons           : '3.5',          // Apache commons lang        DO NOT UPGRADE, if not upgraded in TomEE
         beanutils         : '1.9.3',        // Apache commons beanutils   DO NOT UPGRADE, if not upgraded in TomEE
         collections       : '3.2.2',        // Apache commons collections DO NOT UPGRADE, if not upgraded in TomEE
-        xtend             : '2.14.0.RC1',   // xtend
+        xtend             : '2.14.0',       // xtend
         gson              : '2.8.4',        // Google gson
         sanitizer         : '20171016.1',   // OWASP Java HTML sanitizer
         guava             : '25.0-jre',     // Google guava

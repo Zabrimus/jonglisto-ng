@@ -1,11 +1,11 @@
-0.2.4-snapshot:
+0.2.4:
 Bugfixes:
 - buxfix epg search configuration. Init Logger failed
 - code cleanup
 - compatibility with VDR <= 2.3.3 (command LSTC :ids and PING)
 
 New:
-- upgrade to xtend 2.14.0-RC1
+- upgrade to xtend 2.14.0
 - upgrade to Vaadin 8.4.2
 
 0.2.3:
