@@ -43,7 +43,7 @@ The build itself creates only a web-archive (war) file, which has to be deployed
 More Information can be found in the deployment chapter.
 
 ## channel logos (optional)
-If you want to see channel logos, the go to directory tools and start the shell script build-logo-jar.sh. This script clones the picons github repository and creates png files for a massive amount of channel logos.
+If you want to see channel logos, the go to directory tools and start the shell script build-logo-jar.sh. This script clones the picons gitlab repository and creates png files for a massive amount of channel logos.
 The channel logo images are then copied to the application directory and are part of the application.
 
 ## Build using Gradle
