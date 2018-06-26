@@ -4,7 +4,7 @@
 if [ -d picicon-repo ]; then
     (cd picicon-repo; git pull)
 else
-    git clone --depth 1 https://github.com/picons/picons-source.git picicon-repo
+    git clone --depth 1  https://gitlab.com/picons/picons.git picicon-repo
 fi;
 
 # create logos
