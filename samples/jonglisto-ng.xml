@@ -13,16 +13,24 @@
         <!-- host:        hostname or IP address of the VDR instance        -->
         <!-- port:        SVDRP port of the VDR instance                    -->
         <!-- mac:         Network MAC address, needed for WOL               -->
+        <instance name="vdr1" displayName="VDR 1" host="127.0.0.l" port="6419" />
+
+        <!--
         <instance name="vdr1"       displayName="VDR 1"      host="vdr1"       port="6419"   mac="00-80-41-ae-fd-7e"/>
         <instance name="vdr2"       displayName="VDR 2"      host="vdr2"       port="6419"   mac="00-80-41-ae-fd-8e"/>
         <instance name="vdr3"       displayName="VDR 3"      host="vdr3"       port="6419" />
         <instance name="epgcollect" displayName="epgcollect" host="epgcollect" port="6419" />
+        -->
     </configuredVdr>
 
     <!-- optional configuration, which SVDRP command of vdr-plugin-jonglisto jonglisto-ng are    -->
     <!-- allowed to use in the specified VDR. Some commands falls back to the VDR implementation -->
     <!-- other commands will raise a notification in the GUI.                                    -->
     <!-- the pseudo commands 'all' and 'none' allows any command or no command at all.           -->
+
+    <!-- configuration for epgcollect do not exists. Use the default: all, if the     -->
+    <!-- plugin exists on epgcollect                                                  -->
+    <!--
     <jonglisto-plugin>
         <allow vdr="vdr1">
             <command>all</command>
@@ -38,23 +46,32 @@
             <command>DELT</command>
             <command>SWIT</command>
         </allow>
-
-        <!-- configuration for epgcollect do not exists. Use the default: all, if the     -->
-        <!-- plugin exists on epgcollect                                                  -->
     </jonglisto-plugin>
+    -->
 
     <!-- configuration of the VDR instance which are responsible for EPG and channel data -->
     <!-- ref:  reference to a configured VDR instance, see configuredVdr.instance.name    -->
     <!-- updateInterval: jonglisto-ng uses an internal cache for EPG and channel data.    -->
     <!--                 the data will be updated after xxx minutes at the latest         -->
+    <epg     ref="vdr1" updateInterval="720" />
+    <channel ref="vdr1" updateInterval="720" />
+
+    <!--
     <epg     ref="epgcollect" updateInterval="720" />
     <channel ref="epgcollect" updateInterval="720" />
+    -->
 
     <!-- optional configuration of the epg2vdr database, used for e.g. search timers -->
+    <!--
     <epg2vdr host="epgd" port="3306" username="epg2vdr" password="epg" database="epg2vdr"/>
+    -->
 
     <!-- optional the SVDRP server port which shall be created by jonglisto-ng -->
+    <svdrpPort>0</svdrpPort>
+
+    <!--
     <svdrpPort>6420</svdrpPort>
+    -->
 
     <!-- optional configuration of the time zone: e.g. Europe/Berlin                       -->
     <!-- usually the time zone of the system is used, but this could be not desired        -->
@@ -66,6 +83,7 @@
     <!--      [main]                                                                       -->
     <!--      passwordMatcher = vdr.jonglisto.shiro.JonglistoPasswordMatcher               -->
     <!--      iniRealm.credentialsMatcher = $passwordMatcher                               -->
+
     <!--
     <disableLogin urlUserParam="USER" />
     -->
@@ -80,6 +98,8 @@
     <!-- which shall be mapped to another path for jonglisto-ng                                                                      -->
     <!--      /nfs/vdr/configuration/plugins/scraper2vdr/series/71470/fanart3.jpg                                                    -->
     <!-- then the following configuration is necessary. Otherwise jonglisto-ng will not find any image.                              -->
+
+    <!--
     <scraper>
         <images>true</images>
         <imagePath>
@@ -92,6 +112,7 @@
             <to><![CDATA[/nfs/vdr2/configuration/plugins/]]></to>
         </imagePath>
     </scraper>
+    -->
 
     <!-- preconfigured time list used in EPG view to fastly select a time value -->
     <epgTimeList>
