@@ -98,12 +98,26 @@ As described in the TomEE part, you could rename the war file to be able to acce
 
 ## Using a precompiled docker container (Alpine Linux with TomEE)
 On DockerHub exists a docker image `zabrimus/jonglisto-ng-runtime` already containing TomEE and the lastest version of jonglisto-ng.
-Create two local directories `var` and `etc` and start jonglisto-ng  with
+There exists several possibities to use this docker image.
+
+### Don't use local directories
+The configuration files only exists in the docker container and shall be edited there.
+```
+docker run -p 8080:8080 zabrimus/jonglisto-ng-runtime:latest
+```
+
+### Use local directories for the configuration files
+Create two local directories `var` and `etc` in a directory of your choice and start jonglisto-ng within this directory with
 ```
 docker run -v `pwd`/var:/var/jonglisto-ng -v `pwd`/etc:/etc/jonglisto -p 8080:8080 zabrimus/jonglisto-ng-runtime:latest
 ```
+or use absolute paths
+```
+docker run -v /your/directory/var:/var/jonglisto-ng -v /your/directory/etc:/etc/jonglisto -p 8080:8080 zabrimus/jonglisto-ng-runtime:latest
+```
 After the first start, you will find the configuration files inside your directories, which then can be modified.
-Jonglisto can then be reached e.g. via http://localhost:8080/jonglisto-ng
+Jonglisto can be reached e.g. via http://localhost:8080/jonglisto-ng
+
 
 # Configuration
 There exists three configuration files which have to be installed in /etc/jonglisto
