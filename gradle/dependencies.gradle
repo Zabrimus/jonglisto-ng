@@ -26,7 +26,9 @@ ext {
 
         vicons            : '2.0.0',        // Vaadin Icons Addon
         scaleimage        : '0.5.0',        // Vaadin ScaleImage Addon
-        messagebox        : '4.0.21'        // Vaadin MessageBox Addon
+        messagebox        : '4.0.21',       // Vaadin MessageBox Addon
+
+        netty             : '4.1.30.Final'  // Netty
     ]
 
     libs = [
@@ -58,7 +60,9 @@ ext {
 
         sql2o                : "org.sql2o:sql2o:$versions.sql2o",
         mysqljdbc            : "mysql:mysql-connector-java:$versions.mysqljdbc",
-        tomjdbc              : "org.apache.tomcat:tomcat-jdbc:$versions.tomjdbc"
+        tomjdbc              : "org.apache.tomcat:tomcat-jdbc:$versions.tomjdbc",
+
+        netty                : "io.netty:netty-all:$versions.netty"
    ]
 
    addons = [
