@@ -1,16 +1,16 @@
 ext {
     versions = [
-        vaadin            : '8.4.4',        // Vaadin, Web
-        vaadincdi         : '3.0.0',        // Vaadin CDI
+        vaadin            : '8.5.2',        // Vaadin, Web
+        vaadincdi         : '3.0.1',        // Vaadin CDI
         shiro             : '1.3.2',        // Apache Shiro, Security
         commons           : '3.5',          // Apache commons lang        DO NOT UPGRADE, if not upgraded in TomEE
         beanutils         : '1.9.3',        // Apache commons beanutils   DO NOT UPGRADE, if not upgraded in TomEE
         collections       : '3.2.2',        // Apache commons collections DO NOT UPGRADE, if not upgraded in TomEE
-        xtend             : '2.14.0',       // xtend
-        gson              : '2.8.4',        // Google gson
+        xtend             : '2.15.0',       // xtend
+        gson              : '2.8.5',        // Google gson
         sanitizer         : '20171016.1',   // OWASP Java HTML sanitizer
-        guava             : '25.0-jre',     // Google guava
-        deltaspike        : '1.8.1',        // Apache Deltaspike
+        guava             : '26.0-jre',     // Google guava
+        deltaspike        : '1.9.0',        // Apache Deltaspike
 
         jregex            : '1.2_01',       // jregex, http://jregex.sourceforge.net/
 

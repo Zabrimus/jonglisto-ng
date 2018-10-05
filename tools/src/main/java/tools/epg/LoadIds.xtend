@@ -24,9 +24,9 @@ class LoadIds {
         EPGDATA
     }
 
-    private static val tvmUrl = 'http://wwwa.tvmovie.de/static/tvghost/html/onlinedata/cftv520/datainfo.txt'
-    private static val tvspUrl = 'https://live.tvspielfilm.de/static/content/channel-list/livetv'
-    private static val epgdataUrl = 'http://www.epgdata.com/index.php?action=sendInclude&iOEM=vdr&pin=##PIN##&dataType=xml'
+    static val tvmUrl = 'http://wwwa.tvmovie.de/static/tvghost/html/onlinedata/cftv520/datainfo.txt'
+    static val tvspUrl = 'https://live.tvspielfilm.de/static/content/channel-list/livetv'
+    static val epgdataUrl = 'http://www.epgdata.com/index.php?action=sendInclude&iOEM=vdr&pin=##PIN##&dataType=xml'
 
     def static void main(String[] args) {
         val parser = new DefaultParser()
@@ -60,23 +60,23 @@ class LoadIds {
         val result = new ArrayList<String>
 
         val load = new LoadIds
-        
-        if ("all" == cmd.getOptionValue("t") || "tvm" == cmd.getOptionValue("t")) {        
-            result.addAll(load.getEpgIds(PROVIDER.TVM, null))            
+
+        if ("all" == cmd.getOptionValue("t") || "tvm" == cmd.getOptionValue("t")) {
+            result.addAll(load.getEpgIds(PROVIDER.TVM, null))
         }
 
-        if ("all" == cmd.getOptionValue("t") || "tvsp" == cmd.getOptionValue("t")) {        
-            result.addAll(load.getEpgIds(PROVIDER.TVSP, null))            
+        if ("all" == cmd.getOptionValue("t") || "tvsp" == cmd.getOptionValue("t")) {
+            result.addAll(load.getEpgIds(PROVIDER.TVSP, null))
         }
 
-        if ("all" == cmd.getOptionValue("t") || "epgdata" == cmd.getOptionValue("t")) {        
-            result.addAll(load.getEpgIds(PROVIDER.EPGDATA, cmd.getOptionValue("p")))            
+        if ("all" == cmd.getOptionValue("t") || "epgdata" == cmd.getOptionValue("t")) {
+            result.addAll(load.getEpgIds(PROVIDER.EPGDATA, cmd.getOptionValue("p")))
         }
-     
+
         val fw = new FileWriter(cmd.getOptionValue("o"))
         result.forEach(s | fw.append(s).append("\n"))
         fw.close
-            
+
         println("Result\n" + result)
     }
 
@@ -98,7 +98,7 @@ class LoadIds {
                 array(json).forEach(ch | {
                     val id = str(ch <= 'id')
                     val name = str(ch <= 'name')
-        
+
                     result.add(String.format("%s|%s|%s|%s", PROVIDER.TVSP, id, name, name.normalizeChannelName))
                 })
             }

@@ -1,3 +1,7 @@
+0.2.6-snapshot:
+New:
+- upgrade to Vaadin 8.5.2 and different other library upgrades
+
 0.2.5:
 New:
 - upgrade to Vaadin 8.4.4
