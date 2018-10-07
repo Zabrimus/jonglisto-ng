@@ -165,6 +165,10 @@ class SvdrpClient {
         }
     }
 
+    def sendConn(VDR vdr) {
+        vdr.command("CONN SVDRP:discover name:jonglisto port:" + Configuration.instance.svdrpServerPort + " vdrversion:20400 apiversion:20400 timeout:300", 250)
+    }
+
     @SuppressWarnings("unchecked")
     def getChannels() {
         try {

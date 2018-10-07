@@ -27,6 +27,14 @@ class VDR extends BaseData {
         this.mac = mac
     }
 
+    new(String name, String host, Integer port, int readTimeout) {
+        this.name = name
+        this.host = host
+        this.port = port
+        this.instance = name
+        this.mac = mac
+    }
+
     new(String name, String host, Integer port, int readTimeout, String mac, int connectTimeout, String instanceName) {
         this.name = name
         this.host = host

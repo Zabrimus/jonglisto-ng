@@ -92,6 +92,7 @@ class SvdrpHandler implements Runnable {
                                     case "VDRD": { cmdVDRD(output, option) }
                                     case "VDRP": { cmdVDRP(output, option) }
                                     case "VDRW": { cmdVDRW(output, option) }
+                                    case "CONN": { cmdCONN(output, option) }
                                     case "QUIT": {
                                         output.write("221 jonglisto closing connection\n")
                                         output.flush
@@ -170,8 +171,8 @@ class SvdrpHandler implements Runnable {
 
         val filterCriteria = vdr.get.name
         var List<String> result
-        
-        val fav = Configuration.instance.favourites?.favourite        
+
+        val fav = Configuration.instance.favourites?.favourite
         if (fav !== null && fav.size > 0) {
             result = Configuration.instance.favourites.favourite //
                         .stream() //
@@ -216,8 +217,8 @@ class SvdrpHandler implements Runnable {
 
     private def cmdEPGT(BufferedWriter output) throws IOException {
         var List<String> result
-        
-        val sel = Configuration.instance.epgTimeSelect        
+
+        val sel = Configuration.instance.epgTimeSelect
         if (sel !== null && sel.size > 0) {
             result = Configuration.instance.epgTimeSelect
         } else {
@@ -462,6 +463,15 @@ class SvdrpHandler implements Runnable {
             output.write("950 VDR with name " + option.trim() + " is not configured\n")
         }
 
+        output.flush();
+    }
+
+    private def cmdCONN(BufferedWriter output, String option) throws IOException {
+        log.debug("CONN received...");
+
+        val port = Configuration.getInstance.svdrpServerPort;
+        // output.write("SVDRP:discover name:jonglisto port:" + port + " vdrversion:20400 apiversion:20400 timeout:300");
+        output.write("250 OK");
         output.flush();
     }
 
