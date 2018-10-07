@@ -166,7 +166,15 @@ class SvdrpClient {
     }
 
     def sendConn(VDR vdr) {
-        vdr.command("CONN SVDRP:discover name:jonglisto port:" + Configuration.instance.svdrpServerPort + " vdrversion:20400 apiversion:20400 timeout:300", 250)
+        val resp = vdr.command("CONN SVDRP:discover name:jonglisto port:" + Configuration.instance.svdrpServerPort + " vdrversion:20400 apiversion:20400 timeout:300")
+
+        if (resp.code == 250) {
+            log.info("VDR " + vdr.ip + ":" + vdr.port + " has version at least 2.4. Good")
+        } else if (resp.code == 500) {
+            log.warn("VDR " + vdr.ip + ":" + vdr.port + " does not know command CONN. The VDR seems to have a version < 2.4.")
+        } else {
+            log.warn("VDR " + vdr.ip + ":" + vdr.port + " sends unrecognized code " + resp.code + " after CONN.")
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -706,6 +714,22 @@ class SvdrpClient {
         }
 
         return resp
+    }
+
+    private def command(VDR vdr, String command) {
+        var Connection connection
+
+        try {
+            connection = connections.get(vdr)
+        } catch (Exception e) {
+            val message = "Connection to " + vdr + " refused."
+            log.info(message)
+            throw new ConnectionException(message)
+        }
+
+        log.debug("Command: " + command)
+
+        return connection.send(command)
     }
 
     private def <T> command(VDR vdr, String command, int desiredCode, (Response) => T connectHandler, (Exception) => T errorHandler) {

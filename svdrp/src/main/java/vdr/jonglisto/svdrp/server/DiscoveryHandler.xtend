@@ -25,6 +25,12 @@ class DiscoveryHandler {
             clientName = m.group(1)
             timeout = Integer.parseInt(m.group(5))
 
+            if ("jonglisto".equals(clientName)) {
+                // ignoring loopback
+                log.info("Ignore loopback UDP request");
+                return null;
+            }
+
             var vdrOpt = Configuration.instance.findVdr(ip, clientPort);
 
             if (!vdrOpt.isPresent) {

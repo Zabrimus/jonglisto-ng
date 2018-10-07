@@ -50,7 +50,7 @@ class SvdrpHandler implements Runnable {
             output.write("220 jonglisto SVDRP VideoDiskRecorder 2.4.0; Mon Jan 01 10:00:00 2018; UTF-8\n");
             output.flush();
 
-            log.info("> Waiting for Response")
+            log.info("> Waiting for Response: " + client.remoteSocketAddress)
 
             // endless loop
             while (true) {
@@ -81,18 +81,42 @@ class SvdrpHandler implements Runnable {
                                 }
 
                                 switch (cmd) {
-                                    case "PING": { cmdPING(output) }
-                                    case "FAVL": { cmdFAVL(output, option) }
-                                    case "FAVC": { cmdFAVC(output, option) }
-                                    case "EPGT": { cmdEPGT(output) }
-                                    case "ALRM": { cmdALRM(output, option) }
-                                    case "ALRL": { cmdALRL(output, option) }
-                                    case "ALRC": { cmdARLC(output, option) }
-                                    case "VDRL": { cmdVDRL(output) }
-                                    case "VDRD": { cmdVDRD(output, option) }
-                                    case "VDRP": { cmdVDRP(output, option) }
-                                    case "VDRW": { cmdVDRW(output, option) }
-                                    case "CONN": { cmdCONN(output, option) }
+                                    case "PING": {
+                                        cmdPING(output)
+                                    }
+                                    case "FAVL": {
+                                        cmdFAVL(output, option)
+                                    }
+                                    case "FAVC": {
+                                        cmdFAVC(output, option)
+                                    }
+                                    case "EPGT": {
+                                        cmdEPGT(output)
+                                    }
+                                    case "ALRM": {
+                                        cmdALRM(output, option)
+                                    }
+                                    case "ALRL": {
+                                        cmdALRL(output, option)
+                                    }
+                                    case "ALRC": {
+                                        cmdARLC(output, option)
+                                    }
+                                    case "VDRL": {
+                                        cmdVDRL(output)
+                                    }
+                                    case "VDRD": {
+                                        cmdVDRD(output, option)
+                                    }
+                                    case "VDRP": {
+                                        cmdVDRP(output, option)
+                                    }
+                                    case "VDRW": {
+                                        cmdVDRW(output, option)
+                                    }
+                                    case "CONN": {
+                                        cmdCONN(output, option)
+                                    }
                                     case "QUIT": {
                                         output.write("221 jonglisto closing connection\n")
                                         output.flush
@@ -101,7 +125,6 @@ class SvdrpHandler implements Runnable {
                                         client.close
                                         return;
                                     }
-
                                     default: {
                                         // unkown command
                                         output.write("221 unknown command\n")
@@ -120,7 +143,7 @@ class SvdrpHandler implements Runnable {
                     return;
                 }
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e)
         } finally {
             if (input !== null) {
@@ -138,13 +161,15 @@ class SvdrpHandler implements Runnable {
                     // ignore
                 }
             }
+
+            log.info("> Closing connection to " + client.remoteSocketAddress)
         }
     }
 
     def writeResponse(BufferedWriter output, List<String> strings, String code) throws IOException {
         if (strings.size > 0) {
             for (var i = 0; i < strings.size; i++) {
-                output.write(code + (if (i === strings.size - 1) " " else "-") + strings.get(i) + "\n")
+                output.write(code + (if(i === strings.size - 1) " " else "-") + strings.get(i) + "\n")
             }
         } else {
             output.write("950 empty result\n");
@@ -175,10 +200,9 @@ class SvdrpHandler implements Runnable {
         val fav = Configuration.instance.favourites?.favourite
         if (fav !== null && fav.size > 0) {
             result = Configuration.instance.favourites.favourite //
-                        .stream() //
-                        .filter(s | s.systems.contains(filterCriteria))
-                        .map(s | s.name) //
-                        .collect(Collectors.toList())
+            .stream() //
+            .filter(s|s.systems.contains(filterCriteria)).map(s|s.name) //
+            .collect(Collectors.toList())
         } else {
             result = Collections.emptyList
         }
@@ -195,9 +219,9 @@ class SvdrpHandler implements Runnable {
             val favourites = Configuration.instance.favourites?.favourite
             if (favourites !== null && favourites.size > 0) {
                 val fav = favourites //
-                            .stream() //
-                            .filter(s | s.name.toUpperCase == name) //
-                            .findFirst
+                .stream() //
+                .filter(s|s.name.toUpperCase == name) //
+                .findFirst
                 if (fav.isPresent) {
                     result = fav.get().channel
                 } else {
@@ -242,12 +266,14 @@ class SvdrpHandler implements Runnable {
                 val vdr = Configuration.getInstance.findVdr(client.inetAddress.hostAddress, Integer.valueOf(svdrpPort))
 
                 if (!vdr.isPresent) {
-                    output.write("950 VDR " + client.inetAddress.hostAddress + ":" + svdrpPort + " is not configured\n");
+                    output.write("950 VDR " + client.inetAddress.hostAddress + ":" + svdrpPort +
+                        " is not configured\n");
                 } else {
                     val job = new Jobs
 
                     val dateTime = DateTimeUtil.toDateTime(Long.valueOf(time))
-                    val timeFormat = String.format("0 %d %d %d %d ? %d", dateTime.minute, dateTime.hour, dateTime.dayOfMonth, dateTime.monthValue, dateTime.year)
+                    val timeFormat = String.format("0 %d %d %d %d ? %d", dateTime.minute, dateTime.hour,
+                        dateTime.dayOfMonth, dateTime.monthValue, dateTime.year)
 
                     job.id = Utils.nextRand.toString
                     job.active = true
@@ -271,7 +297,7 @@ class SvdrpHandler implements Runnable {
             } else {
                 output.write("950 ALRM option are invalid '" + option + "'\n");
             }
-        } catch (Exception  e) {
+        } catch (Exception e) {
             output.write("950 ALRM option are invalid '" + option + "'\n");
         }
 
@@ -287,7 +313,8 @@ class SvdrpHandler implements Runnable {
             } catch (Exception e) {
                 e.printStackTrace
 
-                output.write("950 ALRL cannot identify VDR " + client.inetAddress.hostAddress + ":" + commandLine + "\n")
+                output.write("950 ALRL cannot identify VDR " + client.inetAddress.hostAddress + ":" + commandLine +
+                    "\n")
                 output.flush
                 return
             }
@@ -298,17 +325,18 @@ class SvdrpHandler implements Runnable {
                 val ivdr = vdr.get
 
                 val list = Configuration.instance.jcron.jobs.stream() //
-                   .filter(s | s.action !== null && s.action.vdrAction !== null && s.action.vdrAction.vdr == ivdr.name) //
-                   .collect(Collectors.toList)
+                .filter(s|s.action !== null && s.action.vdrAction !== null && s.action.vdrAction.vdr == ivdr.name) //
+                .collect(Collectors.toList)
 
                 if (list.size > 0) {
-                    list.forEach(s | {
+                    list.forEach( s |
+                        {
                         if (s.action.vdrAction !== null && s.action.vdrAction.type == "pluginMessage") {
                             val matcher = cmdPattern.matcher(s.action.vdrAction.parameter)
                             if (matcher.matches) {
                                 val sb = new StringBuilder
                                 sb.append(s.id).append(" ")
-                                sb.append(if (s.active) "1"  else "0").append(" ")
+                                sb.append(if(s.active) "1" else "0").append(" ")
                                 sb.append(Utils.getNextScheduleTime(s.time)).append(" ")
                                 sb.append(matcher.group(1)).append(" ")
                                 sb.append(matcher.group(2))
@@ -316,7 +344,7 @@ class SvdrpHandler implements Runnable {
                                 response.add(sb.toString)
                             }
                         }
-                    })
+                        })
 
                     if (response.size === 0) {
                         output.write("901 no alarms found\n")
@@ -333,7 +361,8 @@ class SvdrpHandler implements Runnable {
                     output.write("901 no alarms found\n")
                 }
             } else {
-                output.write("950 ALRL cannot identify VDR " + client.inetAddress.hostAddress + ":" + commandLine + "\n")
+                output.write("950 ALRL cannot identify VDR " + client.inetAddress.hostAddress + ":" + commandLine +
+                    "\n")
             }
         } catch (Exception e) {
             e.printStackTrace
@@ -349,8 +378,8 @@ class SvdrpHandler implements Runnable {
 
             if (splitted.length == 2) {
                 val job = Configuration.instance.jcron.jobs.stream() //
-                                .filter(s | s.id.equals(splitted.get(1))) //
-                                .findFirst
+                .filter(s|s.id.equals(splitted.get(1))) //
+                .findFirst
 
                 if (job.isPresent) {
                     if ("toggle".equals(splitted.get(0))) {
@@ -376,11 +405,13 @@ class SvdrpHandler implements Runnable {
     private def cmdVDRL(BufferedWriter output) throws IOException {
         val result = new ArrayList<String>
 
-        Configuration.instance.vdrNames.forEach[s | {
-            val vdr = Configuration.instance.getVdr(s)
+        Configuration.instance.vdrNames.forEach [ s |
+            {
+                val vdr = Configuration.instance.getVdr(s)
 
-            result.add(String.format("%s %s %s", vdr.name.replace(" ", "|"), vdr.host, vdr.port))
-        }]
+                result.add(String.format("%s %s %s", vdr.name.replace(" ", "|"), vdr.host, vdr.port))
+            }
+        ]
 
         for (var i = 0; i < result.size(); i++) {
             if (i === result.size() - 1) {
@@ -400,15 +431,18 @@ class SvdrpHandler implements Runnable {
 
         if (vdr !== null) {
             val stat = SvdrpClient.instance.getStat(vdr)
-            val free  = stat.toStringFree.replace(" ", "|")
+            val free = stat.toStringFree.replace(" ", "|")
             val total = stat.toStringTotal.replace(" ", "|")
             val usedPerc = stat.toStringUsedPerc
 
-            result.add(String.format("%s %s %s %s", SvdrpClient.instance.getVdrVersion(vdr), free, total, usedPerc.toString))
+            result.add(
+                String.format("%s %s %s %s", SvdrpClient.instance.getVdrVersion(vdr), free, total, usedPerc.toString))
 
-            SvdrpClient.instance.getPlugins(vdr).forEach[s | {
-                result.add(String.format("%s %s %s", s.plugin, s.version, s.description))
-            }]
+            SvdrpClient.instance.getPlugins(vdr).forEach [ s |
+                {
+                    result.add(String.format("%s %s %s", s.plugin, s.version, s.description))
+                }
+            ]
 
             if (result.size > 0) {
                 for (var i = 0; i < result.size(); i++) {
@@ -433,7 +467,7 @@ class SvdrpHandler implements Runnable {
 
         if (vdr !== null) {
             val pingVdr = Configuration.instance.pingHost(vdr)
-            val svdrpVdr = if (pingVdr) SvdrpClient.instance.pingHost(vdr) else false
+            val svdrpVdr = if(pingVdr) SvdrpClient.instance.pingHost(vdr) else false
 
             if (pingVdr && svdrpVdr) {
                 output.write("900 vdr is alive\n")

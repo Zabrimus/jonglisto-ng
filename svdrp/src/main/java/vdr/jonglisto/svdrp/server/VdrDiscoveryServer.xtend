@@ -15,6 +15,7 @@ import io.netty.channel.socket.DatagramPacket
 import io.netty.channel.socket.nio.NioDatagramChannel
 import io.netty.channel.unix.UnixChannelOption
 import io.netty.util.CharsetUtil
+import vdr.jonglisto.model.VDR
 
 class VdrDiscoveryServer implements Runnable {
     var int PORT = 6419
@@ -32,11 +33,9 @@ class VdrDiscoveryServer implements Runnable {
         }
 
         if (Epoll.isAvailable()) {
-            println("Epoll is available")
             group = new EpollEventLoopGroup(ioThreads)
             channel = EpollDatagramChannel
         } else {
-            println("Epoll is not available")
             group = new NioEventLoopGroup(ioThreads)
             channel = NioDatagramChannel
         }
@@ -76,13 +75,10 @@ class DiscoveryServerHandler extends SimpleChannelInboundHandler<DatagramPacket>
     val handler = new DiscoveryHandler
 
     override void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
-        println("Im Handler...")
-
         val request = packet.content().toString(CharsetUtil.UTF_8)
-        val response = handler.process(packet.sender.address.hostAddress, request)
+        val VDR response = handler.process(packet.sender.address.hostAddress, request)
 
-        println("Request:  " + request)
-        println("Response: " + response)
+        // TODO: Do something useful with the response!
     }
 
     override void channelReadComplete(ChannelHandlerContext ctx) {

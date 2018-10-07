@@ -17,7 +17,7 @@ class SvdrpServerListener implements ServletContextListener {
         // start svdrp server, if port is configured
         if (Configuration.instance.getSvdrpServerPort() > 0) {
             log.info("Start svdrp server using port " + Configuration.instance.getSvdrpServerPort());
-            svdrpServer = new SvdrpServer(Configuration.instance.getSvdrpServerPort(), 10);
+            svdrpServer = new SvdrpServer(Configuration.instance.getSvdrpServerPort(), 20);
             new Thread(svdrpServer).start
         }
     }
