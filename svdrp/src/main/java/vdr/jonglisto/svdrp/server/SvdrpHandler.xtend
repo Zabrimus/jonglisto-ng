@@ -47,7 +47,7 @@ class SvdrpHandler implements Runnable {
             output = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))
 
             // send greeting
-            output.write("220 jonglisto SVDRP VideoDiskRecorder 2.4.0; Mon Jan 01 10:00:00 2018; UTF-8\n");
+            output.write("220 " + Configuration.instance.discoveryServername + " SVDRP VideoDiskRecorder 2.4.0; Mon Jan 01 10:00:00 2018; UTF-8\n");
             output.flush();
 
             log.info("> Waiting for Response: " + client.remoteSocketAddress)
@@ -118,7 +118,7 @@ class SvdrpHandler implements Runnable {
                                         cmdCONN(output, option)
                                     }
                                     case "QUIT": {
-                                        output.write("221 jonglisto closing connection\n")
+                                        output.write("221 " + Configuration.instance.discoveryServername + " closing connection\n")
                                         output.flush
                                         output.close
                                         input.close
@@ -177,7 +177,7 @@ class SvdrpHandler implements Runnable {
     }
 
     private def cmdPING(BufferedWriter output) throws IOException {
-        output.write("250 jonglisto-ng is alive\n");
+        output.write("250 " + Configuration.instance.discoveryServername + " is alive\n");
         output.flush();
     }
 
@@ -501,10 +501,7 @@ class SvdrpHandler implements Runnable {
     }
 
     private def cmdCONN(BufferedWriter output, String option) throws IOException {
-        log.debug("CONN received...");
-
         val port = Configuration.getInstance.svdrpServerPort;
-        // output.write("SVDRP:discover name:jonglisto port:" + port + " vdrversion:20400 apiversion:20400 timeout:300");
         output.write("250 OK");
         output.flush();
     }

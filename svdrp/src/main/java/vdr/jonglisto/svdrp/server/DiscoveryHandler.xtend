@@ -25,9 +25,9 @@ class DiscoveryHandler {
             clientName = m.group(1)
             timeout = Integer.parseInt(m.group(5))
 
-            if ("jonglisto".equals(clientName)) {
+            if (clientName.startsWith("jonglisto") || clientName.equals(Configuration.instance.discoveryServername)) {
                 // ignoring loopback
-                log.info("Ignore loopback UDP request");
+                log.info("Ignore loopback UDP request for '" + clientName + "'");
                 return null;
             }
 

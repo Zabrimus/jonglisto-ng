@@ -166,7 +166,7 @@ class SvdrpClient {
     }
 
     def sendConn(VDR vdr) {
-        val resp = vdr.command("CONN SVDRP:discover name:jonglisto port:" + Configuration.instance.svdrpServerPort + " vdrversion:20400 apiversion:20400 timeout:300")
+        val resp = vdr.command("CONN SVDRP:discover name:" + Configuration.instance.discoveryServername + " port:" + Configuration.instance.svdrpServerPort + " vdrversion:20400 apiversion:20400 timeout:300")
 
         if (resp.code == 250) {
             log.info("VDR " + vdr.ip + ":" + vdr.port + " has version at least 2.4. Good")

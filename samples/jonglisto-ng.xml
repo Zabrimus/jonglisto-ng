@@ -2,6 +2,10 @@
 
 <!-- configuration of jonglisto-ng -->
 <jonglisto>
+    <!-- server name to be used by VDR discovery, defaults to "jonglisto" -->
+    <!--
+    <servername>jonglisto</servername>
+    -->
     <!-- configuration directory in which jonglisto-ng can store some configuration files -->
     <directory dir="/var/jonglisto-ng" />
 

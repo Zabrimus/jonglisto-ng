@@ -55,6 +55,7 @@ class VdrDiscoveryServer implements Runnable {
 
             if (Epoll.isAvailable()) {
                 bootstrap.option(UnixChannelOption.SO_REUSEPORT, true);
+                bootstrap.option(UnixChannelOption.SO_REUSEADDR, true);
             }
 
             bootstrap.handler(new DiscoveryServerHandler());

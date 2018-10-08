@@ -5,6 +5,14 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
+      <xs:element type="xs:string" name="servername" maxOccurs="1" minOccurs="0" >
+         <xs:annotation>
+             <xs:documentation>
+                Server name which is used by the VDR discovery. Allows multiple jonglisto-ng instances
+                within the same network. Defaults to "jonglisto".
+                </xs:documentation>
+            </xs:annotation>
+        </xs:element>
         <xs:element name="directory">
           <xs:annotation>
             <xs:documentation>

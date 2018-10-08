@@ -101,6 +101,8 @@ class Configuration {
     static ZoneId defaultZoneId
     static String defaultZoneStr
 
+    static String discoveryServerName;
+
     private new() {
         try {
             var configObjectFactory = new ObjectFactory
@@ -109,27 +111,32 @@ class Configuration {
             var jcronObjectFactory = new vdr.jonglisto.configuration.jaxb.jcron.ObjectFactory
             var scraperObjectFactory = new vdr.jonglisto.configuration.jaxb.scraper.ObjectFactory
             var epgseachObjectFactory = new vdr.jonglisto.configuration.jaxb.extepgsearch.ObjectFactory
-    
+
             val jc = JAXBContext.newInstance(configObjectFactory.class, remoteObjectFactory.class, favouriteObjectFactory.class, jcronObjectFactory.class, scraperObjectFactory.class, epgseachObjectFactory.class);
-    
+
             unmarshaller = jc.createUnmarshaller()
             marshaller = jc.createMarshaller()
-    
+
             val xmlFile = new File(configurationFile)
             val remoteFile = new File(remoteFile)
-    
+
             val config = unmarshaller.unmarshal(xmlFile) as Jonglisto
             remoteConfig = unmarshaller.unmarshal(remoteFile) as Remote
-    
+
             registerVdrs(config)
             registerEpgTimeSelect(config)
             registerEpgInformation(config)
             registerDbInformation(config)
             registerAllowedCommands(config)
-    
+
             defaultSvdrp = config.svdrpCommandList?.command
             customDirectory = config.directory?.dir
-    
+            discoveryServerName = config.servername
+
+            if (isEmpty(discoveryServerName)) {
+                discoveryServerName = "jonglisto"
+            }
+
             try {
                 defaultZoneStr = config.timezone.tz
                 defaultZoneId = TimeZone.getTimeZone(config.timezone.tz).toZoneId
@@ -137,41 +144,41 @@ class Configuration {
                 defaultZoneId = ZoneId.systemDefault()
                 defaultZoneStr = defaultZoneId.id
             }
-    
+
             try {
                 favouriteConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "favourites.xml")) as Favourites
             } catch (Exception e) {
                 favouriteConfig = new Favourites
             }
-    
+
             try {
                 jcronConfig = unmarshaller.unmarshal(new File(customDirectory + File.separator + "jcron.xml")) as Jcron
             } catch (Exception e) {
                 jcronConfig = new Jcron
             }
-    
+
             if (config.disableLogin !== null && config.disableLogin.urlUserParam !== null && config.disableLogin.urlUserParam.length > 0) {
                 loginUserUrlParameter = config.disableLogin.urlUserParam
             } else {
                 loginUserUrlParameter = null
             }
-    
+
             loadExtEpgSearch
-    
+
             showScraperImage = (config.scraper !== null) && config.scraper.images
-    
+
             if (config.scraper !== null && config.scraper.imagePath !== null) {
                 scraperPath = config.scraper.imagePath
             }
-    
+
             svdrpServerPort = config.svdrpPort ?: 0;
-    
+
             SundialJobScheduler.startScheduler
             registerSchedules
-    
-            loadEpgProvider        
+
+            loadEpgProvider
         } catch (JAXBException e) {
-            throw new RuntimeException("Error while creating Configuration", e);            
+            throw new RuntimeException("Error while creating Configuration", e);
         }
     }
 
@@ -269,7 +276,7 @@ class Configuration {
     def saveExtEpgSearch() {
         try {
             val out = new File(customDirectory + File.separator + "extepgsearch.xml")
-            marshaller.marshal(extEpgSearch, out)            
+            marshaller.marshal(extEpgSearch, out)
         } catch (JAXBException e) {
             throw new RuntimeException("eror while saving " + customDirectory + File.separator + "extepgsearch.xml")
         }
@@ -349,6 +356,10 @@ class Configuration {
 
     def getDbInformation() {
         return #{'username' -> dbUsername ,'password' -> dbPassword, 'host' -> dbHost, 'port' -> dbPort, 'database' -> dbDatabase}
+    }
+
+    def getDiscoveryServername() {
+        return discoveryServerName
     }
 
     def pingHost(VDR vdr) {

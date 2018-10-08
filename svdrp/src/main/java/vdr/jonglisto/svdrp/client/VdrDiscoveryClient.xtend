@@ -54,7 +54,7 @@ class VdrDiscoveryClient {
     def sendDiscovery() {
         sendChannel.writeAndFlush(
             new DatagramPacket(
-                Unpooled.copiedBuffer("SVDRP:discover name:jonglisto port:" + Configuration.instance.svdrpServerPort +
+                Unpooled.copiedBuffer("SVDRP:discover name:" + Configuration.instance.discoveryServername + " port:" + Configuration.instance.svdrpServerPort +
                     " vdrversion:20400 apiversion:20400 timeout:300", CharsetUtil.UTF_8),
                 SocketUtils.socketAddress("255.255.255.255", PORT))).sync()
     }

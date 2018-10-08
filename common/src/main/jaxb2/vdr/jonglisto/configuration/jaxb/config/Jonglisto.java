@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.04.02 um 09:42:33 AM CEST 
+// Generiert: 2018.10.08 um 09:42:55 AM CEST 
 //
 
 
@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlValue;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
+ *         &lt;element name="servername" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="directory"&gt;
  *           &lt;complexType&gt;
  *             &lt;simpleContent&gt;
@@ -293,6 +294,7 @@ import javax.xml.bind.annotation.XmlValue;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
+    "servername",
     "directory",
     "configuredVdr",
     "jonglistoPlugin",
@@ -310,6 +312,7 @@ import javax.xml.bind.annotation.XmlValue;
 @XmlRootElement(name = "jonglisto")
 public class Jonglisto {
 
+    protected String servername;
     @XmlElement(required = true)
     protected Jonglisto.Directory directory;
     @XmlElement(required = true)
@@ -334,6 +337,30 @@ public class Jonglisto {
     protected Jonglisto.SvdrpCommandList svdrpCommandList;
     @XmlElement(name = "epg-columns", required = true)
     protected Jonglisto.EpgColumns epgColumns;
+
+    /**
+     * Ruft den Wert der servername-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getServername() {
+        return servername;
+    }
+
+    /**
+     * Legt den Wert der servername-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setServername(String value) {
+        this.servername = value;
+    }
 
     /**
      * Ruft den Wert der directory-Eigenschaft ab.
