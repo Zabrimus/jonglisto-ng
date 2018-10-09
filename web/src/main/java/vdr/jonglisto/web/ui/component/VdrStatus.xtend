@@ -16,18 +16,21 @@ import com.vaadin.ui.Window
 import com.vaadin.ui.themes.ValoTheme
 import de.steinwedel.messagebox.MessageBox
 import java.util.List
+import java.util.Optional
 import java.util.stream.Collectors
 import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.delegate.Svdrp
 import vdr.jonglisto.model.VDR
+import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.util.NetworkUtils
+import vdr.jonglisto.web.i18n.Messages
 
 import static vdr.jonglisto.web.xtend.UIBuilder.*
-import java.util.Optional
 
 // @Log("jonglisto.web")
 class VdrStatus {
+
     Svdrp svdrp = new Svdrp()
 
     Config config = new Config()
@@ -37,12 +40,17 @@ class VdrStatus {
     var ComboBox<String> box
     var VDR vdr
 
+    var Messages messages
+
     def setVdr(VDR vdr) {
         val currentUser = SecurityUtils.subject
-
         this.vdr = vdr
 
-        grid = new GridLayout(3, 2) => [
+        if (messages === null) {
+            messages = new Messages
+        }
+
+        grid = new GridLayout(3, 4) => [
             setSizeFull
 
             // row 1
@@ -58,6 +66,19 @@ class VdrStatus {
             // row 3
             addComponent(new Label("Disk Free:"))
             addComponent(new Label("0"))
+            addComponent(new Label(""))
+
+            // row 4
+            val last = vdr.lastSeen
+            var String lastStr
+            if (last !== null) {
+                lastStr = DateTimeUtil.toTime(last, messages.formatTime) + " " + DateTimeUtil.toDate(last, messages.formatDate)
+            } else {
+                lastStr = "never"
+            }
+
+            addComponent(new Label(messages.mainLastSeen))
+            addComponent(new Label(lastStr))
             addComponent(new Label(""))
         ]
 
@@ -117,6 +138,7 @@ class VdrStatus {
         getPingStatus()
         getSvdrpStatus()
         getDiskStatus()
+        getLastSeen()
     }
 
     private def svdrpCommand() {
@@ -210,7 +232,25 @@ class VdrStatus {
 
     private def void getDiskStatus() {
         val result = svdrp.getStat(vdr)
-        grid.replaceComponent(grid.getComponent(1, 2), new Label(result.toStringFree))
+        if (result !== null) {
+            grid.replaceComponent(grid.getComponent(1, 2), new Label(result.toStringFree))
+        }
+    }
+
+    private def void getLastSeen() {
+        val result = vdr.lastSeen
+
+        val last = vdr.lastSeen
+        var String lastStr
+        if (last !== null) {
+            lastStr = DateTimeUtil.toTime(last, messages.formatTime) + " " + DateTimeUtil.toDate(last, messages.formatDate)
+        } else {
+            lastStr = "never"
+        }
+
+        if (result !== null) {
+            grid.replaceComponent(grid.getComponent(1, 3), new Label(lastStr))
+        }
     }
 
     private def getStatusHtml(boolean b) {

@@ -346,6 +346,14 @@ class Configuration {
         }
     }
 
+    def findVdr(String name) {
+        if (name !== null) {
+            return vdrs.values.stream.filter(v | name.equals(v.name) || name.equals(v.instance)).findFirst
+        } else {
+            return Optional.empty
+        }
+    }
+
     def getEpgTimeSelect() {
         return epgTimeSelect
     }
@@ -363,7 +371,7 @@ class Configuration {
     }
 
     def pingHost(VDR vdr) {
-        val command = #["ping", "-c", "1", vdr.ip]
+        val command = #["ping", "-c", "1", "-W", "1", vdr.ip]
 
         try {
             val processBuilder = new ProcessBuilder(command);
@@ -512,7 +520,10 @@ class Configuration {
 
             val port = if (v.port == 0) null else Integer.valueOf(v.port)
 
-            vdrs.put(v.displayName, new VDR(v.displayName, v.host, port, v.name, v.mac))
+            val vdr = new VDR(v.displayName, v.host, port, v.name, v.mac)
+            vdr.setConfigured()
+
+            vdrs.put(v.displayName, vdr)
 
             if (v.name == cfg.epg.ref) {
                 vdrs.put(EPG_VDR, new VDR(EPG_VDR, v.host, port, v.name, v.mac))
@@ -522,6 +533,11 @@ class Configuration {
                 vdrs.put(CHANNEL_VDR, new VDR(CHANNEL_VDR, v.host, port, v.name, v.mac))
             }
         })
+    }
+
+    def addVdr(VDR vdr) {
+        orderedVdr.add(vdr.name)
+        vdrs.put(vdr.name, vdr)
     }
 
     private def registerEpgTimeSelect(Jonglisto cfg) {

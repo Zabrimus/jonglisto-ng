@@ -2,27 +2,27 @@ package vdr.jonglisto.svdrp.server
 
 import java.io.BufferedReader
 import java.io.BufferedWriter
+import java.io.IOException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
-import java.net.Socket
-import vdr.jonglisto.xtend.annotation.Log
-import java.io.IOException
 import java.io.StringWriter
-import vdr.jonglisto.configuration.Configuration
-import java.util.stream.Collectors
+import java.net.Socket
+import java.util.ArrayList
 import java.util.Collections
 import java.util.List
-import java.util.regex.Pattern
-import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
-import vdr.jonglisto.util.DateTimeUtil
-import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs.Action.VdrAction
-import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs.Action
-import vdr.jonglisto.util.Utils
-import vdr.jonglisto.model.VDR
 import java.util.Optional
-import java.util.ArrayList
+import java.util.regex.Pattern
+import java.util.stream.Collectors
+import vdr.jonglisto.configuration.Configuration
+import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
+import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs.Action
+import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs.Action.VdrAction
+import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
+import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.util.NetworkUtils
+import vdr.jonglisto.util.Utils
+import vdr.jonglisto.xtend.annotation.Log
 
 @Log("jonglisto.svdrp.server")
 class SvdrpHandler implements Runnable {
@@ -40,15 +40,19 @@ class SvdrpHandler implements Runnable {
         var BufferedReader input
         var BufferedWriter output
 
-        log.info("> New connection: " + client + ", " + client.inetAddress.hostAddress)
+        log.info("> New connection: " + client)
 
         try {
             input = new BufferedReader(new InputStreamReader(client.getInputStream()))
             output = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))
 
-            // send greeting
-            output.write("220 " + Configuration.instance.discoveryServername + " SVDRP VideoDiskRecorder 2.4.0; Mon Jan 01 10:00:00 2018; UTF-8\n");
-            output.flush();
+            input.mark(1)
+            if (input.read() == -1) {
+                // send greeting
+                log.info("Send greeting to " + client)
+                output.write("220 " + Configuration.instance.discoveryServername + " SVDRP VideoDiskRecorder 2.4.0; Mon Jan 01 10:00:00 2018; UTF-8\n");
+                output.flush();
+            }
 
             log.info("> Waiting for Response: " + client.remoteSocketAddress)
 
@@ -57,6 +61,7 @@ class SvdrpHandler implements Runnable {
                 try {
                     var StringWriter command = new StringWriter
                     var int ch;
+                    input.reset
                     while ((ch = input.read()) != -1) {
                         if (ch !== 13 && ch !== 0) {
                             command.append(ch as char)
@@ -70,6 +75,7 @@ class SvdrpHandler implements Runnable {
                                 // do nothing
                             } else if (commandLine.length < 4) {
                                 // unkown command
+                                log.error("Unkown command '" + commandLine + "', client " + client)
                                 output.write("221 unknown command\n")
                                 output.flush
                             } else {
@@ -125,8 +131,44 @@ class SvdrpHandler implements Runnable {
                                         client.close
                                         return;
                                     }
+                                    case "POLL": {
+                                        log.info("POLL received " + client)
+                                        // do nothing, exists only for VDR discovery
+                                        output.write("250 OK\n")
+                                        output.flush
+
+                                        val options = option.split(" ")
+
+                                        // send request to VDR
+                                        var Optional<VDR> vdr
+                                        try {
+                                            vdr = Configuration.getInstance.findVdr(options.get(0))
+
+                                            if (vdr.present) {
+                                                switch (options.get(1)) {
+                                                    case "TIMERS": {
+                                                            val resp = SvdrpClient.instance.getTimerLstt(vdr.get)
+
+                                                            // TODO: This result could be shown in TimersView - if present
+                                                        }
+                                                    default: {
+                                                        log.info("Unknown POLL command: " + options.get(1))
+                                                    }
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            // do nothing
+                                        }
+                                    }
+                                    case "LSTT": {
+                                        log.info("LSTT received " + client)
+                                        // do nothing, exists only for VDR discovery
+                                        output.write("550 No timers defined\n")
+                                        output.flush
+                                    }
                                     default: {
                                         // unkown command
+                                        log.error("Unkown command " + cmd + " " + option + ", client " + client)
                                         output.write("221 unknown command\n")
                                         output.flush
                                     }
@@ -144,6 +186,7 @@ class SvdrpHandler implements Runnable {
                 }
             }
         } catch (IOException e) {
+            e.printStackTrace
             throw new RuntimeException(e)
         } finally {
             if (input !== null) {

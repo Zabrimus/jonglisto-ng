@@ -4,6 +4,7 @@ import java.net.InetAddress
 import java.net.UnknownHostException
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.ToString
+import java.time.LocalDateTime
 
 @Accessors
 @ToString
@@ -18,6 +19,10 @@ class VDR extends BaseData {
     var String mac
 
     var String hostAddress
+
+    var LocalDateTime lastSeen
+    var boolean configured
+    var boolean discovered
 
     new(String name, String host, Integer port, String instanceName, String mac) {
         this.name = name
@@ -55,6 +60,30 @@ class VDR extends BaseData {
         }
 
         return hostAddress
+    }
+
+    def getLastSeen() {
+        return lastSeen
+    }
+
+    def void setLastSeenNow() {
+        lastSeen = LocalDateTime.now
+    }
+
+    def isDiscovered() {
+        return discovered
+    }
+
+    def void setDiscovered() {
+        discovered = true
+    }
+
+    def void setConfigured() {
+        configured = true
+    }
+
+    def isConfigured() {
+        return configured
     }
 
     override int hashCode() {
@@ -108,5 +137,4 @@ class VDR extends BaseData {
 
         return true;
     }
-
 }

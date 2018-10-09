@@ -35,6 +35,8 @@ class DiscoveryHandler {
 
             if (!vdrOpt.isPresent) {
                 vdr = new VDR(clientName, ip, clientPort, timeout);
+                // Configuration.instance.addVdr(vdr)
+                log.info("Add discovered VDR " + vdr)
             } else {
                 vdr = vdrOpt.get
             }
@@ -45,6 +47,8 @@ class DiscoveryHandler {
                 log.info("Discovery request received, but connection to " + ip + ":" + clientPort + " (" + clientName + ") failed")
                 vdr = null
             }
+        } else {
+            log.info("Received: '" + request + "'")
         }
 
         return vdr;

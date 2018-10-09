@@ -53,10 +53,15 @@ class VdrDiscoveryServer implements Runnable {
             bootstrap.group(group) //
                 .channel(channel).option(ChannelOption.SO_BROADCAST, true)
 
+            // bootstrap.option(UnixChannelOption.SO_REUSEPORT, true);
+            bootstrap.option(UnixChannelOption.SO_REUSEADDR, true);
+
+            /*
             if (Epoll.isAvailable()) {
                 bootstrap.option(UnixChannelOption.SO_REUSEPORT, true);
                 bootstrap.option(UnixChannelOption.SO_REUSEADDR, true);
             }
+            */
 
             bootstrap.handler(new DiscoveryServerHandler());
 
@@ -78,6 +83,11 @@ class DiscoveryServerHandler extends SimpleChannelInboundHandler<DatagramPacket>
     override void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
         val request = packet.content().toString(CharsetUtil.UTF_8)
         val VDR response = handler.process(packet.sender.address.hostAddress, request)
+
+        if (response !== null) {
+            response.setLastSeenNow
+            response.setDiscovered()
+        }
 
         // TODO: Do something useful with the response!
     }

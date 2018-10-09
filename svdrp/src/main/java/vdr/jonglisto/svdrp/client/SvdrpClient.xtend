@@ -33,6 +33,8 @@ import vdr.jonglisto.xtend.annotation.Log
 import static extension org.apache.commons.lang3.StringUtils.*
 import java.io.StringWriter
 import java.util.concurrent.ExecutionException
+import vdr.jonglisto.model.VDRDiskStat
+import vdr.jonglisto.svdrp.server.SvdrpHandler
 
 @Log("jonglisto.svdrp.client")
 class SvdrpClient {
@@ -209,7 +211,11 @@ class SvdrpClient {
 
     def getTimer(VDR vdr) {
         // do not cache timers, because they are volatile
-        return readTimer(vdr)
+        return readTimer(vdr, true)
+    }
+
+    def getTimerLstt(VDR vdr) {
+        return readTimer(vdr, false)
     }
 
     def getRecordings(VDR vdr) {
@@ -279,8 +285,13 @@ class SvdrpClient {
     }
 
     def getStat(VDR vdr) {
-        val response = vdr.command("STAT disk", 250)
-        return Parser.parseStat(response.lines.get(0))
+        try {
+            val response = vdr.command("STAT disk", 250)
+            return Parser.parseStat(response.lines.get(0))
+        } catch (ConnectionException e) {
+            // VDR is possibly down
+            return null as VDRDiskStat
+        }
     }
 
     def getEpgsearchSearchTimerList(VDR vdr) {
@@ -659,10 +670,10 @@ class SvdrpClient {
         return Parser.parseEpg(response.lines)
     }
 
-    private def List<Timer> readTimer(VDR vdr) {
+    private def List<Timer> readTimer(VDR vdr, boolean usePlugin) {
         var List<Timer> result
 
-        if (isJonglistoPluginCommandAllowed(vdr, "LSTT")) {
+        if (isJonglistoPluginCommandAllowed(vdr, "LSTT") && usePlugin) {
             result = vdr.command("PLUG jonglisto LSTT", 250, [ Parser.parseTimer(it.lines) ], [ Collections.emptyList ])
 
             result.forEach[s | {
@@ -705,10 +716,11 @@ class SvdrpClient {
 
         log.debug("Command: " + command)
 
+        vdr.setLastSeenNow
         val resp = connection.send(command)
         if (resp.code != desiredCode && desiredCode != -1) {
             val errorMessage = "Code: " + resp.code + ": " + resp.lines.stream.collect(Collectors.joining("\n"))
-            log.info("Command failed:" + command + "\n" + errorMessage)
+            log.debug("Command failed:" + command + "\n" + errorMessage)
 
             throw new ExecutionFailedException(errorMessage)
         }
@@ -729,6 +741,7 @@ class SvdrpClient {
 
         log.debug("Command: " + command)
 
+        vdr.setLastSeenNow
         return connection.send(command)
     }
 

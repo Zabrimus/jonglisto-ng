@@ -50,31 +50,31 @@ class Connection {
 
     def String connect() {
         log.debug("connect to " + host + ":" + port)
-        
+
         try {
             // connect to VDR
             socket = new Socket();
             val sa = new InetSocketAddress(host, port);
-    
+
             socket.connect(sa, connectTimeout);
             socket.setSoTimeout(readTimeout);
-    
+
             output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), 8192);
             input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"), 8192);
-    
+
             // read greeting
             var response = readResponse
-    
+
             if (response.code != 220) {
                 throw new RuntimeException("Code != 220")
             }
-    
+
             val greet = response.lines.get(0)
             val matcher = greetingPattern.matcher(greet);
             if (!matcher.matches) {
                 throw new RuntimeException("Greeting error? " + greet)
             }
-    
+
             // check encoding
             val encoding = matcher.group(2).trim
             if ("UTF-8" != encoding) {
@@ -82,13 +82,13 @@ class Connection {
                 output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), encoding), 8192);
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream(), encoding), 8192);
             }
-    
+
             version = matcher.group(1)
-    
+
             return matcher.group(1)
         } catch (Exception e) {
             throw new RuntimeException("connection failed: " + host + ":" + port)
-        } 
+        }
     }
 
     def String getVersion() {
@@ -130,8 +130,11 @@ class Connection {
             output.write(command.replaceAll("\n", "|"))
             output.newLine
             output.flush
-            
-            return readResponse
+
+            val rsp = readResponse
+            rsp.clientSocket = socket
+
+            return rsp
         } catch (IOException e) {
             // connection is broken -> invalidate
             SvdrpClient.getInstance().invalidateConnection(this)
@@ -144,10 +147,10 @@ class Connection {
             for (var i = 0; i < command.size; i++) {
                 val s = command.get(i)
                 output.write(s.replaceAll("\n", "|"))
-                output.newLine                
+                output.newLine
             }
             output.flush
-            
+
             return readResponse
         } catch (IOException e) {
             // connection is broken -> invalidate
@@ -171,7 +174,7 @@ class Connection {
             output.newLine
 
             output.flush
-            
+
             return readResponse
         } catch (IOException e) {
             // connection is broken -> invalidate

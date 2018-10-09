@@ -30,6 +30,16 @@ public class DateTimeUtil {
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), Configuration.getInstance().getDefaultZoneId()).toLocalDate().format(dateFormatter);
     }
 
+    public static String toDate(LocalDateTime ldt, String dateFormat) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
+        return ldt.format(dateFormatter);
+    }
+
+    public static String toTime(LocalDateTime ldt, String timeFormat) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(timeFormat);
+        return ldt.format(dateFormatter);
+    }
+
     public static String toDateName(long unixTime, String dateFormat) {
         return toDate(unixTime, "EEEE, " + dateFormat);
     }
