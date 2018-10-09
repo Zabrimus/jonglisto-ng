@@ -1,74 +1,75 @@
-13th Street Universal|13thstreet 
-ARD|daserste 
-Auto Motor Sport|automotorundsporttv 
+13th Street Universal|13thstreet
+ARD|daserste
+Auto Motor Sport|automotorundsporttv
 AutoMotorSportChannel|automotorundsporttv
-AXN Action|axn 
-B3|brfernsehennord 
-BBC Entertainment|bbc 
+AXN Action|axn
+B3|brfernsehennord
+BBC Entertainment|bbc
 Bloomberg Europe TV|bloombergtv
-BloombergTV|bloomberg 
-Blue Movie|bluemovie1 
-BR Alpha|ardalpha 
-BR|brfernsehennord 
-BR Fernsehen Süd|brfernsehennord 
-CNN International|cnn 
-Comedy Central|vivacomedycentral 
-DELUXE MUSIC TV|deluxemusic 
-Discovery Channel|discovery 
-Discovery Channel (S)|discovery 
-Disney Channel|disney 
-Disney SD|disney 
-DW (Europe)|deutscheswetterfernsehen 
-E! Entertainment Television|eentertainment 
-euronews|euronewsd 
-EURONEWS|euronewsd 
-EUROSPORT|eurosport1 
-FOX Channel|fox 
-Fox Serie|fox 
-Fox Serie (S)|fox 
-Glitz*|tntglitz 
-H3|hrfernsehen 
-Handshake 2 Deutschland|h2dhandshake2deutschland 
-History Channel|history 
-Home Shopping Europe|hse24 
-Kabel|kabeleins 
-MDR|mdrsanhalt 
-MDR Sachsen-Anhalt|mdrsanhalt 
-MDR Sachsen|mdrsanhalt 
-MDR Thüringen|mdrsanhalt 
+BloombergTV|bloomberg
+Blue Movie|bluemovie1
+BR Alpha|ardalpha
+BR|brfernsehennord
+BR Fernsehen Süd|brfernsehennord
+CNN International|cnn
+Comedy Central|vivacomedycentral
+DELUXE MUSIC TV|deluxemusic
+Discovery Channel|discovery
+Discovery Channel (S)|discovery
+Disney Channel|disney
+Disney SD|disney
+DW (Europe)|deutscheswetterfernsehen
+E! Entertainment Television|eentertainment
+euronews|euronewsd
+EURONEWS|euronewsd
+EUROSPORT|eurosport1
+FOX Channel|fox
+Fox Serie|fox
+Fox Serie (S)|fox
+Glitz*|tntglitz
+H3|hrfernsehen
+Handshake 2 Deutschland|h2dhandshake2deutschland
+History Channel|history
+Home Shopping Europe|hse24
+Kabel|kabeleins
+MDR|mdrsanhalt
+MDR Sachsen-Anhalt|mdrsanhalt
+MDR Sachsen|mdrsanhalt
+MDR Thüringen|mdrsanhalt
 Motorvision TV|motorvision
 MOTORVISION TV|motorvision
-National Geographic|natgeo 
-National Geographic (S)|natgeo 
-National Geographic Wild|natgeowild 
-NDR HH|ndrfshh 
-NDR MV|ndrfsmv 
-NDR|ndrfshh 
-NDR NI|ndrfsnds 
-NDR SH|ndrfssh 
-Nickelodeon/Nicknight|nickelodeon 
-Nick|nickelodeon 
-QVC Beauty & Style|qvcbeauty 
+National Geographic|natgeo
+National Geographic (S)|natgeo
+National Geographic Wild|natgeowild
+NDR HH|ndrfshh
+NDR MV|ndrfsmv
+NDR|ndrfshh
+NDR NI|ndrfsnds
+NDR SH|ndrfssh
+Nickelodeon/Nicknight|nickelodeon
+Nick|nickelodeon
+QVC Beauty & Style|qvcbeauty
 RTL Nitro|nitro
 RTL|rtltelevision
-SCI FI|syfy 
-Silverline|silverlinemoviechannel 
-Sky Action|skycinemaaction 
-SKY Action|skycinemaaction 
-SKY Cinema Hits|skyhits 
-Sky Comedy|skycinemacomedy 
-SKY Comedy|skycinemacomedy 
-Sky Emotion|skycinemaemotion 
-SKY Emotion|skycinemaemotion 
-Sky Nostalgie|skycinemanostalgie 
-SKY Nostalgie|skycinemanostalgie 
+SCI FI|syfy
+Silverline|silverlinemoviechannel
+Sky Action|skycinemaaction
+SKY Action|skycinemaaction
+SKY Cinema Hits|skyhits
+Sky Comedy|skycinemacomedy
+SKY Comedy|skycinemacomedy
+Sky Emotion|skycinemaemotion
+SKY Emotion|skycinemaemotion
+Sky Nostalgie|skycinemanostalgie
+SKY Nostalgie|skycinemanostalgie
 Sony Entertainment|sonychannel
-Sony Entertainment Television|sonychannel 
-sportdigital.tv|sportdigital 
-S RTL|superrtl 
-SWR BW|swrbd 
-SWR RP|swrrp 
-SWR|swrbd 
-VIVA|vivacomedycentral 
+Sony Entertainment Television|sonychannel
+sportdigital.tv|sportdigital
+S RTL|superrtl
+SWR BW|swrbd
+SWR RP|swrrp
+SWR|swrbd
+Universal TV|universalchannel
+VIVA|vivacomedycentral
 Welt der Wunder TV|weltderwunder
-Wetter Fernsehen|deutscheswetterfernsehen 
+Wetter Fernsehen|deutscheswetterfernsehen

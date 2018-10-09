@@ -1,7 +1,8 @@
 0.2.6-snapshot:
 New:
 - upgrade to Vaadin 8.5.2 and different other library upgrades
-- VDR discovery on UDO Port 6419 (started but not finished)
+- VDR discovery on UDO Port 6419
+- some socket and communication bugfixes
 
 0.2.5:
 New:
