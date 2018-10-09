@@ -22,6 +22,15 @@ class Svdrp implements Serializable {
     public final static long serialVersionUID = 1L;
 
     @TraceLog
+    def refreshChannelCache() {
+        SvdrpClient.getInstance.refreshChannelCache
+    }
+
+    def refreshEpgCache() {
+        SvdrpClient.getInstance.refreshEpgCache
+    }
+
+    @TraceLog
     def pingHost(VDR vdr) {
         SvdrpClient.getInstance.pingHost(vdr)
     }

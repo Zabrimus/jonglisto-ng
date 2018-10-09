@@ -630,7 +630,7 @@ class EventGrid {
 
     private def updateFilter() {
         if (grid === null) {
-            log.error("Internal Error: Grid is yot yet initialized in updateFilter")
+            log.error("Internal Error: Grid is not yet initialized in updateFilter")
             return
         }
 

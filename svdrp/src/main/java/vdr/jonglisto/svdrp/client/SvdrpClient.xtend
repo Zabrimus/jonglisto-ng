@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache
 import com.google.common.cache.RemovalListener
 import com.google.common.cache.RemovalNotification
 import java.io.StringReader
+import java.io.StringWriter
 import java.util.ArrayList
 import java.util.Collections
 import java.util.HashMap
@@ -13,6 +14,7 @@ import java.util.List
 import java.util.Map
 import java.util.Optional
 import java.util.Set
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 import vdr.jonglisto.configuration.Configuration
@@ -27,14 +29,11 @@ import vdr.jonglisto.model.EpgsearchSearchTimer.Field
 import vdr.jonglisto.model.Recording
 import vdr.jonglisto.model.Timer
 import vdr.jonglisto.model.VDR
+import vdr.jonglisto.model.VDRDiskStat
 import vdr.jonglisto.model.VdrPlugin
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
-import java.io.StringWriter
-import java.util.concurrent.ExecutionException
-import vdr.jonglisto.model.VDRDiskStat
-import vdr.jonglisto.svdrp.server.SvdrpHandler
 
 @Log("jonglisto.svdrp.client")
 class SvdrpClient {
@@ -103,6 +102,14 @@ class SvdrpClient {
     def cleanupCache() {
         connections.cleanUp
         longCache.cleanUp
+    }
+
+    def refreshChannelCache() {
+        longCache.invalidate("CHANNEL")
+    }
+
+    def refreshEpgCache() {
+        longCache.invalidate("EPG")
     }
 
     def doShutdown() {

@@ -319,6 +319,20 @@ class EpgView extends BaseView {
                 ]
             ]
 
+            cssLayout(it) [
+                button("Reload Channel/EPG") [
+                    icon = VaadinIcons.REFRESH
+                    description = "Reload Channel/EPG"
+
+                    addClickListener(s | {
+                        svdrp.refreshChannelCache
+                        svdrp.refreshEpgCache
+
+                        listTime
+                    })
+                ]
+            ]
+
             epgTypeSelect.selectedItem = messages.epgTypeTime
         ]
 
