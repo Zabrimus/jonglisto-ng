@@ -27,6 +27,9 @@ import vdr.jonglisto.xtend.annotation.Log
 @Log("jonglisto.svdrp.server")
 class SvdrpHandler implements Runnable {
 
+    static final List<SvdrpHandler> activeTasks = Collections.synchronizedList(new ArrayList<SvdrpHandler>());
+    static boolean intentiallyClosed = false
+
     static val alrmPattern = Pattern.compile("^(\\d+) +(\\d+) +(.*?) +(.*?)$")
     static val cmdPattern = Pattern.compile("^(?i)plug +jonglisto +swit +(.*?) +(.*)$")
 
@@ -36,6 +39,20 @@ class SvdrpHandler implements Runnable {
         this.client = client
     }
 
+
+    static def void shutdown() {
+        synchronized(activeTasks) {
+            intentiallyClosed = true
+            for (s : activeTasks) {
+                s.interruptMe()
+            }
+        }
+    }
+
+    def void interruptMe() {
+        client.close
+    }
+
     override run() {
         var BufferedReader input
         var BufferedWriter output
@@ -43,6 +60,8 @@ class SvdrpHandler implements Runnable {
         log.info("> New connection: " + client)
 
         try {
+            activeTasks.add(this);
+
             input = new BufferedReader(new InputStreamReader(client.getInputStream()))
             output = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))
 
@@ -54,7 +73,7 @@ class SvdrpHandler implements Runnable {
             log.info("> Waiting for Response: " + client.remoteSocketAddress)
 
             // endless loop
-            while (true) {
+            while (!intentiallyClosed) {
                 try {
                     var StringWriter command = new StringWriter
                     var int ch;
@@ -176,9 +195,14 @@ class SvdrpHandler implements Runnable {
                     // socket seems to be closed
                     return
                 } catch (IOException e) {
-                    println("Socket Error: " + e);
-                    e.printStackTrace;
-                    return;
+                    if (!intentiallyClosed) {
+                        println("Socket Error: " + e);
+                        e.printStackTrace;
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace
+                } catch(Throwable e) {
+                    e.printStackTrace
                 }
             }
         } catch (IOException e) {
@@ -188,7 +212,7 @@ class SvdrpHandler implements Runnable {
             if (input !== null) {
                 try {
                     input.close
-                } catch (IOException exc) {
+                } catch (Exception exc) {
                     // ignore
                 }
             }
@@ -196,12 +220,15 @@ class SvdrpHandler implements Runnable {
             if (output !== null) {
                 try {
                     output.close
-                } catch (IOException exc) {
+                } catch (Exception exc) {
                     // ignore
                 }
             }
 
+            activeTasks.remove(this);
+
             log.info("> Closing connection to " + client.remoteSocketAddress)
+            System.out.println("> Closing connection to " + client.remoteSocketAddress)
         }
     }
 
@@ -544,5 +571,4 @@ class SvdrpHandler implements Runnable {
         output.write("250 OK");
         output.flush();
     }
-
 }

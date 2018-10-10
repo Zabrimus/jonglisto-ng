@@ -3,7 +3,6 @@ package vdr.jonglisto.web
 import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.event.Observes
 import javax.inject.Inject
-import javax.servlet.ServletContext
 
 @ApplicationScoped
 class ApplicationLifecycle {
@@ -20,14 +19,14 @@ class ApplicationLifecycle {
     @Inject
     SvdrpDiscoveryLifecycle discovery
 
-    def onStartup(@Observes @AppStartEvent ServletContext ctx) {
+    def onStartup(@Observes @AppStartEvent String type) {
         config.onStartup
         svdrpClient.onStartup
         svdrpServer.onStartup
         discovery.onStartup
     }
 
-    def onStop(@Observes @AppStopEvent ServletContext ctx) {
+    def onStop(@Observes @AppStopEvent String type) {
         discovery.onStop
         svdrpServer.onStop
         svdrpClient.onStop

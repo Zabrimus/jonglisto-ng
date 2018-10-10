@@ -37,6 +37,7 @@ import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.ComplexPattern
 import java.util.TimeZone
 import java.time.ZoneId
 import javax.xml.bind.JAXBException
+import org.quartz.QuartzScheduler
 
 @Log("jonglisto.configuration")
 class Configuration {
@@ -454,8 +455,10 @@ class Configuration {
             }]
         }
 
-        //SundialJobScheduler.shutdown
-        SundialJobScheduler.scheduler.shutdown(true)
+        SundialJobScheduler.scheduler.shutdown(false)
+        SundialJobScheduler.shutdown()
+
+        //val a = SundialJobScheduler.scheduler as QuartzScheduler
     }
 
     static def getInstance() {

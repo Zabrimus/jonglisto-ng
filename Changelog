@@ -3,6 +3,7 @@ New:
 - upgrade to Vaadin 8.5.2 and different other library upgrades
 - VDR discovery on UDO Port 6419
 - some socket and communication bugfixes
+- (nearly) proper shutdown
 
 0.2.5:
 New:
