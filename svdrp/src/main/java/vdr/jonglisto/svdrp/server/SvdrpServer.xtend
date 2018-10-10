@@ -6,6 +6,7 @@ import java.net.SocketTimeoutException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import vdr.jonglisto.xtend.annotation.Log
+import java.util.concurrent.ThreadPoolExecutor
 
 @Log("jonglisto.svdrp.server")
 class SvdrpServer implements Runnable {
@@ -31,14 +32,26 @@ class SvdrpServer implements Runnable {
             executor = Executors.newFixedThreadPool(executorCount);
 
             while (running) {
+                log.info("IN RUNNING")
+
                 try {
                     val clientSocket = serverSocket.accept
                     val worker = new SvdrpHandler(clientSocket)
                     executor.execute(worker)
+
+                    log.error("------ Print Queue start")
+                    val ex = executor as ThreadPoolExecutor
+                    ex.queue.forEach[q | {
+                        log.error("Queue: " + q)
+                    }]
+                    log.error("------ Print Queue end")
+
                 } catch (SocketTimeoutException e) {
-                    // do nothing. desired accept timeout
+                    // do nothing. accept timeout
                 }
             }
+
+            log.info("IN RUNNING END")
         } catch (IOException e) {
             log.error("Failed to start svdrp server", e)
         } finally {
@@ -57,6 +70,7 @@ class SvdrpServer implements Runnable {
     }
 
     def void stopServer() {
+        log.info("STOP CALLED")
         running = false
     }
 }

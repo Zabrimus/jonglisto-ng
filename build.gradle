@@ -51,6 +51,7 @@ dependencies {
 
     compile libs.guava
     compile libs.xtend
+    compile libs.netty
 
     compile project(':annotation')
     compile project(':common')

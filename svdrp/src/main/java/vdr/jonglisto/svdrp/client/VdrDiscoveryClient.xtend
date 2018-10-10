@@ -48,7 +48,7 @@ class VdrDiscoveryClient {
     }
 
     def stop() {
-        group.shutdownGracefully();
+        group.shutdownGracefully().await
     }
 
     def sendDiscovery() {

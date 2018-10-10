@@ -46,13 +46,10 @@ class SvdrpHandler implements Runnable {
             input = new BufferedReader(new InputStreamReader(client.getInputStream()))
             output = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))
 
-            input.mark(1)
-            if (input.read() == -1) {
-                // send greeting
-                log.info("Send greeting to " + client)
-                output.write("220 " + Configuration.instance.discoveryServername + " SVDRP VideoDiskRecorder 2.4.0; Mon Jan 01 10:00:00 2018; UTF-8\n");
-                output.flush();
-            }
+            // send greeting
+            log.info("Send greeting to " + client)
+            output.write("220 " + Configuration.instance.discoveryServername + " SVDRP VideoDiskRecorder 2.4.0; Mon Jan 01 10:00:00 2018; UTF-8\n");
+            output.flush();
 
             log.info("> Waiting for Response: " + client.remoteSocketAddress)
 
@@ -61,7 +58,6 @@ class SvdrpHandler implements Runnable {
                 try {
                     var StringWriter command = new StringWriter
                     var int ch;
-                    input.reset
                     while ((ch = input.read()) != -1) {
                         if (ch !== 13 && ch !== 0) {
                             command.append(ch as char)

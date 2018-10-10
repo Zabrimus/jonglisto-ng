@@ -45,6 +45,8 @@ class VdrDiscoveryServer implements Runnable {
         if (channelFuture !== null) {
             channelFuture.channel.close
         }
+
+        group.shutdownGracefully.await
     }
 
     override run() {
@@ -56,13 +58,6 @@ class VdrDiscoveryServer implements Runnable {
             // bootstrap.option(UnixChannelOption.SO_REUSEPORT, true);
             bootstrap.option(UnixChannelOption.SO_REUSEADDR, true);
 
-            /*
-            if (Epoll.isAvailable()) {
-                bootstrap.option(UnixChannelOption.SO_REUSEPORT, true);
-                bootstrap.option(UnixChannelOption.SO_REUSEADDR, true);
-            }
-            */
-
             bootstrap.handler(new DiscoveryServerHandler());
 
             channelFuture = bootstrap.bind(PORT) //
@@ -71,7 +66,7 @@ class VdrDiscoveryServer implements Runnable {
                                 .closeFuture() //
                                 .await();
         } finally {
-            group.shutdownGracefully();
+            group.shutdownGracefully().await
         }
     }
 }

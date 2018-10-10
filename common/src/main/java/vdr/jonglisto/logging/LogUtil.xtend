@@ -4,19 +4,19 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.net.SyslogAppender
+import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.Appender
 import ch.qos.logback.core.rolling.FixedWindowRollingPolicy
 import ch.qos.logback.core.rolling.RollingFileAppender
 import java.io.File
+import java.io.FileReader
+import java.io.FileWriter
+import java.io.IOException
+import java.util.Properties
 import java.util.stream.Collectors
 import org.slf4j.LoggerFactory
-import java.util.Properties
 import vdr.jonglisto.configuration.Configuration
-import java.io.FileWriter
-import java.io.FileReader
 import vdr.jonglisto.xtend.annotation.Log
-import java.io.IOException
-import ch.qos.logback.classic.spi.ILoggingEvent
 
 @Log("jonglisto.logutil")
 class LogUtil {
@@ -45,12 +45,16 @@ class LogUtil {
             prop.store(out, "custom jonglisto-ng logging configuration")
         } catch (IOException exc) {
             throw new RuntimeException("unable to save " + Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg", exc)
-        }       
+        }
     }
 
     static def loadConfig() {
         try {
             log.info("Read logging configuration from " + Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg")
+
+            // at first disable some logging
+            val nettyLogger = LoggerFactory.getLogger("io.netty") as Logger;
+            nettyLogger.level = Level.INFO
 
             val reader = new FileReader(new File(Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg"))
             val prop = new Properties
@@ -125,19 +129,19 @@ class LogUtil {
     }
 
     static def setAppender(Logger logger, Appender<ILoggingEvent> appender) {
-		val l = logger.appender
+    val l = logger.appender
 
-		if (l !== null && l.name.equals(appender.name)) {
-			// appender already exists
-			return
-		}
+    if (l !== null && l.name.equals(appender.name)) {
+      // appender already exists
+      return
+    }
 
-		logger.addAppender(appender)
+    logger.addAppender(appender)
 
-		if (l !== null) {
-			logger.detachAppender(l)
-		}
-	}
+    if (l !== null) {
+      logger.detachAppender(l)
+    }
+  }
 
     static def setLevel(Logger logger, Level level) {
         logger.level = level

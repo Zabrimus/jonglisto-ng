@@ -28,8 +28,8 @@ ext {
         scaleimage        : '0.5.0',        // Vaadin ScaleImage Addon
         messagebox        : '4.0.21',       // Vaadin MessageBox Addon
 
-        netty             : '4.1.30.Final'  // Netty
-    ]
+        netty             : '4.1.30.Final' // Netty
+   ]
 
     libs = [
         vaadinServer         : "com.vaadin:vaadin-server:$versions.vaadin",

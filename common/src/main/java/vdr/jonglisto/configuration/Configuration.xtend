@@ -446,6 +446,18 @@ class Configuration {
         return unmarshaller
     }
 
+    def shutdown() {
+        val jobNames = SundialJobScheduler.allJobNames
+        if (jobNames !== null && jobNames.size > 0) {
+            jobNames.forEach[s | {
+                SundialJobScheduler.stopJob(s)
+            }]
+        }
+
+        //SundialJobScheduler.shutdown
+        SundialJobScheduler.scheduler.shutdown(true)
+    }
+
     static def getInstance() {
         return instance
     }

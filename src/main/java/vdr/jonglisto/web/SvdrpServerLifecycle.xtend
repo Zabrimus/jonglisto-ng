@@ -1,19 +1,17 @@
 package vdr.jonglisto.web
 
-import javax.servlet.ServletContextEvent
-import javax.servlet.ServletContextListener
-import javax.servlet.annotation.WebListener
+import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.svdrp.server.SvdrpServer
 import vdr.jonglisto.xtend.annotation.Log
-import vdr.jonglisto.configuration.Configuration
 
-@Log("jonglisto.servlet")
-@WebListener
-class SvdrpServerListener implements ServletContextListener {
+@Log("jonglisto.lifecycle")
+class SvdrpServerLifecycle {
 
     SvdrpServer svdrpServer
 
-    override void contextInitialized(ServletContextEvent servletContextEvent) {
+    def onStartup() {
+        System.out.println("Initialized web application: SvdrpServerLifecycle");
+
         // start svdrp server, if port is configured
         if (Configuration.instance.getSvdrpServerPort() > 0) {
             log.info("Start svdrp server using port " + Configuration.instance.getSvdrpServerPort());
@@ -22,8 +20,8 @@ class SvdrpServerListener implements ServletContextListener {
         }
     }
 
-    override void contextDestroyed(ServletContextEvent servletContextEvent) {
-        log.info("Stop svdrp server...")
+    def onStop() {
+        System.out.println("Stopped web application: SvdrpServerLifecycle");
 
         if (svdrpServer !== null) {
             svdrpServer.stopServer
