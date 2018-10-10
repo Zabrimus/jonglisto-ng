@@ -54,7 +54,11 @@ class SvdrpClient {
         .removalListener(new RemovalListener<VDR, Connection>() {
             override onRemoval(RemovalNotification<VDR, Connection> notification) {
                 log.info("Close connection to " + notification.key.host + ":" + notification.key.port)
-                notification.value.close
+                try {
+                    notification.value.close
+                } catch(ConnectionException e) {
+                    // do nothing, connection is already closed
+                }
             }
         }) //
         .build(new CacheLoader<VDR, Connection>() {
