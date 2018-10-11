@@ -7,6 +7,7 @@ import javax.inject.Inject
 import javax.servlet.ServletContextEvent
 import javax.servlet.ServletContextListener
 import javax.servlet.annotation.WebListener
+import vdr.jonglisto.configuration.Configuration
 
 @WebListener
 class ApplicationLifecycleListener implements ServletContextListener {
@@ -15,6 +16,8 @@ class ApplicationLifecycleListener implements ServletContextListener {
     Event<String> servletContextEvent;
 
     override contextInitialized(ServletContextEvent sce) {
+        Configuration.instance.setContextRoot(sce.servletContext.contextPath)
+
         servletContextEvent.select(new AnnotationLiteral<AppStartEvent>() {}).fire("start request");
     }
 

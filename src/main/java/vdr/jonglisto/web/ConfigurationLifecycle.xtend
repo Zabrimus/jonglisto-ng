@@ -1,5 +1,6 @@
 package vdr.jonglisto.web
 
+import java.util.Set
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -42,7 +43,7 @@ class ConfigurationLifecycle {
 
         try {
             scheduledExecutorService.shutdown()
-            scheduledExecutorService.awaitTermination(4, TimeUnit.SECONDS)
+            scheduledExecutorService.awaitTermination(10, TimeUnit.SECONDS)
         } catch (Exception e) {
             System.err.println("Shutdown of scheduledExecutorService failed:" + e.message)
         }

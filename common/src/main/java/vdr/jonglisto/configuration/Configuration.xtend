@@ -38,6 +38,7 @@ import vdr.jonglisto.util.Utils
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
+import org.quartz.QuartzScheduler
 
 @Log("jonglisto.configuration")
 class Configuration {
@@ -103,6 +104,7 @@ class Configuration {
     static String defaultZoneStr
 
     static String discoveryServerName;
+    static String contextRoot
 
     private new() {
         try {
@@ -181,6 +183,14 @@ class Configuration {
         } catch (JAXBException e) {
             throw new RuntimeException("Error while creating Configuration", e);
         }
+    }
+
+    def getContextRoot() {
+        return contextRoot
+    }
+
+    def void setContextRoot(String ctx) {
+        contextRoot = ctx
     }
 
     def getDefaultZoneId() {
@@ -455,10 +465,19 @@ class Configuration {
             }]
         }
 
+        val a = SundialJobScheduler.scheduler as QuartzScheduler
+
+        val Thread[] qth = newArrayOfSize(a.getSchedulerThreadGroup().activeCount)
+        a.getSchedulerThreadGroup().enumerate(qth)
+
         SundialJobScheduler.scheduler.shutdown(false)
         SundialJobScheduler.shutdown()
 
-        //val a = SundialJobScheduler.scheduler as QuartzScheduler
+        for (Thread thread : qth) {
+            if (thread.alive) {
+                thread.interrupt
+            }
+        }
     }
 
     static def getInstance() {
