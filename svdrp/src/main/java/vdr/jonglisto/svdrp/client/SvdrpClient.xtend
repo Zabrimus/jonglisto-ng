@@ -50,7 +50,7 @@ class SvdrpClient {
         // init caches
         connections = CacheBuilder.newBuilder() //
         .maximumSize(10) //
-        .expireAfterAccess(30, TimeUnit.SECONDS) //
+        //.expireAfterAccess(30, TimeUnit.SECONDS) //
         .removalListener(new RemovalListener<VDR, Connection>() {
             override onRemoval(RemovalNotification<VDR, Connection> notification) {
                 log.info("Close connection to " + notification.key.host + ":" + notification.key.port)
