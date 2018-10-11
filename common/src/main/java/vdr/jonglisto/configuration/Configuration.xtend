@@ -12,6 +12,7 @@ import java.util.Map
 import java.util.Optional
 import java.util.Set
 import java.util.TimeZone
+import java.util.concurrent.ConcurrentHashMap
 import java.util.regex.Pattern
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.JAXBException
@@ -46,7 +47,7 @@ class Configuration {
     static String EPG_VDR = "#EPG#"
     static String CHANNEL_VDR = "#CHANNEL#"
 
-    static Map<String, VDR> vdrs = new HashMap<String, VDR>
+    static Map<String, VDR> vdrs = new ConcurrentHashMap<String, VDR>
     static List<String> orderedVdr = new ArrayList<String>
     static List<EpgProvider> epgProvider
     static List<String> epgTimeSelect

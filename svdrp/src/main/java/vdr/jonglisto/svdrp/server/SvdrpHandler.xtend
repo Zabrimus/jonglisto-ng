@@ -23,6 +23,7 @@ import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.util.NetworkUtils
 import vdr.jonglisto.util.Utils
 import vdr.jonglisto.xtend.annotation.Log
+import java.net.InetSocketAddress
 
 @Log("jonglisto.svdrp.server")
 class SvdrpHandler implements Runnable {
@@ -66,11 +67,11 @@ class SvdrpHandler implements Runnable {
             output = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))
 
             // send greeting
-            log.info("Send greeting to " + client)
+            log.debug("Send greeting to " + client)
             output.write("220 " + Configuration.instance.discoveryServername + " SVDRP VideoDiskRecorder 2.4.0; Mon Jan 01 10:00:00 2018; UTF-8\n");
             output.flush();
 
-            log.info("> Waiting for Response: " + client.remoteSocketAddress)
+            log.debug("> Waiting for Response: " + client.remoteSocketAddress)
 
             // endless loop
             while (!intentiallyClosed) {
@@ -147,7 +148,6 @@ class SvdrpHandler implements Runnable {
                                         return;
                                     }
                                     case "POLL": {
-                                        log.info("POLL received " + client)
                                         // do nothing, exists only for VDR discovery
                                         output.write("250 OK\n")
                                         output.flush
@@ -176,7 +176,6 @@ class SvdrpHandler implements Runnable {
                                         }
                                     }
                                     case "LSTT": {
-                                        log.info("LSTT received " + client)
                                         // do nothing, exists only for VDR discovery
                                         output.write("550 No timers defined\n")
                                         output.flush
@@ -227,7 +226,7 @@ class SvdrpHandler implements Runnable {
 
             activeTasks.remove(this);
 
-            log.info("> Closing connection to " + client.remoteSocketAddress)
+            log.debug("> Closing connection to " + client.remoteSocketAddress)
             System.out.println("> Closing connection to " + client.remoteSocketAddress)
         }
     }
@@ -427,8 +426,7 @@ class SvdrpHandler implements Runnable {
                     output.write("901 no alarms found\n")
                 }
             } else {
-                output.write("950 ALRL cannot identify VDR " + client.inetAddress.hostAddress + ":" + commandLine +
-                    "\n")
+                output.write("950 ALRL cannot identify VDR " + client.inetAddress.hostAddress + ":" + commandLine + "\n")
             }
         } catch (Exception e) {
             e.printStackTrace
@@ -570,5 +568,10 @@ class SvdrpHandler implements Runnable {
         /* val port = */ Configuration.getInstance.svdrpServerPort;
         output.write("250 OK");
         output.flush();
+
+        val remoteSocketAddress = client.remoteSocketAddress as InetSocketAddress
+        /* val vdr = */ DiscoveryUtil.findVdr(remoteSocketAddress.address.hostAddress, option)
+
+        // TODO: Do something useful with vdr?
     }
 }

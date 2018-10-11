@@ -303,13 +303,11 @@ class EventGrid {
         }
 
         if (epgsearchAvailable) {
-            println("Open epgsearch")
             createEpgsearchTimer(epg)
             return
         }
 
         if (epgdAvailable) {
-            println("Open epgd")
             createEpgdTimer(epg)
             return
         }

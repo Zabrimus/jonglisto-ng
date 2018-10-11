@@ -437,7 +437,7 @@ class RecordingComponent {
         createFileNames(deleteResult, rec, rec.name);
 
         if (log.isDebugEnabled) {
-            deleteResult.keySet.stream().forEach(s | println(String.format("Delete %d %s", s, deleteResult.get(s))))
+            deleteResult.keySet.stream().forEach(s | log.debug(String.format("Delete %d %s", s, deleteResult.get(s))))
         }
 
         selectedParent.children.remove(rec)
@@ -456,7 +456,7 @@ class RecordingComponent {
 
     private def void rename(Map<Long, String> recordings) {
         if (log.isDebugEnabled) {
-            recordings.keySet.stream().forEach(s | println(String.format("Rename %d to %s", s, recordings.get(s))))
+            recordings.keySet.stream().forEach(s | log.debug(String.format("Rename %d to %s", s, recordings.get(s))))
         }
 
         svdrp.renameRecordings(currentVdr, recordings)

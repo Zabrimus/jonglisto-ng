@@ -26,11 +26,6 @@ class MainView extends BaseView {
     }
 
     override enter(ViewChangeEvent event) {
-        val currentUser = SecurityUtils.subject
-
-        config.getVdrNames(currentUser).forEach[s |
-            System.err.println("VDR: " + s)
-        ]
     }
 
     protected override createMainComponents() {
