@@ -216,13 +216,15 @@ task copySamples(type: Exec) {
 
 task createVersionFile {
     def jongversion = getGitVersion()
+    new File("$projectDir/src/main/webapp/version.txt").text = jongversion + "\n"
     new File("$projectDir/src/main/resources/META-INF/version.txt").text = jongversion + "\n"
 }
 
 compileJava.dependsOn(createVersionFile)
 
 war.doLast {
-    delete "$projectDir/src/main/resources/META-INF/version.txt"
+    delete "$projectDir/src/main/webapp/version.txt"
+	delete "$projectDir/src/main/resources/META-INF/version.txt"
 }
 
 task wrapper(type: Wrapper) {

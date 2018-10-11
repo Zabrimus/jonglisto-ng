@@ -3,19 +3,27 @@ package vdr.jonglisto.configuration
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
+import java.time.ZoneId
 import java.util.ArrayList
 import java.util.HashMap
+import java.util.HashSet
 import java.util.List
 import java.util.Map
 import java.util.Optional
+import java.util.Set
+import java.util.TimeZone
 import java.util.regex.Pattern
 import javax.xml.bind.JAXBContext
+import javax.xml.bind.JAXBException
 import javax.xml.bind.Marshaller
 import javax.xml.bind.Unmarshaller
 import org.knowm.sundial.SundialJobScheduler
 import vdr.jonglisto.configuration.jaxb.config.Jonglisto
 import vdr.jonglisto.configuration.jaxb.config.Jonglisto.Scraper.ImagePath
 import vdr.jonglisto.configuration.jaxb.config.ObjectFactory
+import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch
+import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.ComplexPattern
+import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.SimplePattern
 import vdr.jonglisto.configuration.jaxb.favourite.Favourites
 import vdr.jonglisto.configuration.jaxb.jcron.Jcron
 import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
@@ -29,15 +37,6 @@ import vdr.jonglisto.util.Utils
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
-import java.util.Set
-import java.util.HashSet
-import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch
-import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.SimplePattern
-import vdr.jonglisto.configuration.jaxb.extepgsearch.Extepgsearch.ComplexPattern
-import java.util.TimeZone
-import java.time.ZoneId
-import javax.xml.bind.JAXBException
-import org.quartz.QuartzScheduler
 
 @Log("jonglisto.configuration")
 class Configuration {

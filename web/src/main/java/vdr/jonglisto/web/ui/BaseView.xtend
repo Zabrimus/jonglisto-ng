@@ -20,10 +20,11 @@ import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
+import java.io.Serializable
 
 @Log("jonglisto.web")
 @SuppressWarnings("serial")
-abstract class BaseView extends VerticalLayout implements View {
+abstract class BaseView extends VerticalLayout implements View, Serializable {
 
     protected enum BUTTON {
         HOME, TIMER, EPG, EPGD, EPGSEARCH, RECORDING, CHANNELCONFIG, OSD, CONFIG, LOGOUT

@@ -1,6 +1,5 @@
 package vdr.jonglisto.web;
 
-import com.vaadin.annotations.PreserveOnRefresh
 import com.vaadin.annotations.Theme
 import com.vaadin.annotations.Title
 import com.vaadin.cdi.CDINavigator
@@ -18,7 +17,7 @@ import vdr.jonglisto.web.ui.ErrorView
 
 @Theme("jonglisto")
 @Title("VDR Jonglisto")
-@PreserveOnRefresh
+// @PreserveOnRefresh
 // @Log("jonglisto.web")
 @CDIUI("")
 @SuppressWarnings("serial")

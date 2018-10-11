@@ -162,7 +162,7 @@ class SvdrpHandler implements Runnable {
                                             if (vdr.present) {
                                                 switch (options.get(1)) {
                                                     case "TIMERS": {
-                                                            val resp = SvdrpClient.instance.getTimerLstt(vdr.get)
+                                                            /* val resp = */SvdrpClient.instance.getTimerLstt(vdr.get)
 
                                                             // TODO: This result could be shown in TimersView - if present
                                                         }
@@ -567,7 +567,7 @@ class SvdrpHandler implements Runnable {
     }
 
     private def cmdCONN(BufferedWriter output, String option) throws IOException {
-        val port = Configuration.getInstance.svdrpServerPort;
+        /* val port = */ Configuration.getInstance.svdrpServerPort;
         output.write("250 OK");
         output.flush();
     }
