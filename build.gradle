@@ -8,7 +8,7 @@ plugins {
 apply plugin: 'war'
 
 group 'jonglisto-ng'
-version '0.2.6-snapshot'
+version '0.3.0-snapshot'
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
@@ -224,7 +224,7 @@ compileJava.dependsOn(createVersionFile)
 
 war.doLast {
     delete "$projectDir/src/main/webapp/version.txt"
-	delete "$projectDir/src/main/resources/META-INF/version.txt"
+  delete "$projectDir/src/main/resources/META-INF/version.txt"
 }
 
 task wrapper(type: Wrapper) {
