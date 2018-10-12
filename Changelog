@@ -4,7 +4,7 @@ New:
 - VDR discovery on UDP Port 6419
 - some socket and communication bugfixes
 - (nearly) proper shutdown
-- discovered VDR are also available in all pages
+- discovered VDR are also available in all pages (and also removed if not available anymore)
 
 0.2.5:
 New:
