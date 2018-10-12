@@ -34,14 +34,16 @@ class DiscoveryUtil {
 
             if (!vdrOpt.isPresent) {
                 vdr = new VDR(clientName, ip, clientPort, timeout);
-                vdr.discovered = true
-                vdr.lastSeen = LocalDateTime.now
 
                 Configuration.instance.addVdr(vdr)
                 log.debug("Add discovered VDR " + vdr)
             } else {
                 vdr = vdrOpt.get
+                vdr.timeout = timeout
             }
+
+            vdr.discovered = true
+            vdr.lastSeen = LocalDateTime.now
 
             log.trace("Discovery of ip " + ip + ", clientPort " + clientPort + " results in " + vdr)
         } else {

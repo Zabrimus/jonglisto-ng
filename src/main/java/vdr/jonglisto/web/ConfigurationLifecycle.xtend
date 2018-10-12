@@ -1,6 +1,5 @@
 package vdr.jonglisto.web
 
-import java.util.Set
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
