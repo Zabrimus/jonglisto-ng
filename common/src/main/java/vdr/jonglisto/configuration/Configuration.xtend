@@ -574,6 +574,11 @@ class Configuration {
         vdrs.put(vdr.name, vdr)
     }
 
+    def void removeVdr(VDR vdr) {
+        orderedVdr.remove(vdr.name)
+        vdrs.remove(vdr.name)
+    }
+
     private def registerEpgTimeSelect(Jonglisto cfg) {
         epgTimeSelect = cfg.epgTimeList.value
     }

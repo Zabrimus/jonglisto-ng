@@ -58,6 +58,7 @@ class SvdrpClient {
                 log.info("Close connection to " + notification.key.host + ":" + notification.key.port)
                 try {
                     notification.value.close
+                    notification.key.discovered = false
                 } catch(ConnectionException e) {
                     // do nothing, connection is already closed
                 }
@@ -133,10 +134,16 @@ class SvdrpClient {
     def regularEvent() {
         cleanupCache
 
+        val List<String> ov = new ArrayList<String>()
+        ov.addAll(Configuration.instance.vdrNames)
+
         // iterate over all discovered VDRs and send ping
-        Configuration.instance.vdrNames.stream.forEach(s | {
+        ov.stream.forEach(s | {
             val vdr = Configuration.instance.getVdr(s)
-            if (vdr.isDiscovered) {
+
+            if (vdr !== null && vdr.isDiscovered) {
+                log.trace("Ping test {}, discovered {}", vdr.name, vdr.isDiscovered)
+
                 var timeout = vdr.timeout
                 var long lastSeen
                 var long now
@@ -156,10 +163,20 @@ class SvdrpClient {
                 val sendPing = (now - lastSeen) >= (timeout * 1000) * 9 / 10
                 if (sendPing) {
                     try {
+                        log.debug("Ping test to {}", vdr.name)
                         vdr.command("PING", 250)
+                        log.debug("Ping test {} sucessful", vdr.name)
                     } catch (Exception e) {
                         // PING failed, VDR is probably down
+                        log.debug("Close connection to {} because PING failed", vdr.name)
                         connections.invalidate(vdr)
+                        vdr.discovered = false
+
+                        if (!vdr.isConfigured) {
+                            // remove VDR in configuration, because it's discovered, not configured and not available anymore
+                            Configuration.instance.removeVdr(vdr)
+                            connections.invalidate(vdr)
+                        }
                     }
                 }
             }

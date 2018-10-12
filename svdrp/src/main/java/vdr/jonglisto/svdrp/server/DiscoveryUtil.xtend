@@ -42,6 +42,8 @@ class DiscoveryUtil {
             } else {
                 vdr = vdrOpt.get
             }
+
+            log.trace("Discovery of ip " + ip + ", clientPort " + clientPort + " results in " + vdr)
         } else {
             log.debug("Received: '" + request + "'")
         }
