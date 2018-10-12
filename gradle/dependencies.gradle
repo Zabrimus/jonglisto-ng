@@ -28,7 +28,9 @@ ext {
         scaleimage        : '0.5.0',        // Vaadin ScaleImage Addon
         messagebox        : '4.0.21',       // Vaadin MessageBox Addon
 
-        netty             : '4.1.30.Final' // Netty
+        netty             : '4.1.30.Final', // Netty
+
+        atmosphere        : '2.4.30.vaadin1' // Atmosphere
    ]
 
     libs = [
@@ -38,6 +40,8 @@ ext {
         vaadinClientCompiler : "com.vaadin:vaadin-client-compiler:$versions.vaadin",
         vaadinBuildHelper    : "com.vaadin:vaadin-buildhelpers:7.4.0.beta1",
         vaadincdi            : "com.vaadin:vaadin-cdi:$versions.vaadincdi",
+        vaadinPush           : "com.vaadin:vaadin-push:$versions.vaadin",
+        atmosphere           : "com.vaadin.external.atmosphere:atmosphere-project:$versions.atmosphere",
         deltaspike           : "org.apache.deltaspike.core:deltaspike-core-impl:$versions.deltaspike",
 
         jregex               : "net.sourceforge.jregex:jregex:$versions.jregex",

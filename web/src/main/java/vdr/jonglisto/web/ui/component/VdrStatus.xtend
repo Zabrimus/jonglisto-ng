@@ -134,7 +134,7 @@ class VdrStatus {
         return panel
     }
 
-    private def refreshStatus() {
+    def refreshStatus() {
         getPingStatus()
         getSvdrpStatus()
         getDiskStatus()

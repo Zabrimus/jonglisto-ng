@@ -176,6 +176,9 @@ project(':web') {
             exclude group:'org.threeten', module:'threetenbp'
         }
 
+        compile libs.vaadinPush
+        compile libs.atmosphere
+
         compile addons.vicons
 
         compile(addons.scaleimage) {

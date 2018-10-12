@@ -11,6 +11,7 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.VdrStatus
 import vdr.jonglisto.web.util.JonglistoVersion
+import com.vaadin.ui.UI
 
 // @Log("jonglisto.web")
 @CDIView(MainUI.MAIN_VIEW)
@@ -19,6 +20,49 @@ class MainView extends BaseView {
 
     @Inject
     JonglistoVersion jv
+
+    @Inject
+    UI currentViewUI
+
+    val CssLayout css = new CssLayout
+
+    val currentUser = SecurityUtils.subject
+
+    val vdrInfoUpdater = new Runnable() {
+
+        boolean firstRun = true;
+
+        override run() {
+            while(true) {
+                Thread.sleep(20000)
+
+                try {
+                    css.removeAllComponents
+
+                    currentViewUI.access(new Runnable() {
+                        override run() {
+                            config.getVdrNames(currentUser).forEach [ s |
+                                val vdrStatus = new VdrStatus()
+                                vdrStatus.setVdr(config.getVdr(s))
+
+                                if (!firstRun) {
+                                    vdrStatus.refreshStatus
+                                }
+
+                                css.addComponent(vdrStatus.panel)
+                            ]
+
+                        }
+                    })
+
+                    firstRun = false
+                    Thread.sleep(5000)
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     @PostConstruct
     def void init() {
@@ -29,19 +73,13 @@ class MainView extends BaseView {
     }
 
     protected override createMainComponents() {
-        val currentUser = SecurityUtils.subject
-
-        val css = new CssLayout => [
-            config.getVdrNames(currentUser).forEach[s |
-                addComponent(new VdrStatus().setVdr(config.getVdr(s)).panel)
-            ]
-        ]
-
         addComponentsAndExpand(css)
         addComponent(new Label("Version: " + jv.version))
+
+        new Thread(vdrInfoUpdater).start()
     }
 
     override protected void changeVdr(VDR vdr) {
-       // not used in this view
+        // not used in this view
     }
 }

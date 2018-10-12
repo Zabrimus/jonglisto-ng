@@ -1,5 +1,6 @@
 package vdr.jonglisto.web;
 
+import com.vaadin.annotations.Push
 import com.vaadin.annotations.Theme
 import com.vaadin.annotations.Title
 import com.vaadin.cdi.CDINavigator
@@ -21,6 +22,7 @@ import vdr.jonglisto.web.ui.ErrorView
 // @Log("jonglisto.web")
 @CDIUI("")
 @SuppressWarnings("serial")
+@Push
 class MainUI extends UI implements ViewChangeListener {
 
     public static val MAIN_VIEW = "main"
