@@ -34,6 +34,8 @@ import vdr.jonglisto.model.VdrPlugin
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
+import java.time.LocalDateTime
+import vdr.jonglisto.util.DateTimeUtil
 
 @Log("jonglisto.svdrp.client")
 class SvdrpClient {
@@ -128,8 +130,40 @@ class SvdrpClient {
         connections.invalidate(con)
     }
 
-    def doOneMinuteEvent() {
+    def regularEvent() {
         cleanupCache
+
+        // iterate over all discovered VDRs and send ping
+        Configuration.instance.vdrNames.stream.forEach(s | {
+            val vdr = Configuration.instance.getVdr(s)
+            if (vdr.isDiscovered) {
+                var timeout = vdr.timeout
+                var long lastSeen
+                var long now
+
+                if (timeout == 0) {
+                    timeout = 300
+                }
+
+                if (vdr.lastSeen === null) {
+                    lastSeen = DateTimeUtil.toMillis(LocalDateTime.now.minusSeconds(timeout))
+                } else {
+                    lastSeen = DateTimeUtil.toMillis(vdr.lastSeen)
+                }
+
+                now = System.currentTimeMillis
+
+                val sendPing = (now - lastSeen) >= (timeout * 1000) * 9 / 10
+                if (sendPing) {
+                    try {
+                        vdr.command("PING", 250)
+                    } catch (Exception e) {
+                        // PING failed, VDR is probably down
+                        connections.invalidate(vdr)
+                    }
+                }
+            }
+        })
     }
 
     def pingHost(VDR vdr) {

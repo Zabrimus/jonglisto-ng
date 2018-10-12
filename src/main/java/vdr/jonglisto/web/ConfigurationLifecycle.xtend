@@ -32,9 +32,9 @@ class ConfigurationLifecycle {
         // One minute event
         scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             override run() {
-                SvdrpClient.getInstance.doOneMinuteEvent()
+                SvdrpClient.getInstance.regularEvent()
             }
-        }, 1, 1, TimeUnit.MINUTES);
+        }, 9, 15, TimeUnit.SECONDS);
 
     }
 

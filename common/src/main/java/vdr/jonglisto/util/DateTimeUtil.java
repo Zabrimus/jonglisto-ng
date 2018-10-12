@@ -10,6 +10,10 @@ import vdr.jonglisto.configuration.Configuration;
 
 public class DateTimeUtil {
 
+    public static long toMillis(LocalDateTime date) {
+        return date.toInstant(getCurrentZoneOffset()).toEpochMilli();
+    }
+
     public static String toTime(long unixTime, String timeFormat) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(timeFormat);
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), Configuration.getInstance().getDefaultZoneId()).toLocalTime().format(timeFormatter);

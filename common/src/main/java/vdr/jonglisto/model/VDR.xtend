@@ -23,6 +23,7 @@ class VDR extends BaseData {
     var LocalDateTime lastSeen
     var boolean configured
     var boolean discovered
+    var int timeout
 
     new(String name, String host, Integer port, String instanceName, String mac) {
         this.name = name
@@ -32,12 +33,13 @@ class VDR extends BaseData {
         this.mac = mac
     }
 
-    new(String name, String host, Integer port, int readTimeout) {
+    new(String name, String host, Integer port, int timeout) {
         this.name = name
         this.host = host
         this.port = port
         this.instance = name
         this.mac = mac
+        this.timeout = timeout
     }
 
     new(String name, String host, Integer port, int readTimeout, String mac, int connectTimeout, String instanceName) {
