@@ -47,7 +47,7 @@ class TraceLogProcessor extends AbstractMethodProcessor
                     «IF (!voidMethod)»return ret;«ENDIF»
                 } catch(Exception e) {
                     if (log.isTraceEnabled()) {
-                        log.trace("«method.simpleName» ended with exception " + e.getClass().getSimpleName() + "\n" + e.getMessage());
+                        log.trace("«method.simpleName» ended with exception {}\n{}", e.getClass().getSimpleName(), e.getMessage());
                     }
                     throw e;
                 }

@@ -49,7 +49,7 @@ class Connection {
     }
 
     def String connect() {
-        log.debug("connect to " + host + ":" + port)
+        log.debug("connect to {}:{}", host, port)
 
         try {
             // connect to VDR

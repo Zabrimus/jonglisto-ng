@@ -27,7 +27,7 @@ class DiscoveryUtil {
 
             if (clientName.startsWith("jonglisto") || clientName.equals(Configuration.instance.discoveryServername)) {
                 // ignoring loopback
-                log.info("Ignore loopback UDP request for '" + clientName + "'");
+                log.info("Ignore loopback UDP request for '{}'", clientName);
                 return null;
             }
 
@@ -37,7 +37,7 @@ class DiscoveryUtil {
                 vdr = new VDR(clientName, ip, clientPort, timeout);
 
                 Configuration.instance.addVdr(vdr)
-                log.debug("Add discovered VDR " + vdr)
+                log.debug("Add discovered VDR {}", vdr)
             } else {
                 vdr = vdrOpt.get
                 vdr.timeout = timeout
@@ -49,9 +49,9 @@ class DiscoveryUtil {
             // get list of plugins
             SvdrpClient.instance.fillPlugins(vdr)
 
-            log.trace("Discovery of ip " + ip + ", clientPort " + clientPort + " results in " + vdr)
+            log.trace("Discovery of ip {}, clientPort {} results in {}", ip, clientPort, vdr)
         } else {
-            log.debug("Received: '" + request + "'")
+            log.debug("Received: '{}'", request)
         }
 
         return vdr;

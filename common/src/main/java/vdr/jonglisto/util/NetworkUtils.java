@@ -7,13 +7,15 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import vdr.jonglisto.model.VDR;
 
 public class NetworkUtils {
 
-    private final static Logger log = Logger.getLogger("vdr.jonglisto.util.NetworkUtils");
+    private final static Logger log = LoggerFactory.getLogger("vdr.jonglisto.util.NetworkUtils");
 
     public static void sendWol(VDR vdr) {
         if ((vdr == null) || (vdr.getMac() == null)) {
@@ -25,7 +27,7 @@ public class NetworkUtils {
         byte[] macBytes = new byte[6];
         String[] hex = vdr.getMac().split("(\\:|\\-)");
         if (hex.length != 6) {
-            log.severe("Invalid MAC address: " + vdr.getMac());
+            log.warn("Invalid MAC address: {}", vdr.getMac());
             return;
         }
 
@@ -34,7 +36,7 @@ public class NetworkUtils {
                 macBytes[i] = (byte) Integer.parseInt(hex[i], 16);
             }
         } catch (NumberFormatException e) {
-            log.severe("Invalid MAC address: " + vdr.getMac());
+            log.warn("Invalid MAC address: {}", vdr.getMac());
             return;
         }
 
@@ -69,7 +71,7 @@ public class NetworkUtils {
             }
         } catch (IOException e) {
             // i'm unsure what to do
-            log.severe("Unable to send WOL packet to broadcase address");
+            log.warn("Unable to send WOL packet to broadcase address");
         }
     }
 

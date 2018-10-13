@@ -664,7 +664,7 @@ class ChannelConfigView extends BaseView {
                         } catch (Exception e) {
                             // it's possible that the mapping already exists
                             // => ignore this exception
-                            log.debug("Ignoring error in epgProviderAutoMapping: " + e.localizedMessage)
+                            log.debug("Ignoring error in epgProviderAutoMapping: {}", e.localizedMessage)
                         }
                     ]
                 }

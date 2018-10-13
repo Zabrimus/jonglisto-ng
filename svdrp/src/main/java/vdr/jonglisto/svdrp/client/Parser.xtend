@@ -320,8 +320,8 @@ class Parser {
 
         if (line != result.createSvdrpLine()) {
             log.error("Mismatch found in epgsearch timer parsing/creating!")
-            log.error("Original:  " + line)
-            log.error("Generated: " + result.createSvdrpLine())
+            log.error("Original:  {}", line)
+            log.error("Generated: {}", result.createSvdrpLine())
         }
 
         return result

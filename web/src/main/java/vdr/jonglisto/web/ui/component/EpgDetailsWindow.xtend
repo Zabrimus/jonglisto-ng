@@ -206,11 +206,11 @@ class EpgDetailsWindow extends Window {
 
         if (config.showScraperImages) {
             // Poster
-            val sposters = scraper?.series?.poster                       
+            val sposters = scraper?.series?.poster
             val seriesPoster = if (sposters !== null) sposters.size > 0 else false
-            
-            val mposters = scraper?.movie?.poster            
-            val moviePoster = if (mposters !== null) mposters.size > 0 else false 
+
+            val mposters = scraper?.movie?.poster
+            val moviePoster = if (mposters !== null) mposters.size > 0 else false
 
             if (seriesPoster || moviePoster) {
                 posterImages = new CssLayout
@@ -241,12 +241,12 @@ class EpgDetailsWindow extends Window {
             }
 
             // Fanart
-            val sFanart = scraper?.series?.fanart            
+            val sFanart = scraper?.series?.fanart
             val seriesFanart = if (sFanart !== null) sFanart.size > 0 else false
-            
+
             val mFanart = scraper?.movie?.fanart
             val movieFanart = if (mFanart !== null) mFanart.size > 0 else false
-            
+
             if (seriesFanart || movieFanart) {
                 fanartImages = new CssLayout
 
@@ -276,12 +276,12 @@ class EpgDetailsWindow extends Window {
             }
 
             // Actor
-            val sActor = scraper?.series?.actor           
+            val sActor = scraper?.series?.actor
             val seriesActor = if (sActor !== null) sActor.size > 0 else false
-            
-            val mActor = scraper?.movie?.actor            
+
+            val mActor = scraper?.movie?.actor
             val movieActor = if (mActor !== null) mActor.size > 0 else false
-            
+
             if (seriesActor || movieActor) {
                 actorImages = new CssLayout
 
@@ -525,7 +525,7 @@ class EpgDetailsWindow extends Window {
 
                 return image
             } else {
-                log.info("Cannot open file: " + newPath + ", original path: " + scraperPath)
+                log.info("Cannot open file: {}, original path: {}", newPath, scraperPath)
                 return null;
             }
         } else {
@@ -546,7 +546,7 @@ class EpgDetailsWindow extends Window {
 
                 return new ActorImage(image, role, name)
             } else {
-                log.info("Cannot open file: " + newPath + ", original path: " + scraperPath)
+                log.info("Cannot open file: {}, original path: {}", newPath, scraperPath)
 
                 return null;
             }

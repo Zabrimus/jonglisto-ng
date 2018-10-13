@@ -58,7 +58,7 @@ class SvdrpHandler implements Runnable {
         var BufferedReader input
         var BufferedWriter output
 
-        log.info("> New connection: " + client)
+        log.info("> New connection: {}", client)
 
         try {
             activeTasks.add(this);
@@ -67,11 +67,11 @@ class SvdrpHandler implements Runnable {
             output = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()))
 
             // send greeting
-            log.debug("Send greeting to " + client)
+            log.debug("Send greeting to {}", client)
             output.write("220 " + Configuration.instance.discoveryServername + " SVDRP VideoDiskRecorder 2.4.0; Mon Jan 01 10:00:00 2018; UTF-8\n");
             output.flush();
 
-            log.debug("> Waiting for Response: " + client.remoteSocketAddress)
+            log.debug("> Waiting for Response: {}", client.remoteSocketAddress)
 
             // endless loop
             while (!intentiallyClosed) {
@@ -85,13 +85,13 @@ class SvdrpHandler implements Runnable {
                             val commandLine = command.toString().trim()
                             command = new StringWriter
 
-                            log.debug("> Received command: " + commandLine)
+                            log.debug("> Received command: {}", commandLine)
 
                             if (commandLine.length === 0) {
                                 // do nothing
                             } else if (commandLine.length < 4) {
                                 // unkown command
-                                log.error("Unkown command '" + commandLine + "', client " + client)
+                                log.error("Unkown command '{}', client {}", commandLine, client)
                                 output.write("221 unknown command\n")
                                 output.flush
                             } else {
@@ -167,7 +167,7 @@ class SvdrpHandler implements Runnable {
                                                             // TODO: This result could be shown in TimersView - if present
                                                         }
                                                     default: {
-                                                        log.info("Unknown POLL command: " + options.get(1))
+                                                        log.info("Unknown POLL command: {}", options.get(1))
                                                     }
                                                 }
                                             }
@@ -182,7 +182,7 @@ class SvdrpHandler implements Runnable {
                                     }
                                     default: {
                                         // unkown command
-                                        log.error("Unkown command " + cmd + " " + option + ", client " + client)
+                                        log.error("Unkown command {} {}, client {}", cmd, option, client)
                                         output.write("221 unknown command\n")
                                         output.flush
                                     }
@@ -226,7 +226,7 @@ class SvdrpHandler implements Runnable {
 
             activeTasks.remove(this);
 
-            log.debug("> Closing connection to " + client.remoteSocketAddress)
+            log.debug("> Closing connection to {}", client.remoteSocketAddress)
             System.out.println("> Closing connection to " + client.remoteSocketAddress)
         }
     }

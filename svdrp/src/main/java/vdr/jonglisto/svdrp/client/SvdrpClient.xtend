@@ -55,7 +55,7 @@ class SvdrpClient {
         .expireAfterAccess(300, TimeUnit.SECONDS) //
         .removalListener(new RemovalListener<VDR, Connection>() {
             override onRemoval(RemovalNotification<VDR, Connection> notification) {
-                log.info("Close connection to " + notification.key.host + ":" + notification.key.port)
+                log.info("Close connection to {}:{}", notification.key.host, notification.key.port)
                 try {
                     notification.value.close
                     notification.key.discovered = false
@@ -66,7 +66,7 @@ class SvdrpClient {
         }) //
         .build(new CacheLoader<VDR, Connection>() {
             override Connection load(VDR key) {
-                log.info("Create connection to " + key.host + ":" + key.port)
+                log.info("Create connection to {}:{}", key.host, key.port)
                 var Connection con = new Connection(key.host, key.port, key.readTimeout, key.connectTimeout)
                 con.connect
                 return con;
@@ -232,11 +232,11 @@ class SvdrpClient {
         val resp = vdr.command("CONN SVDRP:discover name:" + Configuration.instance.discoveryServername + " port:" + Configuration.instance.svdrpServerPort + " vdrversion:20400 apiversion:20400 timeout:300")
 
         if (resp.code == 250) {
-            log.info("VDR " + vdr.ip + ":" + vdr.port + " has version at least 2.4. Good")
+            log.info("VDR {}:{} has version at least 2.4. Good", vdr.ip, vdr.port)
         } else if (resp.code == 500) {
-            log.warn("VDR " + vdr.ip + ":" + vdr.port + " does not know command CONN. The VDR seems to have a version < 2.4.")
+            log.warn("VDR {}:{} does not know command CONN. The VDR seems to have a version < 2.4.", vdr.ip, vdr.port)
         } else {
-            log.warn("VDR " + vdr.ip + ":" + vdr.port + " sends unrecognized code " + resp.code + " after CONN.")
+            log.warn("VDR {}:{} sends unrecognized code {} after CONN.", vdr.ip, vdr.port, resp.code)
         }
     }
 
@@ -553,7 +553,7 @@ class SvdrpClient {
         try {
             tmpConnection = connections.get(vdr)
         } catch (Exception e) {
-            log.info("Connection to " + vdr + " refused.")
+            log.info("Connection to {} refused.", vdr)
             throw new RuntimeException("saving epg data failed")
         }
 
@@ -648,7 +648,7 @@ class SvdrpClient {
             throw new RuntimeException("Connection to " + source + " refused.")
         }
 
-        log.info("epg copy: reading source EPG finished: " + sourceResponse.lines.size)
+        log.info("epg copy: reading source EPG finished: {}", sourceResponse.lines.size)
 
         var Connection connection
 
@@ -777,13 +777,13 @@ class SvdrpClient {
             throw new ConnectionException(message)
         }
 
-        log.debug("Command: " + command)
+        log.debug("Command: {}", command)
 
         vdr.setLastSeenNow
         val resp = connection.send(command)
         if (resp.code != desiredCode && desiredCode != -1) {
             val errorMessage = "Code: " + resp.code + ": " + resp.lines.stream.collect(Collectors.joining("\n"))
-            log.debug("Command failed:" + command + "\n" + errorMessage)
+            log.debug("Command failed: {}\n{}", command, errorMessage)
 
             throw new ExecutionFailedException(errorMessage)
         }
@@ -802,7 +802,7 @@ class SvdrpClient {
             throw new ConnectionException(message)
         }
 
-        log.debug("Command: " + command)
+        log.debug("Command: {}", command)
 
         vdr.setLastSeenNow
         return connection.send(command)

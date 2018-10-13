@@ -674,7 +674,7 @@ class Configuration {
         try {
             return Pattern.compile(str)
         } catch (Exception e) {
-            log.warn("Regex Pattern '" + str + "' is invalid and will be ignored")
+            log.warn("Regex Pattern '{}' is invalid and will be ignored", str)
             return null
         }
     }

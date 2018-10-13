@@ -13,10 +13,10 @@ class DiscoveryHandler {
 
         if (vdr !== null) {
             try {
-                log.info("Send CONN to " + ip + " , " + request + " failed")
+                log.info("Send CONN to {} , {} failed", ip, request)
                 SvdrpClient.instance.sendConn(vdr)
             } catch (Exception e) {
-                log.info("Discovery request received, but connection to " + ip + " , " + request + " failed")
+                log.info("Discovery request received, but connection to {} , {} failed", ip, request)
                 vdr = null
             }
 

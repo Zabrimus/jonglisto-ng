@@ -38,7 +38,7 @@ class LogUtil {
             prop.put("level." + s.name, level)
         })
 
-        log.info("Save logging configuration to " + Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg")
+        log.info("Save logging configuration to {}/jonglisto-logging.cfg", Configuration.getInstance.customDirectory)
 
         try {
             val out = new FileWriter(new File(Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg"))
@@ -50,7 +50,7 @@ class LogUtil {
 
     static def loadConfig() {
         try {
-            log.info("Read logging configuration from " + Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg")
+            log.info("Read logging configuration from {}/jonglisto-logging.cfg", Configuration.getInstance.customDirectory)
 
             // at first disable some logging
             val nettyLogger = LoggerFactory.getLogger("io.netty") as Logger;
@@ -69,7 +69,7 @@ class LogUtil {
                     val name = k.substring("appender.".length)
                     val l = allLoggers.findFirst[x | x.name == name]
 
-                    log.info("Set Appender for " + name + " to " + prop.get(k))
+                    log.info("Set Appender for {} to {}", name, prop.get(k))
 
                     if (l !== null) {
                         setAppender(l, getAppender(prop.get(k) as String))
@@ -79,7 +79,7 @@ class LogUtil {
 
                     val l = allLoggers.findFirst[x | x.name == name]
 
-                    log.info("Set Level for " + name + " to " + prop.get(k))
+                    log.info("Set Level for {} to {}", name, prop.get(k))
 
                     if (l !== null) {
                         setLevel(l, getLevel(prop.get(k) as String))
@@ -88,7 +88,7 @@ class LogUtil {
             })
         } catch (Exception e) {
             // custom configuration do not exists or has some errors -> fallback to default
-            log.warn("Unable to read logging configuration " + Configuration.getInstance.customDirectory + "/jonglisto-logging.cfg", e)
+            log.warn("Unable to read logging configuration {}/jonglisto-logging.cfg", Configuration.getInstance.customDirectory, e)
             return
         }
     }
