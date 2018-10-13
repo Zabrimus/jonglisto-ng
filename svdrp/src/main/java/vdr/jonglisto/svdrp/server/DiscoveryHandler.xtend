@@ -13,15 +13,17 @@ class DiscoveryHandler {
 
         if (vdr !== null) {
             try {
-                log.info("Send CONN to {} , {} failed", ip, request)
+                log.info("Send CONN to {}, {}", ip, request)
                 SvdrpClient.instance.sendConn(vdr)
             } catch (Exception e) {
                 log.info("Discovery request received, but connection to {} , {} failed", ip, request)
                 vdr = null
             }
 
-            // get list of plugins
-            SvdrpClient.instance.fillPlugins(vdr)
+            if (vdr !== null) {
+                // get list of plugins
+                SvdrpClient.instance.fillPlugins(vdr)
+            }
 
             // send new discovery
             VdrDiscoveryClient.instance.sendDiscovery
