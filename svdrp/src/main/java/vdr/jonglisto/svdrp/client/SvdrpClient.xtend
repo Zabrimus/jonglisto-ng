@@ -172,13 +172,24 @@ class SvdrpClient {
 
                 val sendPing = (now - lastSeen) >= (timeout * 1000) * 9 / 10
                 if (sendPing) {
-                    try {
-                        log.debug("Ping test to {}", vdr.host)
-                        vdr.command("PING", 250)
-                        log.debug("Ping test {} sucessful", vdr.host)
-                    } catch (Exception e) {
-                        // PING failed, VDR is probably down
-                        log.debug("Close connection to {} because PING failed", vdr.name)
+                    val connectionMap = connections.asMap
+                    val connection = connectionMap.get(vdr)
+                    var isConnected = true
+
+                    if (connection === null) {
+                        isConnected = false
+                    } if (connection.socket.isClosed) {
+                        isConnected = false
+                    } else {
+                        try {
+                            vdr.command("PING", 250, connection)
+                        } catch (Exception e) {
+                            isConnected = false
+                        }
+                    }
+
+                    if (!isConnected) {
+                        log.debug("Close connection to {} because PING failed", vdr.host)
                         connections.invalidate(vdr)
                         vdr.discovered = false
 
@@ -186,6 +197,8 @@ class SvdrpClient {
                             // remove VDR in configuration, because it's discovered, not configured and not available anymore
                             Configuration.instance.removeVdr(vdr)
                         }
+                    } else {
+                        connections.refresh(vdr)
                     }
                 }
             }
@@ -773,6 +786,25 @@ class SvdrpClient {
             }]
 
             return result
+        }
+    }
+
+    private def command(VDR vdr, String command, int desiredCode, Connection connection) {
+        if (connection === null) {
+            val message = "Connection to " + vdr + " refused."
+            log.info(message)
+            throw new ConnectionException(message)
+        }
+
+        log.debug("Command: {}", command)
+
+        vdr.setLastSeenNow
+        val resp = connection.send(command)
+        if (resp.code != desiredCode && desiredCode != -1) {
+            val errorMessage = "Code: " + resp.code + ": " + resp.lines.stream.collect(Collectors.joining("\n"))
+            log.debug("Command failed: {}\n{}", command, errorMessage)
+
+            throw new ExecutionFailedException(errorMessage)
         }
     }
 
