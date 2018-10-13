@@ -142,7 +142,7 @@ class SvdrpClient {
             val vdr = Configuration.instance.getVdr(s)
 
             if (vdr !== null && vdr.isDiscovered) {
-                log.trace("Ping test {}, discovered {}", vdr.name, vdr.isDiscovered)
+                // log.trace("Ping test {}, discovered {}", vdr.name, vdr.isDiscovered)
 
                 var timeout = vdr.timeout
                 var long lastSeen
