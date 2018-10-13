@@ -183,6 +183,10 @@ class Connection {
         }
     }
 
+    def getSocket() {
+        socket
+    }
+
     private def Response readResponse() throws IOException {
         var reading = true
         var String line

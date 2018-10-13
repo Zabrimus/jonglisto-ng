@@ -1,12 +1,11 @@
 package vdr.jonglisto.xtend.annotation
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.eclipse.xtend.lib.macro.AbstractClassProcessor
 import org.eclipse.xtend.lib.macro.Active
 import org.eclipse.xtend.lib.macro.TransformationContext
 import org.eclipse.xtend.lib.macro.declaration.MutableClassDeclaration
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 @Active(LogProcessor)
 annotation Log {

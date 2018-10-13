@@ -2,11 +2,10 @@ package vdr.jonglisto.model
 
 import java.net.InetAddress
 import java.net.UnknownHostException
-import org.eclipse.xtend.lib.annotations.Accessors
-import org.eclipse.xtend.lib.annotations.ToString
 import java.time.LocalDateTime
 import java.util.List
-import java.util.Collections
+import org.eclipse.xtend.lib.annotations.Accessors
+import org.eclipse.xtend.lib.annotations.ToString
 
 @Accessors
 @ToString

@@ -52,7 +52,7 @@ class SvdrpClient {
         // init caches
         connections = CacheBuilder.newBuilder() //
         .maximumSize(10) //
-        .expireAfterAccess(300, TimeUnit.SECONDS) //
+        .expireAfterAccess(360, TimeUnit.SECONDS) //
         .removalListener(new RemovalListener<VDR, Connection>() {
             override onRemoval(RemovalNotification<VDR, Connection> notification) {
                 log.info("Close connection to {}:{}", notification.key.host, notification.key.port)
@@ -133,6 +133,16 @@ class SvdrpClient {
 
     def regularEvent() {
         cleanupCache
+
+        if (log.isTraceEnabled()) {
+            log.trace("Current connections in cache:")
+            val connectionMap = connections.asMap
+            connectionMap.keySet().stream().forEach(s |{
+                val socket = connectionMap.get(s).socket
+
+                log.trace("   Local {}:{} --> Remote {}", socket.localAddress, socket.localPort, socket.remoteSocketAddress)
+            })
+        }
 
         val List<String> ov = new ArrayList<String>()
         ov.addAll(Configuration.instance.vdrNames)
