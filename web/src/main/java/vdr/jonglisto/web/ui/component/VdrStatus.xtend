@@ -188,14 +188,12 @@ class VdrStatus {
     }
 
     private def showPlugins() {
-        var plugins = svdrp.getPlugins(vdr)
+        if (vdr.plugins !== null) {
+            vdr.plugins.sortInplace[s1,s2 | s1.plugin.compareTo(s2.plugin)]
 
-        if (plugins !== null) {
-            plugins.sortInplace[s1,s2 | s1.plugin.compareTo(s2.plugin)]
+            val grid = new GridLayout(3, vdr.plugins.size)
 
-            val grid = new GridLayout(3, plugins.size)
-
-            for (s : plugins) {
+            for (s : vdr.plugins) {
                 grid.addComponent(new Label(s.plugin))
                 grid.addComponent(new Label(s.version))
                 grid.addComponent(new Label(s.description))

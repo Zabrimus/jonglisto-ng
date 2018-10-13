@@ -20,6 +20,9 @@ class DiscoveryHandler {
                 vdr = null
             }
 
+            // get list of plugins
+            SvdrpClient.instance.fillPlugins(vdr)
+
             // send new discovery
             VdrDiscoveryClient.instance.sendDiscovery
         }

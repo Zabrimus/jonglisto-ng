@@ -5,6 +5,8 @@ import java.net.UnknownHostException
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.ToString
 import java.time.LocalDateTime
+import java.util.List
+import java.util.Collections
 
 @Accessors
 @ToString
@@ -24,6 +26,8 @@ class VDR extends BaseData {
     var boolean configured
     var boolean discovered
     var int timeout
+
+    var List<VdrPlugin> plugins
 
     new(String name, String host, Integer port, String instanceName, String mac) {
         this.name = name
@@ -86,6 +90,14 @@ class VDR extends BaseData {
 
     def isConfigured() {
         return configured
+    }
+
+    def setPlugins(List<VdrPlugin> p) {
+        plugins = p
+    }
+
+    def getPlugins() {
+        plugins
     }
 
     override int hashCode() {

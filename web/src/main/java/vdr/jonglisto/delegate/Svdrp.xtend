@@ -36,11 +36,6 @@ class Svdrp implements Serializable {
     }
 
     @TraceLog
-    def getPlugins(VDR vdr) {
-        SvdrpClient.getInstance.getPlugins(vdr)
-    }
-
-    @TraceLog
     def getChannels() {
         SvdrpClient.getInstance.getChannels()
     }

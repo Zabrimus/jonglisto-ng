@@ -162,15 +162,13 @@ class SvdrpClient {
 
                 val sendPing = (now - lastSeen) >= (timeout * 1000) * 9 / 10
                 if (sendPing) {
-                    var Response resp
-
                     try {
                         log.debug("Ping test to {}", vdr.name)
-                        resp = vdr.command("PING", 250)
+                        pingHost(vdr)
                         log.debug("Ping test {} sucessful", vdr.name)
                     } catch (Exception e) {
                         // PING failed, VDR is probably down
-                        log.debug("Close connection to {} because PING failed. Response {}", vdr.name, resp)
+                        log.debug("Close connection to {} because PING failed", vdr.name)
                         connections.invalidate(vdr)
                         vdr.discovered = false
 
@@ -186,7 +184,7 @@ class SvdrpClient {
 
     def pingHost(VDR vdr) {
         try {
-            vdr.command("DUMMY", 500)
+            vdr.command("PING", 250)
             return true
         } catch (Exception e) {
             return false
@@ -207,7 +205,7 @@ class SvdrpClient {
         return connection.version
     }
 
-    def getPlugins(VDR vdr) {
+    def void fillPlugins(VDR vdr) {
         try {
             val result = new ArrayList<VdrPlugin>
 
@@ -224,9 +222,9 @@ class SvdrpClient {
                 }
             }
 
-            return result
+            vdr.plugins = result
         } catch (Exception e) {
-            return null
+            vdr.plugins = null
         }
     }
 
@@ -495,9 +493,11 @@ class SvdrpClient {
             return false
         }
 
-        val p = getPlugins(vdr).stream.filter(s | s.plugin.toLowerCase == pluginName.toLowerCase).findFirst
-        if (p.isPresent) {
-            return true
+        if (vdr.plugins !== null) {
+            val p = vdr.plugins.stream.filter(s | s.plugin.toLowerCase == pluginName.toLowerCase).findFirst
+            if (p.isPresent) {
+                return true
+            }
         }
 
         return false

@@ -502,11 +502,11 @@ class SvdrpHandler implements Runnable {
             result.add(
                 String.format("%s %s %s %s", SvdrpClient.instance.getVdrVersion(vdr), free, total, usedPerc.toString))
 
-            SvdrpClient.instance.getPlugins(vdr).forEach [ s |
-                {
+            if (vdr.plugins !== null) {
+                vdr.plugins.stream().forEach(s | {
                     result.add(String.format("%s %s %s", s.plugin, s.version, s.description))
-                }
-            ]
+                })
+            }
 
             if (result.size > 0) {
                 for (var i = 0; i < result.size(); i++) {

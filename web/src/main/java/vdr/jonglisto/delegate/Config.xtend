@@ -1,6 +1,7 @@
 package vdr.jonglisto.delegate
 
 import java.io.Serializable
+import java.util.Collections
 import java.util.stream.Collectors
 import javax.enterprise.context.ApplicationScoped
 import org.apache.shiro.subject.Subject
@@ -9,8 +10,6 @@ import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.xtend.annotation.Log
 import vdr.jonglisto.xtend.annotation.TraceLog
-import java.util.Collection
-import java.util.Collections
 
 @ApplicationScoped
 @Log("jonglisto.delegate.config")
