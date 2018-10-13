@@ -173,9 +173,9 @@ class SvdrpClient {
                 val sendPing = (now - lastSeen) >= (timeout * 1000) * 9 / 10
                 if (sendPing) {
                     try {
-                        log.debug("Ping test to {}", vdr.name)
-                        pingHost(vdr)
-                        log.debug("Ping test {} sucessful", vdr.name)
+                        log.debug("Ping test to {}", vdr.host)
+                        vdr.command("PING", 250)
+                        log.debug("Ping test {} sucessful", vdr.host)
                     } catch (Exception e) {
                         // PING failed, VDR is probably down
                         log.debug("Close connection to {} because PING failed", vdr.name)
