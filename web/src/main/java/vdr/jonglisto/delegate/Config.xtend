@@ -9,6 +9,8 @@ import vdr.jonglisto.configuration.jaxb.jcron.Jcron.Jobs
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.xtend.annotation.Log
 import vdr.jonglisto.xtend.annotation.TraceLog
+import java.util.Collection
+import java.util.Collections
 
 @ApplicationScoped
 @Log("jonglisto.delegate.config")
@@ -120,8 +122,22 @@ class Config implements Serializable {
         if (currentUser === null) {
             return Configuration.getInstance().getVdrNames
         } else {
-            return Configuration.getInstance().getVdrNames.stream() //
-                .filter[s | currentUser.isPermitted("vdr:" + Configuration.getInstance().getVdr(s).instance)]
+            val names = Configuration.getInstance().getVdrNames
+
+            if (names === null) {
+                return Collections.emptyList()
+            }
+
+            return names.stream() //
+                .filter[s | {
+                    val v = Configuration.getInstance().getVdr(s)
+
+                    if (v === null) {
+                        return false
+                    } else {
+                        return currentUser.isPermitted("vdr:" + v.instance)
+                    }
+                }]
                 .collect(Collectors.toList)
         }
     }
