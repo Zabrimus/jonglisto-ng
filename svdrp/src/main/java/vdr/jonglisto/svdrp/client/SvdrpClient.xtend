@@ -162,20 +162,21 @@ class SvdrpClient {
 
                 val sendPing = (now - lastSeen) >= (timeout * 1000) * 9 / 10
                 if (sendPing) {
+                    var Response resp
+
                     try {
                         log.debug("Ping test to {}", vdr.name)
-                        vdr.command("PING", 250)
+                        resp = vdr.command("PING", 250)
                         log.debug("Ping test {} sucessful", vdr.name)
                     } catch (Exception e) {
                         // PING failed, VDR is probably down
-                        log.debug("Close connection to {} because PING failed", vdr.name)
+                        log.debug("Close connection to {} because PING failed. Response {}", vdr.name, resp)
                         connections.invalidate(vdr)
                         vdr.discovered = false
 
                         if (!vdr.isConfigured) {
                             // remove VDR in configuration, because it's discovered, not configured and not available anymore
                             Configuration.instance.removeVdr(vdr)
-                            connections.invalidate(vdr)
                         }
                     }
                 }
