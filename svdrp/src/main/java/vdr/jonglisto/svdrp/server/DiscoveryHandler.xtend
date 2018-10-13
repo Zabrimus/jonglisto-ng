@@ -13,6 +13,13 @@ class DiscoveryHandler {
 
         if (vdr !== null) {
             try {
+                try {
+                    // wait a little bit
+                    Thread.sleep(1000)
+                } catch (InterruptedException e) {
+                    // ignore
+                }
+
                 log.info("Send CONN to {}, {}", ip, request)
                 SvdrpClient.instance.sendConn(vdr)
             } catch (Exception e) {

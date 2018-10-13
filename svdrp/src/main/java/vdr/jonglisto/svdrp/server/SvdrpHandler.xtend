@@ -24,6 +24,7 @@ import vdr.jonglisto.util.NetworkUtils
 import vdr.jonglisto.util.Utils
 import vdr.jonglisto.xtend.annotation.Log
 import java.net.InetSocketAddress
+import java.time.LocalDateTime
 
 @Log("jonglisto.svdrp.server")
 class SvdrpHandler implements Runnable {
@@ -570,8 +571,11 @@ class SvdrpHandler implements Runnable {
         output.flush();
 
         val remoteSocketAddress = client.remoteSocketAddress as InetSocketAddress
-        /* val vdr = */ DiscoveryUtil.findVdr(remoteSocketAddress.address.hostAddress, option)
+        val vdr = DiscoveryUtil.findVdr(remoteSocketAddress.address.hostAddress, option)
 
-        // TODO: Do something useful with vdr?
+        if (vdr !== null) {
+            vdr.lastSeen = LocalDateTime.now()
+            SvdrpClient.instance.fillPlugins(vdr)
+        }
     }
 }
