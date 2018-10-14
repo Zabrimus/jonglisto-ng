@@ -1,6 +1,7 @@
 package vdr.jonglisto.web.ui
 
 import com.vaadin.cdi.CDIView
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
 import com.vaadin.ui.HorizontalLayout
 import javax.annotation.PostConstruct
 import javax.inject.Inject
@@ -26,6 +27,9 @@ class OsdView extends BaseView {
     OsdComponent osd
     var HorizontalLayout layout
 
+    override enter(ViewChangeEvent event) {
+    }
+
     @PostConstruct
     def void init() {
         super.init(BUTTON.OSD)
@@ -43,6 +47,9 @@ class OsdView extends BaseView {
         addComponentsAndExpand(layout)
     }
 
+    override refresh() {
+        // do nothing
+    }
 
     def updateOsd() {
         val oldOsd = osd

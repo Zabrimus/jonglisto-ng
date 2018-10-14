@@ -16,6 +16,10 @@ class ErrorView extends BaseView {
         super.init(null)
     }
 
+    override refresh() {
+        // do nothing
+    }
+
     override enter(ViewChangeEvent event) {
         throw new UnsupportedOperationException("TODO: auto-generated method stub")
     }

@@ -25,6 +25,10 @@ class SearchTimerEpgdView extends BaseView {
         super.init(BUTTON.EPGD)
     }
 
+    override refresh() {
+        // do nothing
+    }
+
     protected override createMainComponents() {
         // sanity check
         if (!config.isDatabaseConfigured) {

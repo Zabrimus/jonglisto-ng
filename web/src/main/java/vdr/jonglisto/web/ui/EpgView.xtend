@@ -2,6 +2,7 @@ package vdr.jonglisto.web.ui
 
 import com.vaadin.cdi.CDIView
 import com.vaadin.icons.VaadinIcons
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
 import com.vaadin.ui.Button
 import com.vaadin.ui.CheckBox
 import com.vaadin.ui.ComboBox
@@ -17,6 +18,7 @@ import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
 import java.util.List
+import java.util.Optional
 import java.util.Set
 import java.util.regex.Pattern
 import java.util.stream.Collectors
@@ -32,7 +34,6 @@ import vdr.jonglisto.web.MainUI
 import vdr.jonglisto.web.ui.component.EventGrid
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import java.util.Optional
 
 // @Log("jonglisto.web")
 @CDIView(MainUI.EPG_VIEW)
@@ -73,6 +74,13 @@ class EpgView extends BaseView {
     @PostConstruct
     def void init() {
         super.init(BUTTON.EPG)
+    }
+
+    override refresh() {
+        // do nothing
+    }
+
+    override enter(ViewChangeEvent event) {
     }
 
     protected override createMainComponents() {

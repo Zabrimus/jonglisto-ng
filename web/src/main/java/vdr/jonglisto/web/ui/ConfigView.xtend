@@ -41,6 +41,10 @@ class ConfigView extends BaseView {
         favourites.changeVdr(selectedVdr)
     }
 
+    override refresh() {
+        // do nothing
+    }
+
     protected override createMainComponents() {
         val currentUser = SecurityUtils.subject
 

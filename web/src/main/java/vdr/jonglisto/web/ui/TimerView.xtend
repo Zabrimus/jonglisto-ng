@@ -35,6 +35,10 @@ class TimerView extends BaseView {
         super.init(BUTTON.TIMER)
     }
 
+    override refresh() {
+        // do nothing
+    }
+
     protected override createMainComponents() {
         horizontalLayout[
             button(messages.timerRefresh) [

@@ -43,6 +43,10 @@ class RecordingView extends BaseView {
         super.init(BUTTON.RECORDING)
     }
 
+    override refresh() {
+        // do nothing
+    }
+
     def reloadRecordings() {
         changeVdr(selectedVdr)
     }

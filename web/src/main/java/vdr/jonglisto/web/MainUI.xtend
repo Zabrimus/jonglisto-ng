@@ -63,7 +63,6 @@ class MainUI extends UI implements ViewChangeListener {
                 try {
                     currentUser.login(token);
                     event.navigator.navigateTo(MainUI.MAIN_VIEW)
-                    // navigator.navigateTo(MainUI.MAIN_VIEW)
                     return true
                 } catch (Exception e) {
                     e.printStackTrace

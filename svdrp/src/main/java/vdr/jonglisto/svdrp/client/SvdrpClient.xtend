@@ -52,13 +52,14 @@ class SvdrpClient {
         // init caches
         connections = CacheBuilder.newBuilder() //
         .maximumSize(10) //
-        .expireAfterAccess(360, TimeUnit.SECONDS) //
+        // .expireAfterAccess(360, TimeUnit.SECONDS) //
+        .expireAfterAccess(30, TimeUnit.SECONDS) //
         .removalListener(new RemovalListener<VDR, Connection>() {
             override onRemoval(RemovalNotification<VDR, Connection> notification) {
                 log.info("Close connection to {}:{}", notification.key.host, notification.key.port)
                 try {
-                    notification.value.close
                     notification.key.discovered = false
+                    notification.value.close
                 } catch(ConnectionException e) {
                     // do nothing, connection is already closed
                 }
@@ -132,77 +133,37 @@ class SvdrpClient {
     }
 
     def regularEvent() {
-        cleanupCache
-
-        if (log.isTraceEnabled()) {
-            log.trace("Current connections in cache:")
-            val connectionMap = connections.asMap
-            connectionMap.keySet().stream().forEach(s |{
-                val socket = connectionMap.get(s).socket
-
-                log.trace("   Local {}:{} --> Remote {}", socket.localAddress, socket.localPort, socket.remoteSocketAddress)
-            })
-        }
-
         val List<String> ov = new ArrayList<String>()
         ov.addAll(Configuration.instance.vdrNames)
 
-        // iterate over all discovered VDRs and send ping
         ov.stream.forEach(s | {
             val vdr = Configuration.instance.getVdr(s)
 
-            if (vdr !== null && vdr.isDiscovered) {
-                // log.trace("Ping test {}, discovered {}", vdr.name, vdr.isDiscovered)
+            if (!vdr.configured) {
+                val connection = connections.get(vdr)
+                var isConnected = true
 
-                var timeout = vdr.timeout
-                var long lastSeen
-                var long now
-
-                if (timeout == 0) {
-                    timeout = 300
-                }
-
-                if (vdr.lastSeen === null) {
-                    lastSeen = DateTimeUtil.toMillis(LocalDateTime.now.minusSeconds(timeout))
+                if (connection === null) {
+                    isConnected = false
+                } else if (connection.socket.isClosed) {
+                    isConnected = false
                 } else {
-                    lastSeen = DateTimeUtil.toMillis(vdr.lastSeen)
+                    try {
+                        vdr.command("PING", 250, connection)
+                    } catch (Exception e) {
+                        isConnected = false
+                    }
                 }
 
-                now = System.currentTimeMillis
-
-                val sendPing = (now - lastSeen) >= (timeout * 1000) * 9 / 10
-                if (sendPing) {
-                    val connectionMap = connections.asMap
-                    val connection = connectionMap.get(vdr)
-                    var isConnected = true
-
-                    if (connection === null) {
-                        isConnected = false
-                    } if (connection.socket.isClosed) {
-                        isConnected = false
-                    } else {
-                        try {
-                            vdr.command("PING", 250, connection)
-                        } catch (Exception e) {
-                            isConnected = false
-                        }
-                    }
-
-                    if (!isConnected) {
-                        log.debug("Close connection to {} because PING failed", vdr.host)
-                        connections.invalidate(vdr)
-                        vdr.discovered = false
-
-                        if (!vdr.isConfigured) {
-                            // remove VDR in configuration, because it's discovered, not configured and not available anymore
-                            Configuration.instance.removeVdr(vdr)
-                        }
-                    } else {
-                        connections.refresh(vdr)
-                    }
+                if (!isConnected) {
+                    log.trace("VDR {} is not configured and will be removed", vdr.host)
+                    Configuration.instance.removeVdr(vdr)
+                    connection.invalidateConnection
                 }
             }
         })
+
+        cleanupCache
     }
 
     def pingHost(VDR vdr) {

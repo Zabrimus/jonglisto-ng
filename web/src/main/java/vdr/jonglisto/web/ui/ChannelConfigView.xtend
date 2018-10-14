@@ -72,6 +72,10 @@ class ChannelConfigView extends BaseView {
         super.init(BUTTON.CHANNELCONFIG)
     }
 
+    override refresh() {
+        // do nothing
+    }
+
     protected override createMainComponents() {
         horizontalLayout(this) [
             addComponent(getChannelDownloadButton(messages.createChannelsConf, "channels.conf"))

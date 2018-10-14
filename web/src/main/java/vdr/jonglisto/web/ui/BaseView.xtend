@@ -4,12 +4,13 @@ import com.vaadin.cdi.CDINavigator
 import com.vaadin.event.selection.SingleSelectionEvent
 import com.vaadin.icons.VaadinIcons
 import com.vaadin.navigator.View
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
 import com.vaadin.server.VaadinSession
 import com.vaadin.ui.Button
 import com.vaadin.ui.ComboBox
 import com.vaadin.ui.VerticalLayout
 import com.vaadin.ui.themes.ValoTheme
+import java.io.Serializable
+import javax.enterprise.inject.Any
 import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.delegate.Config
@@ -20,7 +21,6 @@ import vdr.jonglisto.web.i18n.Messages
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension vdr.jonglisto.web.xtend.UIBuilder.*
-import java.io.Serializable
 
 @Log("jonglisto.web")
 @SuppressWarnings("serial")
@@ -63,9 +63,7 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
 
     abstract protected def void createMainComponents()
     abstract protected def void changeVdr(VDR vdr)
-
-    override enter(ViewChangeEvent event) {
-    }
+    abstract protected def void refresh()
 
     private def createLayout(BUTTON selectedButton) {
         val currentUser = SecurityUtils.subject
@@ -85,7 +83,13 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
                 description = "Home"
                 width = "22px"
                 styleName = ValoTheme.BUTTON_ICON_ONLY + " " + (if (selectedButton == BUTTON.HOME) ValoTheme.BUTTON_PRIMARY else "")
-                addClickListener(s | { navigator.navigateTo(MainUI.MAIN_VIEW) })
+                addClickListener(s | {
+                    if (navigator.state == MainUI.MAIN_VIEW) {
+                        refresh
+                    }
+
+                    navigator.navigateTo(MainUI.MAIN_VIEW)
+                })
             ]
 
             selectVdr = comboBox(config.getVdrNames(currentUser)) [
@@ -99,7 +103,13 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
                 button(messages.menuEpg) [
                     icon = VaadinIcons.NEWSPAPER
                     styleName = (if (selectedButton == BUTTON.EPG) ValoTheme.BUTTON_PRIMARY else "")
-                    addClickListener(s | { navigator.navigateTo(MainUI.EPG_VIEW) })
+                    addClickListener(s | {
+                        if (navigator.state == MainUI.EPG_VIEW) {
+                            refresh
+                        }
+
+                        navigator.navigateTo(MainUI.EPG_VIEW)
+                    })
                 ]
             }
 
@@ -107,7 +117,13 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
                 button(messages.menuTimer) [
                     icon = VaadinIcons.CLOCK
                     styleName = (if (selectedButton == BUTTON.TIMER) ValoTheme.BUTTON_PRIMARY else "")
-                    addClickListener(s | { navigator.navigateTo(MainUI.TIMER_VIEW) })
+                    addClickListener(s | {
+                        if (navigator.state == MainUI.TIMER_VIEW) {
+                            refresh
+                        }
+
+                        navigator.navigateTo(MainUI.TIMER_VIEW)
+                    })
                 ]
             }
 
@@ -117,7 +133,13 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
                     button(messages.menuSearchTimerEpgd) [
                         icon = VaadinIcons.CLOCK
                         styleName = (if (selectedButton == BUTTON.EPGD) ValoTheme.BUTTON_PRIMARY else "")
-                        addClickListener(s | { navigator.navigateTo(MainUI.SEARCHTIMER_EPGD_VIEW) })
+                        addClickListener(s | {
+                            if (navigator.state == MainUI.SEARCHTIMER_EPGD_VIEW) {
+                                refresh
+                            }
+
+                            navigator.navigateTo(MainUI.SEARCHTIMER_EPGD_VIEW)
+                        })
                     ]
                 }
             }
@@ -127,7 +149,13 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
                     icon = VaadinIcons.CLOCK
                     visible = svdrp.isPluginAvailable(selectedVdr.name, "epgsearch")
                     styleName = (if (selectedButton == BUTTON.EPGSEARCH) ValoTheme.BUTTON_PRIMARY else "")
-                    addClickListener(s | { navigator.navigateTo(MainUI.SEARCHTIMER_EPGSEARCH_VIEW) })
+                    addClickListener(s | {
+                        if (navigator.state == MainUI.SEARCHTIMER_EPGSEARCH_VIEW) {
+                            refresh
+                        }
+
+                        navigator.navigateTo(MainUI.SEARCHTIMER_EPGSEARCH_VIEW)
+                    })
                 ]
             }
 
@@ -135,7 +163,13 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
                 button(messages.menuRecordings) [
                     icon = VaadinIcons.FILM
                     styleName = (if (selectedButton == BUTTON.RECORDING) ValoTheme.BUTTON_PRIMARY else "")
-                    addClickListener(s | { navigator.navigateTo(MainUI.RECORDING_VIEW) })
+                    addClickListener(s | {
+                        if (navigator.state == MainUI.RECORDING_VIEW) {
+                            refresh
+                        }
+
+                        navigator.navigateTo(MainUI.RECORDING_VIEW)
+                    })
                 ]
             }
 
@@ -143,7 +177,13 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
                 button(messages.menuOsd) [
                     icon = VaadinIcons.LAPTOP
                     styleName = (if (selectedButton == BUTTON.OSD) ValoTheme.BUTTON_PRIMARY else "")
-                    addClickListener(s | { navigator.navigateTo(MainUI.OSD_VIEW) })
+                    addClickListener(s | {
+                        if (navigator.state == MainUI.OSD_VIEW) {
+                            refresh
+                        }
+
+                        navigator.navigateTo(MainUI.OSD_VIEW)
+                    })
                 ]
             }
 
@@ -151,7 +191,13 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
                 button(messages.channelConfig) [
                     icon = VaadinIcons.COG
                     styleName = (if (selectedButton == BUTTON.CHANNELCONFIG) ValoTheme.BUTTON_PRIMARY else "")
-                    addClickListener(s | { navigator.navigateTo(MainUI.CHANNEL_CONFIG_VIEW) })
+                    addClickListener(s | {
+                        if (navigator.state == MainUI.CHANNEL_CONFIG_VIEW) {
+                            refresh
+                        }
+
+                        navigator.navigateTo(MainUI.CHANNEL_CONFIG_VIEW)
+                    })
                 ]
             }
 
@@ -159,7 +205,13 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
                 button(messages.configView) [
                     icon = VaadinIcons.LIFEBUOY
                     styleName = (if (selectedButton == BUTTON.CONFIG) ValoTheme.BUTTON_PRIMARY else "")
-                    addClickListener(s | { navigator.navigateTo(MainUI.CONFIG_VIEW) })
+                    addClickListener(s | {
+                        if (navigator.state == MainUI.CONFIG_VIEW) {
+                            refresh
+                        }
+
+                        navigator.navigateTo(MainUI.CONFIG_VIEW)
+                    })
                 ]
             }
 

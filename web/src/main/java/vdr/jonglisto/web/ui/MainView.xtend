@@ -20,28 +20,38 @@ class MainView extends BaseView {
     @Inject
     JonglistoVersion jv
 
+    val mainLayout = new CssLayout
+
     @PostConstruct
     def void init() {
         super.init(BUTTON.HOME)
+    }
+
+    override refresh() {
+        mainLayout.removeAllComponents
+        fillMainLayout
     }
 
     override enter(ViewChangeEvent event) {
     }
 
     protected override createMainComponents() {
-        val currentUser = SecurityUtils.subject
+        fillMainLayout
 
-        val css = new CssLayout => [
-            config.getVdrNames(currentUser).forEach[s |
-                addComponent(new VdrStatus().setVdr(config.getVdr(s)).panel)
-            ]
-        ]
-
-        addComponentsAndExpand(css)
+        addComponentsAndExpand(mainLayout)
         addComponent(new Label("Version: " + jv.version))
     }
 
     override protected void changeVdr(VDR vdr) {
        // not used in this view
+    }
+
+    private def void fillMainLayout() {
+        val currentUser = SecurityUtils.subject
+
+        config.getVdrNames(currentUser).forEach[s |
+            mainLayout.addComponent(new VdrStatus().setVdr(config.getVdr(s)).panel)
+        ]
+
     }
 }

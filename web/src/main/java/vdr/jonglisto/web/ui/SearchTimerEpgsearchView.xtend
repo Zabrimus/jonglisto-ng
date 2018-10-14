@@ -24,6 +24,10 @@ class SearchTimerEpgsearchView extends BaseView {
         super.init(BUTTON.EPGSEARCH)
     }
 
+    override refresh() {
+        // do nothing
+    }
+
     protected override createMainComponents() {
         horizontalLayout[
             button(messages.searchtimerRefresh) [
