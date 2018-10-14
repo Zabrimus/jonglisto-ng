@@ -1,6 +1,5 @@
 package vdr.jonglisto.svdrp.server
 
-import java.time.LocalDateTime
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import vdr.jonglisto.configuration.Configuration
@@ -43,7 +42,7 @@ class DiscoveryUtil {
             }
 
             vdr.discovered = true
-            vdr.lastSeen = LocalDateTime.now
+            vdr.setLastSeenNow
 
             log.trace("Discovery of ip {}, clientPort {} results in {}", ip, clientPort, vdr)
         } else {

@@ -8,6 +8,7 @@ import vdr.jonglisto.delegate.Config
 import vdr.jonglisto.logging.LogUtil
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.xtend.annotation.Log
+import vdr.jonglisto.svdrp.server.SvdrpHandler
 
 @Log("jonglisto.lifecycle")
 class ConfigurationLifecycle {
@@ -32,8 +33,9 @@ class ConfigurationLifecycle {
         scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             override run() {
                 SvdrpClient.getInstance.regularEvent()
+                SvdrpHandler.regularEvent()
             }
-        }, 9, 15, TimeUnit.SECONDS);
+        }, 120, 240, TimeUnit.SECONDS);
 
     }
 
