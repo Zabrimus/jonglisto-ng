@@ -138,7 +138,7 @@ class Connection {
             return rsp
         } catch (IOException e) {
             // connection is broken -> invalidate
-            SvdrpClient.getInstance().invalidateConnection(this)
+            // SvdrpClient.getInstance().invalidateConnection(this)
             throw new ConnectionException(e.getMessage)
         }
     }
@@ -155,7 +155,7 @@ class Connection {
             return readResponse
         } catch (IOException e) {
             // connection is broken -> invalidate
-            SvdrpClient.getInstance().invalidateConnection(this)
+            // SvdrpClient.getInstance().invalidateConnection(this)
             throw new ConnectionException(e.getMessage)
         }
     }
@@ -179,7 +179,7 @@ class Connection {
             return readResponse
         } catch (IOException e) {
             // connection is broken -> invalidate
-            SvdrpClient.getInstance().invalidateConnection(this)
+            // SvdrpClient.getInstance().invalidateConnection(this)
             throw new ConnectionException(e.getMessage)
         }
     }

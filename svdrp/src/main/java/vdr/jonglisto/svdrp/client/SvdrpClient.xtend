@@ -129,8 +129,14 @@ class SvdrpClient {
         cleanupCache
     }
 
-    def void invalidateConnection(Connection con) {
-        connections.invalidate(con)
+    def void invalidateConnection(VDR vdr) {
+        try {
+            if (vdr !== null) {
+                connections.invalidate(vdr)
+            }
+        } catch (Exception e) {
+            // ignore this
+        }
     }
 
     def regularEvent() {
@@ -167,7 +173,7 @@ class SvdrpClient {
                     if (!isConnected) {
                         log.trace("VDR {} is not configured and will be removed", vdr.host)
                         Configuration.instance.removeVdr(vdr)
-                        connection.invalidateConnection
+                        vdr.invalidateConnection
                     }
                 }
 
