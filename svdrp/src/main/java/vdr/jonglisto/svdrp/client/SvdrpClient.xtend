@@ -145,7 +145,7 @@ class SvdrpClient {
                     var Connection connection
                     try {
                         connection = connections.get(vdr)
-                    } catch (ConnectionException e) {
+                    } catch (Exception e) {
                         connection = null
                     }
 
