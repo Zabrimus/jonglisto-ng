@@ -70,8 +70,7 @@ class SvdrpClient {
                         con.connect
                         return con;
                     } catch (Exception e) {
-                        // connection refused
-                        return null
+                        throw new ConnectionException("connection refused")
                     }
                 }
             })
@@ -143,7 +142,13 @@ class SvdrpClient {
                 val vdr = Configuration.instance.getVdr(s)
 
                 if (!vdr.configured) {
-                    val connection = connections.get(vdr)
+                    var Connection connection
+                    try {
+                        connection = connections.get(vdr)
+                    } catch (ConnectionException e) {
+                        connection = null
+                    }
+
                     var isConnected = true
 
                     if (connection === null) {
