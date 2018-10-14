@@ -34,8 +34,6 @@ import vdr.jonglisto.model.VdrPlugin
 import vdr.jonglisto.xtend.annotation.Log
 
 import static extension org.apache.commons.lang3.StringUtils.*
-import java.time.LocalDateTime
-import vdr.jonglisto.util.DateTimeUtil
 
 @Log("jonglisto.svdrp.client")
 class SvdrpClient {
@@ -51,28 +49,27 @@ class SvdrpClient {
 
         // init caches
         connections = CacheBuilder.newBuilder() //
-        .maximumSize(10) //
-        // .expireAfterAccess(360, TimeUnit.SECONDS) //
-        .expireAfterAccess(30, TimeUnit.SECONDS) //
-        .removalListener(new RemovalListener<VDR, Connection>() {
-            override onRemoval(RemovalNotification<VDR, Connection> notification) {
-                log.info("Close connection to {}:{}", notification.key.host, notification.key.port)
-                try {
-                    notification.key.discovered = false
-                    notification.value.close
-                } catch(ConnectionException e) {
-                    // do nothing, connection is already closed
+            .maximumSize(30) //
+            .expireAfterAccess(300, TimeUnit.SECONDS) //
+            .removalListener(new RemovalListener<VDR, Connection>() {
+                override onRemoval(RemovalNotification<VDR, Connection> notification) {
+                    log.info("Close connection to {}:{}", notification.key.host, notification.key.port)
+                    try {
+                        notification.key.discovered = false
+                        notification.value.close
+                    } catch(ConnectionException e) {
+                        // do nothing, connection is already closed
+                    }
                 }
-            }
-        }) //
-        .build(new CacheLoader<VDR, Connection>() {
-            override Connection load(VDR key) {
-                log.info("Create connection to {}:{}", key.host, key.port)
-                var Connection con = new Connection(key.host, key.port, key.readTimeout, key.connectTimeout)
-                con.connect
-                return con;
-            }
-        })
+            }) //
+            .build(new CacheLoader<VDR, Connection>() {
+                override Connection load(VDR key) {
+                    log.info("Create connection to {}:{}", key.host, key.port)
+                    var Connection con = new Connection(key.host, key.port, key.readTimeout, key.connectTimeout)
+                    con.connect
+                    return con;
+                }
+            })
 
         longCache = CacheBuilder.newBuilder() //
         .maximumSize(10) //
@@ -137,29 +134,35 @@ class SvdrpClient {
         ov.addAll(Configuration.instance.vdrNames)
 
         ov.stream.forEach(s | {
-            val vdr = Configuration.instance.getVdr(s)
+            try {
+                val vdr = Configuration.instance.getVdr(s)
 
-            if (!vdr.configured) {
-                val connection = connections.get(vdr)
-                var isConnected = true
+                if (!vdr.configured) {
+                    val connection = connections.get(vdr)
+                    var isConnected = true
 
-                if (connection === null) {
-                    isConnected = false
-                } else if (connection.socket.isClosed) {
-                    isConnected = false
-                } else {
-                    try {
-                        vdr.command("PING", 250, connection)
-                    } catch (Exception e) {
+                    if (connection === null) {
                         isConnected = false
+                    } else if (connection.socket.isClosed) {
+                        isConnected = false
+                    } else {
+                        try {
+                            vdr.command("PING", 250, connection)
+                        } catch (Exception e) {
+                            e.printStackTrace
+                            isConnected = false
+                        }
+                    }
+
+                    if (!isConnected) {
+                        log.trace("VDR {} is not configured and will be removed", vdr.host)
+                        Configuration.instance.removeVdr(vdr)
+                        connection.invalidateConnection
                     }
                 }
 
-                if (!isConnected) {
-                    log.trace("VDR {} is not configured and will be removed", vdr.host)
-                    Configuration.instance.removeVdr(vdr)
-                    connection.invalidateConnection
-                }
+            } catch (Exception e) {
+                log.error("Exception caught", e)
             }
         })
 
@@ -782,13 +785,14 @@ class SvdrpClient {
 
         log.debug("Command: {}", command)
 
-        vdr.setLastSeenNow
         val resp = connection.send(command)
         if (resp.code != desiredCode && desiredCode != -1) {
             val errorMessage = "Code: " + resp.code + ": " + resp.lines.stream.collect(Collectors.joining("\n"))
             log.debug("Command failed: {}\n{}", command, errorMessage)
 
             throw new ExecutionFailedException(errorMessage)
+        } else {
+            vdr.setLastSeenNow
         }
 
         return resp

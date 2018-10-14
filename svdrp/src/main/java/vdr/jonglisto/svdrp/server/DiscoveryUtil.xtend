@@ -43,7 +43,7 @@ class DiscoveryUtil {
             }
 
             vdr.discovered = true
-            vdr.lastSeen = LocalDateTime.now
+            vdr.setLastSeenNow
 
             log.trace("Discovery of ip {}, clientPort {} results in {}", ip, clientPort, vdr)
         } else {

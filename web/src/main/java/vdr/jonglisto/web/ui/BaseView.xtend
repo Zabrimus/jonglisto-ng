@@ -10,7 +10,6 @@ import com.vaadin.ui.ComboBox
 import com.vaadin.ui.VerticalLayout
 import com.vaadin.ui.themes.ValoTheme
 import java.io.Serializable
-import javax.enterprise.inject.Any
 import javax.inject.Inject
 import org.apache.shiro.SecurityUtils
 import vdr.jonglisto.delegate.Config

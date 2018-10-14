@@ -1,12 +1,15 @@
 package vdr.jonglisto.svdrp.server
 
+import com.google.common.cache.Cache
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.IOException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.StringWriter
+import java.net.InetSocketAddress
 import java.net.Socket
+import java.time.LocalDateTime
 import java.util.ArrayList
 import java.util.Collections
 import java.util.List
@@ -23,11 +26,16 @@ import vdr.jonglisto.util.DateTimeUtil
 import vdr.jonglisto.util.NetworkUtils
 import vdr.jonglisto.util.Utils
 import vdr.jonglisto.xtend.annotation.Log
-import java.net.InetSocketAddress
-import java.time.LocalDateTime
+import com.google.common.cache.CacheBuilder
+import java.util.concurrent.TimeUnit
 
 @Log("jonglisto.svdrp.server")
 class SvdrpHandler implements Runnable {
+
+    static Cache<String, VDR> connections = CacheBuilder.newBuilder() //
+            .maximumSize(30) //
+            .expireAfterAccess(10, TimeUnit.MINUTES) //
+            .build()
 
     static final List<SvdrpHandler> activeTasks = Collections.synchronizedList(new ArrayList<SvdrpHandler>());
     static boolean intentiallyClosed = false
@@ -41,6 +49,9 @@ class SvdrpHandler implements Runnable {
         this.client = client
     }
 
+    static def regularEvent() {
+        connections.cleanUp
+    }
 
     static def void shutdown() {
         synchronized(activeTasks) {
@@ -86,7 +97,8 @@ class SvdrpHandler implements Runnable {
                             val commandLine = command.toString().trim()
                             command = new StringWriter
 
-                            log.debug("> Received command: {}", commandLine)
+                            val clientVdr = connectedVDR
+                            log.debug("> Received command: {} from {}", commandLine, if (clientVdr !== null) { clientVdr.name } else { "<unknown>"})
 
                             if (commandLine.length === 0) {
                                 // do nothing
@@ -571,11 +583,29 @@ class SvdrpHandler implements Runnable {
         output.flush();
 
         val remoteSocketAddress = client.remoteSocketAddress as InetSocketAddress
+        val remoteSocketPort = remoteSocketAddress.port
         val vdr = DiscoveryUtil.findVdr(remoteSocketAddress.address.hostAddress, option)
 
+        log.trace("CONN received from {}:{} --> {}", remoteSocketAddress.address.hostAddress, remoteSocketPort, if (vdr !== null) { vdr.host } else { "<unknown>" } )
+
+        connections.put(remoteSocketAddress.address.hostAddress + ":" + remoteSocketPort, vdr)
+
         if (vdr !== null) {
-            vdr.lastSeen = LocalDateTime.now()
+            vdr.setLastSeenNow
             SvdrpClient.instance.fillPlugins(vdr)
         }
+    }
+
+    private def getConnectedVDR() {
+        val remoteSocketAddress = client.remoteSocketAddress as InetSocketAddress
+        val remoteSocketPort = remoteSocketAddress.port
+
+        val vdr = connections.getIfPresent(remoteSocketAddress.address.hostAddress + ":" + remoteSocketPort)
+
+        if (vdr !== null) {
+            vdr.setLastSeenNow
+        }
+
+        return vdr
     }
 }

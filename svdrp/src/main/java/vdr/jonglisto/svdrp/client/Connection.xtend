@@ -29,6 +29,7 @@ class Connection {
 
     new(String host, int port) {
         this(host, port, 0, 500)
+
     }
 
     new(String host, int port, int readTimeout, int connectTimeout) {
