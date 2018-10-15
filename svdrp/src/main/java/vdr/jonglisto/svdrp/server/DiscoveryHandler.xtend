@@ -28,7 +28,7 @@ class DiscoveryHandler {
                 if (!vdr.isConfigured) {
                     Configuration.instance.removeVdr(vdr)
                 }
-                
+
                 vdr = null
             }
 
