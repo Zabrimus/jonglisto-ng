@@ -4,6 +4,7 @@ import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
 import vdr.jonglisto.svdrp.client.VdrDiscoveryClient
 import vdr.jonglisto.xtend.annotation.Log
+import vdr.jonglisto.configuration.Configuration
 
 @Log("jonglisto.discovery")
 class DiscoveryHandler {
@@ -24,6 +25,10 @@ class DiscoveryHandler {
                 SvdrpClient.instance.sendConn(vdr)
             } catch (Exception e) {
                 log.info("Discovery request received, but connection to {} , {} failed", ip, request)
+                if (!vdr.isConfigured) {
+                    Configuration.instance.removeVdr(vdr)
+                }
+                
                 vdr = null
             }
 

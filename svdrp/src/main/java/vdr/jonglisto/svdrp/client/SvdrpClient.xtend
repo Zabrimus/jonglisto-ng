@@ -174,6 +174,7 @@ class SvdrpClient {
                         log.trace("VDR {} is not configured and will be removed", vdr.host)
                         Configuration.instance.removeVdr(vdr)
                         vdr.invalidateConnection
+                        // connection.invalidateConnection
                     }
                 }
 
