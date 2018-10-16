@@ -1,10 +1,9 @@
 package vdr.jonglisto.svdrp.server
 
+import vdr.jonglisto.configuration.Configuration
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.svdrp.client.SvdrpClient
-import vdr.jonglisto.svdrp.client.VdrDiscoveryClient
 import vdr.jonglisto.xtend.annotation.Log
-import vdr.jonglisto.configuration.Configuration
 
 @Log("jonglisto.discovery")
 class DiscoveryHandler {
@@ -38,7 +37,7 @@ class DiscoveryHandler {
             }
 
             // send new discovery
-            VdrDiscoveryClient.instance.sendDiscovery
+            // VdrDiscoveryClient.instance.sendDiscovery
         }
 
         return vdr
