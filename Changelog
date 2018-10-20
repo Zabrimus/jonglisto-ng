@@ -1,10 +1,13 @@
-0.3.0-snapshot:
+0.3.0-beta:
 New:
-- upgrade to Vaadin 8.5.2 and different other library upgrades
+- upgrade to Vaadin 8.6.0.rc1 and different other library upgrades
 - VDR discovery on UDP Port 6419
 - some socket and communication bugfixes
 - (nearly) proper shutdown
 - discovered VDR are also available in all pages (and also removed if not available anymore)
+- new configuration entry in jonglisto-ng.xml: startDiscovery.
+-    if this value does not exists or is false or if the SVDRP server port is 0
+-    the new VDR discovery server will not be started
 
 0.2.5:
 New:

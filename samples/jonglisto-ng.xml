@@ -6,6 +6,7 @@
     <!--
     <servername>jonglisto</servername>
     -->
+
     <!-- configuration directory in which jonglisto-ng can store some configuration files -->
     <directory dir="/var/jonglisto-ng" />
 
@@ -72,6 +73,10 @@
 
     <!-- optional the SVDRP server port which shall be created by jonglisto-ng -->
     <svdrpPort>0</svdrpPort>
+
+    <!-- optional: start the VDR discovery server and also send discovery to find VDR in the network -->
+    <!-- Only possible if also svdrpPort is configured, otherwise this configuration will be ignored -->
+    <startDiscovery>true</startDiscovery>
 
     <!--
     <svdrpPort>6420</svdrpPort>

@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.10.08 um 09:42:55 AM CEST 
+// Generiert: 2018.10.20 um 08:22:49 AM CEST 
 //
 
 
@@ -118,6 +118,7 @@ import javax.xml.bind.annotation.XmlValue;
  *           &lt;/complexType&gt;
  *         &lt;/element&gt;
  *         &lt;element name="svdrpPort" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="startDiscovery" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/&gt;
  *         &lt;element name="timezone"&gt;
  *           &lt;complexType&gt;
  *             &lt;simpleContent&gt;
@@ -302,6 +303,7 @@ import javax.xml.bind.annotation.XmlValue;
     "channel",
     "epg2Vdr",
     "svdrpPort",
+    "startDiscovery",
     "timezone",
     "disableLogin",
     "scraper",
@@ -326,6 +328,7 @@ public class Jonglisto {
     @XmlElement(name = "epg2vdr", required = true)
     protected Jonglisto.Epg2Vdr epg2Vdr;
     protected Integer svdrpPort;
+    protected Boolean startDiscovery;
     @XmlElement(required = true)
     protected Jonglisto.Timezone timezone;
     @XmlElement(required = true)
@@ -528,6 +531,30 @@ public class Jonglisto {
      */
     public void setSvdrpPort(Integer value) {
         this.svdrpPort = value;
+    }
+
+    /**
+     * Ruft den Wert der startDiscovery-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isStartDiscovery() {
+        return startDiscovery;
+    }
+
+    /**
+     * Legt den Wert der startDiscovery-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setStartDiscovery(Boolean value) {
+        this.startDiscovery = value;
     }
 
     /**

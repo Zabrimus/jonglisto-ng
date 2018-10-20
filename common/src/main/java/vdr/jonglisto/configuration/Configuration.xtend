@@ -103,7 +103,8 @@ class Configuration {
     static ZoneId defaultZoneId
     static String defaultZoneStr
 
-    static String discoveryServerName;
+    static boolean startDiscovery
+    static String discoveryServerName
     static String contextRoot
 
     private new() {
@@ -176,6 +177,12 @@ class Configuration {
 
             svdrpServerPort = config.svdrpPort ?: 0;
 
+            if (svdrpServerPort > 0 && config.startDiscovery !== null) {
+                startDiscovery = config.startDiscovery
+            } else {
+                startDiscovery = false
+            }
+
             SundialJobScheduler.startScheduler
             registerSchedules
 
@@ -203,6 +210,10 @@ class Configuration {
 
     def getSvdrpServerPort() {
         return svdrpServerPort;
+    }
+
+    def getStartDiscovery() {
+        return startDiscovery;
     }
 
     def getCustomDirectory() {

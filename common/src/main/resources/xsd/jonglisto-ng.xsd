@@ -157,6 +157,8 @@
         <xs:element name="svdrpPort" type="xs:int" maxOccurs="1"
           minOccurs="0">
         </xs:element>
+        <xs:element name="startDiscovery" type="xs:boolean" maxOccurs="1" minOccurs="0">
+        </xs:element>
         <xs:element name="timezone">
              <xs:complexType>
                 <xs:simpleContent>

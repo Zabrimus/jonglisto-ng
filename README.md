@@ -122,6 +122,13 @@ Jonglisto can be reached e.g. via http://localhost:8080/jonglisto-ng
 # Configuration
 There exists three configuration files which have to be installed in /etc/jonglisto
 ## jonglisto-ng.xml (sample can be found in samples/jonglisto-ng.xml)
+The server name which jonglisto is used as discovered name. Default is 'jonglisto'.
+All connected VDR will be able to use this server name to send SVDRP commands easily (since VDR 2.4)
+```xml
+<!-- server name to be used by VDR discovery, defaults to "jonglisto" -->
+<servername>jonglisto</servername>
+```
+
 The directory in which jonglisto-ng can write some configuration data.
 ```xml
 <!-- configuration directory in which jonglisto-ng can store some configuration files -->
@@ -191,6 +198,13 @@ Optional configuration of the VDR epg daemon database
 Optional the SVDRP server port which shall be created by jonglisto-ng
 ```xml
     <svdrpPort>6420</svdrpPort>
+```
+
+Optional flag indicating if the VDR discovery server shall start on UDP port 6419.
+If this value does not exists, is false or if the svdrpPort is 0, then the discovery
+will not be started
+```xml
+    <startDiscovery>true</startDiscovery>
 ```
 
 Optional configuration of the time zone: e.g. Europe/Berlin

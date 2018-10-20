@@ -192,6 +192,11 @@ class SvdrpHandler implements Runnable {
                                         output.write("550 No timers defined\n")
                                         output.flush
                                     }
+                                    case "UPDR": {
+                                        // used only by VDR 2.3.8 and my own patched version of VDR 2.4
+                                        output.write("250 ok\n")
+                                        output.flush
+                                    }
                                     default: {
                                         // unkown command
                                         log.error("Unkown command {} {}, client {}", cmd, option, client)
