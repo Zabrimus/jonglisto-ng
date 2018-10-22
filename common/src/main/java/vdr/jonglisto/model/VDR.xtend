@@ -26,6 +26,8 @@ class VDR extends BaseData {
     var boolean discovered
     var int timeout
 
+    var int osd2webPort
+
     var List<VdrPlugin> plugins
 
     new(String name, String host, Integer port, String instanceName, String mac) {

@@ -27,6 +27,7 @@ class MainUI extends UI implements ViewChangeListener {
     public static val EPG_VIEW = "epg"
     public static val CHANNEL_CONFIG_VIEW = "channelconfig"
     public static val OSD_VIEW = "osd"
+    public static val OSD2WEB_VIEW = "osd2web"
     public static val RECORDING_VIEW = "recordings"
     public static val TIMER_VIEW = "timer"
     public static val SEARCHTIMER_EPGD_VIEW = "searchtimer:epgd"

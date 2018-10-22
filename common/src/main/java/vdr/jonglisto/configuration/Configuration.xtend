@@ -566,6 +566,10 @@ class Configuration {
             val port = if (v.port == 0) null else Integer.valueOf(v.port)
 
             val vdr = new VDR(v.displayName, v.host, port, v.name, v.mac)
+            if (v.osd2Web !== null) {
+                vdr.osd2webPort = Integer.valueOf(v.osd2Web)
+            }
+
             vdr.setConfigured()
 
             vdrs.put(v.displayName, vdr)

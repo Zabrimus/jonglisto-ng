@@ -8,6 +8,8 @@ New:
 - new configuration entry in jonglisto-ng.xml: startDiscovery.
 -    if this value does not exists or is false or if the SVDRP server port is 0
 -    the new VDR discovery server will not be started
+- added view for vdr-plugin-osd2web (needs configuration of osd2web port)
+- new permission: view:osd2web
 
 0.2.5:
 New:

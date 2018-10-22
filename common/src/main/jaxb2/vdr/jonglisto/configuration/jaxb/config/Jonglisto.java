@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2018.10.20 um 08:22:49 AM CEST 
+// Generiert: 2018.10.22 um 06:00:08 PM CEST 
 //
 
 
@@ -53,6 +53,7 @@ import javax.xml.bind.annotation.XmlValue;
  *                           &lt;attribute name="host" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *                           &lt;attribute name="port" type="{http://www.w3.org/2001/XMLSchema}short" /&gt;
  *                           &lt;attribute name="mac" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *                           &lt;attribute name="osd2web" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *                         &lt;/extension&gt;
  *                       &lt;/simpleContent&gt;
  *                     &lt;/complexType&gt;
@@ -827,6 +828,7 @@ public class Jonglisto {
      *                 &lt;attribute name="host" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
      *                 &lt;attribute name="port" type="{http://www.w3.org/2001/XMLSchema}short" /&gt;
      *                 &lt;attribute name="mac" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+     *                 &lt;attribute name="osd2web" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
      *               &lt;/extension&gt;
      *             &lt;/simpleContent&gt;
      *           &lt;/complexType&gt;
@@ -891,6 +893,7 @@ public class Jonglisto {
          *       &lt;attribute name="host" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
          *       &lt;attribute name="port" type="{http://www.w3.org/2001/XMLSchema}short" /&gt;
          *       &lt;attribute name="mac" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+         *       &lt;attribute name="osd2web" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
          *     &lt;/extension&gt;
          *   &lt;/simpleContent&gt;
          * &lt;/complexType&gt;
@@ -916,6 +919,8 @@ public class Jonglisto {
             protected Short port;
             @XmlAttribute(name = "mac")
             protected String mac;
+            @XmlAttribute(name = "osd2web")
+            protected String osd2Web;
 
             /**
              * Ruft den Wert der value-Eigenschaft ab.
@@ -1059,6 +1064,30 @@ public class Jonglisto {
              */
             public void setMac(String value) {
                 this.mac = value;
+            }
+
+            /**
+             * Ruft den Wert der osd2Web-Eigenschaft ab.
+             * 
+             * @return
+             *     possible object is
+             *     {@link String }
+             *     
+             */
+            public String getOsd2Web() {
+                return osd2Web;
+            }
+
+            /**
+             * Legt den Wert der osd2Web-Eigenschaft fest.
+             * 
+             * @param value
+             *     allowed object is
+             *     {@link String }
+             *     
+             */
+            public void setOsd2Web(String value) {
+                this.osd2Web = value;
             }
 
         }

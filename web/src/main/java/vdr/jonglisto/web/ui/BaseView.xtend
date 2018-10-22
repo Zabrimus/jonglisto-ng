@@ -26,7 +26,7 @@ import static extension vdr.jonglisto.web.xtend.UIBuilder.*
 abstract class BaseView extends VerticalLayout implements View, Serializable {
 
     protected enum BUTTON {
-        HOME, TIMER, EPG, EPGD, EPGSEARCH, RECORDING, CHANNELCONFIG, OSD, CONFIG, LOGOUT
+        HOME, TIMER, EPG, EPGD, EPGSEARCH, RECORDING, CHANNELCONFIG, OSD, OSD2WEB, CONFIG, LOGOUT
     }
 
     @Inject
@@ -43,6 +43,7 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
 
     var ComboBox<String> selectVdr
     Button epgsearchButton
+    Button osd2webButton
 
     BUTTON currentView
 
@@ -186,6 +187,20 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
                 ]
             }
 
+            if (currentUser.isPermitted("view:" + MainUI.OSD2WEB_VIEW)) {
+                osd2webButton = button(messages.menuOsd2web) [
+                    icon = VaadinIcons.LAPTOP
+                    styleName = (if (selectedButton == BUTTON.OSD2WEB) ValoTheme.BUTTON_PRIMARY else "")
+                    addClickListener(s | {
+                        if (navigator.state == MainUI.OSD2WEB_VIEW) {
+                            refresh
+                        }
+
+                        navigator.navigateTo(MainUI.OSD2WEB_VIEW)
+                    })
+                ]
+            }
+
             if (currentUser.isPermitted("view:" + MainUI.CHANNEL_CONFIG_VIEW)) {
                 button(messages.channelConfig) [
                     icon = VaadinIcons.COG
@@ -240,6 +255,18 @@ abstract class BaseView extends VerticalLayout implements View, Serializable {
             } else {
                 epgsearchButton.visible = false
                 if (currentView == BUTTON.EPGSEARCH) {
+                    // this view do not exists for this VDR -> change to home
+                    UI.navigator.navigateTo(MainUI.MAIN_VIEW)
+                }
+            }
+        }
+
+        if (osd2webButton !== null) {
+            if (svdrp.isPluginAvailable(event.selectedItem.get, "osd2web")) {
+                osd2webButton.visible = true
+            } else {
+                osd2webButton.visible = false
+                if (currentView == BUTTON.OSD2WEB) {
                     // this view do not exists for this VDR -> change to home
                     UI.navigator.navigateTo(MainUI.MAIN_VIEW)
                 }

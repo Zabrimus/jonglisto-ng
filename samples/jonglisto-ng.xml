@@ -18,7 +18,8 @@
         <!-- host:        hostname or IP address of the VDR instance        -->
         <!-- port:        SVDRP port of the VDR instance                    -->
         <!-- mac:         Network MAC address, needed for WOL               -->
-        <instance name="vdr1" displayName="VDR 1" host="127.0.0.l" port="6419" />
+        <!-- osd2web:     optional: osd2web port which shall be used        -->
+        <instance name="vdr1" displayName="VDR 1" host="127.0.0.l" port="6419" osd2web="4444" />
 
         <!--
         <instance name="vdr1"       displayName="VDR 1"      host="vdr1"       port="6419"   mac="00-80-41-ae-fd-7e"/>

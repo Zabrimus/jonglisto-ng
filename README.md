@@ -144,10 +144,11 @@ Existing VDR instances
         <!-- host:        hostname or IP address of the VDR instance        -->
         <!-- port:        SVDRP port of the VDR instance                    -->
         <!-- mac:         Network MAC address, needed for WOL               -->
+        <!-- osd2web:     optional: osd2web port which shall be used        -->
         <instance name="vdr1"       displayName="VDR 1"      host="vdr1"       port="6419" mac="00-80-40-41-42-43"/>
         <instance name="vdr2"       displayName="VDR 2"      host="vdr2"       port="6419" mac="00-80-40-41-42-44"/>
         <instance name="vdr3"       displayName="VDR 3"      host="vdr3"       port="6419" />
-        <instance name="epgcollect" displayName="epgcollect" host="epgcollect" port="6419" />
+        <instance name="epgcollect" displayName="epgcollect" host="epgcollect" port="6419" osd2web="4444" />
 </configuredVdr>
 ```
 
@@ -360,6 +361,7 @@ The following permissions are currently available:
 * view:searchtimer:epgsearch
 * view:recordings
 * view:osd
+* view:osd2web
 * view:channelconfig
 * view:config:favourite
 * vdr:"instance name in jonglisto-ng.xml"

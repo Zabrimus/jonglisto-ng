@@ -61,6 +61,8 @@
                         name="port" use="optional" />
                       <xs:attribute type="xs:string"
                         name="mac" use="optional" />
+                      <xs:attribute type="xs:string"
+                        name="osd2web" use="optional" />
                     </xs:extension>
                   </xs:simpleContent>
                 </xs:complexType>
