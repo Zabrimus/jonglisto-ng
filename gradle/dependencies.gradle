@@ -1,7 +1,7 @@
 ext {
     versions = [
         // vaadin            : '8.5.2',        // Vaadin, Web
-        vaadin            : '8.6.0.rc1',    // Vaadin, Web
+        vaadin            : '8.6.1',        // Vaadin, Web
         vaadincdi         : '3.0.1',        // Vaadin CDI
         shiro             : '1.3.2',        // Apache Shiro, Security
         commons           : '3.5',          // Apache commons lang        DO NOT UPGRADE, if not upgraded in TomEE

@@ -2,7 +2,6 @@ package vdr.jonglisto.web.ui
 
 import com.vaadin.cdi.CDIView
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
-import com.vaadin.ui.HorizontalLayout
 import javax.annotation.PostConstruct
 import vdr.jonglisto.model.VDR
 import vdr.jonglisto.web.MainUI
