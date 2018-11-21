@@ -70,10 +70,15 @@ class Utils {
     }
 
     private def static long nextExecutionInMillis(long currentTimeInMillis, Cron cron) {
-        val currentInstant = Instant.ofEpochMilli(currentTimeInMillis);
-        return ExecutionTime.forCron(cron).timeToNextExecution(ZonedDateTime.ofInstant(currentInstant, ZoneId.of(Configuration.instance.defaultZoneStr)))
-                .transform(s | currentInstant.plus(s).toEpochMilli())
-                .or(-1L);
+        try {
+            val currentInstant = Instant.ofEpochMilli(currentTimeInMillis);
+            return ExecutionTime.forCron(cron).timeToNextExecution(ZonedDateTime.ofInstant(currentInstant, ZoneId.of(Configuration.instance.defaultZoneStr)))
+                    .transform(s | currentInstant.plus(s).toEpochMilli())
+                    .or(-1L);
+        } catch (Exception e) {
+            // ignore
+            return -1L;
+        }
     }
 
     /**
