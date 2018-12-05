@@ -1,6 +1,6 @@
-0.3.0-beta:
+0.3.0-beta-2:
 New:
-- upgrade to Vaadin 8.6.0.rc1 and different other library upgrades
+- upgrade to Vaadin 8.6.2 and different other library upgrades
 - VDR discovery on UDP Port 6419
 - some socket and communication bugfixes
 - (nearly) proper shutdown
